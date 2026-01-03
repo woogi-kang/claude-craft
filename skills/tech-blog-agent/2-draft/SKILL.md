@@ -193,17 +193,87 @@ in the comments. Got questions? I'm always happy to chat.
 — woogi
 ```
 
-### 7. seo_optimize (SEO Optimization)
+### 7. seo_optimize (SEO Optimization) 🆕 Enhanced
 
-Optimizes for discoverability.
+Comprehensive SEO optimization based on keyword research.
+
+> **Reference:** See `../SEO_GUIDE.md` for detailed SEO strategy.
+
+**Process:**
+
+1. **Title Optimization**
+   ```yaml
+   title:
+     display: "Flutter vs React Native in 2025: The Honest Truth"
+     seo: "Flutter vs React Native 2025: Complete Comparison"  # Optional shorter version
+     length: 56  # Target: 50-60 chars
+     keyword_position: "front"  # Primary keyword front-loaded
+   ```
+
+2. **Meta Description (Subtitle)**
+   ```yaml
+   meta_description:
+     text: "More developers prefer Flutter, but there are 6x more React Native jobs. Learn which framework to choose based on performance, jobs, and your goals."
+     length: 158  # Target: 150-160 chars
+     includes_keyword: true
+     includes_cta: true  # "Learn which..."
+   ```
+
+3. **URL Slug**
+   ```yaml
+   slug:
+     value: "flutter-vs-react-native-2025"
+     includes_keyword: true
+     word_count: 5  # Target: 3-5 words
+   ```
+
+4. **Content SEO**
+   ```yaml
+   content_seo:
+     keyword_in_first_100_words: true
+     h2_with_keywords: ["Performance Comparison", "Developer Experience", "Job Market"]
+     internal_links: 2  # Links to other woogi posts
+     external_links: 5  # Links to authoritative sources
+     word_count: 1850
+     reading_time: "8 min"
+   ```
+
+5. **Image SEO**
+   ```yaml
+   images:
+     cover:
+       file_name: "flutter-vs-react-native-cover.png"
+       dimensions: "1600x840"
+       alt_text: "Flutter vs React Native comparison infographic"
+     inline_images:
+       - alt: "Diagram comparing Flutter and React Native architecture"
+       - alt: "Performance benchmark chart"
+   ```
+
+**SEO Output Block (added to draft frontmatter):**
+```yaml
+seo:
+  primary_keyword: "Flutter vs React Native"
+  secondary_keywords: ["cross-platform 2025", "mobile framework comparison"]
+  meta_description: "More developers prefer Flutter, but..."
+  slug: "flutter-vs-react-native-2025"
+  word_count: 1850
+  internal_links: 2
+  external_links: 5
+  images_optimized: true
+```
 
 **Checklist:**
-- [ ] Title includes main keyword
-- [ ] Meta description (subtitle) is compelling
-- [ ] Headers use relevant keywords naturally
-- [ ] Internal structure is scannable
-- [ ] Alt text for images (if any)
-- [ ] Relevant tags (max 5)
+- [ ] Title: 50-60 chars, keyword front-loaded
+- [ ] Meta description: 150-160 chars, keyword + value + CTA
+- [ ] Slug: 3-5 words, includes keyword, lowercase
+- [ ] Keyword in first 100 words
+- [ ] H2s include secondary keywords
+- [ ] 2-3 internal links with descriptive anchor text
+- [ ] 3-5 external links to authoritative sources
+- [ ] All images have descriptive alt text
+- [ ] Cover image set (1600x840)
+- [ ] Tags relevant and limited to 5
 
 ## Draft Output Format
 

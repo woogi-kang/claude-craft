@@ -18,7 +18,43 @@ Researches topics for woogi's tech blog posts using web search and code analysis
 
 ## Core Functions
 
-### 1. topic_analysis (Topic Understanding)
+### 1. keyword_research (SEO Keyword Research) 🆕
+
+Identifies target keywords for SEO optimization before writing.
+
+> **Reference:** See `../SEO_GUIDE.md` for detailed keyword strategy.
+
+**Process:**
+- Identify primary keyword (main search term)
+- Find secondary keywords (variations, related terms)
+- Analyze search intent (informational/tutorial/comparison)
+- Check Google autocomplete for long-tail variations
+
+**Tools to Use:**
+- Google Search autocomplete
+- Google Trends (compare terms)
+- "People also ask" section
+- Related searches at bottom of SERP
+
+**Output:**
+```yaml
+seo_keywords:
+  primary: "React Server Components"
+  secondary:
+    - "RSC tutorial"
+    - "React Server Components vs SSR"
+    - "how to use React Server Components"
+  long_tail:
+    - "React Server Components Next.js example"
+    - "when to use React Server Components"
+  search_intent: "tutorial"  # informational | tutorial | comparison | troubleshooting
+  competition: "medium"
+  suggested_title_keywords: ["React Server Components", "Guide", "2025"]
+```
+
+---
+
+### 2. topic_analysis (Topic Understanding)
 
 Breaks down the topic into researchable components.
 
@@ -44,7 +80,7 @@ topic_analysis:
     - "What are the trade-offs?"
 ```
 
-### 2. web_research (Web Information Gathering)
+### 3. web_research (Web Information Gathering)
 
 Searches the web for relevant information, tutorials, and documentation.
 
@@ -69,7 +105,7 @@ web_research:
     date: "2024-01-15"
 ```
 
-### 3. code_research (Codebase Analysis)
+### 4. code_research (Codebase Analysis)
 
 Analyzes local codebase for relevant examples and patterns.
 
@@ -92,7 +128,7 @@ code_research:
     notes: "Direct async/await in component"
 ```
 
-### 4. insight_extraction (Key Insights)
+### 5. insight_extraction (Key Insights)
 
 Synthesizes research into actionable insights for the blog post.
 
@@ -103,7 +139,7 @@ Synthesizes research into actionable insights for the blog post.
 - **Pitfalls:** Common mistakes to avoid
 - **Real examples:** Practical use cases
 
-### 5. outline_suggestion (Draft Outline)
+### 6. outline_suggestion (Draft Outline)
 
 Based on research, suggests a blog post structure.
 

@@ -69,28 +69,55 @@ If publication ID missing:
 
 ### 2. content_prepare (Prepare Content)
 
-Converts draft markdown to Hashnode-compatible format.
+Converts draft markdown to Hashnode-compatible format with SEO optimization.
+
+> **Reference:** See `../SEO_GUIDE.md` for Hashnode SEO settings.
 
 **Process:**
 - Parse frontmatter for metadata
 - Extract title, subtitle, tags
+- Apply SEO optimizations
 - Clean markdown content
 - Validate tag count (max 5)
 
 **Output:**
 ```yaml
 prepared_content:
+  # Basic Content
   title: "Understanding React Server Components"
   subtitle: "What RSC is, how it works, and when to use it"
   contentMarkdown: "{full markdown content}"
+  slug: "react-server-components-guide"
+
+  # Tags
   tags:
     - slug: "react"
     - slug: "server-components"
     - slug: "javascript"
+
+  # Cover Image
   coverImageOptions:
-    url: "" # optional
+    coverImageURL: "https://..."  # 1600x840 recommended
+
+  # SEO Settings 🆕
+  seo:
+    title: "React Server Components Guide 2025"  # Can differ from display title
+    description: "Learn how React Server Components work..."
+
+  # Open Graph (Social Sharing) 🆕
+  ogMetaData:
+    title: "React Server Components: A Practical Guide"
+    description: "Master RSC with this comprehensive guide..."
+    image: "https://..."  # Social share image
+
+  # Settings
   settings:
     isTableOfContentEnabled: true
+    delisted: false  # Set true to hide from Hashnode feed
+
+  # Optional
+  canonicalUrl: ""  # If cross-posting from another site
+  disableComments: false
 ```
 
 ### 3. api_publish (Publish via API)
@@ -112,18 +139,31 @@ mutation PublishPost($input: PublishPostInput!) {
 }
 ```
 
-**Input Variables:**
+**Input Variables (with SEO):**
 ```json
 {
   "input": {
     "title": "Understanding React Server Components",
     "subtitle": "What RSC is, how it works, and when to use it",
+    "slug": "react-server-components-guide",
     "publicationId": "{PUBLICATION_ID}",
     "contentMarkdown": "{content}",
     "tags": [
       { "slug": "react" },
       { "slug": "server-components" }
     ],
+    "coverImageOptions": {
+      "coverImageURL": "https://your-image-url.png"
+    },
+    "seo": {
+      "title": "React Server Components Guide 2025",
+      "description": "Learn how React Server Components work with practical examples and best practices."
+    },
+    "ogMetaData": {
+      "title": "React Server Components: A Practical Guide",
+      "description": "Master RSC with this comprehensive guide by woogi",
+      "image": "https://your-og-image-url.png"
+    },
     "settings": {
       "isTableOfContentEnabled": true
     }
