@@ -22,7 +22,7 @@ Researches topics for woogi's tech blog posts using web search and code analysis
 
 Identifies target keywords for SEO optimization before writing.
 
-> **Reference:** See `../SEO_GUIDE.md` for detailed keyword strategy.
+> **Reference:** See `agents/tech-blog-agent/SEO_GUIDE.md` for detailed keyword strategy.
 
 **Process:**
 - Identify primary keyword (main search term)

@@ -71,7 +71,7 @@ If publication ID missing:
 
 Converts draft markdown to Hashnode-compatible format with SEO optimization.
 
-> **Reference:** See `../SEO_GUIDE.md` for Hashnode SEO settings.
+> **Reference:** See `agents/tech-blog-agent/SEO_GUIDE.md` for Hashnode SEO settings.
 
 **Process:**
 - Parse frontmatter for metadata

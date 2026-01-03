@@ -11,7 +11,7 @@ description: |
 
 Writes blog post drafts for woogi's tech blog based on research output.
 
-> **Important**: Always reference `../STYLE_GUIDE.md` for voice, tone, hooks, and structure patterns.
+> **Important**: Always reference `agents/tech-blog-agent/STYLE_GUIDE.md` for voice, tone, hooks, and structure patterns.
 
 ## Trigger Commands
 
@@ -197,7 +197,7 @@ in the comments. Got questions? I'm always happy to chat.
 
 Comprehensive SEO optimization based on keyword research.
 
-> **Reference:** See `../SEO_GUIDE.md` for detailed SEO strategy.
+> **Reference:** See `agents/tech-blog-agent/SEO_GUIDE.md` for detailed SEO strategy.
 
 **Process:**
 
