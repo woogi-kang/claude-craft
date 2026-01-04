@@ -1,7 +1,7 @@
 ---
 name: ppt-design-system
 description: |
-  전문 프레젠테이션 디자인 시스템. 정밀한 타이포그래피, 5가지 완성 팔레트, 10가지 슬라이드 템플릿 제공.
+  전문 프레젠테이션 디자인 시스템. 정밀한 타이포그래피, 10가지 토픽별 테마, 10가지 슬라이드 템플릿 제공.
   "디자인 적용", "템플릿", "스타일 시스템" 요청 시 활성화.
 ---
 
@@ -9,6 +9,25 @@ description: |
 
 전문적인 프레젠테이션 디자인을 위한 정밀 시스템입니다.
 **"Less is More"** 철학을 기반으로 불필요한 요소를 제거하고 콘텐츠에 집중합니다.
+
+## Topic-Based Themes (10가지)
+
+각 주제에 맞는 전문 테마가 별도 파일로 분리되어 있습니다:
+
+| Theme | File | Use Case |
+|-------|------|----------|
+| Healthcare Clean | [themes/01-healthcare/](./themes/01-healthcare/THEME.md) | 의료, 바이오, 헬스케어 |
+| Education Bright | [themes/02-education/](./themes/02-education/THEME.md) | 교육, 트레이닝, 워크샵 |
+| Fintech Bold | [themes/03-fintech/](./themes/03-fintech/THEME.md) | 핀테크, 금융, 크립토 |
+| AI Futuristic | [themes/04-ai-tech/](./themes/04-ai-tech/THEME.md) | AI/ML, 테크, 개발자 |
+| Sustainability Earth | [themes/05-sustainability/](./themes/05-sustainability/THEME.md) | ESG, 환경, 지속가능성 |
+| Startup Gradient | [themes/06-startup/](./themes/06-startup/THEME.md) | 피치덱, 스타트업, VC |
+| Luxury Noir | [themes/07-luxury/](./themes/07-luxury/THEME.md) | 럭셔리, 프리미엄, VIP |
+| Creative Neon | [themes/08-creative/](./themes/08-creative/THEME.md) | 에이전시, 디자인, 포트폴리오 |
+| Real Estate Trust | [themes/09-real-estate/](./themes/09-real-estate/THEME.md) | 부동산, 투자, 자산 |
+| F&B Appetite | [themes/10-fnb/](./themes/10-fnb/THEME.md) | 식음료, 레스토랑, 호텔 |
+
+> **Theme Selection:** [themes/INDEX.md](./themes/INDEX.md) - 테마 선택 가이드 및 키워드 매핑
 
 ## 슬라이드 규격
 
