@@ -18,6 +18,7 @@ venv/
 
 # Node (for mcp-servers)
 node_modules/
+package-lock.json
 
 # Logs
 *.log
