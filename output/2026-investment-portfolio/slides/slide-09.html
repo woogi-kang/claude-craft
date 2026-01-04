@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 960px;
+      height: 540px;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      background: #0c0c14;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div style="position: absolute; left: 64px; top: 48px; width: 60px; height: 28px; background: #00d4ff; border-radius: 4px;"></div>
+  <p style="position: absolute; left: 64px; top: 48px; width: 60px; height: 28px; font-size: 11px; font-weight: 600; color: #0c0c14; text-align: center; line-height: 28px;">ETF</p>
+  <p style="position: absolute; left: 850px; top: 52px; width: 50px; height: 20px; font-size: 13px; color: #6060a0; text-align: right;">09</p>
+
+  <!-- Title -->
+  <h2 style="position: absolute; left: 64px; top: 100px; width: 600px; height: 45px; font-size: 32px; font-weight: 700; color: #ffffff;">추천 ETF 리스트</h2>
+
+  <!-- Table Header -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 832px; height: 40px; background: rgba(139, 92, 246, 0.3); border-radius: 8px 8px 0 0;"></div>
+  <p style="position: absolute; left: 84px; top: 160px; width: 150px; height: 40px; font-size: 12px; font-weight: 600; color: #ffffff; line-height: 40px;">ETF 명</p>
+  <p style="position: absolute; left: 250px; top: 160px; width: 100px; height: 40px; font-size: 12px; font-weight: 600; color: #ffffff; line-height: 40px;">티커</p>
+  <p style="position: absolute; left: 370px; top: 160px; width: 180px; height: 40px; font-size: 12px; font-weight: 600; color: #ffffff; line-height: 40px;">투자 대상</p>
+  <p style="position: absolute; left: 560px; top: 160px; width: 100px; height: 40px; font-size: 12px; font-weight: 600; color: #ffffff; line-height: 40px;">비용</p>
+  <p style="position: absolute; left: 680px; top: 160px; width: 200px; height: 40px; font-size: 12px; font-weight: 600; color: #ffffff; line-height: 40px;">특징</p>
+
+  <!-- Row 1 -->
+  <div style="position: absolute; left: 64px; top: 200px; width: 832px; height: 50px; background: rgba(30, 30, 56, 0.6); border-bottom: 1px solid rgba(139, 92, 246, 0.2);"></div>
+  <p style="position: absolute; left: 84px; top: 200px; width: 150px; height: 50px; font-size: 14px; font-weight: 500; color: #ffffff; line-height: 50px;">Vanguard S&P 500</p>
+  <p style="position: absolute; left: 250px; top: 200px; width: 100px; height: 50px; font-size: 14px; font-weight: 700; color: #8b5cf6; line-height: 50px;">VOO</p>
+  <p style="position: absolute; left: 370px; top: 200px; width: 180px; height: 50px; font-size: 13px; color: #a0a0c0; line-height: 50px;">미국 대형주 500</p>
+  <p style="position: absolute; left: 560px; top: 200px; width: 100px; height: 50px; font-size: 13px; color: #06ffa5; line-height: 50px;">0.03%</p>
+  <p style="position: absolute; left: 680px; top: 200px; width: 200px; height: 50px; font-size: 12px; color: #a0a0c0; line-height: 50px;">초저비용 핵심 자산</p>
+
+  <!-- Row 2 -->
+  <div style="position: absolute; left: 64px; top: 250px; width: 832px; height: 50px; background: rgba(30, 30, 56, 0.3); border-bottom: 1px solid rgba(139, 92, 246, 0.2);"></div>
+  <p style="position: absolute; left: 84px; top: 250px; width: 150px; height: 50px; font-size: 14px; font-weight: 500; color: #ffffff; line-height: 50px;">iShares Tech Sector</p>
+  <p style="position: absolute; left: 250px; top: 250px; width: 100px; height: 50px; font-size: 14px; font-weight: 700; color: #8b5cf6; line-height: 50px;">IGV</p>
+  <p style="position: absolute; left: 370px; top: 250px; width: 180px; height: 50px; font-size: 13px; color: #a0a0c0; line-height: 50px;">Tech/AI 확장</p>
+  <p style="position: absolute; left: 560px; top: 250px; width: 100px; height: 50px; font-size: 13px; color: #06ffa5; line-height: 50px;">0.40%</p>
+  <p style="position: absolute; left: 680px; top: 250px; width: 200px; height: 50px; font-size: 12px; color: #a0a0c0; line-height: 50px;">AI 테마 광범위 노출</p>
+
+  <!-- Row 3 -->
+  <div style="position: absolute; left: 64px; top: 300px; width: 832px; height: 50px; background: rgba(30, 30, 56, 0.6); border-bottom: 1px solid rgba(139, 92, 246, 0.2);"></div>
+  <p style="position: absolute; left: 84px; top: 300px; width: 150px; height: 50px; font-size: 14px; font-weight: 500; color: #ffffff; line-height: 50px;">Vanguard Russell 2000</p>
+  <p style="position: absolute; left: 250px; top: 300px; width: 100px; height: 50px; font-size: 14px; font-weight: 700; color: #06ffa5; line-height: 50px;">VTWO</p>
+  <p style="position: absolute; left: 370px; top: 300px; width: 180px; height: 50px; font-size: 13px; color: #a0a0c0; line-height: 50px;">미국 스몰캡</p>
+  <p style="position: absolute; left: 560px; top: 300px; width: 100px; height: 50px; font-size: 13px; color: #06ffa5; line-height: 50px;">0.10%</p>
+  <p style="position: absolute; left: 680px; top: 300px; width: 200px; height: 50px; font-size: 12px; color: #a0a0c0; line-height: 50px;">밸류 플레이</p>
+
+  <!-- Row 4 -->
+  <div style="position: absolute; left: 64px; top: 350px; width: 832px; height: 50px; background: rgba(30, 30, 56, 0.3); border-bottom: 1px solid rgba(139, 92, 246, 0.2);"></div>
+  <p style="position: absolute; left: 84px; top: 350px; width: 150px; height: 50px; font-size: 14px; font-weight: 500; color: #ffffff; line-height: 50px;">Schwab Dividend</p>
+  <p style="position: absolute; left: 250px; top: 350px; width: 100px; height: 50px; font-size: 14px; font-weight: 700; color: #fbbf24; line-height: 50px;">SCHD</p>
+  <p style="position: absolute; left: 370px; top: 350px; width: 180px; height: 50px; font-size: 13px; color: #a0a0c0; line-height: 50px;">고배당주</p>
+  <p style="position: absolute; left: 560px; top: 350px; width: 100px; height: 50px; font-size: 13px; color: #06ffa5; line-height: 50px;">0.06%</p>
+  <p style="position: absolute; left: 680px; top: 350px; width: 200px; height: 50px; font-size: 12px; color: #a0a0c0; line-height: 50px;">인컴 + 퀄리티</p>
+
+  <!-- Row 5 -->
+  <div style="position: absolute; left: 64px; top: 400px; width: 832px; height: 50px; background: rgba(30, 30, 56, 0.6); border-bottom: 1px solid rgba(139, 92, 246, 0.2);"></div>
+  <p style="position: absolute; left: 84px; top: 400px; width: 150px; height: 50px; font-size: 14px; font-weight: 500; color: #ffffff; line-height: 50px;">Vanguard Total World</p>
+  <p style="position: absolute; left: 250px; top: 400px; width: 100px; height: 50px; font-size: 14px; font-weight: 700; color: #00d4ff; line-height: 50px;">VT</p>
+  <p style="position: absolute; left: 370px; top: 400px; width: 180px; height: 50px; font-size: 13px; color: #a0a0c0; line-height: 50px;">글로벌 주식 9,900+</p>
+  <p style="position: absolute; left: 560px; top: 400px; width: 100px; height: 50px; font-size: 13px; color: #06ffa5; line-height: 50px;">0.07%</p>
+  <p style="position: absolute; left: 680px; top: 400px; width: 200px; height: 50px; font-size: 12px; color: #a0a0c0; line-height: 50px;">원스톱 글로벌 분산</p>
+
+  <!-- Row 6 -->
+  <div style="position: absolute; left: 64px; top: 450px; width: 832px; height: 50px; background: rgba(30, 30, 56, 0.3); border-radius: 0 0 8px 8px;"></div>
+  <p style="position: absolute; left: 84px; top: 450px; width: 150px; height: 50px; font-size: 14px; font-weight: 500; color: #ffffff; line-height: 50px;">SPDR Gold Shares</p>
+  <p style="position: absolute; left: 250px; top: 450px; width: 100px; height: 50px; font-size: 14px; font-weight: 700; color: #fbbf24; line-height: 50px;">GLD</p>
+  <p style="position: absolute; left: 370px; top: 450px; width: 180px; height: 50px; font-size: 13px; color: #a0a0c0; line-height: 50px;">금 현물</p>
+  <p style="position: absolute; left: 560px; top: 450px; width: 100px; height: 50px; font-size: 13px; color: #fbbf24; line-height: 50px;">0.40%</p>
+  <p style="position: absolute; left: 680px; top: 450px; width: 200px; height: 50px; font-size: 12px; color: #a0a0c0; line-height: 50px;">인플레 헤지, 안전자산</p>
+</body>
+</html>

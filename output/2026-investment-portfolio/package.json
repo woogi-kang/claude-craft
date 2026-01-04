@@ -1,0 +1,14 @@
+{
+  "name": "claude-code-seminar",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "node build-pptx.js"
+  },
+  "dependencies": {
+    "pdf-lib": "^1.17.1",
+    "playwright": "^1.40.0",
+    "pptxgenjs": "^3.12.0",
+    "sharp": "^0.33.0"
+  }
+}

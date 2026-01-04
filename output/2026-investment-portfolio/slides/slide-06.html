@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 960px;
+      height: 540px;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      background: #0c0c14;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div style="position: absolute; left: 64px; top: 48px; width: 120px; height: 28px; background: #06ffa5; border-radius: 4px;"></div>
+  <p style="position: absolute; left: 64px; top: 48px; width: 120px; height: 28px; font-size: 11px; font-weight: 600; color: #0c0c14; text-align: center; line-height: 28px;">ALLOCATION</p>
+  <p style="position: absolute; left: 850px; top: 52px; width: 50px; height: 20px; font-size: 13px; color: #6060a0; text-align: right;">06</p>
+
+  <!-- Title -->
+  <h2 style="position: absolute; left: 64px; top: 100px; width: 600px; height: 45px; font-size: 32px; font-weight: 700; color: #ffffff;">추천 자산배분 모델</h2>
+  <p style="position: absolute; left: 64px; top: 145px; width: 600px; height: 24px; font-size: 14px; color: #a0a0c0;">J.P. Morgan 60/40+ 모델 기반</p>
+
+  <!-- Asset Allocation Chart (Visual representation) -->
+  <!-- Main Box -->
+  <div style="position: absolute; left: 64px; top: 190px; width: 400px; height: 300px; background: rgba(30, 30, 56, 0.6); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 16px;"></div>
+
+  <!-- Stocks Section -->
+  <div style="position: absolute; left: 84px; top: 210px; width: 360px; height: 50px; background: #8b5cf6; border-radius: 8px;"></div>
+  <p style="position: absolute; left: 100px; top: 210px; width: 200px; height: 50px; font-size: 16px; font-weight: 600; color: #ffffff; line-height: 50px;">주식 (ACWI)</p>
+  <p style="position: absolute; left: 380px; top: 210px; width: 50px; height: 50px; font-size: 20px; font-weight: 700; color: #ffffff; line-height: 50px;">40%</p>
+
+  <!-- Bonds Section -->
+  <div style="position: absolute; left: 84px; top: 270px; width: 270px; height: 50px; background: #06ffa5; border-radius: 8px;"></div>
+  <p style="position: absolute; left: 100px; top: 270px; width: 150px; height: 50px; font-size: 16px; font-weight: 600; color: #0c0c14; line-height: 50px;">채권 (US Agg)</p>
+  <p style="position: absolute; left: 290px; top: 270px; width: 50px; height: 50px; font-size: 20px; font-weight: 700; color: #0c0c14; line-height: 50px;">30%</p>
+
+  <!-- Alternatives Section -->
+  <div style="position: absolute; left: 84px; top: 330px; width: 270px; height: 50px; background: #00d4ff; border-radius: 8px;"></div>
+  <p style="position: absolute; left: 100px; top: 330px; width: 150px; height: 50px; font-size: 16px; font-weight: 600; color: #0c0c14; line-height: 50px;">대체투자</p>
+  <p style="position: absolute; left: 290px; top: 330px; width: 50px; height: 50px; font-size: 20px; font-weight: 700; color: #0c0c14; line-height: 50px;">30%</p>
+
+  <!-- Expected Return -->
+  <div style="position: absolute; left: 84px; top: 400px; width: 360px; height: 70px; background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.5); border-radius: 8px;"></div>
+  <p style="position: absolute; left: 100px; top: 415px; width: 150px; height: 24px; font-size: 13px; color: #fbbf24;">기대 수익률</p>
+  <p style="position: absolute; left: 100px; top: 438px; width: 150px; height: 30px; font-size: 24px; font-weight: 700; color: #fbbf24;">6.9% / 년</p>
+  <p style="position: absolute; left: 280px; top: 428px; width: 150px; height: 24px; font-size: 12px; color: #a0a0c0; line-height: 1.4;">Sharpe Ratio<br>25% 개선</p>
+
+  <!-- Alternatives Breakdown -->
+  <p style="position: absolute; left: 500px; top: 190px; width: 400px; height: 28px; font-size: 18px; font-weight: 600; color: #ffffff;">대체투자 구성 (30%)</p>
+
+  <div style="position: absolute; left: 500px; top: 230px; width: 400px; height: 45px; background: rgba(30, 30, 56, 0.6); border-left: 3px solid #8b5cf6; padding-left: 12px;"></div>
+  <p style="position: absolute; left: 516px; top: 235px; width: 200px; height: 20px; font-size: 14px; font-weight: 500; color: #ffffff;">Private Equity</p>
+  <p style="position: absolute; left: 516px; top: 253px; width: 200px; height: 18px; font-size: 12px; color: #6060a0;">7.5%</p>
+
+  <div style="position: absolute; left: 500px; top: 285px; width: 400px; height: 45px; background: rgba(30, 30, 56, 0.6); border-left: 3px solid #06ffa5; padding-left: 12px;"></div>
+  <p style="position: absolute; left: 516px; top: 290px; width: 200px; height: 20px; font-size: 14px; font-weight: 500; color: #ffffff;">부동산 (REITs)</p>
+  <p style="position: absolute; left: 516px; top: 308px; width: 200px; height: 18px; font-size: 12px; color: #6060a0;">7.5%</p>
+
+  <div style="position: absolute; left: 500px; top: 340px; width: 400px; height: 45px; background: rgba(30, 30, 56, 0.6); border-left: 3px solid #00d4ff; padding-left: 12px;"></div>
+  <p style="position: absolute; left: 516px; top: 345px; width: 200px; height: 20px; font-size: 14px; font-weight: 500; color: #ffffff;">실물자산 (Gold, 원자재)</p>
+  <p style="position: absolute; left: 516px; top: 363px; width: 200px; height: 18px; font-size: 12px; color: #6060a0;">7.5%</p>
+
+  <div style="position: absolute; left: 500px; top: 395px; width: 400px; height: 45px; background: rgba(30, 30, 56, 0.6); border-left: 3px solid #fbbf24; padding-left: 12px;"></div>
+  <p style="position: absolute; left: 516px; top: 400px; width: 200px; height: 20px; font-size: 14px; font-weight: 500; color: #ffffff;">Private Credit</p>
+  <p style="position: absolute; left: 516px; top: 418px; width: 200px; height: 18px; font-size: 12px; color: #6060a0;">4.5%</p>
+
+  <div style="position: absolute; left: 500px; top: 450px; width: 400px; height: 45px; background: rgba(30, 30, 56, 0.6); border-left: 3px solid #f472b6; padding-left: 12px;"></div>
+  <p style="position: absolute; left: 516px; top: 455px; width: 200px; height: 20px; font-size: 14px; font-weight: 500; color: #ffffff;">헤지펀드</p>
+  <p style="position: absolute; left: 516px; top: 473px; width: 200px; height: 18px; font-size: 12px; color: #6060a0;">3.0%</p>
+</body>
+</html>
