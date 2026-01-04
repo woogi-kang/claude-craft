@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 960px;
+      height: 540px;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      background: #ffffff;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header Badge -->
+  <div style="position: absolute; left: 64px; top: 53px; width: 36px; height: 26px; background: #1a1a1a; border-radius: 5px;"></div>
+  <p style="position: absolute; left: 64px; top: 53px; width: 36px; height: 26px; font-size: 12px; font-weight: 600; color: #ffffff; text-align: center; line-height: 26px;">03</p>
+
+  <!-- Header Title -->
+  <h2 style="position: absolute; left: 122px; top: 53px; width: 400px; height: 32px; font-size: 32px; font-weight: 600; color: #1a1a1a;">Custom Hooks System</h2>
+
+  <!-- Page Number -->
+  <p style="position: absolute; left: 880px; top: 59px; width: 30px; height: 16px; font-size: 13px; color: #999999; text-align: right;">09</p>
+
+  <!-- Left Content -->
+  <h3 style="position: absolute; left: 64px; top: 133px; width: 400px; height: 28px; font-size: 24px; font-weight: 600; color: #1a1a1a;">Automate Your Workflow</h3>
+  <p style="position: absolute; left: 64px; top: 173px; width: 400px; height: 50px; font-size: 17px; color: #666666; line-height: 1.6;">Hooks let you run custom scripts before or after Claude actions.</p>
+
+  <!-- Hook Type Cards Row 1 -->
+  <div style="position: absolute; left: 64px; top: 240px; width: 187px; height: 67px; background: #f5f5f0; border-radius: 10px;"></div>
+  <p style="position: absolute; left: 80px; top: 253px; width: 155px; height: 20px; font-size: 14px; font-weight: 600; color: #1a1a1a;">PreToolUse</p>
+  <p style="position: absolute; left: 80px; top: 277px; width: 155px; height: 20px; font-size: 13px; color: #666666;">Before tool execution</p>
+
+  <div style="position: absolute; left: 267px; top: 240px; width: 187px; height: 67px; background: #f5f5f0; border-radius: 10px;"></div>
+  <p style="position: absolute; left: 283px; top: 253px; width: 155px; height: 20px; font-size: 14px; font-weight: 600; color: #1a1a1a;">PostToolUse</p>
+  <p style="position: absolute; left: 283px; top: 277px; width: 155px; height: 20px; font-size: 13px; color: #666666;">After tool execution</p>
+
+  <!-- Hook Type Cards Row 2 -->
+  <div style="position: absolute; left: 64px; top: 323px; width: 187px; height: 67px; background: #f5f5f0; border-radius: 10px;"></div>
+  <p style="position: absolute; left: 80px; top: 336px; width: 155px; height: 20px; font-size: 14px; font-weight: 600; color: #1a1a1a;">Notification</p>
+  <p style="position: absolute; left: 80px; top: 360px; width: 155px; height: 20px; font-size: 13px; color: #666666;">Alert on events</p>
+
+  <div style="position: absolute; left: 267px; top: 323px; width: 187px; height: 67px; background: #f5f5f0; border-radius: 10px;"></div>
+  <p style="position: absolute; left: 283px; top: 336px; width: 155px; height: 20px; font-size: 14px; font-weight: 600; color: #1a1a1a;">Stop</p>
+  <p style="position: absolute; left: 283px; top: 360px; width: 155px; height: 20px; font-size: 13px; color: #666666;">Session end hook</p>
+
+  <!-- Right Code Box -->
+  <div style="position: absolute; left: 506px; top: 133px; width: 390px; height: 267px; background: #f5f5f0; border-radius: 16px;"></div>
+  <p style="position: absolute; left: 538px; top: 160px; width: 326px; height: 16px; font-size: 13px; color: #888888; letter-spacing: 0.05em;">CONFIGURATION</p>
+
+  <div style="position: absolute; left: 538px; top: 197px; width: 326px; height: 176px; background: #ffffff; border-radius: 10px;"></div>
+  <p style="position: absolute; left: 558px; top: 210px; width: 286px; height: 20px; font-size: 13px; color: #888888; font-family: monospace;">// settings.json</p>
+  <p style="position: absolute; left: 558px; top: 234px; width: 286px; height: 20px; font-size: 13px; color: #1a1a1a; font-family: monospace;">{</p>
+  <p style="position: absolute; left: 574px; top: 256px; width: 270px; height: 20px; font-size: 13px; color: #1a1a1a; font-family: monospace;">"hooks": {</p>
+  <p style="position: absolute; left: 590px; top: 278px; width: 254px; height: 20px; font-size: 13px; color: #1a1a1a; font-family: monospace;">"PreToolUse": [{</p>
+  <p style="position: absolute; left: 606px; top: 300px; width: 238px; height: 20px; font-size: 13px; color: #1a1a1a; font-family: monospace;">"matcher": "Edit",</p>
+  <p style="position: absolute; left: 606px; top: 322px; width: 238px; height: 20px; font-size: 13px; color: #1a1a1a; font-family: monospace;">"command": "./lint"</p>
+  <p style="position: absolute; left: 590px; top: 344px; width: 254px; height: 20px; font-size: 13px; color: #1a1a1a; font-family: monospace;">}]}}</p>
+
+  <!-- Footer -->
+  <div style="position: absolute; left: 64px; top: 483px; width: 832px; height: 1px; background: #eeeeee;"></div>
+  <p style="position: absolute; left: 64px; top: 499px; width: 200px; height: 16px; font-size: 12px; color: #999999;">claude.ai/code</p>
+  <p style="position: absolute; left: 796px; top: 499px; width: 100px; height: 16px; font-size: 12px; color: #999999; text-align: right;">Anthropic</p>
+</body>
+</html>
