@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 960px;
+      height: 540px;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      background: #f5f5f0;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <h2 style="position: absolute; left: 64px; top: 50px; width: 600px; height: 45px; font-size: 32px; font-weight: 600; color: #1a1a1a;">권한 설정</h2>
+  <p style="position: absolute; left: 64px; top: 95px; width: 500px; height: 24px; font-size: 16px; color: #666666;">안전하게 사용하기</p>
+  <p style="position: absolute; left: 880px; top: 58px; width: 30px; height: 16px; font-size: 13px; color: #999999; text-align: right;">18</p>
+
+  <!-- Permission Modes -->
+  <p style="position: absolute; left: 64px; top: 140px; width: 300px; height: 24px; font-size: 16px; font-weight: 600; color: #1a1a1a;">권한 모드</p>
+
+  <div style="position: absolute; left: 64px; top: 175px; width: 270px; height: 75px; background: #ffffff; border: 1px solid #e5e5e0; border-radius: 10px;"></div>
+  <p style="position: absolute; left: 84px; top: 188px; width: 200px; height: 22px; font-size: 14px; font-family: 'JetBrains Mono', monospace; color: #667eea;">default</p>
+  <p style="position: absolute; left: 84px; top: 214px; width: 220px; height: 20px; font-size: 13px; color: #666666;">모든 권한 확인</p>
+
+  <div style="position: absolute; left: 350px; top: 175px; width: 270px; height: 75px; background: #ffffff; border: 1px solid #e5e5e0; border-radius: 10px;"></div>
+  <p style="position: absolute; left: 370px; top: 188px; width: 200px; height: 22px; font-size: 14px; font-family: 'JetBrains Mono', monospace; color: #667eea;">acceptEdits</p>
+  <p style="position: absolute; left: 370px; top: 214px; width: 220px; height: 20px; font-size: 13px; color: #666666;">파일 편집만 자동 승인</p>
+
+  <div style="position: absolute; left: 636px; top: 175px; width: 270px; height: 75px; background: #ffffff; border: 1px solid #e5e5e0; border-radius: 10px;"></div>
+  <p style="position: absolute; left: 656px; top: 188px; width: 200px; height: 22px; font-size: 14px; font-family: 'JetBrains Mono', monospace; color: #667eea;">plan</p>
+  <p style="position: absolute; left: 656px; top: 214px; width: 220px; height: 20px; font-size: 13px; color: #666666;">미리보기 모드 (실행 안 함)</p>
+
+  <!-- Settings Code -->
+  <p style="position: absolute; left: 64px; top: 275px; width: 300px; height: 24px; font-size: 16px; font-weight: 600; color: #1a1a1a;">설정 예시</p>
+
+  <div style="position: absolute; left: 64px; top: 310px; width: 832px; height: 150px; background: #1a1a1a; border-radius: 12px;"></div>
+  <p style="position: absolute; left: 84px; top: 325px; width: 780px; height: 20px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #888888;">// settings.json</p>
+  <p style="position: absolute; left: 84px; top: 350px; width: 780px; height: 20px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #ffffff;">{</p>
+  <p style="position: absolute; left: 100px; top: 372px; width: 780px; height: 20px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #ffffff;">"permissions": {</p>
+  <p style="position: absolute; left: 116px; top: 394px; width: 780px; height: 20px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #22c55e;">"allow": ["Bash(npm:*)", "Bash(git:*)"],</p>
+  <p style="position: absolute; left: 116px; top: 416px; width: 780px; height: 20px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #ef4444;">"deny": ["Bash(rm:*)", "Read(.env)"]</p>
+  <p style="position: absolute; left: 84px; top: 438px; width: 780px; height: 20px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #ffffff;">}}</p>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 960px;
+      height: 540px;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      background: #f5f5f0;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <h2 style="position: absolute; left: 64px; top: 50px; width: 700px; height: 45px; font-size: 32px; font-weight: 600; color: #1a1a1a;">커스텀 슬래시 커맨드</h2>
+  <p style="position: absolute; left: 64px; top: 95px; width: 500px; height: 24px; font-size: 16px; color: #666666;">팀 전용 명령어 만들기</p>
+  <p style="position: absolute; left: 880px; top: 58px; width: 30px; height: 16px; font-size: 13px; color: #999999; text-align: right;">37</p>
+
+  <div style="position: absolute; left: 64px; top: 140px; width: 350px; height: 130px; background: #1a1a1a; border-radius: 12px;"></div>
+  <p style="position: absolute; left: 84px; top: 155px; width: 200px; height: 20px; font-size: 12px; font-weight: 500; color: #667eea;">폴더 구조</p>
+  <p style="position: absolute; left: 84px; top: 185px; width: 300px; height: 22px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #ffffff;">.claude/commands/</p>
+  <p style="position: absolute; left: 84px; top: 210px; width: 300px; height: 22px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #22c55e;">├── deploy.md         # /deploy</p>
+  <p style="position: absolute; left: 84px; top: 232px; width: 300px; height: 22px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #888888;">├── security-check.md</p>
+  <p style="position: absolute; left: 84px; top: 254px; width: 300px; height: 22px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #888888;">└── feature.md</p>
+
+  <div style="position: absolute; left: 446px; top: 140px; width: 450px; height: 200px; background: #1a1a1a; border-radius: 12px;"></div>
+  <p style="position: absolute; left: 466px; top: 155px; width: 200px; height: 20px; font-size: 12px; font-weight: 500; color: #667eea;">deploy.md</p>
+  <p style="position: absolute; left: 466px; top: 185px; width: 400px; height: 22px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #888888;">---</p>
+  <p style="position: absolute; left: 466px; top: 207px; width: 400px; height: 22px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #ffffff;">description: 스테이징 배포</p>
+  <p style="position: absolute; left: 466px; top: 229px; width: 420px; height: 22px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #22c55e;">allowed-tools: Bash(npm:*), Bash(git:*)</p>
+  <p style="position: absolute; left: 466px; top: 251px; width: 400px; height: 22px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #888888;">---</p>
+  <p style="position: absolute; left: 466px; top: 283px; width: 400px; height: 22px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #ffffff;">npm run build &&</p>
+  <p style="position: absolute; left: 466px; top: 305px; width: 400px; height: 22px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #ffffff;">npm run test &&</p>
+  <p style="position: absolute; left: 466px; top: 327px; width: 400px; height: 22px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #ffffff;">npm run deploy:staging</p>
+
+  <div style="position: absolute; left: 64px; top: 370px; width: 832px; height: 90px; background: #667eea; border-radius: 12px;"></div>
+  <p style="position: absolute; left: 100px; top: 395px; width: 760px; height: 40px; font-size: 18px; color: #ffffff; text-align: center; line-height: 40px;">/deploy 입력 → 빌드, 테스트, 배포 자동 실행</p>
+</body>
+</html>

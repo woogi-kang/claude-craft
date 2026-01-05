@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 960px;
+      height: 540px;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      background: #f5f5f0;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <h2 style="position: absolute; left: 64px; top: 50px; width: 700px; height: 45px; font-size: 32px; font-weight: 600; color: #1a1a1a;">기능 비교 테이블</h2>
+  <p style="position: absolute; left: 64px; top: 95px; width: 500px; height: 24px; font-size: 16px; color: #666666;">Claude Code vs GitHub Copilot vs Cursor</p>
+  <p style="position: absolute; left: 880px; top: 58px; width: 30px; height: 16px; font-size: 13px; color: #999999; text-align: right;">07</p>
+
+  <!-- Table -->
+  <div style="position: absolute; left: 64px; top: 140px; width: 160px; height: 40px; background: #1a1a1a; border-radius: 8px 0 0 0;"></div>
+  <p style="position: absolute; left: 84px; top: 140px; width: 120px; height: 40px; font-size: 13px; font-weight: 600; color: #ffffff; line-height: 40px;">기능</p>
+  <div style="position: absolute; left: 224px; top: 140px; width: 244px; height: 40px; background: #667eea;"></div>
+  <p style="position: absolute; left: 224px; top: 140px; width: 244px; height: 40px; font-size: 13px; font-weight: 600; color: #ffffff; text-align: center; line-height: 40px;">Claude Code</p>
+  <div style="position: absolute; left: 468px; top: 140px; width: 214px; height: 40px; background: #1a1a1a;"></div>
+  <p style="position: absolute; left: 468px; top: 140px; width: 214px; height: 40px; font-size: 13px; font-weight: 600; color: #ffffff; text-align: center; line-height: 40px;">Copilot</p>
+  <div style="position: absolute; left: 682px; top: 140px; width: 214px; height: 40px; background: #1a1a1a; border-radius: 0 8px 0 0;"></div>
+  <p style="position: absolute; left: 682px; top: 140px; width: 214px; height: 40px; font-size: 13px; font-weight: 600; color: #ffffff; text-align: center; line-height: 40px;">Cursor</p>
+
+  <!-- Row 1 -->
+  <div style="position: absolute; left: 64px; top: 180px; width: 160px; height: 42px; background: #ffffff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 84px; top: 180px; width: 120px; height: 42px; font-size: 13px; font-weight: 500; color: #1a1a1a; line-height: 42px;">자동완성</p>
+  <div style="position: absolute; left: 224px; top: 180px; width: 244px; height: 42px; background: #f0f0ff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 224px; top: 180px; width: 244px; height: 42px; font-size: 13px; color: #999999; text-align: center; line-height: 42px;">-</p>
+  <div style="position: absolute; left: 468px; top: 180px; width: 214px; height: 42px; background: #ffffff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 468px; top: 180px; width: 214px; height: 42px; font-size: 13px; color: #22c55e; text-align: center; line-height: 42px;">✓</p>
+  <div style="position: absolute; left: 682px; top: 180px; width: 214px; height: 42px; background: #ffffff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 682px; top: 180px; width: 214px; height: 42px; font-size: 13px; color: #22c55e; text-align: center; line-height: 42px;">✓</p>
+
+  <!-- Row 2 -->
+  <div style="position: absolute; left: 64px; top: 222px; width: 160px; height: 42px; background: #ffffff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 84px; top: 222px; width: 120px; height: 42px; font-size: 13px; font-weight: 500; color: #1a1a1a; line-height: 42px;">다중 파일 수정</p>
+  <div style="position: absolute; left: 224px; top: 222px; width: 244px; height: 42px; background: #f0f0ff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 224px; top: 222px; width: 244px; height: 42px; font-size: 13px; color: #667eea; font-weight: 600; text-align: center; line-height: 42px;">✓✓✓</p>
+  <div style="position: absolute; left: 468px; top: 222px; width: 214px; height: 42px; background: #ffffff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 468px; top: 222px; width: 214px; height: 42px; font-size: 13px; color: #f59e0b; text-align: center; line-height: 42px;">△</p>
+  <div style="position: absolute; left: 682px; top: 222px; width: 214px; height: 42px; background: #ffffff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 682px; top: 222px; width: 214px; height: 42px; font-size: 13px; color: #22c55e; text-align: center; line-height: 42px;">✓✓</p>
+
+  <!-- Row 3 -->
+  <div style="position: absolute; left: 64px; top: 264px; width: 160px; height: 42px; background: #ffffff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 84px; top: 264px; width: 120px; height: 42px; font-size: 13px; font-weight: 500; color: #1a1a1a; line-height: 42px;">터미널 통합</p>
+  <div style="position: absolute; left: 224px; top: 264px; width: 244px; height: 42px; background: #f0f0ff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 224px; top: 264px; width: 244px; height: 42px; font-size: 13px; color: #667eea; font-weight: 600; text-align: center; line-height: 42px;">✓✓✓</p>
+  <div style="position: absolute; left: 468px; top: 264px; width: 214px; height: 42px; background: #ffffff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 468px; top: 264px; width: 214px; height: 42px; font-size: 13px; color: #999999; text-align: center; line-height: 42px;">-</p>
+  <div style="position: absolute; left: 682px; top: 264px; width: 214px; height: 42px; background: #ffffff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 682px; top: 264px; width: 214px; height: 42px; font-size: 13px; color: #f59e0b; text-align: center; line-height: 42px;">△</p>
+
+  <!-- Row 4 -->
+  <div style="position: absolute; left: 64px; top: 306px; width: 160px; height: 42px; background: #ffffff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 84px; top: 306px; width: 120px; height: 42px; font-size: 13px; font-weight: 500; color: #1a1a1a; line-height: 42px;">에이전트</p>
+  <div style="position: absolute; left: 224px; top: 306px; width: 244px; height: 42px; background: #f0f0ff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 224px; top: 306px; width: 244px; height: 42px; font-size: 13px; color: #667eea; font-weight: 600; text-align: center; line-height: 42px;">✓✓✓</p>
+  <div style="position: absolute; left: 468px; top: 306px; width: 214px; height: 42px; background: #ffffff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 468px; top: 306px; width: 214px; height: 42px; font-size: 13px; color: #f59e0b; text-align: center; line-height: 42px;">△</p>
+  <div style="position: absolute; left: 682px; top: 306px; width: 214px; height: 42px; background: #ffffff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 682px; top: 306px; width: 214px; height: 42px; font-size: 13px; color: #22c55e; text-align: center; line-height: 42px;">✓</p>
+
+  <!-- Row 5 -->
+  <div style="position: absolute; left: 64px; top: 348px; width: 160px; height: 42px; background: #ffffff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 84px; top: 348px; width: 120px; height: 42px; font-size: 13px; font-weight: 500; color: #1a1a1a; line-height: 42px;">MCP 에코시스템</p>
+  <div style="position: absolute; left: 224px; top: 348px; width: 244px; height: 42px; background: #f0f0ff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 224px; top: 348px; width: 244px; height: 42px; font-size: 13px; color: #667eea; font-weight: 600; text-align: center; line-height: 42px;">✓✓✓</p>
+  <div style="position: absolute; left: 468px; top: 348px; width: 214px; height: 42px; background: #ffffff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 468px; top: 348px; width: 214px; height: 42px; font-size: 13px; color: #999999; text-align: center; line-height: 42px;">-</p>
+  <div style="position: absolute; left: 682px; top: 348px; width: 214px; height: 42px; background: #ffffff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 682px; top: 348px; width: 214px; height: 42px; font-size: 13px; color: #999999; text-align: center; line-height: 42px;">-</p>
+
+  <!-- Row 6 -->
+  <div style="position: absolute; left: 64px; top: 390px; width: 160px; height: 42px; background: #ffffff; border-radius: 0 0 0 8px;"></div>
+  <p style="position: absolute; left: 84px; top: 390px; width: 120px; height: 42px; font-size: 13px; font-weight: 500; color: #1a1a1a; line-height: 42px;">무료 티어</p>
+  <div style="position: absolute; left: 224px; top: 390px; width: 244px; height: 42px; background: #f0f0ff;"></div>
+  <p style="position: absolute; left: 224px; top: 390px; width: 244px; height: 42px; font-size: 13px; color: #22c55e; text-align: center; line-height: 42px;">✓</p>
+  <div style="position: absolute; left: 468px; top: 390px; width: 214px; height: 42px; background: #ffffff;"></div>
+  <p style="position: absolute; left: 468px; top: 390px; width: 214px; height: 42px; font-size: 13px; color: #22c55e; text-align: center; line-height: 42px;">✓</p>
+  <div style="position: absolute; left: 682px; top: 390px; width: 214px; height: 42px; background: #ffffff; border-radius: 0 0 8px 0;"></div>
+  <p style="position: absolute; left: 682px; top: 390px; width: 214px; height: 42px; font-size: 13px; color: #22c55e; text-align: center; line-height: 42px;">✓</p>
+
+  <!-- Footer -->
+  <p style="position: absolute; left: 64px; top: 460px; width: 832px; height: 30px; font-size: 14px; color: #999999; text-align: center;">MCP 에코시스템이 Claude Code만의 핵심 차별점</p>
+</body>
+</html>
