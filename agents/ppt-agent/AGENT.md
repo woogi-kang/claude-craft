@@ -13,7 +13,8 @@ skills:
   - ppt-visual
   - ppt-review
   - ppt-refinement
-  - ppt-export
+  - export-pptx
+  - export-pdf
 ---
 
 # PPT Agent
@@ -23,7 +24,7 @@ skills:
 
 ## 개요
 
-PPT Agent는 9개의 전문 Skills를 통합하여 고품질 프레젠테이션을 제작합니다.
+PPT Agent는 10개의 전문 Skills를 통합하여 고품질 프레젠테이션을 제작합니다.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -39,8 +40,9 @@ PPT Agent는 9개의 전문 Skills를 통합하여 고품질 프레젠테이션�
 │                                                 │               │
 │                                                 ▼               │
 │   ┌─────────┐   ┌─────────┐   ┌─────────┐   ┌─────────┐        │
-│   │ Export  │ ← │Refinement│ ← │ Review  │ ← │ Visual  │        │
-│   └─────────┘   └─────────┘   └─────────┘   └─────────┘        │
+│   │Export   │ ← │Refinement│ ← │ Review  │ ← │ Visual  │        │
+│   │PPTX/PDF │   └─────────┘   └─────────┘   └─────────┘        │
+│   └─────────┘                                                   │
 │        │                            ▲           │               │
 │        │                            │           │               │
 │        │                            └───────────┘               │
@@ -65,7 +67,8 @@ PPT Agent는 9개의 전문 Skills를 통합하여 고품질 프레젠테이션�
 | 6 | **ppt-visual** | 시각 자료 생성 | "차트", "다이어그램", "인포그래픽" |
 | 7 | **ppt-review** | 검토 & QA | "검토", "품질 체크", "리뷰" |
 | 8 | **ppt-refinement** | 피드백 반영 & 개선 | "피드백 반영", "수정", "대안" |
-| 9 | **ppt-export** | 최종 출력 & 배포 | "PPT 만들어", "PDF 변환", "출력" |
+| 9 | **export-pptx** | PPTX 출력 | "PPT 만들어", "PPTX 생성", "파워포인트" |
+| 10 | **export-pdf** | PDF 출력 | "PDF 만들어", "PDF 변환", "PDF 출력" |
 
 ## 전체 워크플로우
 
@@ -131,11 +134,15 @@ PPT Agent는 9개의 전문 Skills를 통합하여 고품질 프레젠테이션�
 ### Phase 5: Export (최종 출력)
 
 ```
-9. Export Skill
-   └─ PPTX 생성, PDF 변환, 클라우드 업로드
+9. Export-PPTX Skill
+   └─ HTML → PPTX 변환, 검증, 출력
          │
          ▼
-   최종 산출물 완성
+10. Export-PDF Skill
+   └─ Playwright 렌더링 → PDF 병합
+         │
+         ▼
+   최종 산출물 완성 (PPTX + PDF)
 ```
 
 ## 사용 시나리오
@@ -154,7 +161,8 @@ Agent 실행 흐름:
 6. [Visual] 시장 규모 차트, 로드맵 다이어그램 생성
 7. [Review] 전체 품질 검토
 8. [Refinement] 이슈 수정
-9. [Export] PPTX + PDF 출력
+9. [Export-PPTX] PPTX 출력
+10. [Export-PDF] PDF 출력
 ```
 
 ### 시나리오 2: 기존 PPT 개선
@@ -277,7 +285,8 @@ automation_level:
 ├── 콘텐츠 일관성 (Content Skill)
 ├── 디자인 일관성 (Design System Skill)
 ├── 접근성 (Review Skill)
-└── 출력 품질 (Export Skill)
+├── PPTX 출력 품질 (Export-PPTX Skill)
+└── PDF 출력 품질 (Export-PDF Skill)
 ```
 
 ### 품질 목표
@@ -294,9 +303,16 @@ automation_level:
 
 ### 기본 산출물
 
-1. **PPTX 파일** - 편집 가능한 프레젠테이션
-2. **PDF (발표용)** - 16:9 고품질
-3. **PDF (핸드아웃)** - 노트 포함
+1. **PPTX 파일** - 편집 가능한 프레젠테이션 (export-pptx)
+2. **PDF 파일** - 16:9 고품질 발표용 (export-pdf)
+
+### 빌드 명령어
+
+```bash
+npm run build        # PPTX만
+npm run build:pdf    # PDF만
+npm run build:all    # PPTX + PDF 동시 생성
+```
 
 ### 부가 산출물
 

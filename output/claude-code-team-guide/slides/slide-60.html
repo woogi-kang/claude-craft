@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 960px;
+      height: 540px;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      background-image: url('../design-system/backgrounds/white.png');
+      background-size: cover;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <p style="position: absolute; left: 64px; top: 40px; width: 300px; height: 24px; font-size: 13px; font-weight: 600; color: #667eea; letter-spacing: 1px;">BEST PRACTICES</p>
+  <h1 style="position: absolute; left: 64px; top: 70px; width: 600px; height: 50px; font-size: 36px; font-weight: 700; color: #0f0f23;">Context 관리</h1>
+  <p style="position: absolute; left: 64px; top: 125px; width: 500px; height: 28px; font-size: 18px; color: #667eea; font-weight: 500;">200K 토큰 활용법</p>
+
+  <!-- Code Block -->
+  <div style="position: absolute; left: 64px; top: 175px; width: 400px; height: 130px; background: #0f0f23; border-radius: 12px;"></div>
+  <p style="position: absolute; left: 80px; top: 195px; width: 370px; height: 18px; font-size: 14px; font-family: 'JetBrains Mono', monospace; color: #98c379;">/context          </p>
+  <p style="position: absolute; left: 230px; top: 195px; width: 200px; height: 18px; font-size: 12px; color: #888;"># 사용량 확인</p>
+  <p style="position: absolute; left: 80px; top: 230px; width: 370px; height: 18px; font-size: 14px; font-family: 'JetBrains Mono', monospace; color: #98c379;">/compact          </p>
+  <p style="position: absolute; left: 230px; top: 230px; width: 200px; height: 18px; font-size: 12px; color: #888;"># 컨텍스트 압축</p>
+  <p style="position: absolute; left: 80px; top: 265px; width: 370px; height: 18px; font-size: 14px; font-family: 'JetBrains Mono', monospace; color: #98c379;">/clear            </p>
+  <p style="position: absolute; left: 230px; top: 265px; width: 200px; height: 18px; font-size: 12px; color: #888;"># 컨텍스트 초기화</p>
+
+  <!-- Management Strategy -->
+  <p style="position: absolute; left: 64px; top: 320px; width: 400px; height: 24px; font-size: 16px; font-weight: 600; color: #0f0f23;">관리 전략</p>
+  <p style="position: absolute; left: 64px; top: 355px; width: 400px; height: 24px; font-size: 14px; color: #333;"><span style="color: #667eea; font-weight: 600;">1.</span> 정기적으로 /compact</p>
+  <p style="position: absolute; left: 64px; top: 385px; width: 400px; height: 24px; font-size: 14px; color: #333;"><span style="color: #667eea; font-weight: 600;">2.</span> 완료된 작업 후 /clear</p>
+  <p style="position: absolute; left: 64px; top: 415px; width: 400px; height: 24px; font-size: 14px; color: #333;"><span style="color: #667eea; font-weight: 600;">3.</span> 중요 정보는 CLAUDE.md에 저장</p>
+  <p style="position: absolute; left: 64px; top: 445px; width: 400px; height: 24px; font-size: 14px; color: #333;"><span style="color: #667eea; font-weight: 600;">4.</span> 대규모 작업은 Subagent 활용</p>
+
+  <!-- Right Side Gauge -->
+  <div style="position: absolute; right: 64px; top: 175px; width: 380px; height: 305px; background: #f8f9fa; border-radius: 12px;"></div>
+  <p style="position: absolute; right: 84px; top: 195px; width: 340px; height: 24px; font-size: 16px; font-weight: 600; color: #0f0f23;">📊 컨텍스트 사용량 예시</p>
+
+  <!-- Gauge bars -->
+  <p style="position: absolute; right: 84px; top: 240px; width: 100px; height: 18px; font-size: 13px; color: #666;">0-50%</p>
+  <div style="position: absolute; right: 84px; top: 265px; width: 340px; height: 20px; background: #e9ecef; border-radius: 4px;"></div>
+  <div style="position: absolute; right: 84px; top: 265px; width: 170px; height: 20px; background: #98c379; border-radius: 4px;"></div>
+  <p style="position: absolute; right: 270px; top: 267px; width: 100px; height: 16px; font-size: 11px; color: #fff;">자유롭게 사용</p>
+
+  <p style="position: absolute; right: 84px; top: 300px; width: 100px; height: 18px; font-size: 13px; color: #666;">50-80%</p>
+  <div style="position: absolute; right: 84px; top: 325px; width: 340px; height: 20px; background: #e9ecef; border-radius: 4px;"></div>
+  <div style="position: absolute; right: 84px; top: 325px; width: 272px; height: 20px; background: #e5c07b; border-radius: 4px;"></div>
+  <p style="position: absolute; right: 220px; top: 327px; width: 100px; height: 16px; font-size: 11px; color: #fff;">/compact 고려</p>
+
+  <p style="position: absolute; right: 84px; top: 360px; width: 100px; height: 18px; font-size: 13px; color: #666;">80%+</p>
+  <div style="position: absolute; right: 84px; top: 385px; width: 340px; height: 20px; background: #e9ecef; border-radius: 4px;"></div>
+  <div style="position: absolute; right: 84px; top: 385px; width: 320px; height: 20px; background: #e06c75; border-radius: 4px;"></div>
+  <p style="position: absolute; right: 160px; top: 387px; width: 120px; height: 16px; font-size: 11px; color: #fff;">/clear 또는 새 세션</p>
+
+  <p style="position: absolute; right: 84px; top: 425px; width: 340px; height: 40px; font-size: 12px; color: #666; line-height: 1.5;">💡 Subagent는 별도 컨텍스트를 사용하므로 대용량 작업에 효과적입니다.</p>
+
+  <p style="position: absolute; left: 880px; top: 500px; width: 30px; height: 16px; font-size: 13px; color: rgba(102,126,234,0.6); text-align: right;">60</p>
+</body>
+</html>

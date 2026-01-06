@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 960px;
+      height: 540px;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      background-image: url('../design-system/backgrounds/white.png');
+      background-size: cover;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <p style="position: absolute; left: 64px; top: 40px; width: 300px; height: 24px; font-size: 13px; font-weight: 600; color: #667eea; letter-spacing: 1px;">BEST PRACTICES</p>
+  <h1 style="position: absolute; left: 64px; top: 70px; width: 600px; height: 50px; font-size: 36px; font-weight: 700; color: #0f0f23;">TDD 워크플로우</h1>
+  <p style="position: absolute; left: 64px; top: 125px; width: 500px; height: 28px; font-size: 18px; color: #667eea; font-weight: 500;">권장 워크플로우 #2</p>
+
+  <!-- TDD Cycle -->
+  <div style="position: absolute; left: 64px; top: 170px; width: 400px; height: 300px; background: #f8f9fa; border-radius: 12px;"></div>
+
+  <!-- Step 1: Red -->
+  <div style="position: absolute; left: 100px; top: 200px; width: 150px; height: 55px; background: #e06c75; border-radius: 8px;"></div>
+  <p style="position: absolute; left: 115px; top: 210px; width: 120px; height: 18px; font-size: 12px; color: rgba(255,255,255,0.8);">1. 테스트 작성</p>
+  <p style="position: absolute; left: 115px; top: 230px; width: 120px; height: 18px; font-size: 14px; font-weight: 600; color: #ffffff;">🔴 Red</p>
+
+  <p style="position: absolute; left: 260px; top: 218px; width: 30px; height: 20px; font-size: 18px; color: #e06c75;">→</p>
+
+  <!-- Step 2: Red still -->
+  <div style="position: absolute; left: 290px; top: 200px; width: 150px; height: 55px; background: #e06c75; border-radius: 8px;"></div>
+  <p style="position: absolute; left: 305px; top: 210px; width: 120px; height: 18px; font-size: 12px; color: rgba(255,255,255,0.8);">2. 실패 확인</p>
+  <p style="position: absolute; left: 305px; top: 230px; width: 120px; height: 18px; font-size: 14px; font-weight: 600; color: #ffffff;">🔴 Red</p>
+
+  <p style="position: absolute; left: 360px; top: 265px; width: 30px; height: 20px; font-size: 18px; color: #98c379;">↓</p>
+
+  <!-- Step 3: Green -->
+  <div style="position: absolute; left: 290px; top: 290px; width: 150px; height: 55px; background: #98c379; border-radius: 8px;"></div>
+  <p style="position: absolute; left: 305px; top: 300px; width: 120px; height: 18px; font-size: 12px; color: rgba(255,255,255,0.9);">3. 구현</p>
+  <p style="position: absolute; left: 305px; top: 320px; width: 120px; height: 18px; font-size: 14px; font-weight: 600; color: #ffffff;">🟢 Green</p>
+
+  <p style="position: absolute; left: 260px; top: 308px; width: 30px; height: 20px; font-size: 18px; color: #98c379;">←</p>
+
+  <!-- Step 4: Refactor -->
+  <div style="position: absolute; left: 100px; top: 290px; width: 150px; height: 55px; background: #61afef; border-radius: 8px;"></div>
+  <p style="position: absolute; left: 115px; top: 300px; width: 120px; height: 18px; font-size: 12px; color: rgba(255,255,255,0.9);">4. 리팩토링</p>
+  <p style="position: absolute; left: 115px; top: 320px; width: 120px; height: 18px; font-size: 14px; font-weight: 600; color: #ffffff;">🔵 Refactor</p>
+
+  <!-- Arrow back to start -->
+  <p style="position: absolute; left: 160px; top: 355px; width: 80px; height: 20px; font-size: 12px; color: #888; text-align: center;">반복 ↑</p>
+
+  <!-- Code Examples -->
+  <div style="position: absolute; right: 64px; top: 170px; width: 400px; height: 300px; background: #0f0f23; border-radius: 12px;"></div>
+  <p style="position: absolute; right: 84px; top: 190px; width: 360px; height: 18px; font-size: 12px; color: #888;">1. 테스트 작성</p>
+  <p style="position: absolute; right: 84px; top: 213px; width: 360px; height: 18px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #98c379;">> "이 기능의 테스트 먼저 작성해줘"</p>
+
+  <p style="position: absolute; right: 84px; top: 248px; width: 360px; height: 18px; font-size: 12px; color: #888;">2. 실패 확인</p>
+  <p style="position: absolute; right: 84px; top: 271px; width: 360px; height: 18px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #98c379;">> "테스트 실행해봐"</p>
+
+  <p style="position: absolute; right: 84px; top: 306px; width: 360px; height: 18px; font-size: 12px; color: #888;">3. 구현</p>
+  <p style="position: absolute; right: 84px; top: 329px; width: 360px; height: 18px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #98c379;">> "테스트 통과하도록 구현해줘"</p>
+
+  <p style="position: absolute; right: 84px; top: 364px; width: 360px; height: 18px; font-size: 12px; color: #888;">4. 리팩토링</p>
+  <p style="position: absolute; right: 84px; top: 387px; width: 360px; height: 18px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #98c379;">> "코드 정리하고 테스트 다시 확인해줘"</p>
+
+  <p style="position: absolute; right: 84px; top: 430px; width: 360px; height: 30px; font-size: 12px; color: #61afef; line-height: 1.5;">Claude가 테스트 주도로 안전하게 코드를 작성합니다</p>
+
+  <p style="position: absolute; left: 880px; top: 500px; width: 30px; height: 16px; font-size: 13px; color: rgba(102,126,234,0.6); text-align: right;">57</p>
+</body>
+</html>

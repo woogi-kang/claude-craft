@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 960px;
+      height: 540px;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      background-image: url('../design-system/backgrounds/white.png');
+      background-size: cover;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <p style="position: absolute; left: 64px; top: 40px; width: 300px; height: 24px; font-size: 13px; font-weight: 600; color: #667eea; letter-spacing: 1px;">AGENT & SUBAGENT</p>
+  <h1 style="position: absolute; left: 64px; top: 70px; width: 600px; height: 50px; font-size: 36px; font-weight: 700; color: #0f0f23;">Task Tool 활용</h1>
+  <p style="position: absolute; left: 64px; top: 125px; width: 500px; height: 28px; font-size: 18px; color: #667eea; font-weight: 500;">병렬 작업 실행</p>
+
+  <!-- Code Example -->
+  <div style="position: absolute; left: 64px; top: 170px; width: 500px; height: 180px; background: #0f0f23; border-radius: 12px;"></div>
+  <p style="position: absolute; left: 80px; top: 185px; width: 470px; height: 20px; font-size: 14px; font-family: 'JetBrains Mono', monospace; color: #98c379;">> "3개 파일을 병렬로 분석해줘"</p>
+  <p style="position: absolute; left: 80px; top: 220px; width: 470px; height: 20px; font-size: 14px; font-family: 'JetBrains Mono', monospace; color: #888;">Claude:</p>
+  <p style="position: absolute; left: 80px; top: 245px; width: 470px; height: 20px; font-size: 14px; font-family: 'JetBrains Mono', monospace; color: #61afef;">  Task tool로 3개 Subagent 생성</p>
+  <p style="position: absolute; left: 80px; top: 270px; width: 470px; height: 20px; font-size: 14px; font-family: 'JetBrains Mono', monospace; color: #61afef;">  → 각각 독립 컨텍스트에서 실행</p>
+  <p style="position: absolute; left: 80px; top: 295px; width: 470px; height: 20px; font-size: 14px; font-family: 'JetBrains Mono', monospace; color: #61afef;">  → 결과 종합하여 반환</p>
+
+  <!-- Benefits -->
+  <p style="position: absolute; left: 64px; top: 370px; width: 200px; height: 24px; font-size: 16px; font-weight: 600; color: #0f0f23;">장점</p>
+
+  <div style="position: absolute; left: 64px; top: 400px; width: 160px; height: 80px; background: #f8f9fa; border-radius: 8px;"></div>
+  <p style="position: absolute; left: 80px; top: 415px; width: 130px; height: 24px; font-size: 28px; font-weight: 700; color: #667eea;">62%</p>
+  <p style="position: absolute; left: 80px; top: 445px; width: 130px; height: 20px; font-size: 13px; color: #666;">시간 단축</p>
+
+  <div style="position: absolute; left: 244px; top: 400px; width: 160px; height: 80px; background: #f8f9fa; border-radius: 8px;"></div>
+  <p style="position: absolute; left: 260px; top: 415px; width: 130px; height: 24px; font-size: 28px; font-weight: 700; color: #764ba2;">100%</p>
+  <p style="position: absolute; left: 260px; top: 445px; width: 130px; height: 20px; font-size: 13px; color: #666;">컨텍스트 보존</p>
+
+  <div style="position: absolute; left: 424px; top: 400px; width: 160px; height: 80px; background: #f8f9fa; border-radius: 8px;"></div>
+  <p style="position: absolute; left: 440px; top: 410px; width: 130px; height: 30px; font-size: 22px; font-weight: 700; color: #f093fb;">독립적</p>
+  <p style="position: absolute; left: 440px; top: 445px; width: 130px; height: 20px; font-size: 13px; color: #666;">작업 수행</p>
+
+  <!-- Right Side Diagram -->
+  <div style="position: absolute; right: 64px; top: 170px; width: 300px; height: 310px; background: #f8f9fa; border-radius: 12px;"></div>
+  <p style="position: absolute; right: 84px; top: 185px; width: 260px; height: 24px; font-size: 14px; font-weight: 600; color: #0f0f23; text-align: center;">병렬 실행 다이어그램</p>
+
+  <!-- Main Task -->
+  <div style="position: absolute; right: 144px; top: 220px; width: 140px; height: 40px; background: #667eea; border-radius: 8px;"></div>
+  <p style="position: absolute; right: 154px; top: 230px; width: 120px; height: 20px; font-size: 13px; font-weight: 500; color: #ffffff; text-align: center;">Task Tool</p>
+
+  <!-- Arrows -->
+  <p style="position: absolute; right: 104px; top: 265px; width: 30px; height: 20px; font-size: 14px; color: #667eea;">↓</p>
+  <p style="position: absolute; right: 204px; top: 265px; width: 30px; height: 20px; font-size: 14px; color: #667eea;">↓</p>
+  <p style="position: absolute; right: 304px; top: 265px; width: 30px; height: 20px; font-size: 14px; color: #667eea;">↓</p>
+
+  <!-- Subagents -->
+  <div style="position: absolute; right: 84px; top: 290px; width: 80px; height: 50px; background: #764ba2; border-radius: 6px;"></div>
+  <p style="position: absolute; right: 89px; top: 305px; width: 70px; height: 20px; font-size: 11px; font-weight: 500; color: #ffffff; text-align: center;">Agent 1</p>
+
+  <div style="position: absolute; right: 174px; top: 290px; width: 80px; height: 50px; background: #764ba2; border-radius: 6px;"></div>
+  <p style="position: absolute; right: 179px; top: 305px; width: 70px; height: 20px; font-size: 11px; font-weight: 500; color: #ffffff; text-align: center;">Agent 2</p>
+
+  <div style="position: absolute; right: 264px; top: 290px; width: 80px; height: 50px; background: #764ba2; border-radius: 6px;"></div>
+  <p style="position: absolute; right: 269px; top: 305px; width: 70px; height: 20px; font-size: 11px; font-weight: 500; color: #ffffff; text-align: center;">Agent 3</p>
+
+  <!-- Results -->
+  <p style="position: absolute; right: 104px; top: 345px; width: 30px; height: 20px; font-size: 14px; color: #764ba2;">↓</p>
+  <p style="position: absolute; right: 204px; top: 345px; width: 30px; height: 20px; font-size: 14px; color: #764ba2;">↓</p>
+  <p style="position: absolute; right: 304px; top: 345px; width: 30px; height: 20px; font-size: 14px; color: #764ba2;">↓</p>
+
+  <div style="position: absolute; right: 84px; top: 370px; width: 80px; height: 35px; background: #98c379; border-radius: 4px;"></div>
+  <p style="position: absolute; right: 89px; top: 378px; width: 70px; height: 18px; font-size: 10px; font-weight: 500; color: #ffffff; text-align: center;">결과 1</p>
+
+  <div style="position: absolute; right: 174px; top: 370px; width: 80px; height: 35px; background: #98c379; border-radius: 4px;"></div>
+  <p style="position: absolute; right: 179px; top: 378px; width: 70px; height: 18px; font-size: 10px; font-weight: 500; color: #ffffff; text-align: center;">결과 2</p>
+
+  <div style="position: absolute; right: 264px; top: 370px; width: 80px; height: 35px; background: #98c379; border-radius: 4px;"></div>
+  <p style="position: absolute; right: 269px; top: 378px; width: 70px; height: 18px; font-size: 10px; font-weight: 500; color: #ffffff; text-align: center;">결과 3</p>
+
+  <!-- Final merge -->
+  <p style="position: absolute; right: 204px; top: 410px; width: 30px; height: 20px; font-size: 14px; color: #98c379; text-align: center;">↓</p>
+
+  <div style="position: absolute; right: 144px; top: 430px; width: 140px; height: 35px; background: #667eea; border-radius: 6px;"></div>
+  <p style="position: absolute; right: 154px; top: 438px; width: 120px; height: 18px; font-size: 12px; font-weight: 500; color: #ffffff; text-align: center;">결과 종합</p>
+
+  <p style="position: absolute; left: 880px; top: 500px; width: 30px; height: 16px; font-size: 13px; color: rgba(102,126,234,0.6); text-align: right;">44</p>
+</body>
+</html>

@@ -24,7 +24,7 @@ This installs:
 
 Agents are multi-skill orchestrators that combine multiple skills into coherent workflows:
 
-- **ppt-agent**: 9-skill pipeline for presentation creation (Research → Validation → Structure → Content → Design System → Visual → Review → Refinement → Export)
+- **ppt-agent**: 10-skill pipeline for presentation creation (Research → Validation → Structure → Content → Design System → Visual → Review → Refinement → Export-PPTX → Export-PDF)
 - **tech-blog-agent**: 4-skill pipeline for Hashnode blog posts (Research → Draft → Review → Publish)
 - **social-media-agent**: Multi-platform content creation agent
 
@@ -60,7 +60,10 @@ Generated presentations go to `output/<project-name>/`:
 - `slides/` - HTML slide files
 - `design-system/` - Project-specific design tokens
 - `*.pptx` - Generated PowerPoint files
-- `generate_ppt.py` or `build-pptx.js` - Generation scripts
+- `*.pdf` - Generated PDF files
+- `build-pptx.js` - PPTX generation script
+- `build-pdf.js` - PDF generation script
+- `build-all.js` - Combined PPTX + PDF generation
 
 ## PPT Generation
 
@@ -69,7 +72,15 @@ For PPT output projects using pptxgenjs:
 ```bash
 cd output/<project-name>
 npm install
+
+# PPTX only
 npm run build
+
+# PDF only
+npm run build:pdf
+
+# Both PPTX + PDF
+npm run build:all
 ```
 
 ## Key Files
