@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 960px;
+      height: 540px;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      background-image: url('../design-system/backgrounds/white.png');
+      background-size: cover;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <p style="position: absolute; left: 64px; top: 40px; width: 300px; height: 24px; font-size: 13px; font-weight: 600; color: #667eea; letter-spacing: 1px;">BEST PRACTICES</p>
+  <h1 style="position: absolute; left: 64px; top: 70px; width: 600px; height: 50px; font-size: 36px; font-weight: 700; color: #0f0f23;">헤드리스 모드</h1>
+  <p style="position: absolute; left: 64px; top: 125px; width: 500px; height: 28px; font-size: 18px; color: #667eea; font-weight: 500;">CI/CD 통합</p>
+
+  <!-- Code Examples -->
+  <div style="position: absolute; left: 64px; top: 175px; width: 500px; height: 145px; background: #0f0f23; border-radius: 12px;"></div>
+  <p style="position: absolute; left: 80px; top: 190px; width: 470px; height: 18px; font-size: 12px; color: #888;"># 자동화 스크립트</p>
+  <p style="position: absolute; left: 80px; top: 215px; width: 470px; height: 18px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #98c379;">claude -p "lint 오류 수정해줘" \</p>
+  <p style="position: absolute; left: 80px; top: 240px; width: 470px; height: 18px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #98c379;">  --output-format stream-json</p>
+
+  <p style="position: absolute; left: 80px; top: 275px; width: 470px; height: 18px; font-size: 12px; color: #888;"># Pre-commit hook</p>
+  <p style="position: absolute; left: 80px; top: 300px; width: 470px; height: 18px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #98c379;">claude -p "변경사항 검토해줘"</p>
+
+  <!-- Options -->
+  <div style="position: absolute; left: 64px; top: 335px; width: 500px; height: 150px; background: #f8f9fa; border-radius: 12px;"></div>
+  <p style="position: absolute; left: 84px; top: 355px; width: 460px; height: 24px; font-size: 15px; font-weight: 600; color: #0f0f23;">주요 옵션</p>
+  <p style="position: absolute; left: 84px; top: 390px; width: 460px; height: 20px; font-size: 13px; color: #333;"><span style="color: #667eea; font-family: 'JetBrains Mono', monospace;">-p</span> 프롬프트 직접 전달</p>
+  <p style="position: absolute; left: 84px; top: 415px; width: 460px; height: 20px; font-size: 13px; color: #333;"><span style="color: #667eea; font-family: 'JetBrains Mono', monospace;">--output-format</span> 출력 형식 (json, stream-json)</p>
+  <p style="position: absolute; left: 84px; top: 440px; width: 460px; height: 20px; font-size: 13px; color: #333;"><span style="color: #667eea; font-family: 'JetBrains Mono', monospace;">--max-turns</span> 최대 대화 턴 수</p>
+  <p style="position: absolute; left: 84px; top: 465px; width: 460px; height: 20px; font-size: 13px; color: #333;"><span style="color: #667eea; font-family: 'JetBrains Mono', monospace;">--allowedTools</span> 허용 도구 제한</p>
+
+  <!-- Right Side Use Cases -->
+  <div style="position: absolute; right: 64px; top: 175px; width: 300px; height: 310px; background: #667eea; border-radius: 12px;"></div>
+  <p style="position: absolute; right: 84px; top: 195px; width: 260px; height: 24px; font-size: 16px; font-weight: 600; color: #ffffff;">🚀 활용 사례</p>
+
+  <p style="position: absolute; right: 84px; top: 240px; width: 260px; height: 20px; font-size: 14px; font-weight: 500; color: #ffffff;">CI/CD 파이프라인</p>
+  <p style="position: absolute; right: 84px; top: 265px; width: 260px; height: 35px; font-size: 12px; color: rgba(255,255,255,0.8); line-height: 1.5;">PR 머지 전 자동 코드 리뷰</p>
+
+  <p style="position: absolute; right: 84px; top: 310px; width: 260px; height: 20px; font-size: 14px; font-weight: 500; color: #ffffff;">Pre-commit Hook</p>
+  <p style="position: absolute; right: 84px; top: 335px; width: 260px; height: 35px; font-size: 12px; color: rgba(255,255,255,0.8); line-height: 1.5;">커밋 전 코드 검증</p>
+
+  <p style="position: absolute; right: 84px; top: 380px; width: 260px; height: 20px; font-size: 14px; font-weight: 500; color: #ffffff;">정기 작업</p>
+  <p style="position: absolute; right: 84px; top: 405px; width: 260px; height: 35px; font-size: 12px; color: rgba(255,255,255,0.8); line-height: 1.5;">의존성 업데이트, 문서 생성</p>
+
+  <p style="position: absolute; right: 84px; top: 455px; width: 260px; height: 20px; font-size: 14px; font-weight: 500; color: #ffffff;">스크립트 자동화</p>
+
+  <p style="position: absolute; left: 880px; top: 500px; width: 30px; height: 16px; font-size: 13px; color: rgba(102,126,234,0.6); text-align: right;">62</p>
+</body>
+</html>

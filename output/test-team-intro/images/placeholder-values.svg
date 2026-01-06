@@ -1,0 +1,30 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100%" height="100%" fill="#f0f4f8"/>
+  <rect x="50" y="50" width="700" height="500" rx="20" fill="#ffffff" stroke="#cad2d8" stroke-width="2"/>
+
+  <!-- Value icons (abstract shapes) -->
+  <rect x="150" y="150" width="100" height="100" rx="15" fill="#1b4965" opacity="0.25"/>
+  <rect x="350" y="150" width="100" height="100" rx="15" fill="#5fa8d3" opacity="0.35"/>
+  <rect x="550" y="150" width="100" height="100" rx="15" fill="#1b4965" opacity="0.25"/>
+
+  <!-- Connecting arrows -->
+  <path d="M260 200 L340 200" stroke="#415a77" stroke-width="2" fill="none" opacity="0.3"/>
+  <path d="M460 200 L540 200" stroke="#415a77" stroke-width="2" fill="none" opacity="0.3"/>
+
+  <!-- Growth chart abstract -->
+  <rect x="200" y="320" width="400" height="120" rx="10" fill="#f8fafc" stroke="#cad2d8"/>
+  <path d="M230 410 L300 370 L370 390 L440 340 L510 350 L570 310" stroke="#5fa8d3" stroke-width="3" fill="none"/>
+  <circle cx="300" cy="370" r="5" fill="#1b4965"/>
+  <circle cx="370" cy="390" r="5" fill="#1b4965"/>
+  <circle cx="440" cy="340" r="5" fill="#1b4965"/>
+  <circle cx="510" cy="350" r="5" fill="#1b4965"/>
+  <circle cx="570" cy="310" r="5" fill="#1b4965"/>
+
+  <!-- Placeholder text -->
+  <text x="400" y="490" font-family="Arial, sans-serif" font-size="18" fill="#415a77" text-anchor="middle">
+    [AI Generated Image Placeholder]
+  </text>
+  <text x="400" y="520" font-family="Arial, sans-serif" font-size="14" fill="#415a77" text-anchor="middle" opacity="0.7">
+    Concept: Core Values / Growth
+  </text>
+</svg>

@@ -1,9 +1,9 @@
 ---
-name: ppt-export
+name: export-pptx
 description: |
   HTML 슬라이드를 고품질 PPTX로 변환하는 Export Skill.
-  HTML → PPTX 변환, PDF 출력, 썸네일 생성, 검증 시스템 제공.
-  "PPT 만들어줘", "PPTX 생성", "PDF 변환" 요청 시 활성화.
+  HTML → PPTX 변환, 썸네일 생성, 검증 시스템 제공.
+  "PPT 만들어줘", "PPTX 생성", "파워포인트 변환" 요청 시 활성화.
 ---
 
 # PPT Export Skill

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 960px;
+      height: 540px;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      background: #f5f5f0;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <h2 style="position: absolute; left: 64px; top: 50px; width: 600px; height: 45px; font-size: 32px; font-weight: 600; color: #1a1a1a;">경로별 규칙</h2>
+  <p style="position: absolute; left: 64px; top: 95px; width: 500px; height: 24px; font-size: 16px; color: #666666;">.claude/rules/ 디렉토리</p>
+  <p style="position: absolute; left: 880px; top: 58px; width: 30px; height: 16px; font-size: 13px; color: #999999; text-align: right;">27</p>
+
+  <!-- Directory Structure -->
+  <div style="position: absolute; left: 64px; top: 140px; width: 400px; height: 140px; background: #1a1a1a; border-radius: 12px;"></div>
+  <p style="position: absolute; left: 84px; top: 155px; width: 200px; height: 20px; font-size: 12px; font-weight: 500; color: #667eea;">폴더 구조</p>
+  <p style="position: absolute; left: 84px; top: 185px; width: 360px; height: 22px; font-size: 14px; font-family: 'JetBrains Mono', monospace; color: #ffffff;">.claude/rules/</p>
+  <p style="position: absolute; left: 84px; top: 210px; width: 360px; height: 22px; font-size: 14px; font-family: 'JetBrains Mono', monospace; color: #888888;">├── general.md      # 전체 적용</p>
+  <p style="position: absolute; left: 84px; top: 232px; width: 360px; height: 22px; font-size: 14px; font-family: 'JetBrains Mono', monospace; color: #888888;">├── typescript.md   # *.ts, *.tsx에만</p>
+  <p style="position: absolute; left: 84px; top: 254px; width: 360px; height: 22px; font-size: 14px; font-family: 'JetBrains Mono', monospace; color: #888888;">└── api.md          # src/api/**에만</p>
+
+  <!-- Rule Example -->
+  <div style="position: absolute; left: 496px; top: 140px; width: 400px; height: 190px; background: #1a1a1a; border-radius: 12px;"></div>
+  <p style="position: absolute; left: 516px; top: 155px; width: 200px; height: 20px; font-size: 12px; font-weight: 500; color: #667eea;">typescript.md</p>
+  <p style="position: absolute; left: 516px; top: 185px; width: 360px; height: 22px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #888888;">---</p>
+  <p style="position: absolute; left: 516px; top: 207px; width: 360px; height: 22px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #22c55e;">paths: src/**/*.{ts,tsx}</p>
+  <p style="position: absolute; left: 516px; top: 229px; width: 360px; height: 22px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #888888;">---</p>
+  <p style="position: absolute; left: 516px; top: 261px; width: 360px; height: 22px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #ffffff;">  any 타입 금지</p>
+  <p style="position: absolute; left: 516px; top: 283px; width: 360px; height: 22px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #ffffff;">  모든 함수에 반환 타입 명시</p>
+
+  <!-- Benefits -->
+  <div style="position: absolute; left: 64px; top: 355px; width: 400px; height: 80px; background: #ffffff; border: 1px solid #e5e5e0; border-radius: 12px;"></div>
+  <p style="position: absolute; left: 84px; top: 375px; width: 360px; height: 24px; font-size: 15px; font-weight: 600; color: #1a1a1a;">파일별 맞춤 규칙</p>
+  <p style="position: absolute; left: 84px; top: 402px; width: 360px; height: 20px; font-size: 13px; color: #666666;">특정 파일에만 적용되는 규칙 설정</p>
+
+  <div style="position: absolute; left: 496px; top: 355px; width: 400px; height: 80px; background: #667eea; border-radius: 12px;"></div>
+  <p style="position: absolute; left: 516px; top: 375px; width: 360px; height: 24px; font-size: 15px; font-weight: 600; color: #ffffff;">팀 표준 강제</p>
+  <p style="position: absolute; left: 516px; top: 402px; width: 360px; height: 20px; font-size: 13px; color: rgba(255,255,255,0.9);">YAML frontmatter로 경로 패턴 지정</p>
+
+  <p style="position: absolute; left: 64px; top: 460px; width: 832px; height: 24px; font-size: 14px; color: #999999; text-align: center;">프론트엔드, 백엔드, API 등 영역별 다른 규칙 적용 가능</p>
+</body>
+</html>

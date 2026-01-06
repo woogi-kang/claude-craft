@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 960px;
+      height: 540px;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      background: #f5f5f0;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <h2 style="position: absolute; left: 64px; top: 50px; width: 600px; height: 45px; font-size: 32px; font-weight: 600; color: #1a1a1a;">두 가지 철학</h2>
+  <p style="position: absolute; left: 64px; top: 95px; width: 500px; height: 24px; font-size: 16px; color: #666666;">IDE-First vs Agent-First</p>
+  <p style="position: absolute; left: 880px; top: 58px; width: 30px; height: 16px; font-size: 13px; color: #999999; text-align: right;">06</p>
+
+  <!-- Table Header -->
+  <div style="position: absolute; left: 64px; top: 140px; width: 200px; height: 40px; background: #e5e5e0; border-radius: 8px 0 0 0;"></div>
+  <div style="position: absolute; left: 264px; top: 140px; width: 316px; height: 40px; background: #e5e5e0;"></div>
+  <p style="position: absolute; left: 264px; top: 140px; width: 316px; height: 40px; font-size: 14px; font-weight: 600; color: #1a1a1a; text-align: center; line-height: 40px;">IDE-First (Copilot, Cursor)</p>
+  <div style="position: absolute; left: 580px; top: 140px; width: 316px; height: 40px; background: #667eea; border-radius: 0 8px 0 0;"></div>
+  <p style="position: absolute; left: 580px; top: 140px; width: 316px; height: 40px; font-size: 14px; font-weight: 600; color: #ffffff; text-align: center; line-height: 40px;">Agent-First (Claude Code)</p>
+
+  <!-- Row 1 -->
+  <div style="position: absolute; left: 64px; top: 180px; width: 200px; height: 55px; background: #ffffff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 84px; top: 180px; width: 160px; height: 55px; font-size: 14px; font-weight: 600; color: #1a1a1a; line-height: 55px;">접근법</p>
+  <div style="position: absolute; left: 264px; top: 180px; width: 316px; height: 55px; background: #ffffff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 284px; top: 180px; width: 276px; height: 55px; font-size: 14px; color: #666666; line-height: 55px;">라인별 자동완성</p>
+  <div style="position: absolute; left: 580px; top: 180px; width: 316px; height: 55px; background: #f0f0ff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 600px; top: 180px; width: 276px; height: 55px; font-size: 14px; font-weight: 500; color: #667eea; line-height: 55px;">전체 작업 수행</p>
+
+  <!-- Row 2 -->
+  <div style="position: absolute; left: 64px; top: 235px; width: 200px; height: 55px; background: #ffffff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 84px; top: 235px; width: 160px; height: 55px; font-size: 14px; font-weight: 600; color: #1a1a1a; line-height: 55px;">컨텍스트</p>
+  <div style="position: absolute; left: 264px; top: 235px; width: 316px; height: 55px; background: #ffffff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 284px; top: 235px; width: 276px; height: 55px; font-size: 14px; color: #666666; line-height: 55px;">현재 파일 중심</p>
+  <div style="position: absolute; left: 580px; top: 235px; width: 316px; height: 55px; background: #f0f0ff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 600px; top: 235px; width: 276px; height: 55px; font-size: 14px; font-weight: 500; color: #667eea; line-height: 55px;">전체 코드베이스</p>
+
+  <!-- Row 3 -->
+  <div style="position: absolute; left: 64px; top: 290px; width: 200px; height: 55px; background: #ffffff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 84px; top: 290px; width: 160px; height: 55px; font-size: 14px; font-weight: 600; color: #1a1a1a; line-height: 55px;">역할</p>
+  <div style="position: absolute; left: 264px; top: 290px; width: 316px; height: 55px; background: #ffffff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 284px; top: 290px; width: 276px; height: 55px; font-size: 14px; color: #666666; line-height: 55px;">코드 제안</p>
+  <div style="position: absolute; left: 580px; top: 290px; width: 316px; height: 55px; background: #f0f0ff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 600px; top: 290px; width: 276px; height: 55px; font-size: 14px; font-weight: 500; color: #667eea; line-height: 55px;">작업 완료</p>
+
+  <!-- Row 4 -->
+  <div style="position: absolute; left: 64px; top: 345px; width: 200px; height: 55px; background: #ffffff; border-radius: 0 0 0 8px;"></div>
+  <p style="position: absolute; left: 84px; top: 345px; width: 160px; height: 55px; font-size: 14px; font-weight: 600; color: #1a1a1a; line-height: 55px;">예시</p>
+  <div style="position: absolute; left: 264px; top: 345px; width: 316px; height: 55px; background: #ffffff;"></div>
+  <p style="position: absolute; left: 284px; top: 345px; width: 276px; height: 55px; font-size: 14px; color: #666666; line-height: 55px;">"이 줄 다음에 뭐?"</p>
+  <div style="position: absolute; left: 580px; top: 345px; width: 316px; height: 55px; background: #f0f0ff; border-radius: 0 0 8px 0;"></div>
+  <p style="position: absolute; left: 600px; top: 345px; width: 276px; height: 55px; font-size: 14px; font-weight: 500; color: #667eea; line-height: 55px;">"이 기능 전체 구현해줘"</p>
+
+  <!-- Footer -->
+  <p style="position: absolute; left: 64px; top: 440px; width: 832px; height: 40px; font-size: 14px; color: #999999; text-align: center;">패러다임의 차이: 보조 도구 vs 동료 개발자</p>
+</body>
+</html>

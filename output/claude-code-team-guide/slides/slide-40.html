@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 960px;
+      height: 540px;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      background: #f5f5f0;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <h2 style="position: absolute; left: 64px; top: 50px; width: 700px; height: 45px; font-size: 32px; font-weight: 600; color: #1a1a1a;">Skills 공유 워크플로우</h2>
+  <p style="position: absolute; left: 64px; top: 95px; width: 500px; height: 24px; font-size: 16px; color: #666666;">팀 Skill 관리 프로세스</p>
+  <p style="position: absolute; left: 880px; top: 58px; width: 30px; height: 16px; font-size: 13px; color: #999999; text-align: right;">40</p>
+
+  <!-- Steps -->
+  <div style="position: absolute; left: 64px; top: 145px; width: 140px; height: 80px; background: #667eea; border-radius: 12px;"></div>
+  <p style="position: absolute; left: 64px; top: 155px; width: 140px; height: 24px; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7); text-align: center;">STEP 1</p>
+  <p style="position: absolute; left: 64px; top: 182px; width: 140px; height: 26px; font-size: 16px; font-weight: 600; color: #ffffff; text-align: center;">작성</p>
+  <p style="position: absolute; left: 64px; top: 208px; width: 140px; height: 16px; font-size: 11px; color: rgba(255,255,255,0.8); text-align: center;">SKILL.md 작성</p>
+
+  <p style="position: absolute; left: 214px; top: 175px; width: 25px; height: 25px; font-size: 20px; color: #667eea; text-align: center;">→</p>
+
+  <div style="position: absolute; left: 249px; top: 145px; width: 140px; height: 80px; background: #ffffff; border: 2px solid #667eea; border-radius: 12px;"></div>
+  <p style="position: absolute; left: 249px; top: 155px; width: 140px; height: 24px; font-size: 13px; font-weight: 500; color: #667eea; text-align: center;">STEP 2</p>
+  <p style="position: absolute; left: 249px; top: 182px; width: 140px; height: 26px; font-size: 16px; font-weight: 600; color: #1a1a1a; text-align: center;">테스트</p>
+  <p style="position: absolute; left: 249px; top: 208px; width: 140px; height: 16px; font-size: 11px; color: #666666; text-align: center;">로컬에서 동작 확인</p>
+
+  <p style="position: absolute; left: 399px; top: 175px; width: 25px; height: 25px; font-size: 20px; color: #667eea; text-align: center;">→</p>
+
+  <div style="position: absolute; left: 434px; top: 145px; width: 140px; height: 80px; background: #ffffff; border: 2px solid #667eea; border-radius: 12px;"></div>
+  <p style="position: absolute; left: 434px; top: 155px; width: 140px; height: 24px; font-size: 13px; font-weight: 500; color: #667eea; text-align: center;">STEP 3</p>
+  <p style="position: absolute; left: 434px; top: 182px; width: 140px; height: 26px; font-size: 16px; font-weight: 600; color: #1a1a1a; text-align: center;">커밋</p>
+  <p style="position: absolute; left: 434px; top: 208px; width: 140px; height: 16px; font-size: 11px; color: #666666; text-align: center;">Git에 커밋</p>
+
+  <p style="position: absolute; left: 584px; top: 175px; width: 25px; height: 25px; font-size: 20px; color: #667eea; text-align: center;">→</p>
+
+  <div style="position: absolute; left: 619px; top: 145px; width: 140px; height: 80px; background: #ffffff; border: 2px solid #667eea; border-radius: 12px;"></div>
+  <p style="position: absolute; left: 619px; top: 155px; width: 140px; height: 24px; font-size: 13px; font-weight: 500; color: #667eea; text-align: center;">STEP 4</p>
+  <p style="position: absolute; left: 619px; top: 182px; width: 140px; height: 26px; font-size: 16px; font-weight: 600; color: #1a1a1a; text-align: center;">공유</p>
+  <p style="position: absolute; left: 619px; top: 208px; width: 140px; height: 16px; font-size: 11px; color: #666666; text-align: center;">팀원 pull</p>
+
+  <p style="position: absolute; left: 769px; top: 175px; width: 25px; height: 25px; font-size: 20px; color: #667eea; text-align: center;">→</p>
+
+  <div style="position: absolute; left: 804px; top: 145px; width: 90px; height: 80px; background: #1a1a1a; border-radius: 12px;"></div>
+  <p style="position: absolute; left: 804px; top: 172px; width: 90px; height: 26px; font-size: 14px; font-weight: 600; color: #ffffff; text-align: center;">개선</p>
+
+  <!-- Feedback Loop -->
+  <div style="position: absolute; left: 64px; top: 260px; width: 832px; height: 100px; background: #ffffff; border: 1px solid #e5e5e0; border-radius: 16px;"></div>
+  <p style="position: absolute; left: 100px; top: 285px; width: 760px; height: 50px; font-size: 18px; color: #1a1a1a; text-align: center; line-height: 50px;">피드백 반영 → 개선 → 재커밋 → 반복</p>
+
+  <div style="position: absolute; left: 64px; top: 385px; width: 832px; height: 80px; background: #667eea; border-radius: 16px;"></div>
+  <p style="position: absolute; left: 100px; top: 408px; width: 760px; height: 34px; font-size: 18px; font-weight: 500; color: #ffffff; text-align: center; line-height: 34px;">Skills = 팀의 집단 지성을 코드로 축적</p>
+</body>
+</html>

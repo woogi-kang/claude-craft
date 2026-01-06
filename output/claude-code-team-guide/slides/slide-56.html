@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 960px;
+      height: 540px;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      background-image: url('../design-system/backgrounds/white.png');
+      background-size: cover;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <p style="position: absolute; left: 64px; top: 40px; width: 300px; height: 24px; font-size: 13px; font-weight: 600; color: #667eea; letter-spacing: 1px;">BEST PRACTICES</p>
+  <h1 style="position: absolute; left: 64px; top: 70px; width: 600px; height: 50px; font-size: 36px; font-weight: 700; color: #0f0f23;">탐색-계획-코딩-커밋</h1>
+  <p style="position: absolute; left: 64px; top: 125px; width: 500px; height: 28px; font-size: 18px; color: #667eea; font-weight: 500;">권장 워크플로우 #1</p>
+
+  <!-- Flow Diagram -->
+  <div style="position: absolute; left: 64px; top: 170px; width: 830px; height: 130px; background: #f8f9fa; border-radius: 12px;"></div>
+
+  <!-- Step 1 -->
+  <div style="position: absolute; left: 100px; top: 195px; width: 160px; height: 80px; background: #667eea; border-radius: 10px;"></div>
+  <p style="position: absolute; left: 115px; top: 210px; width: 130px; height: 24px; font-size: 20px; font-weight: 700; color: #ffffff;">1. 탐색</p>
+  <p style="position: absolute; left: 115px; top: 240px; width: 130px; height: 18px; font-size: 12px; color: rgba(255,255,255,0.8);">코드 분석</p>
+
+  <p style="position: absolute; left: 270px; top: 225px; width: 30px; height: 20px; font-size: 20px; color: #667eea;">→</p>
+
+  <!-- Step 2 -->
+  <div style="position: absolute; left: 310px; top: 195px; width: 160px; height: 80px; background: #764ba2; border-radius: 10px;"></div>
+  <p style="position: absolute; left: 325px; top: 210px; width: 130px; height: 24px; font-size: 20px; font-weight: 700; color: #ffffff;">2. 계획</p>
+  <p style="position: absolute; left: 325px; top: 240px; width: 130px; height: 18px; font-size: 12px; color: rgba(255,255,255,0.8);">think hard</p>
+
+  <p style="position: absolute; left: 480px; top: 225px; width: 30px; height: 20px; font-size: 20px; color: #764ba2;">→</p>
+
+  <!-- Step 3 -->
+  <div style="position: absolute; left: 520px; top: 195px; width: 160px; height: 80px; background: #f093fb; border-radius: 10px;"></div>
+  <p style="position: absolute; left: 535px; top: 210px; width: 130px; height: 24px; font-size: 20px; font-weight: 700; color: #ffffff;">3. 코딩</p>
+  <p style="position: absolute; left: 535px; top: 240px; width: 130px; height: 18px; font-size: 12px; color: rgba(255,255,255,0.9);">구현</p>
+
+  <p style="position: absolute; left: 690px; top: 225px; width: 30px; height: 20px; font-size: 20px; color: #f093fb;">→</p>
+
+  <!-- Step 4 -->
+  <div style="position: absolute; left: 730px; top: 195px; width: 140px; height: 80px; background: #98c379; border-radius: 10px;"></div>
+  <p style="position: absolute; left: 745px; top: 210px; width: 110px; height: 24px; font-size: 20px; font-weight: 700; color: #ffffff;">4. 커밋</p>
+  <p style="position: absolute; left: 745px; top: 240px; width: 110px; height: 18px; font-size: 12px; color: rgba(255,255,255,0.9);">PR</p>
+
+  <!-- Code Examples -->
+  <div style="position: absolute; left: 64px; top: 320px; width: 400px; height: 165px; background: #0f0f23; border-radius: 12px;"></div>
+  <p style="position: absolute; left: 80px; top: 335px; width: 370px; height: 18px; font-size: 12px; color: #888;">1. 탐색</p>
+  <p style="position: absolute; left: 80px; top: 358px; width: 370px; height: 18px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #98c379;">> "이 모듈 구조 분석해줘 (코딩 금지)"</p>
+  <p style="position: absolute; left: 80px; top: 388px; width: 370px; height: 18px; font-size: 12px; color: #888;">2. 계획</p>
+  <p style="position: absolute; left: 80px; top: 411px; width: 370px; height: 18px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #98c379;">> "think hard로 구현 계획 세워줘"</p>
+  <p style="position: absolute; left: 80px; top: 441px; width: 370px; height: 18px; font-size: 12px; color: #888;">3-4. 코딩 & 커밋</p>
+  <p style="position: absolute; left: 80px; top: 464px; width: 370px; height: 18px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #98c379;">> "계획대로 구현하고 PR 만들어줘"</p>
+
+  <!-- Right Side Tips -->
+  <div style="position: absolute; right: 64px; top: 320px; width: 350px; height: 165px; background: #667eea; border-radius: 12px;"></div>
+  <p style="position: absolute; right: 84px; top: 340px; width: 310px; height: 24px; font-size: 16px; font-weight: 600; color: #ffffff;">💡 왜 이 순서인가?</p>
+  <p style="position: absolute; right: 84px; top: 375px; width: 310px; height: 40px; font-size: 13px; color: rgba(255,255,255,0.9); line-height: 1.5;">탐색 없이 바로 코딩하면 Claude가 잘못된 가정으로 코드를 작성할 수 있습니다.</p>
+  <p style="position: absolute; right: 84px; top: 425px; width: 310px; height: 40px; font-size: 13px; color: rgba(255,255,255,0.9); line-height: 1.5;">계획 단계에서 "think hard"를 사용하면 더 깊은 분석이 가능합니다.</p>
+
+  <p style="position: absolute; left: 880px; top: 500px; width: 30px; height: 16px; font-size: 13px; color: rgba(102,126,234,0.6); text-align: right;">56</p>
+</body>
+</html>
