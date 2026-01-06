@@ -175,6 +175,17 @@ tones:
 ## 설정
 
 ### 필수 환경변수
+
+**Method 1: .env 파일 사용 (권장)**
+```bash
+# 프로젝트 루트에 .env 파일 생성
+HASHNODE_API_KEY=your_api_key
+HASHNODE_PUBLICATION_ID=your_publication_id
+```
+
+> `.env`는 이미 `.gitignore`에 등록되어 있어 안전합니다.
+
+**Method 2: 환경변수 직접 설정**
 ```bash
 export HASHNODE_API_KEY=your_api_key
 export HASHNODE_PUBLICATION_ID=your_publication_id

@@ -23,9 +23,27 @@ Publishes approved blog drafts to woogi's Hashnode blog via GraphQL API.
    - `work-blog/drafts/{topic-slug}-draft.md`
    - Must have `review_status: "approved"`
 
-2. Hashnode configuration:
-   - `HASHNODE_API_KEY` environment variable
-   - `HASHNODE_PUBLICATION_ID` environment variable
+2. Hashnode configuration (choose one method):
+
+   **Method 1: .env file (Recommended)**
+   ```bash
+   # Create .env in project root
+   HASHNODE_API_KEY=your_api_key
+   HASHNODE_PUBLICATION_ID=your_publication_id
+   ```
+
+   Load before API call:
+   ```bash
+   source .env && curl ...
+   ```
+
+   **Method 2: Environment variables**
+   ```bash
+   export HASHNODE_API_KEY=your_api_key
+   export HASHNODE_PUBLICATION_ID=your_publication_id
+   ```
+
+> **Note**: `.env` is already in `.gitignore` - safe to store API keys
 
 ## Core Functions
 
