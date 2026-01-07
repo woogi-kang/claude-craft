@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 960px;
+      height: 540px;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      background: #f5f5f0;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <h2 style="position: absolute; left: 64px; top: 50px; width: 700px; height: 45px; font-size: 32px; font-weight: 600; color: #1a1a1a;">PR 리뷰 에이전트 설계</h2>
+  <p style="position: absolute; left: 64px; top: 95px; width: 500px; height: 24px; font-size: 16px; color: #666666;">에이전트 구조</p>
+  <p style="position: absolute; left: 880px; top: 58px; width: 30px; height: 16px; font-size: 13px; color: #999999; text-align: right;">11</p>
+
+  <!-- Agent Structure -->
+  <div style="position: absolute; left: 64px; top: 140px; width: 832px; height: 50px; background: #1a1a1a; border-radius: 12px 12px 0 0;"></div>
+  <p style="position: absolute; left: 64px; top: 140px; width: 832px; height: 50px; font-size: 16px; font-weight: 600; color: #ffffff; text-align: center; line-height: 50px;">PR Review Agent</p>
+
+  <!-- Trigger -->
+  <div style="position: absolute; left: 64px; top: 190px; width: 832px; height: 40px; background: #f0f0ff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 84px; top: 190px; width: 150px; height: 40px; font-size: 13px; font-weight: 600; color: #667eea; line-height: 40px;">Trigger</p>
+  <p style="position: absolute; left: 234px; top: 190px; width: 642px; height: 40px; font-size: 13px; color: #333333; line-height: 40px; font-family: 'JetBrains Mono', monospace;">"PR 리뷰해줘", "코드 검토", "/review"</p>
+
+  <!-- Skills -->
+  <div style="position: absolute; left: 64px; top: 230px; width: 832px; height: 100px; background: #ffffff; border-bottom: 1px solid #e5e5e0;"></div>
+  <p style="position: absolute; left: 84px; top: 240px; width: 150px; height: 24px; font-size: 13px; font-weight: 600; color: #667eea;">Skills</p>
+  <div style="position: absolute; left: 234px; top: 245px; width: 150px; height: 30px; background: #667eea; border-radius: 6px;"></div>
+  <p style="position: absolute; left: 234px; top: 245px; width: 150px; height: 30px; font-size: 12px; color: #ffffff; text-align: center; line-height: 30px;">diff-analysis</p>
+  <div style="position: absolute; left: 394px; top: 245px; width: 150px; height: 30px; background: #667eea; border-radius: 6px;"></div>
+  <p style="position: absolute; left: 394px; top: 245px; width: 150px; height: 30px; font-size: 12px; color: #ffffff; text-align: center; line-height: 30px;">security-check</p>
+  <div style="position: absolute; left: 234px; top: 285px; width: 150px; height: 30px; background: #667eea; border-radius: 6px;"></div>
+  <p style="position: absolute; left: 234px; top: 285px; width: 150px; height: 30px; font-size: 12px; color: #ffffff; text-align: center; line-height: 30px;">style-check</p>
+  <div style="position: absolute; left: 394px; top: 285px; width: 150px; height: 30px; background: #667eea; border-radius: 6px;"></div>
+  <p style="position: absolute; left: 394px; top: 285px; width: 150px; height: 30px; font-size: 12px; color: #ffffff; text-align: center; line-height: 30px;">feedback-format</p>
+
+  <!-- MCP Servers -->
+  <div style="position: absolute; left: 64px; top: 330px; width: 832px; height: 70px; background: #ffffff; border-radius: 0 0 12px 12px;"></div>
+  <p style="position: absolute; left: 84px; top: 345px; width: 150px; height: 24px; font-size: 13px; font-weight: 600; color: #667eea;">MCP Servers</p>
+  <div style="position: absolute; left: 234px; top: 350px; width: 150px; height: 30px; background: #1a1a1a; border-radius: 6px;"></div>
+  <p style="position: absolute; left: 234px; top: 350px; width: 150px; height: 30px; font-size: 12px; color: #ffffff; text-align: center; line-height: 30px;">GitHub MCP</p>
+  <div style="position: absolute; left: 394px; top: 350px; width: 150px; height: 30px; background: #1a1a1a; border-radius: 6px;"></div>
+  <p style="position: absolute; left: 394px; top: 350px; width: 150px; height: 30px; font-size: 12px; color: #ffffff; text-align: center; line-height: 30px;">SonarQube MCP</p>
+
+  <!-- Key Point -->
+  <div style="position: absolute; left: 64px; top: 420px; width: 832px; height: 70px; background: rgba(102,126,234,0.1); border-radius: 12px;"></div>
+  <p style="position: absolute; left: 84px; top: 435px; width: 792px; height: 40px; font-size: 14px; color: #333333; line-height: 40px;">Skills로 검토 로직 정의 + MCP로 GitHub/CI 도구 연결 = 완전 자동화된 PR 리뷰</p>
+</body>
+</html>

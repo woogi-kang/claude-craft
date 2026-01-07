@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 960px;
+      height: 540px;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      background: #f5f5f0;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <h2 style="position: absolute; left: 64px; top: 50px; width: 700px; height: 45px; font-size: 32px; font-weight: 600; color: #1a1a1a;">Step 1: IDENTIFY</h2>
+  <p style="position: absolute; left: 64px; top: 95px; width: 500px; height: 24px; font-size: 16px; color: #666666;">반복 업무 식별 매트릭스</p>
+  <p style="position: absolute; left: 880px; top: 58px; width: 30px; height: 16px; font-size: 13px; color: #999999; text-align: right;">26</p>
+
+  <!-- Matrix -->
+  <div style="position: absolute; left: 64px; top: 145px; width: 450px; height: 300px; background: #ffffff; border-radius: 12px;"></div>
+
+  <!-- Y-axis label -->
+  <p style="position: absolute; left: 80px; top: 260px; width: 20px; height: 100px; font-size: 12px; color: #666666; writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg);">반복 빈도 높음 ↑</p>
+
+  <!-- X-axis label -->
+  <p style="position: absolute; left: 280px; top: 420px; width: 200px; height: 20px; font-size: 12px; color: #666666; text-align: center;">자동화 가능성 높음 →</p>
+
+  <!-- Quadrants -->
+  <div style="position: absolute; left: 120px; top: 170px; width: 180px; height: 120px; background: #f59e0b; border-radius: 8px 0 0 0;"></div>
+  <p style="position: absolute; left: 140px; top: 190px; width: 140px; height: 24px; font-size: 16px; font-weight: 700; color: #ffffff;">B</p>
+  <p style="position: absolute; left: 140px; top: 220px; width: 140px; height: 50px; font-size: 12px; color: rgba(255,255,255,0.9); line-height: 18px;">반자동화<br>제안서 초안, 보고서</p>
+
+  <div style="position: absolute; left: 300px; top: 170px; width: 180px; height: 120px; background: #22c55e; border-radius: 0 8px 0 0;"></div>
+  <p style="position: absolute; left: 320px; top: 190px; width: 140px; height: 24px; font-size: 16px; font-weight: 700; color: #ffffff;">A ⭐</p>
+  <p style="position: absolute; left: 320px; top: 220px; width: 140px; height: 50px; font-size: 12px; color: rgba(255,255,255,0.9); line-height: 18px;">즉시 자동화<br>PR 리뷰, 경쟁사 뉴스</p>
+
+  <div style="position: absolute; left: 120px; top: 290px; width: 180px; height: 120px; background: #e5e5e0; border-radius: 0 0 0 8px;"></div>
+  <p style="position: absolute; left: 140px; top: 310px; width: 140px; height: 24px; font-size: 16px; font-weight: 700; color: #666666;">D</p>
+  <p style="position: absolute; left: 140px; top: 340px; width: 140px; height: 50px; font-size: 12px; color: #666666; line-height: 18px;">유지 (수동)<br>창의적 업무</p>
+
+  <div style="position: absolute; left: 300px; top: 290px; width: 180px; height: 120px; background: #667eea; border-radius: 0 0 8px 0;"></div>
+  <p style="position: absolute; left: 320px; top: 310px; width: 140px; height: 24px; font-size: 16px; font-weight: 700; color: #ffffff;">C</p>
+  <p style="position: absolute; left: 320px; top: 340px; width: 140px; height: 50px; font-size: 12px; color: rgba(255,255,255,0.9); line-height: 18px;">도구 지원<br>코드 리팩토링</p>
+
+  <!-- Priority Guide -->
+  <div style="position: absolute; left: 540px; top: 145px; width: 356px; height: 300px; background: #1a1a1a; border-radius: 12px;"></div>
+  <p style="position: absolute; left: 560px; top: 165px; width: 316px; height: 24px; font-size: 14px; color: rgba(255,255,255,0.7);">자동화 우선순위</p>
+
+  <div style="position: absolute; left: 560px; top: 200px; width: 24px; height: 24px; background: #22c55e; border-radius: 4px;"></div>
+  <p style="position: absolute; left: 594px; top: 200px; width: 282px; height: 24px; font-size: 14px; color: #ffffff; line-height: 24px; font-weight: 600;">A: 최우선 자동화</p>
+  <p style="position: absolute; left: 594px; top: 225px; width: 282px; height: 40px; font-size: 12px; color: rgba(255,255,255,0.8); line-height: 18px;">빈도 높음 + 자동화 쉬움<br>PR 리뷰, 경쟁사 모니터링</p>
+
+  <div style="position: absolute; left: 560px; top: 275px; width: 24px; height: 24px; background: #f59e0b; border-radius: 4px;"></div>
+  <p style="position: absolute; left: 594px; top: 275px; width: 282px; height: 24px; font-size: 14px; color: #ffffff; line-height: 24px; font-weight: 600;">B: 반자동화</p>
+  <p style="position: absolute; left: 594px; top: 300px; width: 282px; height: 40px; font-size: 12px; color: rgba(255,255,255,0.8); line-height: 18px;">빈도 높음 + 판단 필요<br>제안서 초안, 보고서 작성</p>
+
+  <div style="position: absolute; left: 560px; top: 350px; width: 24px; height: 24px; background: #667eea; border-radius: 4px;"></div>
+  <p style="position: absolute; left: 594px; top: 350px; width: 282px; height: 24px; font-size: 14px; color: #ffffff; line-height: 24px; font-weight: 600;">C: 도구 지원</p>
+  <p style="position: absolute; left: 594px; top: 375px; width: 282px; height: 40px; font-size: 12px; color: rgba(255,255,255,0.8); line-height: 18px;">빈도 낮음 + 자동화 가능<br>코드 리팩토링, 마이그레이션</p>
+
+  <!-- Footer -->
+  <p style="position: absolute; left: 64px; top: 465px; width: 832px; height: 30px; font-size: 13px; color: #999999; text-align: center; line-height: 30px;">A 영역부터 시작해서 점진적으로 확장</p>
+</body>
+</html>
