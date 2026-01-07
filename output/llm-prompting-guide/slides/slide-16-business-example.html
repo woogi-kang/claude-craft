@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=960, height=540">
+  <title>Slide 16 - 기획/경영지원 활용 예시</title>
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { width: 960px; height: 540px; font-family: 'Pretendard', sans-serif; background: #0a0a0f; color: #e8e8ec; padding: 40px 50px; }
+    .header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+    .badge { background: #4ade80; color: #0a0a0f; padding: 6px 14px; border-radius: 4px; font-size: 13px; font-weight: 600; }
+    .title { font-size: 28px; font-weight: 600; }
+    .examples { display: flex; flex-direction: column; gap: 16px; }
+    .example { background: #12121a; border-left: 3px solid #4ade80; padding: 16px 20px; border-radius: 0 8px 8px 0; }
+    .example-title { font-size: 14px; color: #00d9ff; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .example-title::before { content: ""; width: 6px; height: 6px; background: #00d9ff; border-radius: 50%; }
+    .prompt { font-size: 13px; color: #b8b8c8; line-height: 1.6; font-family: 'SF Mono', 'Consolas', monospace; background: #0a0a0f; padding: 12px 14px; border-radius: 6px; }
+    .prompt .highlight { color: #4ade80; }
+    .prompt .role { color: #f59e0b; }
+    .slide-num { position: absolute; bottom: 30px; right: 50px; font-size: 12px; color: #585868; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <span class="badge">기획/경영지원</span>
+    <h1 class="title">보고서 · 회의록 · 데이터분석</h1>
+  </div>
+  <div class="examples">
+    <div class="example">
+      <div class="example-title">회의록 정리</div>
+      <div class="prompt">
+        아래 회의 내용을 정리해주세요. <span class="highlight">결정사항, 논의사항, Action Item</span>으로<br>
+        구분하고, 각 Action Item에는 <span class="highlight">담당자와 마감일</span>을 명시해주세요.<br>
+        <span class="role">경영지원 담당자</span> 관점에서 후속 조치가 필요한 항목을 강조해주세요.
+      </div>
+    </div>
+    <div class="example">
+      <div class="example-title">SWOT 분석</div>
+      <div class="prompt">
+        우리 회사의 SWOT 분석을 수행해주세요. <span class="highlight">단계별로 생각</span>하며<br>
+        1) 각 항목 5개씩 도출 2) 근거 설명 3) <span class="highlight">SO/ST/WO/WT 전략</span> 제안<br>
+        4) 우선순위가 높은 액션 아이템 3개를 선정해주세요.
+      </div>
+    </div>
+    <div class="example">
+      <div class="example-title">데이터 인사이트 도출</div>
+      <div class="prompt">
+        [첨부된 매출 데이터]를 분석해주세요. <span class="highlight">Let's think step by step.</span><br>
+        1) 주요 트렌드 파악 2) 이상치 탐지 3) 원인 가설 수립<br>
+        4) <span class="highlight">경영진 보고용 핵심 인사이트 3가지</span>를 도출해주세요.
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">16 / 18</div>
+</body>
+</html>

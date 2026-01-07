@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=960, height=540">
+  <title>Slide 11 - 원칙 6</title>
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { width: 960px; height: 540px; font-family: 'Pretendard', sans-serif; background: #0a0a0f; color: #e8e8ec; padding: 50px 60px; }
+    .header { font-size: 32px; font-weight: 600; margin-bottom: 24px; }
+    .bullets { display: flex; flex-direction: column; gap: 18px; margin-bottom: 28px; }
+    .bullet { display: flex; align-items: flex-start; gap: 12px; font-size: 18px; line-height: 1.5; }
+    .bullet-dot { width: 8px; height: 8px; background: #00d9ff; border-radius: 50%; margin-top: 8px; flex-shrink: 0; }
+    .structure-box { background: #1a1a25; border: 1px solid #667eea; border-radius: 12px; padding: 24px; }
+    .structure-title { font-size: 16px; color: #667eea; margin-bottom: 16px; font-weight: 600; }
+    .structure-items { display: flex; gap: 20px; }
+    .structure-item { flex: 1; text-align: center; padding: 16px; background: #0d0d12; border-radius: 8px; }
+    .structure-label { font-size: 14px; color: #a855f7; font-weight: 600; margin-bottom: 8px; }
+    .structure-desc { font-size: 13px; color: #888898; }
+    .slide-num { position: absolute; bottom: 30px; right: 60px; font-size: 12px; color: #585868; }
+  </style>
+</head>
+<body>
+  <h1 class="header">원칙 6: 역할 부여하기</h1>
+  <div class="bullets">
+    <div class="bullet">
+      <div class="bullet-dot"></div>
+      <span>전문가 역할을 부여하면 <strong style="color:#00d9ff">해당 관점에서 더 전문적인 답변</strong> 생성</span>
+    </div>
+    <div class="bullet">
+      <div class="bullet-dot"></div>
+      <span>"당신은 10년 경력의 시니어 개발자입니다" - 품질 향상</span>
+    </div>
+  </div>
+  <div class="structure-box">
+    <div class="structure-title">Role-Context-Task 3계층 구조</div>
+    <div class="structure-items">
+      <div class="structure-item">
+        <div class="structure-label">Role</div>
+        <div class="structure-desc">역할 정의<br>"당신은 ~입니다"</div>
+      </div>
+      <div class="structure-item">
+        <div class="structure-label">Context</div>
+        <div class="structure-desc">배경/맥락<br>상황 설명</div>
+      </div>
+      <div class="structure-item">
+        <div class="structure-label">Task</div>
+        <div class="structure-desc">작업 지시<br>구체적 요청</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">11 / 18</div>
+</body>
+</html>

@@ -1,0 +1,410 @@
+{
+  "project": {
+    "title": "LLM 프롬프트 작성의 기술",
+    "subtitle": "Claude Code와 AI를 200% 활용하는 프롬프팅 가이드",
+    "target_audience": "개발자, 기술팀, AI 활용 담당자",
+    "presentation_type": "tech_seminar",
+    "language": "ko"
+  },
+  "research_items": [
+    {
+      "id": "R001",
+      "content": "프롬프트 엔지니어링은 LLM과의 상호작용, 안전성 개선, 기능 확장을 포함하는 종합적 분야",
+      "source": {
+        "url": "https://www.promptingguide.ai/kr",
+        "title": "Prompt Engineering Guide",
+        "date": "2025-01",
+        "type": "guide"
+      },
+      "credibility_score": 0.92,
+      "tags": ["정의", "기본개념"],
+      "validation_status": "verified",
+      "story_criticality": {
+        "priority": "must_use",
+        "story_role": "hook",
+        "data_type": "quote",
+        "audience_impact": "high"
+      },
+      "content_ready": {
+        "headline_format": "프롬프트 = AI와의 대화 언어",
+        "bullet_format": "프롬프트 품질이 AI 응답의 정확성, 관련성, 일관성을 결정",
+        "citation_short": "(Prompt Engineering Guide, 2025)",
+        "citation_full": "출처: Prompt Engineering Guide, 2025년 1월"
+      }
+    },
+    {
+      "id": "R002",
+      "content": "Claude 4.x는 이전 모델보다 지시를 더 정확히 따름. 말 그대로 지시한 것만 실행하므로 명시적 요청 필요",
+      "source": {
+        "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-4-best-practices",
+        "title": "Claude 4 Best Practices - Anthropic",
+        "date": "2025-01",
+        "type": "documentation"
+      },
+      "credibility_score": 0.98,
+      "tags": ["Claude", "특성", "핵심"],
+      "validation_status": "verified",
+      "story_criticality": {
+        "priority": "must_use",
+        "story_role": "evidence",
+        "data_type": "quote",
+        "audience_impact": "high"
+      },
+      "content_ready": {
+        "headline_format": "Claude 4.x: 말한 대로만 한다",
+        "bullet_format": "이전 버전은 의도를 추론해 확장했지만, 4.x는 정확히 지시한 것만 실행",
+        "citation_short": "(Anthropic, 2025)",
+        "citation_full": "출처: Anthropic Claude Docs, 2025년"
+      }
+    },
+    {
+      "id": "R003",
+      "content": "6가지 원칙 적용 시 정확도 72%→87%(+15pp), 재질문 41% 감소, 토큰 소비 22% 감소",
+      "source": {
+        "url": "https://nomadlab.kr/154",
+        "title": "2025년 최신 프롬프트 엔지니어링 완벽 가이드",
+        "date": "2025-01",
+        "type": "article"
+      },
+      "credibility_score": 0.85,
+      "tags": ["통계", "효과", "ROI"],
+      "validation_status": "verified",
+      "story_criticality": {
+        "priority": "must_use",
+        "story_role": "hook",
+        "data_type": "statistic",
+        "audience_impact": "high"
+      },
+      "visual_suggestion": {
+        "recommended_type": "metric_box",
+        "data_format": {
+          "metrics": [
+            {"label": "정확도 향상", "value": "+15%p", "delta": "72→87%"},
+            {"label": "재질문 감소", "value": "-41%", "delta": "3.4→2.0회"},
+            {"label": "토큰 절약", "value": "-22%", "delta": "893→701"}
+          ]
+        }
+      },
+      "content_ready": {
+        "headline_format": "프롬프트 최적화로 정확도 15%p 향상",
+        "bullet_format": "6가지 원칙 적용: 정확도 +15%p, 재질문 -41%, 토큰 -22%",
+        "citation_short": "(NomadLab, 2025)",
+        "citation_full": "출처: NomadLab 프롬프트 엔지니어링 가이드, 2025년 1분기"
+      }
+    },
+    {
+      "id": "R004",
+      "content": "명확하고 구체적인 지시가 핵심. 'Create an analytics dashboard' 대신 'Include as many relevant features as possible. Go beyond the basics'로 확장 요청",
+      "source": {
+        "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-4-best-practices",
+        "title": "Claude 4 Best Practices - Anthropic",
+        "date": "2025-01",
+        "type": "documentation"
+      },
+      "credibility_score": 0.98,
+      "tags": ["원칙", "명확성", "예시"],
+      "validation_status": "verified",
+      "story_criticality": {
+        "priority": "must_use",
+        "story_role": "evidence",
+        "data_type": "comparison",
+        "audience_impact": "high"
+      },
+      "content_ready": {
+        "headline_format": "원칙 1: 명확하고 구체적으로",
+        "bullet_format": "모호한 지시 대신 원하는 범위와 수준을 명시적으로 요청",
+        "citation_short": "(Anthropic, 2025)",
+        "citation_full": "출처: Anthropic Claude 4 Best Practices, 2025년"
+      }
+    },
+    {
+      "id": "R005",
+      "content": "컨텍스트와 이유 제공이 중요. 'NEVER use ellipses' 대신 'Your response will be read aloud by TTS, so never use ellipses'",
+      "source": {
+        "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-4-best-practices",
+        "title": "Claude 4 Best Practices - Anthropic",
+        "date": "2025-01",
+        "type": "documentation"
+      },
+      "credibility_score": 0.98,
+      "tags": ["원칙", "컨텍스트", "예시"],
+      "validation_status": "verified",
+      "story_criticality": {
+        "priority": "must_use",
+        "story_role": "evidence",
+        "data_type": "comparison",
+        "audience_impact": "high"
+      },
+      "content_ready": {
+        "headline_format": "원칙 2: 맥락과 이유 설명",
+        "bullet_format": "왜 그 행동이 필요한지 설명하면 Claude가 더 잘 일반화",
+        "citation_short": "(Anthropic, 2025)",
+        "citation_full": "출처: Anthropic Claude 4 Best Practices, 2025년"
+      }
+    },
+    {
+      "id": "R006",
+      "content": "Few-shot Prompting: 예시를 제공하면 모델이 패턴을 학습하여 원하는 출력 형식과 스타일을 정확히 전달 가능",
+      "source": {
+        "url": "https://www.promptingguide.ai/kr",
+        "title": "Prompt Engineering Guide",
+        "date": "2025-01",
+        "type": "guide"
+      },
+      "credibility_score": 0.92,
+      "tags": ["기법", "Few-shot", "예시"],
+      "validation_status": "verified",
+      "story_criticality": {
+        "priority": "must_use",
+        "story_role": "evidence",
+        "data_type": "case_study",
+        "audience_impact": "high"
+      },
+      "content_ready": {
+        "headline_format": "원칙 3: 예시로 보여주기 (Few-shot)",
+        "bullet_format": "1-3개의 예시를 제공하면 원하는 출력 형식을 정확히 전달",
+        "citation_short": "(Prompt Engineering Guide, 2025)",
+        "citation_full": "출처: Prompt Engineering Guide, 2025년"
+      }
+    },
+    {
+      "id": "R007",
+      "content": "Chain-of-Thought: 단계별 추론을 요청하면 복잡한 문제 해결 능력이 크게 향상됨. '단계별로 생각해봐' 추가만으로 효과",
+      "source": {
+        "url": "https://www.promptingguide.ai/kr",
+        "title": "Prompt Engineering Guide",
+        "date": "2025-01",
+        "type": "guide"
+      },
+      "credibility_score": 0.92,
+      "tags": ["기법", "CoT", "추론"],
+      "validation_status": "verified",
+      "story_criticality": {
+        "priority": "must_use",
+        "story_role": "evidence",
+        "data_type": "case_study",
+        "audience_impact": "high"
+      },
+      "content_ready": {
+        "headline_format": "원칙 4: 생각의 사슬 (Chain-of-Thought)",
+        "bullet_format": "복잡한 문제는 '단계별로 생각해봐' 한 줄 추가로 정확도 향상",
+        "citation_short": "(Prompt Engineering Guide, 2025)",
+        "citation_full": "출처: Prompt Engineering Guide, 2025년"
+      }
+    },
+    {
+      "id": "R008",
+      "content": "XML 태그 활용: Claude는 XML 태그로 학습되어 <context>, <task>, <format> 등의 구조화된 태그에 잘 반응",
+      "source": {
+        "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-4-best-practices",
+        "title": "Claude 4 Best Practices - Anthropic",
+        "date": "2025-01",
+        "type": "documentation"
+      },
+      "credibility_score": 0.98,
+      "tags": ["Claude", "XML", "구조화"],
+      "validation_status": "verified",
+      "story_criticality": {
+        "priority": "must_use",
+        "story_role": "evidence",
+        "data_type": "case_study",
+        "audience_impact": "high"
+      },
+      "content_ready": {
+        "headline_format": "원칙 5: XML 태그로 구조화",
+        "bullet_format": "<context>, <task>, <format> 태그로 프롬프트 영역을 명확히 구분",
+        "citation_short": "(Anthropic, 2025)",
+        "citation_full": "출처: Anthropic Claude 4 Best Practices, 2025년"
+      }
+    },
+    {
+      "id": "R009",
+      "content": "역할(Role) - 맥락(Context) - 작업(Task)의 3계층 구조로 프롬프트 설계 시 유지보수 난이도 대폭 감소",
+      "source": {
+        "url": "https://nomadlab.kr/154",
+        "title": "2025년 최신 프롬프트 엔지니어링 완벽 가이드",
+        "date": "2025-01",
+        "type": "article"
+      },
+      "credibility_score": 0.85,
+      "tags": ["구조", "Role", "프레임워크"],
+      "validation_status": "verified",
+      "story_criticality": {
+        "priority": "should_use",
+        "story_role": "evidence",
+        "data_type": "case_study",
+        "audience_impact": "medium"
+      },
+      "content_ready": {
+        "headline_format": "원칙 6: 역할 부여하기",
+        "bullet_format": "Role-Context-Task 3계층 구조로 명확한 역할과 맥락 정의",
+        "citation_short": "(NomadLab, 2025)",
+        "citation_full": "출처: NomadLab 프롬프트 엔지니어링 가이드, 2025년"
+      }
+    },
+    {
+      "id": "R010",
+      "content": "프롬프트 최적화는 LLM 파라미터 튜닝 대비 2.3배의 비용 효율성 (2025년 1분기 데이터)",
+      "source": {
+        "url": "https://nomadlab.kr/154",
+        "title": "2025년 최신 프롬프트 엔지니어링 완벽 가이드",
+        "date": "2025-01",
+        "type": "article"
+      },
+      "credibility_score": 0.85,
+      "tags": ["통계", "비용", "ROI"],
+      "validation_status": "verified",
+      "story_criticality": {
+        "priority": "should_use",
+        "story_role": "support",
+        "data_type": "statistic",
+        "audience_impact": "medium"
+      },
+      "content_ready": {
+        "headline_format": "프롬프트 최적화 = 2.3배 비용 효율",
+        "bullet_format": "파라미터 튜닝 대비 2.3배의 비용 효율성 (2025 Q1)",
+        "citation_short": "(NomadLab, 2025)",
+        "citation_full": "출처: NomadLab, 2025년 1분기 데이터"
+      }
+    },
+    {
+      "id": "R011",
+      "content": "CLAUDE.md는 Claude가 대화를 시작할 때 자동으로 컨텍스트에 가져오는 특별한 파일. 프로젝트의 두뇌 역할",
+      "source": {
+        "url": "https://yozm.blog/claude-code-claude-md-setup-guide-2025",
+        "title": "클로드 코드 CLAUDE.md 설정 가이드 (2025)",
+        "date": "2025-01",
+        "type": "article"
+      },
+      "credibility_score": 0.88,
+      "tags": ["Claude Code", "CLAUDE.md", "설정"],
+      "validation_status": "verified",
+      "story_criticality": {
+        "priority": "must_use",
+        "story_role": "evidence",
+        "data_type": "case_study",
+        "audience_impact": "high"
+      },
+      "content_ready": {
+        "headline_format": "Claude Code 팁 1: CLAUDE.md 활용",
+        "bullet_format": "프로젝트 루트에 CLAUDE.md 파일로 컨벤션, 명령어, 구조 자동 로드",
+        "citation_short": "(Yozm, 2025)",
+        "citation_full": "출처: Yozm Claude Code 가이드, 2025년"
+      }
+    },
+    {
+      "id": "R012",
+      "content": ".claude/commands/에 마크다운 파일을 생성하면 /명령어로 바로 실행 가능. 팀 전체 Git 공유 가능",
+      "source": {
+        "url": "https://www.anthropic.com/engineering/claude-code-best-practices",
+        "title": "Claude Code Best Practices - Anthropic Engineering",
+        "date": "2025-01",
+        "type": "documentation"
+      },
+      "credibility_score": 0.98,
+      "tags": ["Claude Code", "명령어", "자동화"],
+      "validation_status": "verified",
+      "story_criticality": {
+        "priority": "must_use",
+        "story_role": "evidence",
+        "data_type": "case_study",
+        "audience_impact": "high"
+      },
+      "content_ready": {
+        "headline_format": "Claude Code 팁 2: 커스텀 슬래시 명령어",
+        "bullet_format": ".claude/commands/review.md → /review로 반복 작업 자동화",
+        "citation_short": "(Anthropic Engineering, 2025)",
+        "citation_full": "출처: Anthropic Engineering Blog, 2025년"
+      }
+    },
+    {
+      "id": "R013",
+      "content": "Claude 4.x는 병렬 도구 실행에 특화. 여러 파일 읽기, 여러 검색을 동시에 처리하여 속도 향상",
+      "source": {
+        "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-4-best-practices",
+        "title": "Claude 4 Best Practices - Anthropic",
+        "date": "2025-01",
+        "type": "documentation"
+      },
+      "credibility_score": 0.98,
+      "tags": ["Claude Code", "병렬", "효율"],
+      "validation_status": "verified",
+      "story_criticality": {
+        "priority": "should_use",
+        "story_role": "support",
+        "data_type": "case_study",
+        "audience_impact": "medium"
+      },
+      "content_ready": {
+        "headline_format": "Claude Code 팁 3: 병렬 실행 활용",
+        "bullet_format": "독립적인 파일 읽기, 검색을 동시에 처리하여 속도 향상",
+        "citation_short": "(Anthropic, 2025)",
+        "citation_full": "출처: Anthropic Claude 4 Best Practices, 2025년"
+      }
+    },
+    {
+      "id": "R014",
+      "content": "Extended Thinking: Claude의 확장 사고 기능으로 복잡한 추론 작업에서 성능 대폭 향상",
+      "source": {
+        "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-4-best-practices",
+        "title": "Claude 4 Best Practices - Anthropic",
+        "date": "2025-01",
+        "type": "documentation"
+      },
+      "credibility_score": 0.98,
+      "tags": ["Claude", "Extended Thinking", "추론"],
+      "validation_status": "verified",
+      "story_criticality": {
+        "priority": "should_use",
+        "story_role": "evidence",
+        "data_type": "case_study",
+        "audience_impact": "medium"
+      },
+      "content_ready": {
+        "headline_format": "원칙 7: 충분히 생각할 시간 주기",
+        "bullet_format": "Extended Thinking으로 복잡한 추론 작업 성능 향상",
+        "citation_short": "(Anthropic, 2025)",
+        "citation_full": "출처: Anthropic Claude 4 Best Practices, 2025년"
+      }
+    },
+    {
+      "id": "R015",
+      "content": "반복 개선(Iterative Refinement): 첫 시도에 완벽한 프롬프트를 기대하지 말고 테스트→조정→재테스트 사이클 반복",
+      "source": {
+        "url": "https://www.promptingguide.ai/kr",
+        "title": "Prompt Engineering Guide",
+        "date": "2025-01",
+        "type": "guide"
+      },
+      "credibility_score": 0.92,
+      "tags": ["원칙", "반복", "개선"],
+      "validation_status": "verified",
+      "story_criticality": {
+        "priority": "should_use",
+        "story_role": "support",
+        "data_type": "quote",
+        "audience_impact": "medium"
+      },
+      "content_ready": {
+        "headline_format": "프롬프트는 한 번에 완성되지 않는다",
+        "bullet_format": "테스트 → 조정 → 재테스트 사이클로 점진적 개선",
+        "citation_short": "(Prompt Engineering Guide, 2025)",
+        "citation_full": "출처: Prompt Engineering Guide, 2025년"
+      }
+    }
+  ],
+  "key_themes": [
+    {"theme": "명확성과 구체성", "description": "모호한 지시 대신 구체적이고 명확한 요청"},
+    {"theme": "구조화된 프롬프트", "description": "XML 태그와 Role-Context-Task 구조"},
+    {"theme": "예시와 맥락 제공", "description": "Few-shot 학습과 배경 설명"},
+    {"theme": "Claude Code 활용", "description": "CLAUDE.md, 커스텀 명령어, 병렬 실행"},
+    {"theme": "반복 개선", "description": "테스트와 피드백을 통한 점진적 개선"}
+  ],
+  "sources": [
+    {"url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-4-best-practices", "title": "Anthropic Claude 4 Best Practices", "credibility": 0.98},
+    {"url": "https://www.promptingguide.ai/kr", "title": "Prompt Engineering Guide", "credibility": 0.92},
+    {"url": "https://www.anthropic.com/engineering/claude-code-best-practices", "title": "Anthropic Claude Code Best Practices", "credibility": 0.98},
+    {"url": "https://nomadlab.kr/154", "title": "NomadLab 프롬프트 엔지니어링 가이드", "credibility": 0.85},
+    {"url": "https://yozm.blog/claude-code-claude-md-setup-guide-2025", "title": "Yozm Claude Code 가이드", "credibility": 0.88}
+  ]
+}

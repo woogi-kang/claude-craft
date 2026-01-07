@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=960, height=540">
+  <title>Slide 01 - Cover</title>
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 960px;
+      height: 540px;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      background: #0a0a0f;
+      color: #e8e8ec;
+      overflow: hidden;
+      position: relative;
+    }
+    .dot-grid {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    .content {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 60px;
+    }
+    .title {
+      font-size: 56px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #e8e8ec 0%, #667eea 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .divider {
+      width: 200px;
+      height: 3px;
+      background: linear-gradient(90deg, #667eea, #00d9ff);
+      margin: 20px 0;
+    }
+    .subtitle {
+      font-size: 22px;
+      color: #00d9ff;
+      font-weight: 400;
+    }
+    .footer {
+      position: absolute;
+      bottom: 40px;
+      left: 60px;
+      right: 60px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      color: #585868;
+    }
+  </style>
+</head>
+<body>
+  <div class="dot-grid"></div>
+  <div class="content">
+    <h1 class="title">LLM 프롬프트 작성의 기술</h1>
+    <div class="divider"></div>
+    <p class="subtitle">Claude Code와 AI를 200% 활용하는 프롬프팅 가이드</p>
+  </div>
+  <div class="footer">
+    <span>Tech Seminar 2026</span>
+    <span>Powered by Claude Code</span>
+  </div>
+</body>
+</html>

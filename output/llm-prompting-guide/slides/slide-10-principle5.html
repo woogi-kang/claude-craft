@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=960, height=540">
+  <title>Slide 10 - 원칙 5</title>
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { width: 960px; height: 540px; font-family: 'Pretendard', sans-serif; background: #0a0a0f; color: #e8e8ec; padding: 50px 60px; }
+    .header { font-size: 32px; font-weight: 600; margin-bottom: 16px; }
+    .description { font-size: 16px; color: #888898; margin-bottom: 20px; }
+    .code-container { background: #0d0d12; border: 1px solid rgba(102,126,234,0.3); border-radius: 12px; overflow: hidden; }
+    .code-header { background: #1a1a25; padding: 10px 16px; display: flex; gap: 8px; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot.red { background: #ef4444; }
+    .dot.yellow { background: #fbbf24; }
+    .dot.green { background: #22c55e; }
+    .code-block { padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; }
+    .tag { color: #a855f7; }
+    .content-text { color: #e8e8ec; }
+    .slide-num { position: absolute; bottom: 30px; right: 60px; font-size: 12px; color: #585868; }
+  </style>
+</head>
+<body>
+  <h1 class="header">원칙 5: XML 태그로 구조화</h1>
+  <p class="description">Claude는 XML 태그로 학습되어 구조화된 프롬프트에 잘 반응</p>
+  <div class="code-container">
+    <div class="code-header">
+      <div class="dot red"></div>
+      <div class="dot yellow"></div>
+      <div class="dot green"></div>
+    </div>
+    <div class="code-block">
+<span class="tag">&lt;context&gt;</span>
+<span class="content-text">현재 프로젝트는 React + TypeScript 기반 웹 앱입니다.</span>
+<span class="tag">&lt;/context&gt;</span>
+
+<span class="tag">&lt;task&gt;</span>
+<span class="content-text">사용자 로그인 컴포넌트를 만들어주세요.</span>
+<span class="tag">&lt;/task&gt;</span>
+
+<span class="tag">&lt;format&gt;</span>
+<span class="content-text">TypeScript로 작성하고 JSDoc 주석을 포함해주세요.</span>
+<span class="tag">&lt;/format&gt;</span>
+    </div>
+  </div>
+  <div class="slide-num">10 / 18</div>
+</body>
+</html>
