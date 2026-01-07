@@ -342,7 +342,42 @@ const pdfBytes = await mergedPdf.save({
 
 ## 트러블슈팅
 
-### 1. 폰트 깨짐
+### 1. 텍스트 안보임 / 깨짐 (Gradient Text 문제)
+
+**원인:** CSS gradient text 효과 (`-webkit-background-clip: text`)가 PDF 렌더링에서 지원되지 않음
+
+```css
+/* ❌ PDF에서 텍스트가 투명하게 렌더링됨 */
+.gradient-text {
+  background: linear-gradient(135deg, #e8e8ec 0%, #667eea 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+```
+
+**해결 방법:**
+```css
+/* ✅ 단색으로 변경 */
+.title {
+  color: #e8e8ec;
+}
+
+/* ✅ 강조가 필요하면 accent 색상 사용 */
+.highlight {
+  color: #00d9ff;
+}
+```
+
+**PDF 비호환 CSS 목록:**
+| CSS 속성 | 대안 |
+|---------|------|
+| `-webkit-background-clip: text` | 단색 `color` |
+| `-webkit-text-fill-color: transparent` | 제거 |
+| `background-clip: text` | 제거 |
+| `filter: blur()` on text | `text-shadow` |
+
+### 2. 폰트 깨짐
 
 ```javascript
 // 폰트 로딩 시간 증가
@@ -354,7 +389,7 @@ await page.waitForFunction(() => {
 });
 ```
 
-### 2. 배경 이미지 누락
+### 3. 배경 이미지 누락
 
 ```javascript
 // networkidle 대기
@@ -364,14 +399,14 @@ await page.goto(fileUrl, { waitUntil: 'networkidle' });
 await page.waitForSelector('img');
 ```
 
-### 3. 브라우저 미설치
+### 4. 브라우저 미설치
 
 ```bash
 # Playwright 브라우저 설치
 npx playwright install chromium
 ```
 
-### 4. 메모리 부족 (대용량 PDF)
+### 5. 메모리 부족 (대용량 PDF)
 
 ```javascript
 // 배치 처리로 메모리 관리

@@ -149,6 +149,52 @@ tags: [ai, ml, machine-learning, deep-learning, tech, developer, cloud, infrastr
 }
 ```
 
+## ⚠️ PDF 호환성 주의사항
+
+### 사용 금지 CSS (PDF 렌더링 깨짐)
+
+다음 CSS 기법은 Playwright PDF 출력 시 텍스트가 보이지 않거나 깨지는 문제가 발생합니다:
+
+```css
+/* ❌ 사용 금지 - PDF에서 텍스트 투명하게 렌더링됨 */
+.gradient-text {
+  background: linear-gradient(135deg, #e8e8ec 0%, #667eea 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+```
+
+### PDF 호환 대안
+
+```css
+/* ✅ 권장 - 단색 사용 */
+.title {
+  color: #e8e8ec;
+}
+
+/* ✅ 권장 - 강조 텍스트는 accent 색상 */
+.highlight-text {
+  color: #00d9ff;  /* AI Cyan */
+}
+
+/* ✅ 허용 - text-shadow는 PDF에서 정상 작동 */
+.glow-text {
+  color: #667eea;
+  text-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+}
+```
+
+### PDF 비호환 CSS 목록
+
+| CSS 속성 | 문제 | 대안 |
+|---------|------|------|
+| `-webkit-background-clip: text` | 텍스트 투명화 | 단색 `color` 사용 |
+| `-webkit-text-fill-color: transparent` | 텍스트 투명화 | 제거 |
+| `background-clip: text` | 텍스트 투명화 | 제거 |
+| `filter: blur()` on text | 텍스트 흐림 | `text-shadow` 사용 |
+| `mix-blend-mode` on text | 예측 불가 | 제거 |
+
 ### Dot Grid Background
 
 ```css
