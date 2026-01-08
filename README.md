@@ -15,6 +15,7 @@ Claude Craft는 [Claude Code](https://claude.ai/code) (Anthropic의 공식 CLI �
 | **PPT Agent** | 프레젠테이션 제작 자동화 | 11개 (리서치 → 검증 → 구조 → 콘텐츠 → 디자인 → 시각화 → AI이미지 → 검토 → 개선 → PPTX → PDF) |
 | **Tech Blog Agent** | Hashnode 블로그 작성 자동화 | 4개 (리서치 → 초안 → 검토 → 발행) |
 | **Social Media Agent** | 멀티플랫폼 SNS 콘텐츠 제작 | 12개 (전략 → 리서치 → 검증 → 컴플라이언스 → 콘텐츠 → 비주얼 → 해시태그 → 승인 → 스케줄 → 리퍼포징 → 참여 → 분석) |
+| **Marketing Agent** | 마케팅 전략 및 실행물 제작 | 15개 (컨텍스트 → 리서치 → 페르소나 → 포지셔닝 → 전략 → 캠페인 → 퍼널 → 여정 → 카피 → LP → 이메일 → 광고 → AB테스트 → KPI → 리뷰) |
 
 ### 2. Real-time Cost Statusline
 
@@ -92,7 +93,9 @@ claude-craft/
 │   │   │   └── AGENT.md
 │   │   ├── tech-blog-agent/
 │   │   │   └── AGENT.md
-│   │   └── social-media-agent/
+│   │   ├── social-media-agent/
+│   │   │   └── AGENT.md
+│   │   └── marketing-agent/
 │   │       └── AGENT.md
 │   │
 │   ├── skills/                      # Skill 정의
@@ -116,23 +119,40 @@ claude-craft/
 │   │   │   ├── 3-review/
 │   │   │   └── 4-publish/
 │   │   │
-│   │   └── social-media-agent-skills/ # SNS Skills (12개)
-│   │       ├── 0-strategy/
-│   │       ├── 1-research/
-│   │       ├── 2-validation/
-│   │       ├── 3-compliance/
-│   │       ├── 4-content/
-│   │       │   ├── instagram/
-│   │       │   ├── linkedin/
-│   │       │   ├── x/
-│   │       │   └── threads/
-│   │       ├── 5-visual/
-│   │       ├── 6-hashtag/
-│   │       ├── 7-approval/
-│   │       ├── 8-schedule/
-│   │       ├── 9-repurpose/
-│   │       ├── 10-engagement/
-│   │       └── 11-analytics/
+│   │   ├── social-media-agent-skills/ # SNS Skills (12개)
+│   │   │   ├── 0-strategy/
+│   │   │   ├── 1-research/
+│   │   │   ├── 2-validation/
+│   │   │   ├── 3-compliance/
+│   │   │   ├── 4-content/
+│   │   │   │   ├── instagram/
+│   │   │   │   ├── linkedin/
+│   │   │   │   ├── x/
+│   │   │   │   └── threads/
+│   │   │   ├── 5-visual/
+│   │   │   ├── 6-hashtag/
+│   │   │   ├── 7-approval/
+│   │   │   ├── 8-schedule/
+│   │   │   ├── 9-repurpose/
+│   │   │   ├── 10-engagement/
+│   │   │   └── 11-analytics/
+│   │   │
+│   │   └── marketing-agent-skills/  # Marketing Skills (15개)
+│   │       ├── 1-context-intake/
+│   │       ├── 2-market-research/
+│   │       ├── 3-persona/
+│   │       ├── 4-positioning/
+│   │       ├── 5-strategy/
+│   │       ├── 6-campaign/
+│   │       ├── 7-funnel/
+│   │       ├── 8-customer-journey/
+│   │       ├── 9-copywriting/
+│   │       ├── 10-landing-page/
+│   │       ├── 11-email-sequence/
+│   │       ├── 12-ads-creative/
+│   │       ├── 13-ab-testing/
+│   │       ├── 14-analytics-kpi/
+│   │       └── 15-review/
 │   │
 │   ├── hooks/                       # Hook 스크립트
 │   │   ├── post-write-hook.sh
@@ -152,6 +172,16 @@ claude-craft/
 │   │   ├── drafts/
 │   │   └── published/
 │   ├── work-social/                 # SNS 작업
+│   ├── work-marketing/              # 마케팅 작업
+│   │   ├── context/
+│   │   ├── research/
+│   │   ├── personas/
+│   │   ├── strategy/
+│   │   ├── copy/
+│   │   ├── landing-pages/
+│   │   ├── email-sequences/
+│   │   ├── ads/
+│   │   └── reports/
 │   └── work-plan/                   # 기획 문서
 │
 ├── scripts/
@@ -216,6 +246,33 @@ Content (Instagram/LinkedIn/X/Threads) → Visual → Hashtag
     ↓
 Approval → Schedule → Publish → Engagement → Analytics
 ```
+
+### Marketing Agent
+
+```bash
+# Claude Code 실행 후
+"개발자용 API 모니터링 툴 마케팅해줘. 경쟁사는 Datadog."
+"랜딩페이지 카피 써줘"
+"이메일 온보딩 시퀀스 만들어줘"
+```
+
+**워크플로우:**
+```
+Context Intake → Market Research → Persona → Positioning → Strategy
+    ↓
+Campaign → Funnel → Customer Journey
+    ↓
+Copywriting → Landing Page → Email Sequence → Ads Creative
+    ↓
+A/B Testing → Analytics KPI → Review
+```
+
+**주요 프레임워크:**
+- 전략: 3C, STP, PESO, AARRR, SMART Goals
+- 카피: AIDA, PAS, BAB, FAB
+- 최적화: CRO 체크리스트, A/B 테스트
+
+**퀄리티 기대치:** 80% 완성도 초안, 피드백 루프로 시니어 마케터 수준까지 개선 가능
 
 ## Statusline 설정
 
