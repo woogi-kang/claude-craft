@@ -16,7 +16,7 @@ __pycache__/
 .env
 venv/
 
-# Node (for mcp-servers)
+# Node
 node_modules/
 package-lock.json
 
@@ -27,3 +27,12 @@ package-lock.json
 local.json
 *.local.*
 .playwright-mcp/
+
+# Build outputs
+dist/
+
+# Workspace outputs (optional - uncomment to ignore)
+# workspace/output/*/node_modules/
+# workspace/output/*/*.pptx
+# workspace/output/*/*.pdf
+ppt_reference
