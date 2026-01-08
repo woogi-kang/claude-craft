@@ -42,6 +42,7 @@ claude-craft/
 │   ├── output/                 # PPT outputs
 │   ├── work-blog/              # Blog drafts
 │   ├── work-social/            # Social media drafts
+│   ├── work-marketing/         # Marketing strategy & assets
 │   └── work-plan/              # Planning docs
 │
 ├── scripts/
@@ -59,6 +60,7 @@ Agents are multi-skill orchestrators that combine multiple skills into coherent 
 | **ppt-agent** | 11 skills | 프레젠테이션 제작 파이프라인 (Research → Validation → Structure → Content → Design System → Visual → Image Gen → Review → Refinement → Export-PPTX → Export-PDF) |
 | **tech-blog-agent** | 4 skills | Hashnode 블로그 작성 파이프라인 (Research → Draft → Review → Publish) |
 | **social-media-agent** | 12 skills | 멀티플랫폼 소셜미디어 콘텐츠 제작 (Strategy → Research → Validation → Compliance → Content → Visual → Hashtag → Approval → Schedule → Repurpose → Engagement → Analytics) |
+| **marketing-agent** | 15 skills | 마케팅 전략 및 실행물 제작 (Context Intake → Market Research → Persona → Positioning → Strategy → Campaign → Funnel → Customer Journey → Copywriting → Landing Page → Email Sequence → Ads Creative → A/B Testing → Analytics KPI → Review) |
 
 ### Skills
 
@@ -71,6 +73,7 @@ Skills are located in `.claude/skills/<agent-name>-skills/<number>-<skill-name>/
 - `.claude/skills/ppt-agent-skills/` - PPT 제작 관련 skills (11개)
 - `.claude/skills/tech-blog-agent-skills/` - 블로그 작성 관련 skills (4개)
 - `.claude/skills/social-media-agent-skills/` - 소셜미디어 관련 skills (12개)
+- `.claude/skills/marketing-agent-skills/` - 마케팅 전략 및 실행물 관련 skills (15개)
 
 ### PPT Design System
 
@@ -91,6 +94,35 @@ The Social Media agent supports 4 platforms:
 - **Threads**: 텍스트, 이미지
 
 Platform-specific content skills: `.claude/skills/social-media-agent-skills/4-content/<platform>/SKILL.md`
+
+### Marketing Agent
+
+The Marketing agent provides end-to-end marketing automation with 15 skills:
+
+**Strategy Phase:**
+- **Context Intake**: 브랜드/제품 정보 수집 (퀄리티 향상 핵심)
+- **Market Research**: 3C 분석 (Customer, Competitor, Company)
+- **Persona**: 고객 페르소나 & 공감 지도
+- **Positioning**: STP 전략 & 포지셔닝 맵
+- **Strategy**: PESO 미디어 믹스, North Star Metric
+
+**Campaign Phase:**
+- **Campaign**: SMART Goals 캠페인 기획
+- **Funnel**: AARRR 퍼널 설계
+- **Customer Journey**: 고객 여정 맵 & 터치포인트
+
+**Content Phase:**
+- **Copywriting**: AIDA, PAS, BAB 프레임워크 카피
+- **Landing Page**: CRO 체크리스트 기반 LP 설계
+- **Email Sequence**: 드립 캠페인 & 시퀀스
+- **Ads Creative**: Google/Meta/LinkedIn 광고
+
+**Optimization Phase:**
+- **A/B Testing**: 테스트 가설 & 설계
+- **Analytics KPI**: KPI 대시보드 설계
+- **Review**: 최종 품질 검토
+
+**Quality Expectation**: 80% 완성도 초안, 피드백 루프로 시니어 마케터 수준까지 개선 가능
 
 ### Hooks
 
@@ -158,6 +190,19 @@ Pricing data is embedded for Opus, Sonnet, and Haiku models.
 - `calendar/` - 콘텐츠 캘린더
 - `analytics/` - 성과 리포트
 
+**Marketing Output** - `workspace/work-marketing/`:
+- `context/` - 브랜드/제품 컨텍스트 문서
+- `research/` - 시장 분석 (3C)
+- `personas/` - 고객 페르소나
+- `strategy/` - 포지셔닝, 마케팅 전략, 캠페인 기획
+- `campaigns/` - 퍼널, 고객 여정
+- `copy/` - 헤드라인, 가치 제안, CTA
+- `landing-pages/` - LP 구조 및 카피
+- `email-sequences/` - 이메일 시퀀스
+- `ads/` - 광고 크리에이티브 (Google, Meta, LinkedIn)
+- `ab-tests/` - A/B 테스트 설계
+- `reports/` - KPI 대시보드, 리뷰 리포트
+
 ## Build Commands
 
 ### PPT Generation (pptxgenjs)
@@ -182,8 +227,11 @@ npm run build:all    # Both PPTX + PDF
 | `.claude/hooks/post-write-hook.sh` | PostToolUse hook for detecting agent/skill changes |
 | `.claude/hooks/sync-docs.sh` | Script to scan and report agent/skill structure |
 | `.claude/statusline.py` | Cost tracking statusline script |
+| `.claude/agents/marketing-agent/AGENT.md` | Marketing agent workflow and configuration |
+| `.claude/skills/marketing-agent-skills/` | Marketing skills (15개) |
 | `workspace/work-blog/` | Tech blog drafts and research |
 | `workspace/work-social/` | Social media drafts and calendar |
+| `workspace/work-marketing/` | Marketing strategy and assets |
 | `workspace/work-plan/` | Planning documents |
 
 ## Conventions
