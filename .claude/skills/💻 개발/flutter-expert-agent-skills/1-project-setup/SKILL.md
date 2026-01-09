@@ -70,6 +70,9 @@ dependencies:
   connectivity_plus: ^6.0.0
   flutter_secure_storage: ^9.2.0
 
+  # 환경 변수
+  envied: ^1.3.2
+
   # 반응형 UI
   flutter_screenutil: ^5.9.3
 
@@ -94,6 +97,9 @@ dev_dependencies:
   mocktail: ^1.0.4
   patrol: ^4.1.0
   alchemist: ^0.13.0
+  # Flavor & 환경 변수
+  flutter_flavorizr: ^2.4.1
+  envied_generator: ^1.3.2
 ```
 
 ### 디렉토리 구조
@@ -101,6 +107,9 @@ dev_dependencies:
 ```
 lib/
 ├── core/
+│   ├── config/
+│   │   ├── env/              # envied 환경 변수
+│   │   └── flavor_config.dart
 │   ├── design_system/
 │   │   ├── tokens/
 │   │   ├── atoms/
@@ -114,7 +123,10 @@ lib/
 │   └── utils/
 ├── features/
 ├── routes/
-└── main.dart
+├── main_dev.dart             # Dev entry point
+├── main_staging.dart         # Staging entry point
+├── main_prod.dart            # Prod entry point
+└── app.dart
 
 test/
 ├── unit/

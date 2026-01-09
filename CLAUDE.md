@@ -74,7 +74,7 @@ Agents are multi-skill orchestrators that combine multiple skills into coherent 
 | **📝 콘텐츠** | social-media-agent | 15 | 멀티플랫폼 소셜미디어 콘텐츠 |
 | **📣 마케팅** | marketing-agent | 15 | 마케팅 전략 및 실행물 제작 |
 | **💻 개발** | flutter-to-nextjs-agent | 8 | Flutter → Next.js 마이그레이션 |
-| **💻 개발** | flutter-expert-agent | 24 | Flutter 앱 개발 (Clean Architecture + Riverpod 3 + TDD) |
+| **💻 개발** | flutter-expert-agent | 25 | Flutter 앱 개발 (Clean Architecture + Riverpod 3 + TDD) |
 | **⚖️ 법무** | legal-contract-agent | 12 | 계약서 검토, 위험 분석, 협상 지원 |
 
 ### Skills
@@ -95,7 +95,7 @@ Skills are located in `.claude/skills/<category>/<agent-name>-skills/<number>-<s
 │   └── marketing-agent-skills/     (15 skills)
 ├── 💻 개발/
 │   ├── flutter-to-nextjs-skills/   (8 skills)
-│   ├── flutter-expert-agent-skills/ (24 skills + 6 references)
+│   ├── flutter-expert-agent-skills/ (25 skills + 6 references)
 │   └── nextjs-boilerplate-skill/   (standalone)
 └── ⚖️ 법무/
     └── legal-contract-agent-skills/ (12 skills)
@@ -230,7 +230,7 @@ Flutter 프로젝트를 Next.js로 마이그레이션하는 Agent입니다. 8개
 
 ### Flutter Expert Agent
 
-현대적인 Flutter 앱 개발을 위한 종합 Agent입니다. 24개 Skills + 6개 References로 구성:
+현대적인 Flutter 앱 개발을 위한 종합 Agent입니다. 25개 Skills + 6개 References로 구성:
 
 **Tech Stack:**
 | Category | Technology | Version |
@@ -242,10 +242,13 @@ Flutter 프로젝트를 Next.js로 마이그레이션하는 Agent입니다. 8개
 | **코드생성** | Freezed + JSON Serializable | ^3.2.4 |
 | **반응형UI** | flutter_screenutil | ^5.9.3 |
 | **다국어** | easy_localization | ^3.0.8 |
+| **Flavor** | flutter_flavorizr | ^2.4.1 |
+| **환경변수** | envied | ^1.3.2 |
 
 **Phase 1 - Setup (설정):**
 - **Project Setup**: pubspec.yaml, 디렉토리 구조 (Clean Architecture)
 - **Architecture**: Domain/Data/UI 레이어 설계
+- **Flavor**: dev/staging/prod 환경 분리, envied 환경 변수
 
 **Phase 2 - Core (핵심):**
 - **Design System**: Atomic Design + flutter_screenutil 반응형 토큰
@@ -464,6 +467,18 @@ patrol test
 
 # Widgetbook 실행
 cd widgetbook && flutter run -d chrome
+
+# Flavor 설정
+flutter pub run flutter_flavorizr         # Flavor 초기 설정
+
+# Flavor별 실행
+flutter run --flavor dev -t lib/main_dev.dart
+flutter run --flavor staging -t lib/main_staging.dart
+flutter run --flavor prod -t lib/main_prod.dart
+
+# Flavor별 릴리스 빌드
+flutter build apk --flavor prod -t lib/main_prod.dart --release
+flutter build appbundle --flavor prod -t lib/main_prod.dart --release
 ```
 
 ## Key Files
@@ -485,7 +500,7 @@ cd widgetbook && flutter run -d chrome
 | `.claude/skills/💻 개발/flutter-to-nextjs-skills/5-state/STATE-MAP.md` | 상태관리 패턴 매핑 레퍼런스 |
 | `.claude/skills/💻 개발/nextjs-boilerplate-skill/` | Next.js 보일러플레이트 생성 skill |
 | `.claude/agents/💻 개발/flutter-expert-agent.md` | Flutter Expert Agent workflow |
-| `.claude/skills/💻 개발/flutter-expert-agent-skills/` | Flutter Expert skills (24개 + 6 references) |
+| `.claude/skills/💻 개발/flutter-expert-agent-skills/` | Flutter Expert skills (25개 + 6 references) |
 | `.claude/skills/💻 개발/flutter-expert-agent-skills/_references/` | Architecture, Riverpod, Test 패턴 레퍼런스 |
 | `.claude/agents/⚖️ 법무/legal-contract-agent.md` | Legal contract agent workflow |
 | `.claude/skills/⚖️ 법무/legal-contract-agent-skills/` | Legal contract skills (12개) |

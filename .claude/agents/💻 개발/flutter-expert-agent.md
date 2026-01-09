@@ -56,6 +56,13 @@ Flutter 프로젝트의 설계부터 구현, 테스트까지 지원하는 종합
 | **DI** | Injectable + get_it | 2.7.1 / 9.2.0 |
 | **함수형** | fpdart | 1.2.0 |
 
+### 환경 설정
+
+| 영역 | 기술 | 버전 |
+|------|------|------|
+| **Flavor** | flutter_flavorizr | 2.4.1 |
+| **환경 변수** | envied | 1.3.2 |
+
 ### UI & DX
 
 | 영역 | 기술 | 버전 |
@@ -234,7 +241,7 @@ widgetbook/                   # 컴포넌트 카탈로그 (별도 프로젝트)
 
 ---
 
-## Skills 목록 (24개)
+## Skills 목록 (25개)
 
 ### Phase 1: 설계 (Architecture)
 
@@ -244,6 +251,7 @@ widgetbook/                   # 컴포넌트 카탈로그 (별도 프로젝트)
 | 2 | architecture | Clean Architecture 구조 설계 |
 | 3 | design-system | Atomic Design + ScreenUtil 반응형 시스템 |
 | 4 | feature-design | Feature 단위 도메인 설계 |
+| 25 | flavor | 환경별 빌드 설정 (dev/staging/prod) |
 
 ### Phase 2: 구현 (Implementation)
 
@@ -410,6 +418,7 @@ Agent 실행:
 /flutter-arch         # 아키텍처 설계
 /flutter-design       # Atomic Design 시스템
 /flutter-feature      # Feature 설계
+/flutter-flavor       # Flavor 환경 설정
 
 # Phase 2: 구현
 /flutter-entity       # Entity 생성
