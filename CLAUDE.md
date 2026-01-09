@@ -59,38 +59,44 @@ Agents are multi-skill orchestrators that combine multiple skills into coherent 
 **카테고리 구조:**
 ```
 .claude/agents/
-├── 콘텐츠/           # 콘텐츠 생성 관련
-├── 마케팅/           # 마케팅 전략 및 실행
-├── 개발/             # 개발 및 마이그레이션
-└── (확장 가능)       # 관리, 설계, 품질보증, QA, 인프라, 문서화 등
+├── 📝 콘텐츠/         # 콘텐츠 생성 관련
+├── 📣 마케팅/         # 마케팅 전략 및 실행
+├── 💻 개발/           # 개발 및 마이그레이션
+└── (확장 가능)        # 🎯 관리, 🏗️ 설계, ✅ 품질보증, 🔍 QA, 🚀 인프라, 📚 문서화 등
 ```
 
 | Category | Agent | Skills | Description |
 |----------|-------|--------|-------------|
-| **콘텐츠** | ppt-agent | 11 | 프레젠테이션 제작 (Research → Export) |
-| **콘텐츠** | tech-blog-agent | 4 | Hashnode 블로그 작성 |
-| **콘텐츠** | social-media-agent | 15 | 멀티플랫폼 소셜미디어 콘텐츠 |
-| **마케팅** | marketing-agent | 15 | 마케팅 전략 및 실행물 제작 |
-| **개발** | flutter-to-nextjs-agent | 8 | Flutter → Next.js 마이그레이션 |
+| **📝 콘텐츠** | ppt-agent | 11 | 프레젠테이션 제작 (Research → Export) |
+| **📝 콘텐츠** | tech-blog-agent | 4 | Hashnode 블로그 작성 |
+| **📝 콘텐츠** | social-media-agent | 15 | 멀티플랫폼 소셜미디어 콘텐츠 |
+| **📣 마케팅** | marketing-agent | 15 | 마케팅 전략 및 실행물 제작 |
+| **💻 개발** | flutter-to-nextjs-agent | 8 | Flutter → Next.js 마이그레이션 |
 
 ### Skills
 
-Skills are located in `.claude/skills/<agent-name>-skills/<number>-<skill-name>/SKILL.md`. Each skill defines:
+Skills are located in `.claude/skills/<category>/<agent-name>-skills/<number>-<skill-name>/SKILL.md`. Each skill defines:
 - Trigger keywords
 - Input/output specification
 - Workflow steps
 
-**Skill Directories:**
-- `.claude/skills/ppt-agent-skills/` - PPT 제작 관련 skills (11개)
-- `.claude/skills/tech-blog-agent-skills/` - 블로그 작성 관련 skills (4개)
-- `.claude/skills/social-media-agent-skills/` - 소셜미디어 관련 skills (15개)
-- `.claude/skills/marketing-agent-skills/` - 마케팅 전략 및 실행물 관련 skills (15개)
-- `.claude/skills/flutter-to-nextjs-skills/` - Flutter → Next.js 마이그레이션 skills (8개)
-- `.claude/skills/nextjs-boilerplate-skill/` - Next.js 프로젝트 보일러플레이트 생성 (Standalone)
+**카테고리 구조:**
+```
+.claude/skills/
+├── 📝 콘텐츠/
+│   ├── ppt-agent-skills/           (11 skills)
+│   ├── tech-blog-agent-skills/     (4 skills)
+│   └── social-media-agent-skills/  (15 skills)
+├── 📣 마케팅/
+│   └── marketing-agent-skills/     (15 skills)
+└── 💻 개발/
+    ├── flutter-to-nextjs-skills/   (8 skills)
+    └── nextjs-boilerplate-skill/   (standalone)
+```
 
 ### Standalone Skills
 
-Agent에 속하지 않는 독립 Skill입니다.
+Agent에 속하지 않는 독립 Skill입니다. (💻 개발 카테고리에 위치)
 
 | Skill | Description |
 |-------|-------------|
@@ -98,13 +104,13 @@ Agent에 속하지 않는 독립 Skill입니다.
 
 ### PPT Design System
 
-The PPT agent uses a comprehensive design system (`.claude/skills/ppt-agent-skills/5-design-system/`):
+The PPT agent uses a comprehensive design system (`.claude/skills/📝 콘텐츠/ppt-agent-skills/5-design-system/`):
 - **10 topic-based themes**: Healthcare, Education, Fintech, AI/Tech, Sustainability, Startup, Luxury, Creative, Real Estate, F&B
 - **10 slide templates**: Cover, Contents, Section Divider, Content, Statistics, Split Layout, Team, Quote, Timeline, Closing
 - **5 color palettes**: Executive Minimal, Sage Professional, Modern Dark, Corporate Blue, Warm Neutral
 - **Typography system**: Pretendard (Korean) / Inter (English), 7-level hierarchy from Hero (72-96pt) to Label (10-12pt)
 
-Theme files: `.claude/skills/ppt-agent-skills/5-design-system/themes/<number>-<theme>/THEME.md`
+Theme files: `.claude/skills/📝 콘텐츠/ppt-agent-skills/5-design-system/themes/<number>-<theme>/THEME.md`
 
 ### Social Media Platforms
 
@@ -114,7 +120,7 @@ The Social Media agent supports 4 platforms:
 - **X (Twitter)**: 트윗, 스레드, 인용
 - **Threads**: 텍스트, 이미지
 
-Platform-specific content skills: `.claude/skills/social-media-agent-skills/4-content/<platform>/SKILL.md`
+Platform-specific content skills: `.claude/skills/📝 콘텐츠/social-media-agent-skills/4-content/<platform>/SKILL.md`
 
 ### Marketing Agent
 
@@ -281,19 +287,19 @@ npm run build:all    # Both PPTX + PDF
 | Path | Purpose |
 |------|---------|
 | `.claude/agents/<category>/<name>.md` | Agent configuration and workflow |
-| `.claude/skills/<agent>-skills/<n>-<skill>/SKILL.md` | Individual skill definition |
-| `.claude/skills/ppt-agent-skills/5-design-system/THEMES.md` | Theme selection guide |
-| `.claude/skills/ppt-agent-skills/5-design-system/themes/INDEX.md` | Theme keyword mapping |
+| `.claude/skills/<category>/<agent>-skills/<n>-<skill>/SKILL.md` | Individual skill definition |
+| `.claude/skills/📝 콘텐츠/ppt-agent-skills/5-design-system/THEMES.md` | Theme selection guide |
+| `.claude/skills/📝 콘텐츠/ppt-agent-skills/5-design-system/themes/INDEX.md` | Theme keyword mapping |
 | `.claude/hooks/post-write-hook.sh` | PostToolUse hook for detecting agent/skill changes |
 | `.claude/hooks/sync-docs.sh` | Script to scan and report agent/skill structure |
 | `.claude/statusline.py` | Cost tracking statusline script |
-| `.claude/agents/마케팅/marketing-agent.md` | Marketing agent workflow and configuration |
-| `.claude/skills/marketing-agent-skills/` | Marketing skills (15개) |
-| `.claude/agents/개발/flutter-to-nextjs-agent.md` | Flutter → Next.js 마이그레이션 agent |
-| `.claude/skills/flutter-to-nextjs-skills/` | Flutter → Next.js 마이그레이션 skills (8개) |
-| `.claude/skills/flutter-to-nextjs-skills/4-components/WIDGET-MAP.md` | Flutter Widget → React 매핑 레퍼런스 |
-| `.claude/skills/flutter-to-nextjs-skills/5-state/STATE-MAP.md` | 상태관리 패턴 매핑 레퍼런스 |
-| `.claude/skills/nextjs-boilerplate-skill/` | Next.js 보일러플레이트 생성 skill |
+| `.claude/agents/📣 마케팅/marketing-agent.md` | Marketing agent workflow and configuration |
+| `.claude/skills/📣 마케팅/marketing-agent-skills/` | Marketing skills (15개) |
+| `.claude/agents/💻 개발/flutter-to-nextjs-agent.md` | Flutter → Next.js 마이그레이션 agent |
+| `.claude/skills/💻 개발/flutter-to-nextjs-skills/` | Flutter → Next.js 마이그레이션 skills (8개) |
+| `.claude/skills/💻 개발/flutter-to-nextjs-skills/4-components/WIDGET-MAP.md` | Flutter Widget → React 매핑 레퍼런스 |
+| `.claude/skills/💻 개발/flutter-to-nextjs-skills/5-state/STATE-MAP.md` | 상태관리 패턴 매핑 레퍼런스 |
+| `.claude/skills/💻 개발/nextjs-boilerplate-skill/` | Next.js 보일러플레이트 생성 skill |
 | `workspace/work-blog/` | Tech blog drafts and research |
 | `workspace/work-social/` | Social media drafts and calendar |
 | `workspace/work-marketing/` | Marketing strategy and assets |
