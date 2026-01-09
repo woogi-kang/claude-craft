@@ -78,11 +78,11 @@ PPT Agent는 11개의 전문 Skills를 통합하여 고품질 프레젠테이션
 | 4 | **ppt-content** | 콘텐츠 작성 | "내용 작성", "헤드라인", "스크립트" |
 | 5 | **ppt-design-system** | 디자인 시스템 | "디자인", "템플릿", "스타일" |
 | 6 | **ppt-visual** | 시각 자료 생성 (차트/다이어그램) | "차트", "다이어그램", "인포그래픽" |
-| 6.5 | **ppt-image-gen** | AI 이미지 생성 (Gemini 3) | "이미지 생성", "비주얼", "일러스트" |
-| 7 | **ppt-review** | 검토 & QA | "검토", "품질 체크", "리뷰" |
-| 8 | **ppt-refinement** | 피드백 반영 & 개선 | "피드백 반영", "수정", "대안" |
-| 9 | **export-pptx** | PPTX 출력 | "PPT 만들어", "PPTX 생성", "파워포인트" |
-| 10 | **export-pdf** | PDF 출력 | "PDF 만들어", "PDF 변환", "PDF 출력" |
+| 7 | **ppt-image-gen** | AI 이미지 생성 (Gemini 3) | "이미지 생성", "비주얼", "일러스트" |
+| 8 | **ppt-review** | 검토 & QA | "검토", "품질 체크", "리뷰" |
+| 9 | **ppt-refinement** | 피드백 반영 & 개선 | "피드백 반영", "수정", "대안" |
+| 10 | **export-pptx** | PPTX 출력 | "PPT 만들어", "PPTX 생성", "파워포인트" |
+| 11 | **export-pdf** | PDF 출력 | "PDF 만들어", "PDF 변환", "PDF 출력" |
 
 ## 전체 워크플로우
 
@@ -125,7 +125,7 @@ PPT Agent는 11개의 전문 Skills를 통합하여 고품질 프레젠테이션
          ├───────────────────┐
          │                   │
          ▼                   ▼
-6. Visual Skill        6.5. Image Gen Skill
+6. Visual Skill         7. Image Gen Skill
    └─ 차트, 다이어그램     └─ AI 이미지 생성 (Gemini 3)
       인포그래픽 생성         테마 연동 비주얼 자동 생성
          │                   │
@@ -146,13 +146,13 @@ PPT Agent는 11개의 전문 Skills를 통합하여 고품질 프레젠테이션
 ### Phase 4: Review & Refinement (품질 관리)
 
 ```
-7. Review Skill
+8. Review Skill
    └─ 콘텐츠, 흐름, 디자인, 접근성 검토
          │
          ├─ Critical/Major 이슈 → Refinement Skill
          │
          ▼
-8. Refinement Skill
+9. Refinement Skill
    └─ 피드백 반영, 버전 관리, 대안 제시
          │
          └─ 재검토 필요 시 → Review Skill로 복귀
@@ -161,15 +161,15 @@ PPT Agent는 11개의 전문 Skills를 통합하여 고품질 프레젠테이션
 ### Phase 5: Export (최종 출력)
 
 ```
-9. Export-PPTX Skill
-   └─ HTML → PPTX 변환, 검증, 출력
-         │
-         ▼
-10. Export-PDF Skill
-   └─ Playwright 렌더링 → PDF 병합
-         │
-         ▼
-   최종 산출물 완성 (PPTX + PDF)
+10. Export-PPTX Skill
+    └─ HTML → PPTX 변환, 검증, 출력
+          │
+          ▼
+11. Export-PDF Skill
+    └─ Playwright 렌더링 → PDF 병합
+          │
+          ▼
+    최종 산출물 완성 (PPTX + PDF)
 ```
 
 ## 사용 시나리오
@@ -186,11 +186,11 @@ Agent 실행 흐름:
 4. [Content] 슬라이드별 콘텐츠 작성
 5. [Design System] 테크 스타트업 스타일 적용
 6. [Visual] 시장 규모 차트, 로드맵 다이어그램 생성
-6.5. [Image Gen] AI 테크 테마 비주얼 이미지 자동 생성
-7. [Review] 전체 품질 검토 (이미지 품질 포함)
-8. [Refinement] 이슈 수정
-9. [Export-PPTX] PPTX 출력
-10. [Export-PDF] PDF 출력
+7. [Image Gen] AI 테크 테마 비주얼 이미지 자동 생성
+8. [Review] 전체 품질 검토 (이미지 품질 포함)
+9. [Refinement] 이슈 수정
+10. [Export-PPTX] PPTX 출력
+11. [Export-PDF] PDF 출력
 ```
 
 ### 시나리오 2: 기존 PPT 개선

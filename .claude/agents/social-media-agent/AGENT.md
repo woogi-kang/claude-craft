@@ -9,7 +9,10 @@ skills:
   - social-research
   - social-validation
   - social-compliance
-  - social-content          # 4-content/ (instagram, linkedin, x, threads 하위 폴더 포함)
+  - social-content-instagram
+  - social-content-linkedin
+  - social-content-x
+  - social-content-threads
   - social-visual
   - social-hashtag
   - social-approval
@@ -31,7 +34,7 @@ platforms:
 
 ## 개요
 
-Social Media Agent는 12개의 전문 Skills를 통합하여 4개 플랫폼에 최적화된 콘텐츠를 제작합니다.
+Social Media Agent는 15개의 전문 Skills를 통합하여 4개 플랫폼에 최적화된 콘텐츠를 제작합니다.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -96,7 +99,10 @@ Social Media Agent는 12개의 전문 Skills를 통합하여 4개 플랫폼에 �
 | 1 | **social-research** | 트렌드, 소재 리서치 | "트렌드 조사", "소재 찾아줘" |
 | 2 | **social-validation** | 콘텐츠 팩트체크 | "팩트체크", "검증해줘" |
 | 3 | **social-compliance** | 법적/가이드라인 검토 | "컴플라이언스", "규정 확인" |
-| 4 | **social-content** | 플랫폼별 콘텐츠 작성 | "콘텐츠 작성", "포스트 써줘" |
+| 4a | **social-content-instagram** | Instagram 콘텐츠 작성 | "인스타", "IG", "릴스" |
+| 4b | **social-content-linkedin** | LinkedIn 콘텐츠 작성 | "링크드인", "LI" |
+| 4c | **social-content-x** | X (Twitter) 콘텐츠 작성 | "트위터", "X", "스레드" |
+| 4d | **social-content-threads** | Threads 콘텐츠 작성 | "스레드", "threads" |
 | 5 | **social-visual** | 비주얼 제작 | "이미지 만들어", "비주얼" |
 | 6 | **social-hashtag** | 해시태그 최적화 | "해시태그", "태그 추천" |
 | 7 | **social-approval** | 승인 프로세스 | "승인 요청", "리뷰해줘" |
@@ -276,12 +282,15 @@ Agent 실행 흐름:
 
 ### 특정 Skill 호출
 ```
-/social-strategy     # 전략 수립
-/social-research     # 리서치
-/social-content      # 콘텐츠 작성
-/social-visual       # 비주얼 제작
-/social-schedule     # 스케줄링
-/social-analytics    # 분석
+/social-strategy            # 전략 수립
+/social-research            # 리서치
+/social-content-instagram   # Instagram 콘텐츠
+/social-content-linkedin    # LinkedIn 콘텐츠
+/social-content-x           # X 콘텐츠
+/social-content-threads     # Threads 콘텐츠
+/social-visual              # 비주얼 제작
+/social-schedule            # 스케줄링
+/social-analytics           # 분석
 ```
 
 ### 플랫폼 지정

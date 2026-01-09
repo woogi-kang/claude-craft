@@ -59,7 +59,7 @@ Agents are multi-skill orchestrators that combine multiple skills into coherent 
 |-------|--------|-------------|
 | **ppt-agent** | 11 skills | 프레젠테이션 제작 파이프라인 (Research → Validation → Structure → Content → Design System → Visual → Image Gen → Review → Refinement → Export-PPTX → Export-PDF) |
 | **tech-blog-agent** | 4 skills | Hashnode 블로그 작성 파이프라인 (Research → Draft → Review → Publish) |
-| **social-media-agent** | 12 skills | 멀티플랫폼 소셜미디어 콘텐츠 제작 (Strategy → Research → Validation → Compliance → Content → Visual → Hashtag → Approval → Schedule → Repurpose → Engagement → Analytics) |
+| **social-media-agent** | 15 skills | 멀티플랫폼 소셜미디어 콘텐츠 제작 (Strategy → Research → Validation → Compliance → Content [Instagram/LinkedIn/X/Threads] → Visual → Hashtag → Approval → Schedule → Repurpose → Engagement → Analytics) |
 | **marketing-agent** | 15 skills | 마케팅 전략 및 실행물 제작 (Context Intake → Market Research → Persona → Positioning → Strategy → Campaign → Funnel → Customer Journey → Copywriting → Landing Page → Email Sequence → Ads Creative → A/B Testing → Analytics KPI → Review) |
 
 ### Skills
@@ -72,8 +72,17 @@ Skills are located in `.claude/skills/<agent-name>-skills/<number>-<skill-name>/
 **Skill Directories:**
 - `.claude/skills/ppt-agent-skills/` - PPT 제작 관련 skills (11개)
 - `.claude/skills/tech-blog-agent-skills/` - 블로그 작성 관련 skills (4개)
-- `.claude/skills/social-media-agent-skills/` - 소셜미디어 관련 skills (12개)
+- `.claude/skills/social-media-agent-skills/` - 소셜미디어 관련 skills (15개)
 - `.claude/skills/marketing-agent-skills/` - 마케팅 전략 및 실행물 관련 skills (15개)
+- `.claude/skills/nextjs-boilerplate-skill/` - Next.js 프로젝트 보일러플레이트 생성 (Standalone)
+
+### Standalone Skills
+
+Agent에 속하지 않는 독립 Skill입니다.
+
+| Skill | Description |
+|-------|-------------|
+| **nextjs-boilerplate** | AI 시대 최적화된 Next.js 15+ 프로젝트 보일러플레이트 생성. Clean Architecture, Supabase, Drizzle, Testing, Docker, MCP, CI/CD 선택적 지원. |
 
 ### PPT Design System
 
@@ -229,6 +238,7 @@ npm run build:all    # Both PPTX + PDF
 | `.claude/statusline.py` | Cost tracking statusline script |
 | `.claude/agents/marketing-agent/AGENT.md` | Marketing agent workflow and configuration |
 | `.claude/skills/marketing-agent-skills/` | Marketing skills (15개) |
+| `.claude/skills/nextjs-boilerplate-skill/` | Next.js 보일러플레이트 생성 skill |
 | `workspace/work-blog/` | Tech blog drafts and research |
 | `workspace/work-social/` | Social media drafts and calendar |
 | `workspace/work-marketing/` | Marketing strategy and assets |
