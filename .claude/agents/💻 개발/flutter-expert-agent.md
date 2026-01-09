@@ -76,6 +76,15 @@ Flutter 프로젝트의 설계부터 구현, 테스트까지 지원하는 종합
 | **Storage** | firebase_storage | 13.0.5 |
 | **Remote Config** | firebase_remote_config | 6.1.3 |
 
+### Supabase (Firebase 대안)
+
+| 영역 | 기술 | 버전 |
+|------|------|------|
+| **Core** | supabase_flutter | 2.12.0 |
+| **Database** | PostgreSQL + RLS | - |
+| **Realtime** | Postgres Changes, Broadcast, Presence | - |
+| **Edge Functions** | Deno Runtime | - |
+
 ### UI & DX
 
 | 영역 | 기술 | 버전 |
@@ -254,7 +263,7 @@ widgetbook/                   # 컴포넌트 카탈로그 (별도 프로젝트)
 
 ---
 
-## Skills 목록 (26개)
+## Skills 목록 (27개)
 
 ### Phase 1: 설계 (Architecture)
 
@@ -266,6 +275,7 @@ widgetbook/                   # 컴포넌트 카탈로그 (별도 프로젝트)
 | 4 | feature-design | Feature 단위 도메인 설계 |
 | 25 | flavor | 환경별 빌드 설정 (dev/staging/prod) |
 | 26 | firebase | Firebase 서비스 통합 (Auth, Firestore, FCM 등) |
+| 27 | supabase | Supabase 백엔드 (PostgreSQL, Auth, Storage, Realtime) |
 
 ### Phase 2: 구현 (Implementation)
 
@@ -434,6 +444,7 @@ Agent 실행:
 /flutter-feature      # Feature 설계
 /flutter-flavor       # Flavor 환경 설정
 /flutter-firebase     # Firebase 서비스 설정
+/flutter-supabase     # Supabase 백엔드 설정
 
 # Phase 2: 구현
 /flutter-entity       # Entity 생성

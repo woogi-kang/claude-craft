@@ -94,6 +94,9 @@ dependencies:
   # Local Notifications (FCM)
   flutter_local_notifications: ^18.0.1
 
+  # Supabase (Firebase 대안)
+  supabase_flutter: ^2.12.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -127,6 +130,10 @@ lib/
 │   │   ├── firebase_initializer.dart
 │   │   ├── providers/        # Riverpod providers
 │   │   └── services/         # Auth, Firestore, FCM 등
+│   ├── supabase/             # Firebase 대안
+│   │   ├── supabase_initializer.dart
+│   │   ├── providers/
+│   │   └── services/         # Auth, Database, Storage, Realtime
 │   ├── design_system/
 │   │   ├── tokens/
 │   │   ├── atoms/
