@@ -437,13 +437,128 @@ criteria:
 3. Product-Led Growth - 무료 티어로 바이럴
 ```
 
+## AI 시대 전략 강화 (2025)
+
+### 2025 핵심 트렌드
+
+```yaml
+key_insights:
+  숏폼이_왕이다:
+    stat: "78%의 사람들이 숏폼 비디오로 새 제품을 알게 됨"
+    implication: "숏폼 80% + 이미지/텍스트 20%"
+
+  바이럴_equals_참여:
+    principle: "팔리는 콘텐츠 ❌ → 공감이 전염되는 콘텐츠 ✅"
+    implication: "소비자가 공동 창작자가 되어야 확산"
+
+  커뮤니티가_핵:
+    principle: "신뢰 + 공감 + 커뮤니티 = 2025 확산의 3축"
+    implication: "초기 100명의 열성 팬이 1만 명보다 가치있음"
+
+  AI_도구가_게임_체인저:
+    stat: "79% 크리에이터가 AI로 더 많은 콘텐츠 생산"
+    implication: "예산 0원도 AI 도구로 프로급 콘텐츠 가능"
+```
+
+### 숏폼 우선 전략 (PESO 재정의)
+
+```yaml
+peso_2025:
+  Paid:
+    전통: "검색광고, 디스플레이"
+    AI강화: "틱톡/릴스 프로모션, 마이크로 인플루언서"
+
+  Earned:
+    전통: "PR, 언론"
+    AI강화: "바이럴 챌린지 참여, UGC 확산"
+
+  Shared:
+    전통: "소셜 미디어"
+    AI강화:
+      - "숏폼 비디오 80%"
+      - "참여형 챌린지"
+      - "밈화 유도"
+      - "커뮤니티 팬덤"
+
+  Owned:
+    전통: "웹사이트, 블로그"
+    AI강화:
+      - "Discord/카톡 커뮤니티"
+      - "Building in Public"
+      - "앰배서더 프로그램"
+```
+
+### 콘텐츠 비중 가이드
+
+```
+2025 콘텐츠 믹스
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+숏폼 비디오    ████████████████████████  80%
+(TikTok, Reels, Shorts)
+
+이미지/텍스트  █████                      20%
+(피드, 카드뉴스, 블로그)
+```
+
+### 플랫폼 우선순위
+
+```yaml
+platform_priority:
+  바이럴_잠재력:
+    1: "TikTok (알고리즘 노출 기회 최고)"
+    2: "Instagram Reels"
+    3: "YouTube Shorts"
+
+  타겟별_선택:
+    2030_국내: [TikTok, Instagram]
+    B2B: [LinkedIn, Twitter]
+    개발자: [Twitter, GitHub, Discord]
+    10대: [TikTok]
+```
+
+### AI 도구 추천
+
+```yaml
+ai_tools:
+  무료_필수:
+    영상_편집: "CapCut"
+    그래픽: "Canva AI"
+    스크립트: "ChatGPT"
+    랜딩페이지: "Carrd, Tally"
+    이메일: "Mailchimp (무료 티어)"
+    분석: "Google Analytics 4"
+
+  유료_추천:
+    영상: "Descript, Runway"
+    그래픽: "Midjourney, DALL-E"
+    아바타: "HeyGen, Synthesia"
+    카피: "Jasper, Copy.ai"
+    자동화: "Zapier, Make"
+```
+
+### 전략 체크리스트 (AI 시대)
+
+```markdown
+□ 숏폼 비디오가 콘텐츠 믹스의 80%인가?
+□ 참여형 챌린지/밈 요소가 있는가?
+□ 커뮤니티 빌딩 계획이 있는가?
+□ AI 도구 활용 계획이 구체적인가?
+□ Building in Public 전략이 있는가?
+□ 마이크로 인플루언서 활용 계획이 있는가?
+□ 무예산으로도 실행 가능한 전략이 있는가?
+```
+
+---
+
 ## 다음 스킬 연결
 
-- **Campaign Skill**: 전략을 구체적 캠페인으로
+- **Campaign Skill**: 전략을 구체적 캠페인으로 (챌린지 포함)
 - **Funnel Skill**: AARRR 퍼널 상세 설계
+- **Copywriting Skill**: 숏폼 스크립트 제작
 - **Analytics KPI Skill**: KPI 측정 체계 구축
 
 ---
 
 *좋은 전략은 "무엇을 하지 않을 것인가"를 명확히 합니다.*
 *모든 것을 다 할 수는 없습니다. 선택과 집중이 핵심입니다.*
+*2025년엔 "어떻게 참여하게 만들 것인가?"가 선택의 기준입니다.*

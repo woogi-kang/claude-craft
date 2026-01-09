@@ -462,52 +462,51 @@ Agent 실행 흐름:
 
 ## 출력물 구조
 
+**중요: 모든 산출물은 프로젝트별 폴더에 저장**
+
 ```
 workspace/work-marketing/
 │
-├── context/
-│   └── {project}-context.md       # 브랜드/제품 컨텍스트
-│
-├── research/
-│   └── {project}-3c-analysis.md   # 시장 분석
-│
-├── personas/
-│   ├── persona-1.md               # 페르소나 1
-│   ├── persona-2.md               # 페르소나 2
-│   └── persona-3.md               # 페르소나 3
-│
-├── strategy/
-│   ├── positioning.md             # 포지셔닝 전략
-│   ├── marketing-strategy.md      # 마케팅 전략
-│   └── campaign-plan.md           # 캠페인 기획
-│
-├── copy/
-│   ├── headlines.md               # 헤드라인 모음
-│   ├── value-propositions.md      # 가치 제안
-│   └── cta-variations.md          # CTA 변형
-│
-├── landing-pages/
-│   └── {page-name}/
-│       ├── structure.md           # 섹션 구조
-│       ├── copy.md                # 전체 카피
-│       └── cro-checklist.md       # CRO 체크
-│
-├── email-sequences/
-│   ├── welcome-sequence.md        # 웰컴 시퀀스
-│   ├── onboarding-sequence.md     # 온보딩
-│   └── nurturing-sequence.md      # 너처링
-│
-├── ads/
-│   ├── google-ads.md              # Google Ads
-│   ├── meta-ads.md                # Meta Ads
-│   └── linkedin-ads.md            # LinkedIn Ads
-│
-├── ab-tests/
-│   └── {test-name}-design.md      # 테스트 설계
-│
-└── reports/
-    ├── kpi-dashboard.md           # KPI 대시보드
-    └── review-report.md           # 리뷰 리포트
+└── {project-name}/                 # 프로젝트별 폴더 (필수!)
+    │
+    ├── context/
+    │   └── {project}-context.md    # 브랜드/제품 컨텍스트
+    │
+    ├── research/
+    │   └── {project}-3c-analysis.md # 시장 분석
+    │
+    ├── personas/
+    │   └── {project}-personas.md   # 페르소나 통합
+    │
+    ├── strategy/
+    │   ├── {project}-positioning.md     # 포지셔닝 전략
+    │   ├── {project}-strategy.md        # 마케팅 전략
+    │   ├── {project}-prelaunch.md       # 런칭 전 전략
+    │   └── {project}-ai-enhanced.md     # AI 강화 전략
+    │
+    ├── copy/
+    │   └── {project}-copy.md       # 카피 통합 (헤드라인, CTA 등)
+    │
+    ├── landing-pages/
+    │   └── {page-name}/
+    │       ├── structure.md
+    │       ├── copy.md
+    │       └── cro-checklist.md
+    │
+    ├── email-sequences/
+    │   └── {sequence-name}.md
+    │
+    ├── ads/
+    │   ├── google-ads.md
+    │   ├── meta-ads.md
+    │   └── linkedin-ads.md
+    │
+    ├── ab-tests/
+    │   └── {test-name}.md
+    │
+    └── reports/
+        ├── kpi-dashboard.md
+        └── review-report.md
 ```
 
 ## 자동화 범위
@@ -567,6 +566,121 @@ workspace/work-marketing/
 | 타겟 언어 어색 | 실제 고객 언어 부재 | 고객 리뷰/피드백 공유 |
 | 창의성 부족 | AI 한계 | 방향 제시 후 변형 요청 |
 | 데이터 부정확 | 실시간 데이터 없음 | 외부 리서치 보완 |
+
+## AI 시대 강화 전략 (2025)
+
+### 핵심 트렌드
+
+| 트렌드 | 수치 | 적용 |
+|--------|------|------|
+| 숏폼 비디오 | 소셜 트래픽 80% | TikTok/Reels 우선 |
+| AI 콘텐츠 생산 | 79% 크리에이터 활용 | AI 도구 파이프라인 |
+| 참여형 콘텐츠 | 바이럴 핵심 | 챌린지/밈 전략 |
+| 커뮤니티 | 확산의 3축 | 팬덤 빌딩 |
+
+### 숏폼 우선 전략
+
+```
+콘텐츠 비중:
+- 숏폼 비디오: 80%
+- 이미지/텍스트: 20%
+
+플랫폼 우선순위:
+1. TikTok (바이럴 잠재력)
+2. Instagram Reels
+3. YouTube Shorts
+```
+
+### 바이럴 숏폼 공식
+
+```
+[0-1초] 훅 (스크롤 멈추게)
+[1-5초] 문제 공감
+[5-12초] 솔루션 (데모)
+[12-15초] CTA
+```
+
+### 참여형 챌린지 전략
+
+```
+핵심: 사용자를 콘텐츠의 공동 창작자로
+
+챌린지 구조:
+1. 참여하기 쉬운 포맷
+2. 자기 표현 기회
+3. 친구 태그 유도
+4. 해시태그 통일
+```
+
+### 커뮤니티 팬덤 빌딩
+
+```
+Building in Public:
+- 개발/마케팅 과정 공개
+- 피드백 수집 & 반영
+- 초기 팬 100명 확보
+
+앰배서더 프로그램:
+- 얼리어답터 특권 부여
+- 자발적 바이럴 유도
+```
+
+### AI 콘텐츠 파이프라인
+
+```
+1. 아이디어 생성 (ChatGPT)
+   └─ 훅 문구 30개 대량 생성
+         │
+         ▼
+2. 스크립트 작성 (ChatGPT)
+   └─ 15초 숏폼 스크립트 변환
+         │
+         ▼
+3. 비주얼 제작 (Canva AI)
+   └─ 썸네일, 텍스트 오버레이
+         │
+         ▼
+4. 영상 편집 (CapCut)
+   └─ 자동 캡션, 트렌드 템플릿
+         │
+         ▼
+5. 결과: 1시간에 5개 콘텐츠 생산
+```
+
+### AI 도구 (무료)
+
+| 용도 | 도구 | 활용 |
+|------|------|------|
+| 아이디어/스크립트 | ChatGPT | 훅, 카피 생성 |
+| 비주얼 | Canva AI | 이미지, 썸네일 |
+| 영상 편집 | CapCut | 자동 캡션, 템플릿 |
+| 랜딩페이지 | Carrd | 무료 LP 제작 |
+| 폼 | Tally | 이메일 수집 |
+| 이메일 | Mailchimp | 500명까지 무료 |
+
+### AI 프롬프트 템플릿
+
+**훅 생성용**
+```
+당신은 바이럴 마케팅 전문가입니다.
+[제품] 타겟 [타겟]을 위한 틱톡 훅 10개를 만들어주세요.
+
+조건:
+- 3초 안에 스크롤 멈추게
+- 질문형 또는 공감형
+- 친근한 톤
+```
+
+**스크립트 생성용**
+```
+위 훅을 15초 틱톡 스크립트로 확장해주세요.
+
+구조:
+[0-3초] 훅
+[3-8초] 문제 공감
+[8-13초] 솔루션
+[13-15초] CTA
+```
 
 ## 확장 가능성
 
