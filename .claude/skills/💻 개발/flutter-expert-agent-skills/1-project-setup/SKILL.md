@@ -81,6 +81,19 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  # Firebase
+  firebase_core: ^4.3.0
+  firebase_auth: ^6.1.3
+  cloud_firestore: ^6.1.1
+  firebase_messaging: ^16.1.0
+  firebase_crashlytics: ^5.0.6
+  firebase_analytics: ^12.1.0
+  firebase_storage: ^13.0.5
+  firebase_remote_config: ^6.1.3
+
+  # Local Notifications (FCM)
+  flutter_local_notifications: ^18.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -110,6 +123,10 @@ lib/
 │   ├── config/
 │   │   ├── env/              # envied 환경 변수
 │   │   └── flavor_config.dart
+│   ├── firebase/
+│   │   ├── firebase_initializer.dart
+│   │   ├── providers/        # Riverpod providers
+│   │   └── services/         # Auth, Firestore, FCM 등
 │   ├── design_system/
 │   │   ├── tokens/
 │   │   ├── atoms/
@@ -123,6 +140,9 @@ lib/
 │   └── utils/
 ├── features/
 ├── routes/
+├── firebase_options_dev.dart     # FlutterFire CLI 생성
+├── firebase_options_staging.dart
+├── firebase_options_prod.dart
 ├── main_dev.dart             # Dev entry point
 ├── main_staging.dart         # Staging entry point
 ├── main_prod.dart            # Prod entry point
