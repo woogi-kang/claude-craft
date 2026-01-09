@@ -14,8 +14,17 @@ Claude Craft는 [Claude Code](https://claude.ai/code) (Anthropic의 공식 CLI �
 |-------|------|--------|
 | **PPT Agent** | 프레젠테이션 제작 자동화 | 11개 (리서치 → 검증 → 구조 → 콘텐츠 → 디자인 → 시각화 → AI이미지 → 검토 → 개선 → PPTX → PDF) |
 | **Tech Blog Agent** | Hashnode 블로그 작성 자동화 | 4개 (리서치 → 초안 → 검토 → 발행) |
-| **Social Media Agent** | 멀티플랫폼 SNS 콘텐츠 제작 | 12개 (전략 → 리서치 → 검증 → 컴플라이언스 → 콘텐츠 → 비주얼 → 해시태그 → 승인 → 스케줄 → 리퍼포징 → 참여 → 분석) |
+| **Social Media Agent** | 멀티플랫폼 SNS 콘텐츠 제작 | 15개 (전략 → 리서치 → 검증 → 컴플라이언스 → 콘텐츠 → 비주얼 → 해시태그 → 승인 → 스케줄 → 리퍼포징 → 참여 → 분석) |
 | **Marketing Agent** | 마케팅 전략 및 실행물 제작 | 15개 (컨텍스트 → 리서치 → 페르소나 → 포지셔닝 → 전략 → 캠페인 → 퍼널 → 여정 → 카피 → LP → 이메일 → 광고 → AB테스트 → KPI → 리뷰) |
+| **Flutter to Next.js Agent** | Flutter → Next.js 마이그레이션 | 8개 (분석 → 매핑 → 스캐폴딩 → 컴포넌트 → 상태관리 → 라우팅 → 검증 → 리뷰) |
+
+### Standalone Skills
+
+Agent에 속하지 않는 독립 Skill:
+
+| Skill | 설명 |
+|-------|------|
+| **Next.js Boilerplate** | AI 시대 최적화된 Next.js 15+ 프로젝트 보일러플레이트 생성 (Clean Architecture, Auth, Supabase, Drizzle, Testing, Docker, MCP, CI/CD 선택적 지원) |
 
 ### 2. Real-time Cost Statusline
 
@@ -95,7 +104,9 @@ claude-craft/
 │   │   │   └── AGENT.md
 │   │   ├── social-media-agent/
 │   │   │   └── AGENT.md
-│   │   └── marketing-agent/
+│   │   ├── marketing-agent/
+│   │   │   └── AGENT.md
+│   │   └── flutter-to-nextjs-agent/
 │   │       └── AGENT.md
 │   │
 │   ├── skills/                      # Skill 정의
@@ -107,11 +118,11 @@ claude-craft/
 │   │   │   ├── 5-design-system/
 │   │   │   │   └── themes/          # 10개 산업별 테마
 │   │   │   ├── 6-visual/
-│   │   │   ├── 6.5-image-gen/
-│   │   │   ├── 7-review/
-│   │   │   ├── 8-refinement/
-│   │   │   ├── 9-export-pptx/
-│   │   │   └── 10-export-pdf/
+│   │   │   ├── 7-image-gen/
+│   │   │   ├── 8-review/
+│   │   │   ├── 9-refinement/
+│   │   │   ├── 10-export-pptx/
+│   │   │   └── 11-export-pdf/
 │   │   │
 │   │   ├── tech-blog-agent-skills/  # Blog Skills (4개)
 │   │   │   ├── 1-research/
@@ -119,7 +130,7 @@ claude-craft/
 │   │   │   ├── 3-review/
 │   │   │   └── 4-publish/
 │   │   │
-│   │   ├── social-media-agent-skills/ # SNS Skills (12개)
+│   │   ├── social-media-agent-skills/ # SNS Skills (15개)
 │   │   │   ├── 0-strategy/
 │   │   │   ├── 1-research/
 │   │   │   ├── 2-validation/
@@ -137,22 +148,36 @@ claude-craft/
 │   │   │   ├── 10-engagement/
 │   │   │   └── 11-analytics/
 │   │   │
-│   │   └── marketing-agent-skills/  # Marketing Skills (15개)
-│   │       ├── 1-context-intake/
-│   │       ├── 2-market-research/
-│   │       ├── 3-persona/
-│   │       ├── 4-positioning/
-│   │       ├── 5-strategy/
-│   │       ├── 6-campaign/
-│   │       ├── 7-funnel/
-│   │       ├── 8-customer-journey/
-│   │       ├── 9-copywriting/
-│   │       ├── 10-landing-page/
-│   │       ├── 11-email-sequence/
-│   │       ├── 12-ads-creative/
-│   │       ├── 13-ab-testing/
-│   │       ├── 14-analytics-kpi/
-│   │       └── 15-review/
+│   │   ├── marketing-agent-skills/  # Marketing Skills (15개)
+│   │   │   ├── 1-context-intake/
+│   │   │   ├── 2-market-research/
+│   │   │   ├── 3-persona/
+│   │   │   ├── 4-positioning/
+│   │   │   ├── 5-strategy/
+│   │   │   ├── 6-campaign/
+│   │   │   ├── 7-funnel/
+│   │   │   ├── 8-customer-journey/
+│   │   │   ├── 9-copywriting/
+│   │   │   ├── 10-landing-page/
+│   │   │   ├── 11-email-sequence/
+│   │   │   ├── 12-ads-creative/
+│   │   │   ├── 13-ab-testing/
+│   │   │   ├── 14-analytics-kpi/
+│   │   │   └── 15-review/
+│   │   │
+│   │   ├── flutter-to-nextjs-skills/ # Flutter Migration Skills (8개)
+│   │   │   ├── 1-analyze/
+│   │   │   ├── 2-mapping/
+│   │   │   ├── 3-scaffold/
+│   │   │   ├── 4-components/         # + WIDGET-MAP.md
+│   │   │   ├── 5-state/              # + STATE-MAP.md
+│   │   │   ├── 6-routing/
+│   │   │   ├── 7-validate/
+│   │   │   └── 8-review/
+│   │   │
+│   │   └── nextjs-boilerplate-skill/ # Standalone Skill
+│   │       ├── SKILL.md
+│   │       └── templates/            # 9개 옵션 템플릿
 │   │
 │   ├── hooks/                       # Hook 스크립트
 │   │   ├── post-write-hook.sh
@@ -182,7 +207,11 @@ claude-craft/
 │   │   ├── email-sequences/
 │   │   ├── ads/
 │   │   └── reports/
-│   └── work-plan/                   # 기획 문서
+│   ├── work-plan/                   # 기획 문서
+│   └── flutter-migration/           # Flutter → Next.js 변환
+│       └── <project-name>/
+│           ├── analysis/            # 분석 리포트
+│           └── nextjs/              # 변환된 프로젝트
 │
 ├── scripts/
 │   └── install.sh                   # 설치 스크립트
@@ -273,6 +302,48 @@ A/B Testing → Analytics KPI → Review
 - 최적화: CRO 체크리스트, A/B 테스트
 
 **퀄리티 기대치:** 80% 완성도 초안, 피드백 루프로 시니어 마케터 수준까지 개선 가능
+
+### Flutter to Next.js Agent
+
+```bash
+# Claude Code 실행 후
+"이 Flutter 앱을 Next.js로 마이그레이션해줘"
+"Flutter BLoC을 Zustand로 변환해줘"
+"GoRouter를 App Router로 변환해줘"
+```
+
+**워크플로우:**
+```
+Analyze → Mapping → Scaffold → Components → State → Routing → Validate → Review
+```
+
+**기술 스택 변환:**
+| Flutter | Next.js |
+|---------|---------|
+| Widget | React Component (shadcn/ui) |
+| BLoC/Riverpod/Provider/GetX | Zustand |
+| Repository + Stream | React Query |
+| GoRouter/Navigator | App Router |
+| http/dio | Server Actions + fetch |
+
+**주요 특징:**
+- Zustand로 상태관리 통일 (BLoC, Riverpod, Provider, GetX 모두 지원)
+- shadcn/ui 기반 UI 컴포넌트 (필요시 커스텀)
+- 1:1 기능 동일성 유지
+- 모바일 웹 + 데스크탑 웹 반응형 지원
+- 점진적 변환 (화면/기능 단위)
+
+### Next.js Boilerplate Skill
+
+```bash
+# Claude Code 실행 후
+"Next.js 프로젝트 만들어줘"
+"/nextjs-boilerplate"
+```
+
+**옵션:**
+- Clean Architecture, Auth (NextAuth), Supabase, Drizzle ORM
+- Testing (Vitest + Playwright), Docker, MCP Server, CI/CD
 
 ## Statusline 설정
 

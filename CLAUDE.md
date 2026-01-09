@@ -43,7 +43,8 @@ claude-craft/
 │   ├── work-blog/              # Blog drafts
 │   ├── work-social/            # Social media drafts
 │   ├── work-marketing/         # Marketing strategy & assets
-│   └── work-plan/              # Planning docs
+│   ├── work-plan/              # Planning docs
+│   └── flutter-migration/      # Flutter → Next.js migration outputs
 │
 ├── scripts/
 │   └── install.sh              # Installation script
@@ -53,14 +54,24 @@ claude-craft/
 
 ### Agents
 
-Agents are multi-skill orchestrators that combine multiple skills into coherent workflows. Located in `.claude/agents/<agent-name>/AGENT.md`.
+Agents are multi-skill orchestrators that combine multiple skills into coherent workflows. Located in `.claude/agents/<category>/<agent-name>.md`.
 
-| Agent | Skills | Description |
-|-------|--------|-------------|
-| **ppt-agent** | 11 skills | 프레젠테이션 제작 파이프라인 (Research → Validation → Structure → Content → Design System → Visual → Image Gen → Review → Refinement → Export-PPTX → Export-PDF) |
-| **tech-blog-agent** | 4 skills | Hashnode 블로그 작성 파이프라인 (Research → Draft → Review → Publish) |
-| **social-media-agent** | 15 skills | 멀티플랫폼 소셜미디어 콘텐츠 제작 (Strategy → Research → Validation → Compliance → Content [Instagram/LinkedIn/X/Threads] → Visual → Hashtag → Approval → Schedule → Repurpose → Engagement → Analytics) |
-| **marketing-agent** | 15 skills | 마케팅 전략 및 실행물 제작 (Context Intake → Market Research → Persona → Positioning → Strategy → Campaign → Funnel → Customer Journey → Copywriting → Landing Page → Email Sequence → Ads Creative → A/B Testing → Analytics KPI → Review) |
+**카테고리 구조:**
+```
+.claude/agents/
+├── 콘텐츠/           # 콘텐츠 생성 관련
+├── 마케팅/           # 마케팅 전략 및 실행
+├── 개발/             # 개발 및 마이그레이션
+└── (확장 가능)       # 관리, 설계, 품질보증, QA, 인프라, 문서화 등
+```
+
+| Category | Agent | Skills | Description |
+|----------|-------|--------|-------------|
+| **콘텐츠** | ppt-agent | 11 | 프레젠테이션 제작 (Research → Export) |
+| **콘텐츠** | tech-blog-agent | 4 | Hashnode 블로그 작성 |
+| **콘텐츠** | social-media-agent | 15 | 멀티플랫폼 소셜미디어 콘텐츠 |
+| **마케팅** | marketing-agent | 15 | 마케팅 전략 및 실행물 제작 |
+| **개발** | flutter-to-nextjs-agent | 8 | Flutter → Next.js 마이그레이션 |
 
 ### Skills
 
@@ -74,6 +85,7 @@ Skills are located in `.claude/skills/<agent-name>-skills/<number>-<skill-name>/
 - `.claude/skills/tech-blog-agent-skills/` - 블로그 작성 관련 skills (4개)
 - `.claude/skills/social-media-agent-skills/` - 소셜미디어 관련 skills (15개)
 - `.claude/skills/marketing-agent-skills/` - 마케팅 전략 및 실행물 관련 skills (15개)
+- `.claude/skills/flutter-to-nextjs-skills/` - Flutter → Next.js 마이그레이션 skills (8개)
 - `.claude/skills/nextjs-boilerplate-skill/` - Next.js 프로젝트 보일러플레이트 생성 (Standalone)
 
 ### Standalone Skills
@@ -132,6 +144,37 @@ The Marketing agent provides end-to-end marketing automation with 15 skills:
 - **Review**: 최종 품질 검토
 
 **Quality Expectation**: 80% 완성도 초안, 피드백 루프로 시니어 마케터 수준까지 개선 가능
+
+### Flutter to Next.js Agent
+
+Flutter 프로젝트를 Next.js로 마이그레이션하는 Agent입니다. 8개 Skills로 구성:
+
+**Analysis Phase:**
+- **Analyze**: Flutter 프로젝트 구조, 위젯, 상태관리, API, 라우팅 분석
+- **Mapping**: Widget→Component, State→Zustand, Route 매핑 전략 수립
+
+**Conversion Phase:**
+- **Scaffold**: Next.js 15+ 프로젝트 스캐폴딩 (App Router, Zustand, React Query)
+- **Components**: Flutter Widget → React 컴포넌트 변환 (shadcn/ui 기반)
+- **State**: BLoC/Riverpod/Provider/GetX → Zustand 변환
+- **Routing**: GoRouter/Navigator → App Router 변환
+
+**Validation Phase:**
+- **Validate**: TypeScript, ESLint, 빌드 검증
+- **Review**: 기능 동일성, 코드 품질, 성능 최종 검토
+
+**Tech Stack Mapping:**
+| Flutter | Next.js |
+|---------|---------|
+| Widget | React Component (shadcn/ui) |
+| BLoC/Riverpod/Provider/GetX | Zustand |
+| Repository + Stream | React Query |
+| GoRouter/Navigator | App Router |
+| http/dio | Server Actions + fetch |
+
+**Reference Files:**
+- `WIDGET-MAP.md`: Flutter Widget → React/Tailwind 매핑
+- `STATE-MAP.md`: 상태관리 패턴 매핑
 
 ### Hooks
 
@@ -212,6 +255,14 @@ Pricing data is embedded for Opus, Sonnet, and Haiku models.
 - `ab-tests/` - A/B 테스트 설계
 - `reports/` - KPI 대시보드, 리뷰 리포트
 
+**Flutter Migration Output** - `workspace/flutter-migration/{project-name}/`:
+- `analysis/` - Flutter 프로젝트 분석 리포트
+  - `flutter-analysis.md` - 구조, 위젯, 상태관리 분석
+  - `mapping-strategy.md` - 변환 전략
+  - `validation-report.md` - 검증 결과
+  - `final-review.md` - 최종 품질 검토
+- `nextjs/` - 변환된 Next.js 프로젝트
+
 ## Build Commands
 
 ### PPT Generation (pptxgenjs)
@@ -229,15 +280,19 @@ npm run build:all    # Both PPTX + PDF
 
 | Path | Purpose |
 |------|---------|
-| `.claude/agents/<name>/AGENT.md` | Agent configuration and workflow |
+| `.claude/agents/<category>/<name>.md` | Agent configuration and workflow |
 | `.claude/skills/<agent>-skills/<n>-<skill>/SKILL.md` | Individual skill definition |
 | `.claude/skills/ppt-agent-skills/5-design-system/THEMES.md` | Theme selection guide |
 | `.claude/skills/ppt-agent-skills/5-design-system/themes/INDEX.md` | Theme keyword mapping |
 | `.claude/hooks/post-write-hook.sh` | PostToolUse hook for detecting agent/skill changes |
 | `.claude/hooks/sync-docs.sh` | Script to scan and report agent/skill structure |
 | `.claude/statusline.py` | Cost tracking statusline script |
-| `.claude/agents/marketing-agent/AGENT.md` | Marketing agent workflow and configuration |
+| `.claude/agents/마케팅/marketing-agent.md` | Marketing agent workflow and configuration |
 | `.claude/skills/marketing-agent-skills/` | Marketing skills (15개) |
+| `.claude/agents/개발/flutter-to-nextjs-agent.md` | Flutter → Next.js 마이그레이션 agent |
+| `.claude/skills/flutter-to-nextjs-skills/` | Flutter → Next.js 마이그레이션 skills (8개) |
+| `.claude/skills/flutter-to-nextjs-skills/4-components/WIDGET-MAP.md` | Flutter Widget → React 매핑 레퍼런스 |
+| `.claude/skills/flutter-to-nextjs-skills/5-state/STATE-MAP.md` | 상태관리 패턴 매핑 레퍼런스 |
 | `.claude/skills/nextjs-boilerplate-skill/` | Next.js 보일러플레이트 생성 skill |
 | `workspace/work-blog/` | Tech blog drafts and research |
 | `workspace/work-social/` | Social media drafts and calendar |

@@ -210,7 +210,7 @@ Auth: Authorization header with API key
 | **Links** | 내부 2-3개, 외부 3-5개 |
 | **Images** | Alt text, 1600x840 cover |
 
-> 상세 가이드: [SEO_GUIDE.md](./SEO_GUIDE.md)
+> 상세 가이드: [SEO_GUIDE.md](../../skills/tech-blog-agent-skills/SEO_GUIDE.md)
 
 ## 출력물
 
@@ -250,7 +250,7 @@ work-blog/
 "67% of React components re-render unnecessarily."
 ```
 
-> 상세 가이드: [STYLE_GUIDE.md](./STYLE_GUIDE.md)
+> 상세 가이드: [STYLE_GUIDE.md](../../skills/tech-blog-agent-skills/STYLE_GUIDE.md)
 
 ## 사용 시나리오
 

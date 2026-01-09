@@ -49,9 +49,11 @@ case "$MODE" in
             rm -rf "$CLAUDE_DEST/agents" 2>/dev/null || true
             ln -sf "$CLAUDE_SRC/agents" "$CLAUDE_DEST/agents"
             echo "      -> Linked $CLAUDE_DEST/agents"
-            for agent_dir in "$CLAUDE_SRC/agents"/*/; do
-                if [ -d "$agent_dir" ]; then
-                    echo "         - $(basename "$agent_dir")"
+            for category_dir in "$CLAUDE_SRC/agents"/*/; do
+                if [ -d "$category_dir" ]; then
+                    category=$(basename "$category_dir")
+                    agent_count=$(find "$category_dir" -maxdepth 1 -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
+                    echo "         - $category/ ($agent_count agents)"
                 fi
             done
         else
