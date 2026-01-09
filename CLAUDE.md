@@ -74,6 +74,7 @@ Agents are multi-skill orchestrators that combine multiple skills into coherent 
 | **📝 콘텐츠** | social-media-agent | 15 | 멀티플랫폼 소셜미디어 콘텐츠 |
 | **📣 마케팅** | marketing-agent | 15 | 마케팅 전략 및 실행물 제작 |
 | **💻 개발** | flutter-to-nextjs-agent | 8 | Flutter → Next.js 마이그레이션 |
+| **💻 개발** | flutter-expert-agent | 24 | Flutter 앱 개발 (Clean Architecture + Riverpod 3 + TDD) |
 | **⚖️ 법무** | legal-contract-agent | 12 | 계약서 검토, 위험 분석, 협상 지원 |
 
 ### Skills
@@ -94,6 +95,7 @@ Skills are located in `.claude/skills/<category>/<agent-name>-skills/<number>-<s
 │   └── marketing-agent-skills/     (15 skills)
 ├── 💻 개발/
 │   ├── flutter-to-nextjs-skills/   (8 skills)
+│   ├── flutter-expert-agent-skills/ (24 skills + 6 references)
 │   └── nextjs-boilerplate-skill/   (standalone)
 └── ⚖️ 법무/
     └── legal-contract-agent-skills/ (12 skills)
@@ -226,6 +228,89 @@ Flutter 프로젝트를 Next.js로 마이그레이션하는 Agent입니다. 8개
 - 근로기준법
 - 업종별 규제 (금융, 의료, 건설 등)
 
+### Flutter Expert Agent
+
+현대적인 Flutter 앱 개발을 위한 종합 Agent입니다. 24개 Skills + 6개 References로 구성:
+
+**Tech Stack:**
+| Category | Technology | Version |
+|----------|------------|---------|
+| **상태관리** | Riverpod 3 (AsyncNotifier, Mutations) | ^3.1.0 |
+| **라우팅** | GoRouter + Type-Safe Builder | ^17.0.1 |
+| **네트워크** | Dio + Retrofit | ^5.9.0 |
+| **로컬DB** | Drift (SQLite) | ^2.30.0 |
+| **코드생성** | Freezed + JSON Serializable | ^3.2.4 |
+| **반응형UI** | flutter_screenutil | ^5.9.3 |
+| **다국어** | easy_localization | ^3.0.8 |
+
+**Phase 1 - Setup (설정):**
+- **Project Setup**: pubspec.yaml, 디렉토리 구조 (Clean Architecture)
+- **Architecture**: Domain/Data/UI 레이어 설계
+
+**Phase 2 - Core (핵심):**
+- **Design System**: Atomic Design + flutter_screenutil 반응형 토큰
+- **Error Handling**: Either/Result 패턴 (fpdart)
+- **Network**: Dio + Retrofit + Interceptors
+- **Database**: Drift DAOs, 마이그레이션
+
+**Phase 3 - State (상태관리):**
+- **Riverpod 3**: AsyncNotifier, Mutations, Offline Persistence
+- **DI**: Injectable + GetIt
+
+**Phase 4 - Feature (기능):**
+- **Feature**: Domain/Data/UI 레이어별 구현
+- **Routing**: GoRouter + StatefulShellRoute
+- **Form Validation**: Reactive Forms
+- **Pagination**: 무한스크롤, Cursor 기반
+- **Offline Mode**: 오프라인 큐, 동기화
+
+**Phase 5 - Test (테스트):**
+- **Unit Test**: Riverpod ProviderContainer.test()
+- **Widget Test**: Robot Pattern
+- **Golden Test**: Alchemist
+- **E2E Test**: Patrol
+
+**Phase 6 - DevOps:**
+- **CI/CD**: GitHub Actions (Flutter 3.24+)
+- **Widgetbook**: 컴포넌트 카탈로그 3.20.2
+- **easy-localization**: JSON 번역 관리
+
+**Testing Pyramid:**
+| Level | Coverage | Tools |
+|-------|----------|-------|
+| Unit | 60-70% | mocktail, ProviderContainer.test() |
+| Widget | 15-20% | Robot Pattern |
+| Golden | 10-15% | Alchemist |
+| E2E | 5-10% | Patrol |
+
+**Architecture Pattern:**
+```
+lib/
+├── core/
+│   ├── design_system/          # Atomic Design
+│   │   ├── tokens/             # Colors, Typography, Spacing
+│   │   ├── atoms/              # Button, Text, Input
+│   │   ├── molecules/          # SearchBar, LabeledInput
+│   │   ├── organisms/          # Header, LoginForm
+│   │   └── templates/          # Page layouts
+│   ├── error/                  # Failure, Either
+│   ├── network/                # Dio, Interceptors
+│   └── database/               # Drift
+├── features/{feature}/
+│   ├── domain/                 # Entities, Repositories, UseCases
+│   ├── data/                   # DTOs, DataSources, RepoImpl
+│   └── presentation/           # Pages, Widgets, Providers
+└── routes/                     # GoRouter configuration
+```
+
+**Reference Files:**
+- `_references/ARCHITECTURE-PATTERN.md`: Clean Architecture 가이드
+- `_references/RIVERPOD-PATTERN.md`: Riverpod 3 AsyncNotifier 패턴
+- `_references/ATOMIC-DESIGN-PATTERN.md`: Atomic Design 체계
+- `_references/TEST-PATTERN.md`: TDD 피라미드
+- `_references/NETWORK-PATTERN.md`: Dio + Retrofit 패턴
+- `_references/DATABASE-PATTERN.md`: Drift DAO 패턴
+
 ### Hooks
 
 Automated scripts that run on Claude Code events. Located in `.claude/hooks/`.
@@ -331,6 +416,20 @@ Pricing data is embedded for Opus, Sonnet, and Haiku models.
 - `checklist/` - 서명 전 체크리스트
 - `reports/` - 최종 리뷰 리포트
 
+**Flutter Project Output** - `{project-root}/`:
+- `lib/` - Clean Architecture 구조
+  - `core/` - 공통 모듈 (design_system, error, network, database)
+  - `features/` - 피처별 domain/data/presentation
+  - `routes/` - GoRouter 설정
+- `test/` - 테스트 코드
+  - `unit/` - 유닛 테스트
+  - `widget/` - 위젯 테스트
+  - `golden/` - 골든 테스트
+  - `helpers/` - 테스트 헬퍼
+- `integration_test/` - E2E 테스트 (Patrol)
+- `widgetbook/` - 컴포넌트 카탈로그
+- `assets/translations/` - easy_localization JSON 파일
+
 ## Build Commands
 
 ### PPT Generation (pptxgenjs)
@@ -342,6 +441,29 @@ npm install
 npm run build        # PPTX only
 npm run build:pdf    # PDF only
 npm run build:all    # Both PPTX + PDF
+```
+
+### Flutter Project (flutter-expert-agent)
+
+```bash
+# 프로젝트 생성
+flutter create --org com.example my_app
+cd my_app
+
+# 의존성 설치 및 코드 생성
+flutter pub get
+dart run build_runner build --delete-conflicting-outputs
+
+# 테스트 실행
+flutter test                           # 전체 테스트
+flutter test test/unit/               # 유닛 테스트만
+flutter test --update-goldens         # 골든 테스트 업데이트
+
+# E2E 테스트 (Patrol)
+patrol test
+
+# Widgetbook 실행
+cd widgetbook && flutter run -d chrome
 ```
 
 ## Key Files
@@ -362,6 +484,9 @@ npm run build:all    # Both PPTX + PDF
 | `.claude/skills/💻 개발/flutter-to-nextjs-skills/4-components/WIDGET-MAP.md` | Flutter Widget → React 매핑 레퍼런스 |
 | `.claude/skills/💻 개발/flutter-to-nextjs-skills/5-state/STATE-MAP.md` | 상태관리 패턴 매핑 레퍼런스 |
 | `.claude/skills/💻 개발/nextjs-boilerplate-skill/` | Next.js 보일러플레이트 생성 skill |
+| `.claude/agents/💻 개발/flutter-expert-agent.md` | Flutter Expert Agent workflow |
+| `.claude/skills/💻 개발/flutter-expert-agent-skills/` | Flutter Expert skills (24개 + 6 references) |
+| `.claude/skills/💻 개발/flutter-expert-agent-skills/_references/` | Architecture, Riverpod, Test 패턴 레퍼런스 |
 | `.claude/agents/⚖️ 법무/legal-contract-agent.md` | Legal contract agent workflow |
 | `.claude/skills/⚖️ 법무/legal-contract-agent-skills/` | Legal contract skills (12개) |
 | `workspace/work-blog/` | Tech blog drafts and research |
