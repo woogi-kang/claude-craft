@@ -43,6 +43,7 @@ claude-craft/
 │   ├── work-blog/              # Blog drafts
 │   ├── work-social/            # Social media drafts
 │   ├── work-marketing/         # Marketing strategy & assets
+│   ├── work-legal/             # Legal contract review & drafts
 │   ├── work-plan/              # Planning docs
 │   └── flutter-migration/      # Flutter → Next.js migration outputs
 │
@@ -62,6 +63,7 @@ Agents are multi-skill orchestrators that combine multiple skills into coherent 
 ├── 📝 콘텐츠/         # 콘텐츠 생성 관련
 ├── 📣 마케팅/         # 마케팅 전략 및 실행
 ├── 💻 개발/           # 개발 및 마이그레이션
+├── ⚖️ 법무/           # 계약서 검토 및 법무 지원
 └── (확장 가능)        # 🎯 관리, 🏗️ 설계, ✅ 품질보증, 🔍 QA, 🚀 인프라, 📚 문서화 등
 ```
 
@@ -72,6 +74,7 @@ Agents are multi-skill orchestrators that combine multiple skills into coherent 
 | **📝 콘텐츠** | social-media-agent | 15 | 멀티플랫폼 소셜미디어 콘텐츠 |
 | **📣 마케팅** | marketing-agent | 15 | 마케팅 전략 및 실행물 제작 |
 | **💻 개발** | flutter-to-nextjs-agent | 8 | Flutter → Next.js 마이그레이션 |
+| **⚖️ 법무** | legal-contract-agent | 12 | 계약서 검토, 위험 분석, 협상 지원 |
 
 ### Skills
 
@@ -89,9 +92,11 @@ Skills are located in `.claude/skills/<category>/<agent-name>-skills/<number>-<s
 │   └── social-media-agent-skills/  (15 skills)
 ├── 📣 마케팅/
 │   └── marketing-agent-skills/     (15 skills)
-└── 💻 개발/
-    ├── flutter-to-nextjs-skills/   (8 skills)
-    └── nextjs-boilerplate-skill/   (standalone)
+├── 💻 개발/
+│   ├── flutter-to-nextjs-skills/   (8 skills)
+│   └── nextjs-boilerplate-skill/   (standalone)
+└── ⚖️ 법무/
+    └── legal-contract-agent-skills/ (12 skills)
 ```
 
 ### Standalone Skills
@@ -182,6 +187,45 @@ Flutter 프로젝트를 Next.js로 마이그레이션하는 Agent입니다. 8개
 - `WIDGET-MAP.md`: Flutter Widget → React/Tailwind 매핑
 - `STATE-MAP.md`: 상태관리 패턴 매핑
 
+### Legal Contract Agent
+
+계약서 검토 및 법무 지원을 위한 Agent입니다. 12개 Skills로 구성:
+
+**Phase 1 - Analysis (분석):**
+- **Context**: 계약 배경, 당사자 정보, 협상 목표 수집
+- **Document Analysis**: 계약서 구조, 조항 분류, 핵심 조건 추출
+- **Risk Assessment**: 4단계 위험 매트릭스 (Critical/High/Medium/Low)
+- **Summary Extract**: 핵심 조항 요약, 1-Page 경영진 브리핑
+
+**Phase 2 - Review (검토):**
+- **Clause Library**: 업계 표준(Playbook) 대비 조항 비교
+- **Version Compare**: 버전 간 변경사항 Diff 분석, 협상 추적
+- **Compliance Check**: 규제 준수 검증 (하도급법, 개인정보보호법 등)
+
+**Phase 3 - Execution (실행):**
+- **Redline Suggest**: 수정 제안 및 레드라인 마크업
+- **Negotiation Points**: BATNA 분석, Give-and-Take 전략
+- **Document Generate**: 계약서 초안 생성 (NDA, SaaS, 용역계약서)
+
+**Phase 4 - Validation (검증):**
+- **Checklist**: 서명 전 최종 체크리스트
+- **Final Review**: 종합 검토 및 권고사항
+
+**Risk Matrix:**
+| Level | Symbol | Action |
+|-------|--------|--------|
+| Critical | 🔴 | 즉시 수정 필요 |
+| High | 🟠 | 협상 권고 |
+| Medium | 🟡 | 검토 필요 |
+| Low | 🟢 | 수용 가능 |
+
+**Compliance Coverage:**
+- 하도급법 (공정거래위원회)
+- 개인정보보호법/GDPR
+- 전자상거래법
+- 근로기준법
+- 업종별 규제 (금융, 의료, 건설 등)
+
 ### Hooks
 
 Automated scripts that run on Claude Code events. Located in `.claude/hooks/`.
@@ -269,6 +313,24 @@ Pricing data is embedded for Opus, Sonnet, and Haiku models.
   - `final-review.md` - 최종 품질 검토
 - `nextjs/` - 변환된 Next.js 프로젝트
 
+**Legal Output** - `workspace/work-legal/{project-name}/`:
+- `context/` - 계약 배경 및 당사자 정보
+  - `{project}-context.md` - 컨텍스트 문서
+- `analysis/` - 분석 결과물
+  - `{project}-document-analysis.md` - 문서 분석
+  - `{project}-risk-assessment.md` - 위험 평가
+  - `{project}-summary.md` - 핵심 요약
+- `review/` - 검토 결과물
+  - `{project}-clause-comparison.md` - 조항 비교
+  - `{project}-version-diff.md` - 버전 비교
+  - `{project}-compliance.md` - 규제 준수 검토
+- `execution/` - 실행 산출물
+  - `{project}-redline.md` - 수정 제안
+  - `{project}-negotiation-strategy.md` - 협상 전략
+- `drafts/` - 계약서 초안
+- `checklist/` - 서명 전 체크리스트
+- `reports/` - 최종 리뷰 리포트
+
 ## Build Commands
 
 ### PPT Generation (pptxgenjs)
@@ -300,9 +362,12 @@ npm run build:all    # Both PPTX + PDF
 | `.claude/skills/💻 개발/flutter-to-nextjs-skills/4-components/WIDGET-MAP.md` | Flutter Widget → React 매핑 레퍼런스 |
 | `.claude/skills/💻 개발/flutter-to-nextjs-skills/5-state/STATE-MAP.md` | 상태관리 패턴 매핑 레퍼런스 |
 | `.claude/skills/💻 개발/nextjs-boilerplate-skill/` | Next.js 보일러플레이트 생성 skill |
+| `.claude/agents/⚖️ 법무/legal-contract-agent.md` | Legal contract agent workflow |
+| `.claude/skills/⚖️ 법무/legal-contract-agent-skills/` | Legal contract skills (12개) |
 | `workspace/work-blog/` | Tech blog drafts and research |
 | `workspace/work-social/` | Social media drafts and calendar |
 | `workspace/work-marketing/` | Marketing strategy and assets |
+| `workspace/work-legal/` | Legal contract review and drafts |
 | `workspace/work-plan/` | Planning documents |
 
 ## Conventions
