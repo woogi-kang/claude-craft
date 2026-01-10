@@ -97,6 +97,15 @@ dependencies:
   # Supabase (Firebase 대안)
   supabase_flutter: ^2.12.0
 
+  # 보안
+  flutter_secure_storage: ^9.2.0
+  local_auth: ^2.3.0
+  flutter_jailbreak_detection: ^1.10.0
+  encrypt: ^5.0.3
+
+  # 딥링크
+  app_links: ^6.3.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -134,6 +143,14 @@ lib/
 │   │   ├── supabase_initializer.dart
 │   │   ├── providers/
 │   │   └── services/         # Auth, Database, Storage, Realtime
+│   ├── security/             # 보안 모듈
+│   │   ├── secure_storage_service.dart
+│   │   ├── biometric_service.dart
+│   │   ├── device_security_service.dart
+│   │   └── ssl_pinning_interceptor.dart
+│   ├── deeplink/             # 딥링크 모듈
+│   │   ├── deep_link_service.dart
+│   │   └── deep_link_handler.dart
 │   ├── design_system/
 │   │   ├── tokens/
 │   │   ├── atoms/

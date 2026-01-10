@@ -102,6 +102,23 @@ Flutter 프로젝트의 설계부터 구현, 테스트까지 지원하는 종합
 | **E2E Test** | Patrol | 4.1.0 |
 | **로깅** | Talker | 5.1.9 |
 
+### 보안
+
+| 영역 | 기술 | 버전 |
+|------|------|------|
+| **Secure Storage** | flutter_secure_storage | 9.2.0 |
+| **생체 인증** | local_auth | 2.3.0 |
+| **Root 탐지** | flutter_jailbreak_detection | 1.10.0 |
+| **암호화** | encrypt | 5.0.3 |
+
+### 딥링크 & 배포
+
+| 영역 | 기술 | 버전 |
+|------|------|------|
+| **Deep Link** | app_links | 6.3.2 |
+| **OTA Update** | Shorebird | - |
+| **자동 배포** | Fastlane | - |
+
 ---
 
 ## 워크플로우
@@ -263,7 +280,7 @@ widgetbook/                   # 컴포넌트 카탈로그 (별도 프로젝트)
 
 ---
 
-## Skills 목록 (27개)
+## Skills 목록 (31개)
 
 ### Phase 1: 설계 (Architecture)
 
@@ -290,6 +307,7 @@ widgetbook/                   # 컴포넌트 카탈로그 (별도 프로젝트)
 | 11 | network | Dio + Retrofit API Client |
 | 12 | database | Drift 로컬 DB 구현 |
 | 13 | platform-channel | Pigeon 네이티브 통신 |
+| 29 | deeplink | 딥링크 & 유니버셜 링크 |
 
 ### Phase 3: 테스트 (Testing)
 
@@ -306,6 +324,7 @@ widgetbook/                   # 컴포넌트 카탈로그 (별도 프로젝트)
 |---|-------|------|
 | 18 | performance | 성능 최적화 |
 | 19 | refactor | 코드 리팩토링 |
+| 31 | accessibility | 접근성 (a11y) |
 
 ### Phase 5: 검증 (Validation)
 
@@ -321,6 +340,13 @@ widgetbook/                   # 컴포넌트 카탈로그 (별도 프로젝트)
 | 22 | cicd | GitHub Actions CI/CD 파이프라인 |
 | 23 | widgetbook | 컴포넌트 카탈로그 & 디자인 문서화 |
 | 24 | easy-localization | easy_localization 기반 다국어 지원 |
+| 30 | deployment | Fastlane 자동 배포 & Shorebird OTA |
+
+### Phase 7: 보안 (Security)
+
+| # | Skill | 설명 |
+|---|-------|------|
+| 28 | security | 앱 보안 (Secure Storage, SSL Pinning, 난독화) |
 
 ---
 
@@ -473,6 +499,12 @@ Agent 실행:
 /flutter-cicd         # CI/CD 파이프라인
 /flutter-widgetbook   # 컴포넌트 카탈로그
 /flutter-i18n         # easy_localization 다국어
+/flutter-deploy       # Fastlane 자동 배포
+
+# Phase 7: 보안 & 출시 준비
+/flutter-security     # 앱 보안 설정
+/flutter-deeplink     # 딥링크/유니버셜 링크
+/flutter-a11y         # 접근성 최적화
 ```
 
 ---
