@@ -75,6 +75,8 @@ Agents are multi-skill orchestrators that combine multiple skills into coherent 
 | **📣 마케팅** | marketing-agent | 15 | 마케팅 전략 및 실행물 제작 |
 | **💻 개발** | flutter-to-nextjs-agent | 8 | Flutter → Next.js 마이그레이션 |
 | **💻 개발** | flutter-expert-agent | 31 | Flutter 앱 개발 (Clean Architecture + Riverpod 3 + TDD) |
+| **💻 개발** | nextjs-expert-agent | 31 | Next.js 웹앱 개발 (Clean Architecture + TanStack Query + Zustand + TDD) |
+| **💻 개발** | fastapi-expert-agent | 37 | FastAPI 백엔드 개발 (Clean Architecture + SQLAlchemy 2.0 + TDD) |
 | **⚖️ 법무** | legal-contract-agent | 12 | 계약서 검토, 위험 분석, 협상 지원 |
 
 ### Skills
@@ -96,6 +98,8 @@ Skills are located in `.claude/skills/<category>/<agent-name>-skills/<number>-<s
 ├── 💻 개발/
 │   ├── flutter-to-nextjs-skills/   (8 skills)
 │   ├── flutter-expert-agent-skills/ (31 skills + 6 references)
+│   ├── nextjs-expert-agent-skills/  (31 skills + 6 references)
+│   ├── fastapi-expert-agent-skills/ (37 skills + 6 references)
 │   └── nextjs-boilerplate-skill/   (standalone)
 └── ⚖️ 법무/
     └── legal-contract-agent-skills/ (12 skills)
@@ -327,6 +331,222 @@ lib/
 - `_references/NETWORK-PATTERN.md`: Dio + Retrofit 패턴
 - `_references/DATABASE-PATTERN.md`: Drift DAO 패턴
 
+### Next.js Expert Agent
+
+현대적인 Next.js 웹앱 개발을 위한 종합 Agent입니다. 31개 Skills + 6개 References로 구성:
+
+**Tech Stack:**
+| Category | Technology | Version |
+|----------|------------|---------|
+| **Framework** | Next.js 15+ (App Router, Server Components) | ^15.1.0 |
+| **Server State** | TanStack Query (useQuery, useMutation) | ^5.62.0 |
+| **Client State** | Zustand (with persist, immer) | ^5.0.2 |
+| **URL State** | nuqs (type-safe query params) | ^2.2.3 |
+| **UI** | shadcn/ui + Tailwind CSS v4 | latest |
+| **Forms** | React Hook Form + Zod | ^7.54.0 |
+| **Auth** | Auth.js v5 or Clerk | ^5.0.0 |
+| **Database** | Drizzle ORM + PostgreSQL (Neon) | ^0.36.4 |
+| **Server Actions** | next-safe-action | ^7.10.0 |
+| **Testing** | Vitest + Playwright + MSW | ^2.1.8 |
+| **Animation** | Framer Motion | ^11.15.0 |
+| **i18n** | next-intl | ^3.26.3 |
+
+**Phase 1 - Setup (설정):**
+- **Project Setup**: package.json, 디렉토리 구조 (Clean Architecture)
+- **Architecture**: UI/Domain/Data 레이어 설계, Feature 모듈
+- **Design System**: shadcn/ui 설정, Tailwind v4, Dark Mode
+- **Database**: Drizzle ORM, 스키마, 마이그레이션
+- **Auth**: Auth.js v5 또는 Clerk 설정
+- **Env**: T3 Env 타입 안전 환경 변수
+- **i18n**: next-intl 다국어 설정
+
+**Phase 2 - Core (핵심):**
+- **Schema**: Zod 스키마 패턴
+- **API Client**: TanStack Query Provider, Query/Mutation 훅
+- **State**: Zustand Store 패턴, Selectors
+- **Server Action**: next-safe-action 미들웨어 체인
+- **Error Handling**: Error Boundary, Sentry
+- **Middleware**: Edge Middleware 패턴
+
+**Phase 3 - Feature (기능):**
+- **Feature**: Feature 기반 모듈 구조
+- **Form**: React Hook Form + Zod 통합
+- **Routing**: App Router, Parallel/Intercepting Routes
+- **Pagination**: Offset/Cursor 기반, 무한 스크롤
+- **File Upload**: Vercel Blob, S3
+- **Realtime**: SSE, Pusher
+
+**Phase 4 - Test (테스트):**
+- **Unit Test**: Vitest, MSW, Service/Schema/Hook 테스트
+- **Integration Test**: RTL, 컴포넌트 통합 테스트
+- **E2E Test**: Playwright, Page Object Model
+- **Visual Test**: Storybook, Snapshot
+
+**Phase 5-6 - Optimization & DevOps:**
+- **Performance**: 이미지/폰트 최적화, Core Web Vitals
+- **SEO**: Metadata API, Sitemap, Structured Data
+- **CI/CD**: GitHub Actions, Vercel 배포
+- **Monorepo**: Turborepo, 공유 패키지
+
+**Phase 7 - Integration:**
+- **Analytics**: Google Analytics 4, Vercel Analytics
+- **Email**: Resend, React Email 템플릿
+- **Payment**: Stripe 일회성/구독 결제
+- **Security**: Rate Limiting, CSRF, 보안 헤더
+
+**Testing Pyramid:**
+| Level | Coverage | Tools |
+|-------|----------|-------|
+| Unit | 60-70% | Vitest, MSW |
+| Integration | 15-20% | RTL, custom render |
+| E2E | 10-15% | Playwright |
+| Visual | 5% | Storybook, Chromatic |
+
+**Architecture Pattern:**
+```
+app/
+├── (auth)/                     # Auth 레이아웃 그룹
+├── (dashboard)/                # Dashboard 레이아웃 그룹
+├── api/                        # API Routes
+├── layout.tsx                  # Root Layout
+└── providers.tsx               # Client Providers
+
+features/{feature}/
+├── api/                        # API Service
+├── components/                 # Feature Components
+├── hooks/                      # Query/Mutation Hooks
+├── actions/                    # Server Actions
+├── schemas/                    # Zod Schemas
+├── stores/                     # Zustand Stores
+└── types/                      # TypeScript Types
+
+lib/
+├── db/                         # Drizzle Client & Schema
+├── auth/                       # Auth.js Config
+├── actions/                    # safe-action Client
+└── utils.ts                    # Utilities
+```
+
+**Reference Files:**
+- `_references/ARCHITECTURE-PATTERN.md`: Clean Architecture 가이드
+- `_references/STATE-PATTERN.md`: TanStack Query + Zustand 패턴
+- `_references/COMPONENT-PATTERN.md`: Atomic Design + shadcn/ui
+- `_references/TEST-PATTERN.md`: TDD 피라미드
+- `_references/SERVER-ACTION-PATTERN.md`: next-safe-action 패턴
+- `_references/DATABASE-PATTERN.md`: Drizzle ORM 패턴
+
+### FastAPI Expert Agent
+
+현대적인 FastAPI 백엔드 개발을 위한 종합 Agent입니다. 37개 Skills + 6개 References로 구성:
+
+**Tech Stack:**
+| Category | Technology | Version |
+|----------|------------|---------|
+| **Framework** | FastAPI (async, Pydantic V2) | ^0.115.4 |
+| **Database** | SQLAlchemy 2.0 (asyncpg) | ^2.0.36 |
+| **Migrations** | Alembic | ^1.14.0 |
+| **Validation** | Pydantic V2 | ^2.10.0 |
+| **Auth** | OAuth2 + JWT (PyJWT) | ^2.10.1 |
+| **Background Tasks** | Celery / ARQ | ^5.4.0 |
+| **Caching** | Redis (redis-py) | ^5.2.0 |
+| **Logging** | structlog | ^24.4.0 |
+| **Testing** | pytest + pytest-asyncio | ^8.3.0 |
+| **Container** | Docker + Kubernetes | - |
+| **Observability** | Prometheus + OpenTelemetry | - |
+
+**Phase 1 - Setup (설정):**
+- **Project Setup**: pyproject.toml, uv, 디렉토리 구조 (Clean Architecture)
+- **Architecture**: API/Application/Domain/Infrastructure 레이어 설계
+- **Database Setup**: SQLAlchemy 2.0 async, asyncpg, 연결 풀링
+- **Environment**: pydantic-settings, 환경 변수 관리
+- **DI Container**: FastAPI Depends, 의존성 주입
+
+**Phase 2 - Core (핵심):**
+- **Service Layer**: Application Services, Use Cases
+- **Error Handling**: Result 패턴, Exception Hierarchy
+- **Logging**: structlog, 요청 추적
+- **Middleware**: CORS, GZip, Request ID
+- **Health Check**: Liveness/Readiness probes
+- **Validation**: Pydantic V2 스키마, 커스텀 Validators
+
+**Phase 3 - Security (보안):**
+- **Authentication**: OAuth2 + JWT, 토큰 관리
+- **Authorization**: RBAC, Permission Guards
+- **API Keys**: 키 발급, 해싱, 환경별 관리
+- **Security Hardening**: CSP, Rate Limiting, HTTPS
+
+**Phase 4 - Data Layer (데이터):**
+- **Repository Pattern**: Abstract Repository, SQLAlchemy 구현
+- **Unit of Work**: 트랜잭션 관리
+- **Query Optimization**: 인덱싱, N+1 방지, Eager Loading
+- **Caching**: Redis 캐싱, 캐시 무효화
+
+**Phase 5 - Feature (기능):**
+- **Feature Implementation**: Clean Architecture 피처 구현
+- **File Upload**: Local/S3 스토리지
+- **WebSocket**: ConnectionManager, Redis Pub/Sub 스케일링
+- **Background Tasks**: Celery/ARQ, 비동기 작업
+- **Scheduled Jobs**: APScheduler, Cron 작업
+
+**Phase 6 - API Design (API 설계):**
+- **OpenAPI Docs**: Swagger UI, ReDoc, 커스텀 문서화
+- **API Versioning**: URL Path/Header 버저닝
+- **Response Design**: 표준 응답 래퍼, 페이지네이션, 에러 응답
+
+**Phase 7 - Testing (테스트):**
+- **Unit Test**: pytest, Factory Boy, Mock
+- **Integration Test**: TestClient, DB 트랜잭션 롤백
+- **E2E Test**: Testcontainers, Docker Compose
+
+**Phase 8 - DevOps (배포):**
+- **Docker**: 멀티스테이지 빌드, Docker Compose
+- **Kubernetes**: Deployment, HPA, Ingress, Helm
+- **CI/CD**: GitHub Actions, GitLab CI
+- **Observability**: Prometheus 메트릭, OpenTelemetry 트레이싱, Sentry
+
+**Testing Pyramid:**
+| Level | Coverage | Tools |
+|-------|----------|-------|
+| Unit | 60-70% | pytest, Factory Boy, mock |
+| Integration | 20-25% | TestClient, respx |
+| E2E | 5-10% | testcontainers |
+
+**Architecture Pattern:**
+```
+app/
+├── api/                        # Presentation Layer
+│   ├── v1/
+│   │   ├── routes/             # API endpoints
+│   │   └── dependencies.py     # FastAPI Depends
+│   └── router.py               # Main router
+├── application/                # Application Layer
+│   ├── services/               # Business logic
+│   ├── use_cases/              # Use case handlers
+│   └── schemas/                # Pydantic DTOs
+├── domain/                     # Domain Layer
+│   ├── entities/               # Domain entities
+│   ├── repositories/           # Repository interfaces
+│   └── value_objects/          # Value objects
+├── infrastructure/             # Infrastructure Layer
+│   ├── database/               # SQLAlchemy models, session
+│   ├── repositories/           # Repository implementations
+│   ├── security/               # Password, JWT
+│   ├── cache/                  # Redis
+│   └── services/               # External services
+├── core/                       # Shared/Core
+│   ├── config.py               # Settings
+│   └── exceptions.py           # Exception hierarchy
+└── main.py                     # Application entry
+```
+
+**Reference Files:**
+- `_references/ARCHITECTURE-PATTERN.md`: Clean Architecture 가이드
+- `_references/REPOSITORY-PATTERN.md`: Repository 패턴
+- `_references/AUTH-PATTERN.md`: 인증/인가 패턴
+- `_references/TEST-PATTERN.md`: TDD 피라미드
+- `_references/API-PATTERN.md`: REST API 설계 패턴
+- `_references/DEPLOYMENT-PATTERN.md`: 배포 패턴
+
 ### Hooks
 
 Automated scripts that run on Claude Code events. Located in `.claude/hooks/`.
@@ -522,6 +742,12 @@ flutterfire configure --project=my-app-dev \
 | `.claude/agents/💻 개발/flutter-expert-agent.md` | Flutter Expert Agent workflow |
 | `.claude/skills/💻 개발/flutter-expert-agent-skills/` | Flutter Expert skills (31개 + 6 references) |
 | `.claude/skills/💻 개발/flutter-expert-agent-skills/_references/` | Architecture, Riverpod, Test 패턴 레퍼런스 |
+| `.claude/agents/💻 개발/nextjs-expert-agent.md` | Next.js Expert Agent workflow |
+| `.claude/skills/💻 개발/nextjs-expert-agent-skills/` | Next.js Expert skills (31개 + 6 references) |
+| `.claude/skills/💻 개발/nextjs-expert-agent-skills/_references/` | Architecture, State, Test 패턴 레퍼런스 |
+| `.claude/agents/💻 개발/fastapi-expert-agent.md` | FastAPI Expert Agent workflow |
+| `.claude/skills/💻 개발/fastapi-expert-agent-skills/` | FastAPI Expert skills (37개 + 6 references) |
+| `.claude/skills/💻 개발/fastapi-expert-agent-skills/_references/` | Architecture, Repository, Auth, API 패턴 레퍼런스 |
 | `.claude/agents/⚖️ 법무/legal-contract-agent.md` | Legal contract agent workflow |
 | `.claude/skills/⚖️ 법무/legal-contract-agent-skills/` | Legal contract skills (12개) |
 | `workspace/work-blog/` | Tech blog drafts and research |
