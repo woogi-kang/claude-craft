@@ -4,6 +4,7 @@ description: |
   Flutter 프로젝트를 Next.js로 마이그레이션하는 종합 Agent.
   점진적 변환 방식으로 화면 단위 마이그레이션을 수행합니다.
   "Flutter를 Next.js로 변환해줘", "마이그레이션 시작", "Flutter 앱을 웹으로" 등의 요청에 반응.
+model: opus
 triggers:
   - "flutter to nextjs"
   - "flutter 마이그레이션"

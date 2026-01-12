@@ -4,6 +4,7 @@ description: |
   FastAPI 프로젝트의 설계, 구현, 테스트를 지원하는 종합 Expert Agent.
   Clean Architecture + SQLAlchemy/SQLModel + OAuth2/JWT + pytest 기반의 현대적 FastAPI 개발.
   "FastAPI 앱 설계해줘", "API 구현해줘", "테스트 작성해줘" 등의 요청에 반응.
+model: opus
 triggers:
   - "fastapi 개발"
   - "fastapi 설계"

@@ -4,6 +4,7 @@ description: |
   Flutter 프로젝트의 설계, 구현, 테스트를 지원하는 종합 Expert Agent.
   Clean Architecture + Riverpod 3 + GoRouter + TDD 기반의 현대적 Flutter 개발.
   "Flutter 앱 설계해줘", "기능 구현해줘", "테스트 작성해줘" 등의 요청에 반응.
+model: opus
 triggers:
   - "flutter 개발"
   - "flutter 설계"

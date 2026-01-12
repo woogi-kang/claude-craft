@@ -4,6 +4,7 @@ description: |
   전문적인 PPT 제작을 위한 종합 Agent.
   리서치부터 최종 출력까지 PPT 제작 전 과정을 관리합니다.
   "PPT 만들어줘", "발표자료 제작", "프레젠테이션 준비" 등의 요청에 반응.
+model: opus
 skills:
   - ppt-research
   - ppt-validation

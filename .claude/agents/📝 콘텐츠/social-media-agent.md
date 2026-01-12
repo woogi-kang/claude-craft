@@ -4,6 +4,7 @@ description: |
   멀티 플랫폼 소셜미디어 콘텐츠 제작 Agent.
   전략 수립부터 발행, 분석까지 소셜미디어 운영 전 과정을 관리합니다.
   "소셜 콘텐츠 만들어줘", "SNS 게시물 작성", "인스타 포스트" 등의 요청에 반응.
+model: opus
 skills:
   - social-strategy
   - social-research

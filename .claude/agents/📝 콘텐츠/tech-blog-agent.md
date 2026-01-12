@@ -4,6 +4,7 @@ description: |
   Tech blog writing agent for Hashnode.
   Researches topics, drafts articles in woogi's voice, reviews with feedback, and publishes.
   "Write a blog post", "블로그 작성", "publish to hashnode" 등의 요청에 반응.
+model: opus
 skills:
   - blog-research
   - blog-draft
