@@ -180,7 +180,7 @@ void main() {
     mockLoginUseCase = MockLoginUseCase();
     mockLogoutUseCase = MockLogoutUseCase();
 
-    container = ProviderContainer.test(
+    container = ProviderContainer(
       overrides: [
         loginUseCaseProvider.overrideWithValue(mockLoginUseCase),
         logoutUseCaseProvider.overrideWithValue(mockLogoutUseCase),
@@ -875,7 +875,7 @@ Widget createTestWidget({
 ProviderContainer createTestContainer({
   List<Override> overrides = const [],
 }) {
-  return ProviderContainer.test(overrides: overrides);
+  return ProviderContainer(overrides: overrides);
 }
 
 /// 비동기 상태 대기

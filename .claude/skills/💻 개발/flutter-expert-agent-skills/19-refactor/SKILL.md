@@ -49,6 +49,14 @@ class PersonCard extends StatelessWidget {
   final String email;
   final Widget? badge;
 
+  const PersonCard({
+    required this.name,
+    required this.email,
+    this.badge,
+    super.key,
+  });
+
+  @override
   Widget build(BuildContext context) {
     return Card(
       child: Padding(

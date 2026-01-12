@@ -909,7 +909,7 @@ class SupabaseRealtimeService {
       event: PostgresChangeEvent.insert,
       schema: schema ?? 'public',
       table: table,
-      filter: filter != null ? PostgresChangeFilter.fromString(filter) : null,
+      filter: filter,
       callback: (payload) {
         onInsert(fromJson(payload.newRecord));
       },

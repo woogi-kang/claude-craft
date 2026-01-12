@@ -17,6 +17,9 @@ Claude Craft는 [Claude Code](https://claude.ai/code) (Anthropic의 공식 CLI �
 | **Social Media Agent** | 멀티플랫폼 SNS 콘텐츠 제작 | 15개 (전략 → 리서치 → 검증 → 컴플라이언스 → 콘텐츠 → 비주얼 → 해시태그 → 승인 → 스케줄 → 리퍼포징 → 참여 → 분석) |
 | **Marketing Agent** | 마케팅 전략 및 실행물 제작 | 15개 (컨텍스트 → 리서치 → 페르소나 → 포지셔닝 → 전략 → 캠페인 → 퍼널 → 여정 → 카피 → LP → 이메일 → 광고 → AB테스트 → KPI → 리뷰) |
 | **Flutter to Next.js Agent** | Flutter → Next.js 마이그레이션 | 8개 (분석 → 매핑 → 스캐폴딩 → 컴포넌트 → 상태관리 → 라우팅 → 검증 → 리뷰) |
+| **Flutter Expert Agent** | Flutter 앱 개발 (Clean Architecture + Riverpod 3 + TDD) | 31개 (Setup → Core → State → Feature → Test → DevOps → Security) |
+| **Next.js Expert Agent** | Next.js 웹앱 개발 (Clean Architecture + TanStack Query + Zustand + TDD) | 31개 (Setup → Core → Feature → Test → Optimization → DevOps → Integration) |
+| **Legal Contract Agent** | 계약서 검토, 위험 분석, 협상 지원 | 12개 (분석 → 검토 → 실행 → 검증) |
 
 ### Standalone Skills
 
@@ -98,86 +101,33 @@ cd ~/Development/claude-craft
 claude-craft/
 ├── .claude/                         # Claude Code 호환 패키지
 │   ├── agents/                      # Agent 정의
-│   │   ├── ppt-agent/
-│   │   │   └── AGENT.md
-│   │   ├── tech-blog-agent/
-│   │   │   └── AGENT.md
-│   │   ├── social-media-agent/
-│   │   │   └── AGENT.md
-│   │   ├── marketing-agent/
-│   │   │   └── AGENT.md
-│   │   └── flutter-to-nextjs-agent/
-│   │       └── AGENT.md
+│   │   ├── 📝 콘텐츠/
+│   │   │   ├── ppt-agent.md
+│   │   │   ├── tech-blog-agent.md
+│   │   │   └── social-media-agent.md
+│   │   ├── 📣 마케팅/
+│   │   │   └── marketing-agent.md
+│   │   ├── 💻 개발/
+│   │   │   ├── flutter-to-nextjs-agent.md
+│   │   │   ├── flutter-expert-agent.md
+│   │   │   └── nextjs-expert-agent.md
+│   │   └── ⚖️ 법무/
+│   │       └── legal-contract-agent.md
 │   │
 │   ├── skills/                      # Skill 정의
-│   │   ├── ppt-agent-skills/        # PPT Skills (11개)
-│   │   │   ├── 1-research/
-│   │   │   ├── 2-validation/
-│   │   │   ├── 3-structure/
-│   │   │   ├── 4-content/
-│   │   │   ├── 5-design-system/
-│   │   │   │   └── themes/          # 10개 산업별 테마
-│   │   │   ├── 6-visual/
-│   │   │   ├── 7-image-gen/
-│   │   │   ├── 8-review/
-│   │   │   ├── 9-refinement/
-│   │   │   ├── 10-export-pptx/
-│   │   │   └── 11-export-pdf/
-│   │   │
-│   │   ├── tech-blog-agent-skills/  # Blog Skills (4개)
-│   │   │   ├── 1-research/
-│   │   │   ├── 2-draft/
-│   │   │   ├── 3-review/
-│   │   │   └── 4-publish/
-│   │   │
-│   │   ├── social-media-agent-skills/ # SNS Skills (15개)
-│   │   │   ├── 0-strategy/
-│   │   │   ├── 1-research/
-│   │   │   ├── 2-validation/
-│   │   │   ├── 3-compliance/
-│   │   │   ├── 4-content/
-│   │   │   │   ├── instagram/
-│   │   │   │   ├── linkedin/
-│   │   │   │   ├── x/
-│   │   │   │   └── threads/
-│   │   │   ├── 5-visual/
-│   │   │   ├── 6-hashtag/
-│   │   │   ├── 7-approval/
-│   │   │   ├── 8-schedule/
-│   │   │   ├── 9-repurpose/
-│   │   │   ├── 10-engagement/
-│   │   │   └── 11-analytics/
-│   │   │
-│   │   ├── marketing-agent-skills/  # Marketing Skills (15개)
-│   │   │   ├── 1-context-intake/
-│   │   │   ├── 2-market-research/
-│   │   │   ├── 3-persona/
-│   │   │   ├── 4-positioning/
-│   │   │   ├── 5-strategy/
-│   │   │   ├── 6-campaign/
-│   │   │   ├── 7-funnel/
-│   │   │   ├── 8-customer-journey/
-│   │   │   ├── 9-copywriting/
-│   │   │   ├── 10-landing-page/
-│   │   │   ├── 11-email-sequence/
-│   │   │   ├── 12-ads-creative/
-│   │   │   ├── 13-ab-testing/
-│   │   │   ├── 14-analytics-kpi/
-│   │   │   └── 15-review/
-│   │   │
-│   │   ├── flutter-to-nextjs-skills/ # Flutter Migration Skills (8개)
-│   │   │   ├── 1-analyze/
-│   │   │   ├── 2-mapping/
-│   │   │   ├── 3-scaffold/
-│   │   │   ├── 4-components/         # + WIDGET-MAP.md
-│   │   │   ├── 5-state/              # + STATE-MAP.md
-│   │   │   ├── 6-routing/
-│   │   │   ├── 7-validate/
-│   │   │   └── 8-review/
-│   │   │
-│   │   └── nextjs-boilerplate-skill/ # Standalone Skill
-│   │       ├── SKILL.md
-│   │       └── templates/            # 9개 옵션 템플릿
+│   │   ├── 📝 콘텐츠/
+│   │   │   ├── ppt-agent-skills/        # PPT Skills (11개)
+│   │   │   ├── tech-blog-agent-skills/  # Blog Skills (4개)
+│   │   │   └── social-media-agent-skills/ # SNS Skills (15개)
+│   │   ├── 📣 마케팅/
+│   │   │   └── marketing-agent-skills/  # Marketing Skills (15개)
+│   │   ├── 💻 개발/
+│   │   │   ├── flutter-to-nextjs-skills/
+│   │   │   ├── flutter-expert-agent-skills/
+│   │   │   ├── nextjs-expert-agent-skills/
+│   │   │   └── nextjs-boilerplate-skill/
+│   │   └── ⚖️ 법무/
+│   │       └── legal-contract-agent-skills/ # Legal Skills (12개)
 │   │
 │   ├── hooks/                       # Hook 스크립트
 │   │   ├── post-write-hook.sh
@@ -332,6 +282,78 @@ Analyze → Mapping → Scaffold → Components → State → Routing → Valida
 - 1:1 기능 동일성 유지
 - 모바일 웹 + 데스크탑 웹 반응형 지원
 - 점진적 변환 (화면/기능 단위)
+
+### Flutter Expert Agent
+
+```bash
+# Claude Code 실행 후
+"Flutter 앱 만들어줘"
+"Riverpod으로 상태관리 설정해줘"
+"로그인 피처 구현해줘"
+"유닛 테스트 작성해줘"
+```
+
+**워크플로우:**
+```
+Setup → Architecture → Flavor → Firebase/Supabase
+    ↓
+Design System → Error Handling → Network → Database
+    ↓
+Riverpod → DI → Feature → Routing → Form → Pagination → Offline
+    ↓
+Unit Test → Widget Test → Golden Test → E2E Test
+    ↓
+CI/CD → Widgetbook → i18n → Security → Deep Link → Accessibility
+```
+
+**기술 스택:**
+| Category | Technology |
+|----------|------------|
+| 상태관리 | Riverpod 3 (AsyncNotifier, Mutations) |
+| 라우팅 | GoRouter + Type-Safe Builder |
+| 네트워크 | Dio + Retrofit |
+| 로컬DB | Drift (SQLite) |
+| 테스트 | Vitest, Robot Pattern, Alchemist, Patrol |
+| 백엔드 | Firebase 또는 Supabase |
+
+### Next.js Expert Agent
+
+```bash
+# Claude Code 실행 후
+"Next.js 앱 만들어줘"
+"사용자 피처 구현해줘"
+"TanStack Query로 API 연동해줘"
+"Playwright E2E 테스트 작성해줘"
+```
+
+**워크플로우:**
+```
+Project Setup → Architecture → Design System → Database → Auth → Env → i18n
+    ↓
+Schema → API Client → State → Server Action → Error Handling → Middleware
+    ↓
+Feature → Form → Routing → Pagination → File Upload → Realtime
+    ↓
+Unit Test → Integration Test → E2E Test → Visual Test
+    ↓
+Performance → SEO → CI/CD → Monorepo
+    ↓
+Analytics → Email → Payment → Security
+```
+
+**기술 스택:**
+| Category | Technology |
+|----------|------------|
+| Framework | Next.js 15+ (App Router, Server Components) |
+| Server State | TanStack Query |
+| Client State | Zustand (with persist, immer) |
+| URL State | nuqs |
+| UI | shadcn/ui + Tailwind CSS v4 |
+| Forms | React Hook Form + Zod |
+| Auth | Auth.js v5 or Clerk |
+| Database | Drizzle ORM + PostgreSQL (Neon) |
+| Server Actions | next-safe-action |
+| Testing | Vitest + Playwright + MSW |
 
 ### Next.js Boilerplate Skill
 

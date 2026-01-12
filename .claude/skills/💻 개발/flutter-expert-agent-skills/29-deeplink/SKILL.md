@@ -521,4 +521,4 @@ class FirebaseDynamicLinkHandler {
 
 ## References
 
-- `12-routing/SKILL.md`
+- `10-routing/SKILL.md`

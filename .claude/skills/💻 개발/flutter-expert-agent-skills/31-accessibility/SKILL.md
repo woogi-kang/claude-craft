@@ -346,6 +346,15 @@ class AccessibleIconButton extends StatelessWidget {
 
 // 버튼 최소 높이 보장
 class AccessibleButton extends StatelessWidget {
+  final VoidCallback onPressed;
+  final String label;
+
+  const AccessibleButton({
+    required this.onPressed,
+    required this.label,
+    super.key,
+  });
+
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(

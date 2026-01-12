@@ -102,11 +102,11 @@ class DeviceService {
 // Flutter API 구현 (Native에서 호출)
 class DeviceEventApiImpl implements DeviceEventApi {
   final void Function(int) onBatteryChanged;
-  final void Function(String, bool) onPermissionResult;
+  final void Function(String, bool) onPermissionResultCallback;
 
   DeviceEventApiImpl({
     required this.onBatteryChanged,
-    required this.onPermissionResult,
+    required this.onPermissionResultCallback,
   });
 
   @override
@@ -116,7 +116,7 @@ class DeviceEventApiImpl implements DeviceEventApi {
 
   @override
   void onPermissionResult(String permission, bool granted) {
-    onPermissionResult(permission, granted);
+    onPermissionResultCallback(permission, granted);
   }
 }
 ```

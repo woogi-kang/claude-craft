@@ -175,7 +175,7 @@ void main() {
 
   setUp(() {
     mockGetUseCase = MockGet{Feature}UseCase();
-    container = ProviderContainer.test(
+    container = ProviderContainer(
       overrides: [
         get{Feature}UseCaseProvider.overrideWithValue(mockGetUseCase),
       ],

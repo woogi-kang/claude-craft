@@ -507,7 +507,7 @@ class AppButton extends StatelessWidget {
           ),
         ButtonVariant.text => TextButton(
             onPressed: isEnabled ? onPressed : null,
-            style: _textStyle,
+            style: _textButtonStyle,
             child: _buildChild(),
           ),
       },
@@ -584,7 +584,7 @@ class AppButton extends StatelessWidget {
         padding: _padding,
       );
 
-  ButtonStyle get _textStyle => TextButton.styleFrom(
+  ButtonStyle get _textButtonStyle => TextButton.styleFrom(
         foregroundColor: AppColors.primary,
         padding: _padding,
       );

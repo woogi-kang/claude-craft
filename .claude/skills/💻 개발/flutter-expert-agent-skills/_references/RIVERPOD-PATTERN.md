@@ -410,13 +410,13 @@ class DataLoader extends _$DataLoader {
 
 ## 테스트 패턴
 
-### ProviderContainer.test()
+### ProviderContainer()
 
 ```dart
 void main() {
   test('Counter increments', () async {
     // test()는 테스트 후 자동 dispose
-    final container = ProviderContainer.test(
+    final container = ProviderContainer(
       overrides: [
         // 필요한 오버라이드
       ],
@@ -440,7 +440,7 @@ void main() {
     when(() => mockRepository.getUser('123'))
         .thenAnswer((_) async => testUser);
 
-    final container = ProviderContainer.test(
+    final container = ProviderContainer(
       overrides: [
         userRepositoryProvider.overrideWithValue(mockRepository),
       ],
@@ -491,7 +491,7 @@ class TestCounter extends _$Counter {
 
 ```dart
 test('Override only build logic', () {
-  final container = ProviderContainer.test(
+  final container = ProviderContainer(
     overrides: [
       // build 로직만 오버라이드, 메서드는 원본 유지
       userNotifierProvider.overrideWithBuild(

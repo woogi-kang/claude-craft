@@ -133,9 +133,49 @@ class AuthInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 401) {
-      // Token refresh 로직
+      // Token refresh 시도
+      final refreshed = await _refreshToken();
+      if (refreshed) {
+        // 새 토큰으로 재요청
+        final opts = err.requestOptions;
+        final token = await _tokenStorage.getAccessToken();
+        opts.headers['Authorization'] = 'Bearer $token';
+
+        try {
+          final response = await Dio().fetch(opts);
+          return handler.resolve(response);
+        } catch (e) {
+          return handler.next(err);
+        }
+      }
     }
     handler.next(err);
+  }
+
+  Future<bool> _refreshToken() async {
+    try {
+      final refreshToken = await _tokenStorage.getRefreshToken();
+      if (refreshToken == null) return false;
+
+      final dio = Dio();
+      final response = await dio.post(
+        '${ApiEndpoints.baseUrl}/auth/refresh',
+        data: {'refresh_token': refreshToken},
+      );
+
+      final newAccessToken = response.data['access_token'] as String;
+      final newRefreshToken = response.data['refresh_token'] as String;
+
+      await _tokenStorage.saveTokens(
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
+      );
+
+      return true;
+    } catch (e) {
+      await _tokenStorage.clearTokens();
+      return false;
+    }
   }
 }
 ```
