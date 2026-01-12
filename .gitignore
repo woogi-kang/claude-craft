@@ -31,8 +31,6 @@ local.json
 # Build outputs
 dist/
 
-# Workspace outputs (optional - uncomment to ignore)
-# workspace/output/*/node_modules/
-# workspace/output/*/*.pptx
-# workspace/output/*/*.pdf
+# Workspace outputs
+workspace/
 ppt_reference
