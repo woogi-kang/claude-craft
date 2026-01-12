@@ -19,7 +19,9 @@ Claude Craft는 [Claude Code](https://claude.ai/code) (Anthropic의 공식 CLI �
 | **Flutter to Next.js Agent** | Flutter → Next.js 마이그레이션 | 8개 (분석 → 매핑 → 스캐폴딩 → 컴포넌트 → 상태관리 → 라우팅 → 검증 → 리뷰) |
 | **Flutter Expert Agent** | Flutter 앱 개발 (Clean Architecture + Riverpod 3 + TDD) | 31개 (Setup → Core → State → Feature → Test → DevOps → Security) |
 | **Next.js Expert Agent** | Next.js 웹앱 개발 (Clean Architecture + TanStack Query + Zustand + TDD) | 31개 (Setup → Core → Feature → Test → Optimization → DevOps → Integration) |
+| **FastAPI Expert Agent** | FastAPI 백엔드 개발 (Clean Architecture + SQLAlchemy 2.0 + TDD) | 37개 (Setup → Core → Security → Data → Feature → API → Test → DevOps) |
 | **Legal Contract Agent** | 계약서 검토, 위험 분석, 협상 지원 | 12개 (분석 → 검토 → 실행 → 검증) |
+| **Frontend Design Agent** | 독창적 웹/모바일 프론트엔드 디자인 (Anti-AI-Slop) | 18개 (Discovery → Foundation → Components → Pages → Polish) |
 
 ### Standalone Skills
 
@@ -110,9 +112,12 @@ claude-craft/
 │   │   ├── 💻 개발/
 │   │   │   ├── flutter-to-nextjs-agent.md
 │   │   │   ├── flutter-expert-agent.md
-│   │   │   └── nextjs-expert-agent.md
-│   │   └── ⚖️ 법무/
-│   │       └── legal-contract-agent.md
+│   │   │   ├── nextjs-expert-agent.md
+│   │   │   └── fastapi-expert-agent.md
+│   │   ├── ⚖️ 법무/
+│   │   │   └── legal-contract-agent.md
+│   │   └── 🎨 디자인/
+│   │       └── frontend-design-agent.md
 │   │
 │   ├── skills/                      # Skill 정의
 │   │   ├── 📝 콘텐츠/
@@ -122,12 +127,15 @@ claude-craft/
 │   │   ├── 📣 마케팅/
 │   │   │   └── marketing-agent-skills/  # Marketing Skills (15개)
 │   │   ├── 💻 개발/
-│   │   │   ├── flutter-to-nextjs-skills/
-│   │   │   ├── flutter-expert-agent-skills/
-│   │   │   ├── nextjs-expert-agent-skills/
+│   │   │   ├── flutter-to-nextjs-skills/    # 8개
+│   │   │   ├── flutter-expert-agent-skills/ # 31개 + 6 refs
+│   │   │   ├── nextjs-expert-agent-skills/  # 31개 + 6 refs
+│   │   │   ├── fastapi-expert-agent-skills/ # 37개 + 6 refs
 │   │   │   └── nextjs-boilerplate-skill/
-│   │   └── ⚖️ 법무/
-│   │       └── legal-contract-agent-skills/ # Legal Skills (12개)
+│   │   ├── ⚖️ 법무/
+│   │   │   └── legal-contract-agent-skills/ # Legal Skills (12개)
+│   │   └── 🎨 디자인/
+│   │       └── frontend-design-agent-skills/ # 18개 + 7 refs
 │   │
 │   ├── hooks/                       # Hook 스크립트
 │   │   ├── post-write-hook.sh
@@ -157,6 +165,10 @@ claude-craft/
 │   │   ├── email-sequences/
 │   │   ├── ads/
 │   │   └── reports/
+│   ├── work-design/                 # 프론트엔드 디자인 작업
+│   │   └── <project-name>/
+│   │       ├── app/                 # Next.js App
+│   │       └── components/          # React Components
 │   ├── work-plan/                   # 기획 문서
 │   └── flutter-migration/           # Flutter → Next.js 변환
 │       └── <project-name>/
@@ -366,6 +378,101 @@ Analytics → Email → Payment → Security
 **옵션:**
 - Clean Architecture, Auth (NextAuth), Supabase, Drizzle ORM
 - Testing (Vitest + Playwright), Docker, MCP Server, CI/CD
+
+### FastAPI Expert Agent
+
+```bash
+# Claude Code 실행 후
+"FastAPI 백엔드 만들어줘"
+"사용자 API 구현해줘"
+"JWT 인증 설정해줘"
+"pytest로 테스트 작성해줘"
+```
+
+**워크플로우:**
+```
+Project Setup → Architecture → Database → Environment → DI Container
+    ↓
+Service Layer → Error Handling → Logging → Middleware → Health Check → Validation
+    ↓
+Authentication → Authorization → API Keys → Security Hardening
+    ↓
+Repository → Unit of Work → Query Optimization → Caching
+    ↓
+Feature → File Upload → WebSocket → Background Tasks → Scheduled Jobs
+    ↓
+OpenAPI Docs → API Versioning → Response Design
+    ↓
+Unit Test → Integration Test → E2E Test
+    ↓
+Docker → Kubernetes → CI/CD → Observability
+```
+
+**기술 스택:**
+| Category | Technology |
+|----------|------------|
+| Framework | FastAPI (async, Pydantic V2) |
+| Database | SQLAlchemy 2.0 (asyncpg) |
+| Migrations | Alembic |
+| Auth | OAuth2 + JWT |
+| Background | Celery / ARQ |
+| Caching | Redis |
+| Logging | structlog |
+| Testing | pytest + pytest-asyncio |
+| Container | Docker + Kubernetes |
+
+### Frontend Design Agent
+
+```bash
+# Claude Code 실행 후
+"UI 디자인해줘"
+"랜딩페이지 만들어줘"
+"대시보드 디자인 해줘"
+"SaaS 앱 디자인"
+```
+
+**워크플로우:**
+```
+Context → Inspiration → Direction (12개 Aesthetic Templates)
+    ↓
+Typography → Color → Spacing → Motion
+    ↓
+Primitives → Patterns → Effects → Interactions
+    ↓
+Landing → Dashboard → Content → Mobile
+    ↓
+Accessibility → Responsive → Performance
+```
+
+**핵심 철학 - Anti-AI-Slop:**
+- **금지 폰트**: Inter, Roboto, Arial, Open Sans, Poppins
+- **금지 패턴**: 보라색 그라데이션 on 흰배경, 동일 카드 나열
+- **목표**: 매번 다른 독창적인 디자인
+
+**12개 Aesthetic Templates:**
+| 템플릿 | 적용 분야 |
+|--------|----------|
+| Barely-There Minimal | SaaS, AI |
+| Soft Maximalism | 브랜드 |
+| Anti-Design Chaos | 포트폴리오 |
+| Liquid Glass | 앱 |
+| Editorial Magazine | 미디어 |
+| Retro-Futuristic | 게임 |
+| Organic Natural | 웰니스 |
+| Luxury Refined | 럭셔리 |
+| Tech Documentation | 개발자 도구 |
+| Brutalist Raw | 갤러리 |
+| Playful Rounded | 교육 |
+| Grade-School Bold | 스타트업 |
+
+**기술 스택:**
+| Category | Technology |
+|----------|------------|
+| Framework | Next.js 15+ (App Router) |
+| Styling | Tailwind CSS v4 |
+| Animation | tw-animate-css + Framer Motion 12+ |
+| Components | shadcn/ui + Motion Primitives |
+| Color Space | oklch (perceptually uniform) |
 
 ## Statusline 설정
 

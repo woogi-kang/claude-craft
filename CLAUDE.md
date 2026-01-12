@@ -44,6 +44,7 @@ claude-craft/
 │   ├── work-social/            # Social media drafts
 │   ├── work-marketing/         # Marketing strategy & assets
 │   ├── work-legal/             # Legal contract review & drafts
+│   ├── work-design/            # Frontend design projects
 │   ├── work-plan/              # Planning docs
 │   └── flutter-migration/      # Flutter → Next.js migration outputs
 │
@@ -64,6 +65,7 @@ Agents are multi-skill orchestrators that combine multiple skills into coherent 
 ├── 📣 마케팅/         # 마케팅 전략 및 실행
 ├── 💻 개발/           # 개발 및 마이그레이션
 ├── ⚖️ 법무/           # 계약서 검토 및 법무 지원
+├── 🎨 디자인/         # 프론트엔드 디자인
 └── (확장 가능)        # 🎯 관리, 🏗️ 설계, ✅ 품질보증, 🔍 QA, 🚀 인프라, 📚 문서화 등
 ```
 
@@ -78,6 +80,7 @@ Agents are multi-skill orchestrators that combine multiple skills into coherent 
 | **💻 개발** | nextjs-expert-agent | 31 | Next.js 웹앱 개발 (Clean Architecture + TanStack Query + Zustand + TDD) |
 | **💻 개발** | fastapi-expert-agent | 37 | FastAPI 백엔드 개발 (Clean Architecture + SQLAlchemy 2.0 + TDD) |
 | **⚖️ 법무** | legal-contract-agent | 12 | 계약서 검토, 위험 분석, 협상 지원 |
+| **🎨 디자인** | frontend-design-agent | 18 | 독창적 웹/모바일 프론트엔드 디자인 |
 
 ### Skills
 
@@ -101,8 +104,10 @@ Skills are located in `.claude/skills/<category>/<agent-name>-skills/<number>-<s
 │   ├── nextjs-expert-agent-skills/  (31 skills + 6 references)
 │   ├── fastapi-expert-agent-skills/ (37 skills + 6 references)
 │   └── nextjs-boilerplate-skill/   (standalone)
-└── ⚖️ 법무/
-    └── legal-contract-agent-skills/ (12 skills)
+├── ⚖️ 법무/
+│   └── legal-contract-agent-skills/ (12 skills)
+└── 🎨 디자인/
+    └── frontend-design-agent-skills/ (18 skills + 7 references)
 ```
 
 ### Standalone Skills
@@ -231,6 +236,111 @@ Flutter 프로젝트를 Next.js로 마이그레이션하는 Agent입니다. 8개
 - 전자상거래법
 - 근로기준법
 - 업종별 규제 (금융, 의료, 건설 등)
+
+### Frontend Design Agent
+
+독창적이고 트렌디한 웹/모바일 프론트엔드 디자인을 생성하는 Agent입니다. 18개 Skills + 7개 References로 구성:
+
+**핵심 철학 - Anti-AI-Slop:**
+- **금지 폰트**: Inter, Roboto, Arial, Open Sans, Poppins
+- **금지 패턴**: 보라색 그라데이션 on 흰배경, 동일 카드 나열
+- **목표**: 매번 다른 독창적인 디자인, 맥락에 맞는 미적 방향
+
+**Tech Stack:**
+| Category | Technology | Version |
+|----------|------------|---------|
+| **Framework** | Next.js (App Router) | 15+ |
+| **Styling** | Tailwind CSS | v4 |
+| **Animation** | tw-animate-css + Framer Motion | 12+ |
+| **Components** | shadcn/ui + Motion Primitives | latest |
+| **Color Space** | oklch (perceptually uniform) | - |
+| **Typography** | Variable fonts (wght, wdth) | - |
+
+**12개 Aesthetic Templates:**
+| # | 템플릿 | 특징 | 적용 분야 |
+|---|--------|------|----------|
+| 1 | Barely-There Minimal | 극도의 절제, 여백 | SaaS, AI |
+| 2 | Soft Maximalism | 대담하지만 통제된 | 브랜드 |
+| 3 | Anti-Design Chaos | 규칙 파괴, 비정형 | 포트폴리오 |
+| 4 | Liquid Glass | Apple 스타일, 블러 | 앱 |
+| 5 | Editorial Magazine | 매거진, 타이포 중심 | 미디어 |
+| 6 | Retro-Futuristic | 90s + 사이버 | 게임 |
+| 7 | Organic Natural | 자연, 부드러운 곡선 | 웰니스 |
+| 8 | Luxury Refined | 고급, 세련된 | 럭셔리 |
+| 9 | Tech Documentation | 매뉴얼 스타일 | 개발자 도구 |
+| 10 | Brutalist Raw | 거친, 원시적 | 갤러리 |
+| 11 | Playful Rounded | 친근한, 둥근 | 교육 |
+| 12 | Grade-School Bold | 기본 색상, 명확한 | 스타트업 |
+
+**Phase 1 - Discovery (탐색):**
+- **Context**: 프로젝트 목적, 타겟 유저, 제약사항 파악
+- **Inspiration**: 레퍼런스 수집, 트렌드 분석
+- **Direction**: 12개 템플릿 중 미적 방향 결정
+
+**Phase 2 - Foundation (기반):**
+- **Typography**: 폰트 선택/페어링, Variable font
+- **Color**: oklch 팔레트, 다크모드, 시맨틱 컬러
+- **Spacing**: 간격 시스템, 그리드, 레이아웃
+- **Motion**: 애니메이션 원칙, 이징, 지속시간
+
+**Phase 3 - Components (컴포넌트):**
+- **Primitives**: 버튼, 인풋, 배지 등 기본 요소
+- **Patterns**: 카드, 모달, 드롭다운 복합 패턴
+- **Effects**: 배경 효과, 글래스모피즘, 노이즈
+- **Interactions**: 마이크로인터랙션, 호버/탭 피드백
+
+**Phase 4 - Pages (페이지):**
+- **Landing**: 랜딩 페이지, 히어로, CTA
+- **Dashboard**: 대시보드, 데이터 시각화, SaaS
+- **Content**: 블로그, 아티클, 에디토리얼
+- **Mobile**: 모바일 퍼스트, 앱 스타일
+
+**Phase 5 - Polish (완성):**
+- **Accessibility**: WCAG 2.2, 신경다양성, 모션 감도
+- **Responsive**: 반응형 검증, 브레이크포인트
+- **Performance**: Core Web Vitals, 폰트/애니메이션 최적화
+
+**다양성 보장 메커니즘:**
+- Template Rotation: 이전에 사용하지 않은 템플릿 우선 선택
+- Font Variation Matrix: 템플릿 내 폰트 조합 로테이션
+- Color Palette Shuffle: 같은 템플릿이라도 accent color 변형
+- Layout Variation Rules: Hero 섹션 6가지 변형
+- Anti-Repetition Checklist: 매 디자인 생성 시 확인
+
+**Command Guide:**
+```
+# 전체 프로세스
+"UI 디자인해줘", "랜딩페이지 만들어줘", "대시보드 디자인 해줘"
+
+# 개별 Skill 호출
+/fd-context        # 컨텍스트 파악
+/fd-inspiration    # 레퍼런스 수집
+/fd-direction      # 미적 방향 결정
+/fd-typography     # 타이포그래피
+/fd-color          # 색상 팔레트
+/fd-spacing        # 스페이싱
+/fd-motion         # 애니메이션
+/fd-primitives     # 기본 컴포넌트
+/fd-patterns       # 복합 패턴
+/fd-effects        # 배경 효과
+/fd-interactions   # 마이크로인터랙션
+/fd-landing        # 랜딩 페이지
+/fd-dashboard      # 대시보드
+/fd-content        # 콘텐츠 페이지
+/fd-mobile         # 모바일 최적화
+/fd-a11y           # 접근성 검증
+/fd-responsive     # 반응형 검증
+/fd-perf           # 성능 최적화
+```
+
+**Reference Files:**
+- `_references/TYPOGRAPHY-RECIPES.md`: 50+ 폰트 조합, 금지 목록
+- `_references/COLOR-SYSTEM.md`: oklch 팔레트, 다크모드
+- `_references/MOTION-PATTERNS.md`: Framer Motion 레시피 30+
+- `_references/BACKGROUND-EFFECTS.md`: 그래디언트, 노이즈, 글래스
+- `_references/LAYOUT-TECHNIQUES.md`: 비대칭, 오버랩, Bento
+- `_references/ANTI-PATTERNS.md`: AI Slop 체크리스트
+- `_references/ACCESSIBILITY-CHECKLIST.md`: WCAG 2.2, 신경다양성
 
 ### Flutter Expert Agent
 
@@ -666,6 +776,24 @@ Pricing data is embedded for Opus, Sonnet, and Haiku models.
 - `widgetbook/` - 컴포넌트 카탈로그
 - `assets/translations/` - easy_localization JSON 파일
 
+**Design Output** - `workspace/work-design/{project-name}/`:
+- `context/` - 프로젝트 컨텍스트 문서
+  - `{project}-context.md` - 브리핑 및 요구사항
+- `inspiration/` - 레퍼런스 및 영감
+  - `mood-board.md` - 무드보드
+  - `trend-analysis.md` - 트렌드 분석
+  - `competitor-analysis.md` - 경쟁사 분석
+- `direction/` - 미적 방향 결정
+  - `aesthetic-direction.md` - 선택된 디자인 방향
+  - `decision-rationale.md` - 결정 근거
+- `tokens/` - 디자인 토큰
+  - `typography.css` - 타이포그래피 토큰
+  - `colors.css` - 색상 토큰
+  - `spacing.css` - 간격 토큰
+  - `motion.css` - 애니메이션 토큰
+- `components/` - 생성된 컴포넌트
+- `pages/` - 페이지 레이아웃
+
 ## Build Commands
 
 ### PPT Generation (pptxgenjs)
@@ -750,6 +878,8 @@ flutterfire configure --project=my-app-dev \
 | `.claude/skills/💻 개발/fastapi-expert-agent-skills/_references/` | Architecture, Repository, Auth, API 패턴 레퍼런스 |
 | `.claude/agents/⚖️ 법무/legal-contract-agent.md` | Legal contract agent workflow |
 | `.claude/skills/⚖️ 법무/legal-contract-agent-skills/` | Legal contract skills (12개) |
+| `.claude/agents/🎨 디자인/frontend-design-agent.md` | Frontend Design Agent workflow |
+| `.claude/skills/🎨 디자인/frontend-design-agent-skills/` | Frontend Design skills (18개 + 7 references) |
 | `workspace/work-blog/` | Tech blog drafts and research |
 | `workspace/work-social/` | Social media drafts and calendar |
 | `workspace/work-marketing/` | Marketing strategy and assets |
