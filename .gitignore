@@ -34,3 +34,122 @@ dist/
 # Workspace outputs
 workspace/
 ppt_reference
+*-secret-key.*
+*.pyc
+*.sqlite
+.cursor/
+# FIXED: Issue #237 - Replaced overly broad *key* and *secret* patterns
+.aws/config
+*.secret.*
+*.jks
+.netlify/
+.claude/.env.local*
+.vercel/
+*.sqlite3
+.uv-cache/
+.AppleDouble
+# Build Artifacts & Distribution
+# ===========================================
+.Trashes
+# Deployment & CI/CD
+env/
+# ============================================
+.fseventsd
+*.key.*
+*_secret.*
+# Windows
+*.sublime-project
+.TemporaryItems
+*_secret=*
+.claude/skills/*/*/*secret*
+.coverage
+*.egg
+api-key-*
+# Python Cache & Bytecode
+# MoAI-ADK Package Distribution .gitignore
+.directory
+.DocumentRevisions-V100
+*_token=*
+# Updated: 2026-01-10
+.claude/settings.local.*.json
+*.suo
+*.p12
+.pytest_cache/
+*.njsproj
+*.egg-info/
+*-secret.*
+*.bak
+dist-ssr/
+*.db
+.uv_cache/
+*.temp
+*-key.*
+*.rdb
+.firebase/
+# Version: 0.33.0
+# Mac
+.VolumeIcon.icns
+# Build Tools & Frameworks
+logs/
+*.dbm
+htmlcov/
+# Linux
+.env.*
+.Spotlight-V100
+private-key*
+# Virtual Environments
+.ruff_cache/
+build/
+[Dd]esktop.ini
+.nuxt/
+# Test Coverage
+.LSOverride
+.claude/settings.local.json
+.#*
+.claude/skills/*/*/*key*
+# Private keys (specific patterns to avoid false positives)
+.tscache/
+*.tmp
+.venv/
+# Purpose: Essential patterns for user projects
+*.pfx
+.claude/skills/*/.env*
+*-backup/
+.claude/local/
+*.sublime-workspace
+!.env.example
+# Claude Code Configuration
+*-api-key.*
+# Cloud provider credentials
+*.backup
+*.pyd
+secret-*.*
+# Node.js (for docs/Nextra)
+*_key.*
+# Certificate files
+# OS Files
+*.sw?
+*.tsbuildinfo
+.turbo/
+ehthumbs.db
+# Environment files
+.aws/credentials
+.claude/skills/*/*/*token*
+*.sln
+# Logs & Temporary Files
+.mypy_cache/
+# Secrets and Credentials (CRITICAL)
+*.backup/
+# Credential patterns in environment files
+# Backups
+.env/
+out/
+.claude/skills/*/secrets/
+.moai-backups/
+coverage.json
+.next/
+secret-key-*
+# Skill-specific credentials
+*_backup_*/
+*.pem
+# IDE & Editors
