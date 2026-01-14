@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Craft - AI-Powered Development Environment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e4e4e4;
+        }
+        .container {
+            max-width: 800px;
+            padding: 2rem;
+            text-align: center;
+        }
+        .logo {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .tagline {
+            font-size: 1.2rem;
+            color: #a0a0a0;
+            margin-bottom: 2rem;
+        }
+        .install-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        .install-box h2 {
+            font-size: 1rem;
+            color: #00d4ff;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .code-block {
+            background: #0d1117;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.95rem;
+            color: #58a6ff;
+            overflow-x: auto;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .code-block:hover {
+            background: #161b22;
+            transform: scale(1.02);
+        }
+        .copy-hint {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+        .feature {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        .feature-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .feature h3 {
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+        .feature p {
+            font-size: 0.85rem;
+            color: #888;
+        }
+        .links {
+            margin-top: 2rem;
+        }
+        .links a {
+            color: #00d4ff;
+            text-decoration: none;
+            margin: 0 1rem;
+            transition: opacity 0.2s;
+        }
+        .links a:hover {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🎩</div>
+        <h1>Claude Craft</h1>
+        <p class="tagline">AI-Powered Development Environment for Claude Code</p>
+
+        <div class="install-box">
+            <h2>Quick Install</h2>
+            <div class="code-block" onclick="copyToClipboard(this)">
+                curl -LsSf https://woogi.github.io/claude-craft/install.sh | sh
+            </div>
+            <p class="copy-hint">Click to copy</p>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🤖</div>
+                <h3>20+ Agents</h3>
+                <p>Specialized AI agents for different development tasks</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <h3>50+ Skills</h3>
+                <p>Pre-built capabilities for common workflows</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔧</div>
+                <h3>Auto Hooks</h3>
+                <p>Automated code quality checks on every edit</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📊</div>
+                <h3>Status Line</h3>
+                <p>Real-time cost tracking and session info</p>
+            </div>
+        </div>
+
+        <div class="links">
+            <a href="https://github.com/woogi/claude-craft">GitHub</a>
+            <a href="https://github.com/woogi/claude-craft#readme">Documentation</a>
+            <a href="https://github.com/woogi/claude-craft/issues">Issues</a>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(element) {
+            navigator.clipboard.writeText(element.textContent.trim());
+            element.style.background = '#1a3a1a';
+            setTimeout(() => {
+                element.style.background = '#0d1117';
+            }, 200);
+        }
+    </script>
+</body>
+</html>
