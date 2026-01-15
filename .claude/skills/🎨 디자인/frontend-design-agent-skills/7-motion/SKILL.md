@@ -668,7 +668,91 @@ export const springs = {
 
 ---
 
-### Step 6: prefers-reduced-motion 지원
+### Step 6: Animation Guidelines (web-interface-guidelines 기반)
+
+> Vercel의 web-interface-guidelines를 기반으로 한 애니메이션 규칙입니다.
+
+#### 필수 규칙 (Required)
+
+| 규칙 | 설명 | 예시 |
+|------|------|------|
+| **prefers-reduced-motion** | 사용자의 모션 감도 설정 존중 | CSS media query 또는 `useReducedMotion()` |
+| **transform/opacity only** | GPU 가속 속성만 애니메이션 | translate, scale, rotate, opacity |
+| **중단 가능** | 애니메이션 중 새 상태로 전환 가능 | spring 애니메이션 |
+| **적절한 duration** | 150-300ms 권장, 최대 500ms | 호버: 150ms, 모달: 300ms |
+
+#### 금지 규칙 (Forbidden)
+
+| 패턴 | 문제 | 대안 |
+|------|------|------|
+| `transition: all` | 의도치 않은 전환 + 성능 저하 | 명시적 속성 지정 |
+| `width/height` 애니메이션 | Layout thrashing | `transform: scale()` |
+| `top/left/right/bottom` | Layout 트리거 | `transform: translate()` |
+| `margin/padding` 애니메이션 | Layout 트리거 | transform 또는 gap |
+| 300ms 이상 hover | 사용자 차단 느낌 | 150ms 이하 |
+| 무한 반복 (필수 아닌) | 주의 분산 + 접근성 | 조건부 또는 제거 |
+
+#### 코드 예시
+
+```css
+/* ❌ Bad: 금지 패턴 */
+.element {
+  transition: all 0.3s;           /* 1. transition: all */
+  transition: width 0.3s;         /* 2. width */
+  transition: height 0.3s;        /* 3. height */
+  transition: top 0.3s;           /* 4. position */
+}
+
+/* ✅ Good: GPU 가속 속성만 */
+.element {
+  transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+}
+```
+
+```tsx
+// ❌ Bad: 너무 긴 애니메이션
+<motion.div transition={{ duration: 1 }} />
+
+// ❌ Bad: reduced motion 무시
+<motion.div animate={{ x: 100 }} />
+
+// ✅ Good: 적절한 duration + reduced motion 지원
+const shouldReduceMotion = useReducedMotion();
+
+<motion.div
+  animate={{ x: shouldReduceMotion ? 0 : 100 }}
+  transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
+/>
+```
+
+#### Duration 가이드
+
+```typescript
+const DURATION_GUIDE = {
+  // 마이크로인터랙션 (즉각적 피드백)
+  instant: 100,    // 버튼 클릭, 체크박스
+
+  // 빠른 전환 (호버, 토글)
+  fast: 150,       // 호버 효과, 드롭다운
+
+  // 일반 전환 (모달, 토스트)
+  normal: 200,     // 모달 열기, 페이드
+
+  // 복잡한 전환 (사이드바, 페이지)
+  slow: 300,       // 서랍, 페이지 전환
+
+  // 드라마틱 효과 (특별한 경우만)
+  slower: 500,     // 히어로 애니메이션 (드물게 사용)
+} as const;
+
+// ❌ 피해야 할 duration
+// - 500ms 이상: 사용자를 기다리게 함
+// - 1000ms 이상: 거의 사용 안 함
+```
+
+---
+
+### Step 7: prefers-reduced-motion 지원
 
 ```css
 /* app/globals.css - Reduced motion support */
@@ -793,7 +877,7 @@ MotionDiv.displayName = 'MotionDiv';
 
 ---
 
-### Step 7: 실용적 애니메이션 예제
+### Step 8: 실용적 애니메이션 예제
 
 #### Page Transition
 

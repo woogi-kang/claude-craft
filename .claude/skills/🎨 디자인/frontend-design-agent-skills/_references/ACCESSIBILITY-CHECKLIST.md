@@ -1513,3 +1513,326 @@ export function auditAccessibility(element: HTMLElement): {
   return { errors, warnings };
 }
 ```
+
+---
+
+## Web Interface Guidelines 통합
+
+> Vercel의 web-interface-guidelines 기반 추가 규칙
+
+### Interaction Rules (상호작용 규칙)
+
+```tsx
+// ✅ 필수 사항
+const INTERACTION_RULES = {
+  // 1. 키보드로 모든 flow 완료 가능해야 함
+  keyboardComplete: true,
+
+  // 2. WAI-ARIA 패턴 준수
+  ariaPatterns: true,
+
+  // 3. 포커스 트랩 적절히 구현 (모달, 드롭다운)
+  focusTrap: true,
+
+  // 4. 터치 타겟 크기
+  touchTarget: {
+    mobile: 44,   // 44x44px 이상
+    desktop: 24,  // 24x24px 이상 (WCAG 2.5.8)
+  },
+
+  // 5. 텍스트 입력 크기 (iOS 줌 방지)
+  inputFontSize: 16,  // 16px 이상
+};
+```
+
+### Focus Rules (포커스 규칙)
+
+```tsx
+// ❌ Bad
+<button className="outline-none">No focus indicator</button>
+
+// ✅ Good
+<button className="outline-none focus-visible:ring-2 focus-visible:ring-ring">
+  Visible focus
+</button>
+
+// 규칙 요약
+const FOCUS_RULES = [
+  'outline-none 사용 시 반드시 focus-visible 대체 스타일 제공',
+  ':focus 대신 :focus-visible 사용 (마우스 클릭 시 링 방지)',
+  '모든 interactive element에 focus-visible 스타일 필수',
+  '포커스 순서가 논리적이어야 함 (tabindex 남용 금지)',
+];
+```
+
+### Form Rules (폼 규칙)
+
+```tsx
+// ✅ 폼 요소 필수 사항
+const FORM_RULES = {
+  // 1. 모든 input에 label 연결
+  label: 'htmlFor 또는 aria-label/aria-labelledby',
+
+  // 2. autocomplete 속성 필수
+  autocomplete: {
+    email: 'email',
+    password: 'current-password | new-password',
+    name: 'name | given-name | family-name',
+    tel: 'tel',
+  },
+
+  // 3. paste 차단 금지
+  noPasteBlock: '비밀번호 관리자 사용 허용',
+
+  // 4. 제출 중에도 버튼 활성 유지 (스피너로 상태 표시)
+  submitButton: 'disabled 대신 스피너 사용',
+
+  // 5. 인라인 에러 + 첫 에러 필드 포커스
+  errorHandling: 'role="alert" + setFocus',
+};
+```
+
+---
+
+## Anti-Patterns 종합 체크리스트
+
+코드 생성/리뷰 시 다음을 자동 검출하고 수정합니다.
+
+### 🔴 Critical (반드시 수정)
+
+| 패턴 | 문제 | 해결책 |
+|------|------|--------|
+| `user-scalable=no` | 줌 차단 | 메타 태그에서 제거 |
+| `transition: all` | 성능 저하 + 의도치 않은 전환 | 명시적 속성 지정 |
+| `outline-none` (단독) | 포커스 인디케이터 없음 | focus-visible 추가 |
+| `<div onClick>` (role 없음) | 접근성 불가 | button 또는 role+tabIndex |
+| `<img>` (width/height 없음) | CLS 유발 | 차원 명시 |
+| `onPaste={e.preventDefault()}` | 비밀번호 관리자 차단 | 제거 |
+| 50+ items 직접 렌더링 | 성능 저하 | 가상화 사용 |
+
+### 🟠 High (강력 권고)
+
+| 패턴 | 문제 | 해결책 |
+|------|------|--------|
+| 하드코딩된 날짜/숫자 | 로컬라이제이션 불가 | `Intl.*` 사용 |
+| 아이콘 버튼 (label 없음) | 스크린 리더 무시 | aria-label 추가 |
+| input (label 없음) | 접근성 불가 | Label htmlFor 연결 |
+| input (autocomplete 없음) | 자동완성 불가 | autocomplete 속성 |
+| 에러 (role="alert" 없음) | 스크린 리더 알림 안됨 | role="alert" 추가 |
+| 애니메이션 (reduced-motion 무시) | 접근성 위반 | prefers-reduced-motion 체크 |
+
+### 🟡 Medium (권고)
+
+| 패턴 | 문제 | 해결책 |
+|------|------|--------|
+| `:focus` 사용 | 마우스에도 표시됨 | `:focus-visible` 사용 |
+| ASCII 따옴표/말줄임표 | 타이포그래피 품질 저하 | 유니코드 사용 ("" … →) |
+| 제목에 text-wrap 없음 | 불균형한 줄바꿈 | `text-wrap: balance` |
+| 비시맨틱 interactive 요소 | 접근성 저하 | 시맨틱 HTML 사용 |
+
+---
+
+## Quick Reference (빠른 참조)
+
+### 접근성 필수 체크
+
+```tsx
+// 1. 아이콘 버튼
+<Button aria-label="닫기">
+  <X className="h-4 w-4" aria-hidden="true" />
+</Button>
+
+// 2. 폼 입력
+<Label htmlFor="email">이메일</Label>
+<Input id="email" type="email" autoComplete="email" />
+
+// 3. 에러 메시지
+<span id="email-error" role="alert">{error}</span>
+
+// 4. 이미지
+<Image src={url} alt="설명" width={400} height={300} />
+
+// 5. 링크
+<Link href="/about">소개</Link>  // div onClick 금지
+```
+
+### 포커스 스타일
+
+```tsx
+// Tailwind 클래스
+className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+
+// shadcn/ui 컴포넌트는 자동 적용
+<Button>클릭</Button>
+```
+
+### 모션 접근성
+
+```tsx
+// Framer Motion
+const shouldReduceMotion = useReducedMotion();
+transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
+
+// CSS
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; }
+}
+
+// Tailwind
+className="motion-safe:animate-bounce motion-reduce:animate-none"
+```
+
+### 터치 타겟
+
+```tsx
+// 모바일 최소 44x44px
+<button className="min-w-[44px] min-h-[44px] p-3">
+  <Icon className="h-4 w-4" />
+</button>
+
+// 데스크톱 최소 24x24px (WCAG 2.5.8)
+<button className="min-w-6 min-h-6 p-1">
+  <Icon className="h-4 w-4" />
+</button>
+```
+
+### iOS 줌 방지
+
+```tsx
+// 입력 필드 폰트 16px 이상
+<input className="text-base" />  // 16px ✅
+<input className="text-sm" />    // 14px ❌ (iOS 줌 트리거)
+```
+
+---
+
+## 검증 코드
+
+### Playwright 접근성 테스트
+
+```typescript
+// e2e/accessibility.spec.ts
+import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+
+test.describe('Accessibility', () => {
+  test('should not have any automatically detectable accessibility issues', async ({ page }) => {
+    await page.goto('/');
+
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+      .analyze();
+
+    expect(accessibilityScanResults.violations).toEqual([]);
+  });
+
+  test('should be navigable by keyboard', async ({ page }) => {
+    await page.goto('/');
+
+    // Tab through interactive elements
+    await page.keyboard.press('Tab');
+    const firstFocused = await page.evaluate(() => document.activeElement?.tagName);
+    expect(['A', 'BUTTON', 'INPUT']).toContain(firstFocused);
+
+    // Skip link should be focusable
+    await page.keyboard.press('Tab');
+    const skipLink = page.locator('a:has-text("Skip to")');
+    if (await skipLink.count() > 0) {
+      await expect(skipLink).toBeFocused();
+    }
+  });
+
+  test('should have visible focus indicators', async ({ page }) => {
+    await page.goto('/');
+
+    const button = page.locator('button').first();
+    await button.focus();
+
+    // Check for focus ring (outline or box-shadow)
+    const styles = await button.evaluate((el) => {
+      const computed = window.getComputedStyle(el);
+      return {
+        outline: computed.outline,
+        boxShadow: computed.boxShadow,
+      };
+    });
+
+    const hasFocusIndicator =
+      styles.outline !== 'none' ||
+      styles.boxShadow !== 'none';
+
+    expect(hasFocusIndicator).toBe(true);
+  });
+});
+```
+
+### React Testing Library 접근성
+
+```tsx
+// components/__tests__/form.a11y.test.tsx
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { axe, toHaveNoViolations } from 'jest-axe';
+import { LoginForm } from '../LoginForm';
+
+expect.extend(toHaveNoViolations);
+
+describe('LoginForm Accessibility', () => {
+  it('should have no accessibility violations', async () => {
+    const { container } = render(<LoginForm />);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+
+  it('should have labels for all inputs', () => {
+    render(<LoginForm />);
+
+    const emailInput = screen.getByLabelText(/email/i);
+    const passwordInput = screen.getByLabelText(/password/i);
+
+    expect(emailInput).toBeInTheDocument();
+    expect(passwordInput).toBeInTheDocument();
+  });
+
+  it('should announce errors to screen readers', async () => {
+    const user = userEvent.setup();
+    render(<LoginForm />);
+
+    // Submit empty form
+    const submitButton = screen.getByRole('button', { name: /submit/i });
+    await user.click(submitButton);
+
+    // Error should have role="alert"
+    const error = screen.getByRole('alert');
+    expect(error).toBeInTheDocument();
+  });
+});
+```
+
+---
+
+## 부록: WCAG 2.2 준수 수준 매트릭스
+
+| 기준 | 레벨 | 필수 여부 | 설명 |
+|------|------|----------|------|
+| 1.1.1 Non-text Content | A | ✅ 필수 | 이미지 alt 텍스트 |
+| 1.3.1 Info and Relationships | A | ✅ 필수 | 시맨틱 마크업 |
+| 1.4.3 Contrast (Minimum) | AA | ✅ 필수 | 4.5:1 대비 |
+| 1.4.11 Non-text Contrast | AA | ✅ 필수 | UI 요소 3:1 |
+| 2.1.1 Keyboard | A | ✅ 필수 | 키보드 접근 |
+| 2.4.7 Focus Visible | AA | ✅ 필수 | 포커스 표시 |
+| 2.4.11 Focus Not Obscured | AA | ✅ 필수 | 포커스 가림 방지 |
+| 2.5.7 Dragging Movements | AA | ✅ 필수 | 드래그 대안 제공 |
+| 2.5.8 Target Size | AA | ✅ 필수 | 24x24px 최소 |
+| 3.2.6 Consistent Help | A | ✅ 필수 | 일관된 도움말 위치 |
+| 3.3.8 Accessible Authentication | AA | ✅ 필수 | 인지 기능 테스트 금지 |
+
+---
+
+## References
+
+- [WCAG 2.2 Guidelines](https://www.w3.org/TR/WCAG22/)
+- [Vercel Web Interface Guidelines](https://vercel.com/blog/web-interface-guidelines)
+- [Axe DevTools](https://www.deque.com/axe/)
+- `UI-GUIDELINES.md` - Next.js Expert Agent UI 가이드라인
+```

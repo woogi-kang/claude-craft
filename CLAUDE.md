@@ -109,7 +109,7 @@ Skills are located in `.claude/skills/<category>/<agent-name>-skills/<number>-<s
 ├── ⚖️ 법무/
 │   └── legal-contract-agent-skills/ (12 skills)
 ├── 🎨 디자인/
-│   └── frontend-design-agent-skills/ (18 skills + 8 references)
+│   └── frontend-design-agent-skills/ (18 skills + 7 references)
 └── 🎯 기획/
     └── planning-agent-skills/       (29 skills + 6 references)
 ```
