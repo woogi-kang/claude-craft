@@ -1,0 +1,9 @@
+project:
+  name: claude-craft
+  description: ''
+  type: ''
+  locale: '{{LOCALE}}'
+  created_at: '2026-01-14T11:09:15.258318Z'
+  initialized: 'true'
+github:
+  profile_name: woogi
