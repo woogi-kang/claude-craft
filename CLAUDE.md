@@ -121,6 +121,7 @@ Agent에 속하지 않는 독립 Skill입니다. (💻 개발 카테고리에 �
 | Skill | Description |
 |-------|-------------|
 | **nextjs-boilerplate** | AI 시대 최적화된 Next.js 15+ 프로젝트 보일러플레이트 생성. Clean Architecture, Supabase, Drizzle, Testing, Docker, MCP, CI/CD 선택적 지원. |
+| **agent-browser-test** | Vercel agent-browser CLI 기반 AI 친화적 E2E 테스트 자동화. Refs 시스템으로 결정론적 요소 선택, 접근성 트리 기반 테스트. |
 
 ### PPT Design System
 
@@ -131,6 +132,46 @@ The PPT agent uses a comprehensive design system (`.claude/skills/📝 콘텐츠
 - **Typography system**: Pretendard (Korean) / Inter (English), 7-level hierarchy from Hero (72-96pt) to Label (10-12pt)
 
 Theme files: `.claude/skills/📝 콘텐츠/ppt-agent-skills/5-design-system/themes/<number>-<theme>/THEME.md`
+
+### Agent Browser Test Skill
+
+Vercel Labs의 **agent-browser** CLI를 활용한 AI 친화적 E2E 테스트 자동화 스킬입니다.
+
+**핵심 특징:**
+- **Refs 시스템**: 결정론적 요소 선택 (`@e1`, `@e2` 등)
+- **접근성 트리 기반**: LLM 워크플로우 최적화
+- **세션 관리 내장**: `--session` 플래그로 상태 유지
+- **JSON 출력**: `--json` 플래그로 프로그래밍 가능
+
+**vs Playwright:**
+| 항목 | agent-browser | Playwright |
+|------|--------------|------------|
+| 요소 선택 | Refs (결정론적) | CSS/XPath |
+| AI 최적화 | 접근성 트리 | DOM 기반 |
+| 사용 사례 | AI 에이전트 | 전통적 E2E |
+
+**핵심 명령어:**
+```bash
+# 설치
+npm install -g agent-browser
+agent-browser install
+
+# 스냅샷 (요소 맵 획득)
+agent-browser open http://localhost:3000
+agent-browser snapshot -i  # 상호작용 요소만
+
+# Refs로 상호작용
+agent-browser fill @e2 "user@example.com"
+agent-browser click @e1
+agent-browser screenshot result.png
+```
+
+**테스트 템플릿:**
+- `templates/auth/login.sh`: 로그인 테스트
+- `templates/auth/logout.sh`: 로그아웃 테스트
+- `templates/forms/validation.sh`: 폼 검증 테스트
+- `templates/crud/create-item.sh`: CRUD 테스트
+- `templates/a11y/accessibility.sh`: 접근성 분석
 
 ### Social Media Platforms
 
@@ -1020,6 +1061,8 @@ flutterfire configure --project=my-app-dev \
 | `.claude/skills/💻 개발/flutter-to-nextjs-skills/4-components/WIDGET-MAP.md` | Flutter Widget → React 매핑 레퍼런스 |
 | `.claude/skills/💻 개발/flutter-to-nextjs-skills/5-state/STATE-MAP.md` | 상태관리 패턴 매핑 레퍼런스 |
 | `.claude/skills/💻 개발/nextjs-boilerplate-skill/` | Next.js 보일러플레이트 생성 skill |
+| `.claude/skills/💻 개발/agent-browser-test-skill/` | Vercel agent-browser E2E 테스트 skill |
+| `.claude/skills/💻 개발/agent-browser-test-skill/templates/` | 테스트 스크립트 템플릿 (auth, forms, crud, a11y) |
 | `.claude/agents/💻 개발/flutter-expert-agent.md` | Flutter Expert Agent workflow |
 | `.claude/skills/💻 개발/flutter-expert-agent-skills/` | Flutter Expert skills (31개 + 6 references) |
 | `.claude/skills/💻 개발/flutter-expert-agent-skills/_references/` | Architecture, Riverpod, Test 패턴 레퍼런스 |

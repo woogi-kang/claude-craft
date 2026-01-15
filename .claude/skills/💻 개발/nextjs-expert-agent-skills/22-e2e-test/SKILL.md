@@ -772,8 +772,105 @@ export default defineConfig({
 
 ---
 
+---
+
+## agent-browser (Alternative)
+
+Vercel Labs의 **agent-browser**는 AI 에이전트를 위한 헤드리스 브라우저 자동화 CLI입니다.
+Refs 시스템을 통해 결정론적 요소 선택이 가능하며, 접근성 트리 기반으로 LLM 워크플로우에 최적화되어 있습니다.
+
+### Playwright vs agent-browser
+
+| 항목 | Playwright | agent-browser |
+|------|-----------|---------------|
+| **설치** | `npm i -D @playwright/test` | `npm i -g agent-browser` |
+| **요소 선택** | CSS/XPath/Role | Refs 시스템 (결정론적) |
+| **AI 최적화** | 일반적 | 접근성 트리 기반 |
+| **세션 관리** | 별도 구현 | 내장 (`--session`) |
+| **출력 형식** | JavaScript API | CLI + JSON |
+| **사용 사례** | 전통적 E2E | AI 에이전트 자동화 |
+
+### 설치
+
+```bash
+npm install -g agent-browser
+agent-browser install  # Chromium 설치
+```
+
+### 핵심 명령어
+
+```bash
+# 스냅샷 (요소 맵 획득)
+agent-browser open http://localhost:3000
+agent-browser snapshot -i  # 상호작용 요소만
+
+# 출력 예시:
+# - button "로그인" [ref=e1]
+# - textbox "이메일" [ref=e2]
+# - textbox "비밀번호" [ref=e3]
+
+# Refs로 상호작용
+agent-browser fill @e2 "user@example.com"
+agent-browser fill @e3 "password123"
+agent-browser click @e1
+agent-browser wait network-idle
+agent-browser screenshot result.png
+```
+
+### 테스트 스크립트 예시
+
+```bash
+#!/bin/bash
+# tests/e2e/login.sh
+
+SESSION="auth-test"
+
+# 로그인 페이지 접근
+agent-browser --session $SESSION open http://localhost:3000/login
+agent-browser --session $SESSION snapshot -i
+
+# 로그인 수행
+agent-browser --session $SESSION fill @email "test@test.com"
+agent-browser --session $SESSION fill @password "password123"
+agent-browser --session $SESSION click @submit
+agent-browser --session $SESSION wait network-idle
+
+# 결과 검증
+agent-browser --session $SESSION snapshot -i
+agent-browser --session $SESSION screenshot test-results/login.png
+```
+
+### CI/CD 통합 (GitHub Actions)
+
+```yaml
+# .github/workflows/e2e-agent-browser.yml
+- name: Install agent-browser
+  run: |
+    npm install -g agent-browser
+    agent-browser install
+
+- name: Run E2E tests
+  run: bash tests/e2e/run-all.sh
+```
+
+### 언제 사용할까?
+
+| 상황 | 권장 도구 |
+|------|----------|
+| 전통적 E2E 테스트 스위트 | **Playwright** |
+| AI 에이전트 자동화 | **agent-browser** |
+| Visual Regression | Playwright 또는 agent-browser |
+| 접근성 트리 기반 테스트 | **agent-browser** |
+| 복잡한 테스트 시나리오 | **Playwright** |
+| 빠른 프로토타이핑 | **agent-browser** |
+
+> 상세한 agent-browser 가이드는 `agent-browser-test-skill/SKILL.md` 참조
+
+---
+
 ## References
 
 - `_references/TEST-PATTERN.md`
 - `_references/ARCHITECTURE-PATTERN.md`
+- `agent-browser-test-skill/SKILL.md`
 
