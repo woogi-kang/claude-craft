@@ -235,6 +235,7 @@ Hero Section Variations:
 | `_references/LAYOUT-TECHNIQUES.md` | 비대칭, 오버랩, Bento |
 | `_references/ANTI-PATTERNS.md` | AI Slop 체크리스트 |
 | `_references/ACCESSIBILITY-CHECKLIST.md` | WCAG 2.2, 신경다양성 |
+| `nextjs-expert-agent-skills/_references/UI-GUIDELINES.md` | 웹 인터페이스 100+ 규칙 |
 
 ---
 
@@ -314,3 +315,54 @@ Agent:
 3. **맥락 우선**: 기술보다 목적을 먼저 파악
 4. **접근성 필수**: 모든 디자인에 접근성 검증
 5. **성능 고려**: 애니메이션은 GPU 가속 속성만
+
+---
+
+## 코드 생성 원칙
+
+### 접근성 필수 규칙
+
+| 요소 | 필수 속성 | 예시 |
+|------|----------|------|
+| Icon 버튼 | `aria-label` | `<button aria-label="닫기"><X /></button>` |
+| 이미지 | `alt` | `<Image alt="상품 이미지" />` |
+| 폼 입력 | `<label>` + `htmlFor` | `<label htmlFor="email">` |
+| focus 스타일 | `focus-visible:` | `outline-none` 단독 사용 금지 |
+
+### 애니메이션 필수 규칙
+
+```tsx
+// ✅ prefers-reduced-motion 존중
+import { useReducedMotion } from 'framer-motion'
+
+function AnimatedCard() {
+  const shouldReduce = useReducedMotion()
+
+  return (
+    <motion.div
+      animate={{ scale: shouldReduce ? 1 : 1.05 }}
+      transition={{ duration: shouldReduce ? 0 : 0.2 }}
+    />
+  )
+}
+```
+
+### GPU 가속 속성만 사용
+
+```tsx
+// ✅ Good: GPU 가속 (transform, opacity)
+animate={{ scale: 1.1, opacity: 1, x: 10, y: 10, rotate: 5 }}
+
+// ❌ Bad: 레이아웃 재계산 유발
+animate={{ width: 200, height: 200, padding: 20 }}
+```
+
+### Anti-Patterns 체크리스트
+
+| 패턴 | 문제 | 해결 |
+|------|------|------|
+| `outline-none` 단독 | 키보드 접근성 | `focus-visible:ring-2` 추가 |
+| `div` + `onClick` | 의미론 | `button` 또는 `a` 사용 |
+| 아이콘만 있는 버튼 | 스크린리더 | `aria-label` 추가 |
+| `transition: all` | 성능 | 특정 속성만 지정 |
+| 50+ 리스트 아이템 | 렌더링 | 가상화 또는 `content-visibility` |

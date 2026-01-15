@@ -366,12 +366,96 @@ Skills에서 참조하는 공통 레퍼런스 문서:
 
 | 문서 | 설명 |
 |------|------|
+| `_references/REACT-PERF-RULES.md` | **Vercel 45개 React 성능 규칙** |
+| `_references/UI-GUIDELINES.md` | **100+ UI 접근성/성능 가이드라인** |
 | `_references/ARCHITECTURE-PATTERN.md` | Clean Architecture 패턴 & 샘플 |
 | `_references/STATE-PATTERN.md` | TanStack Query + Zustand 패턴 |
 | `_references/COMPONENT-PATTERN.md` | shadcn/ui + Atomic Design 패턴 |
 | `_references/TEST-PATTERN.md` | 테스트 패턴 (Unit/Integration/E2E) |
 | `_references/SERVER-ACTION-PATTERN.md` | Server Actions + next-safe-action 패턴 |
 | `_references/DATABASE-PATTERN.md` | Drizzle ORM 패턴 |
+
+---
+
+## 코드 생성 원칙
+
+코드 생성 및 리뷰 시 다음 규칙을 자동으로 적용합니다.
+
+### 🔴 CRITICAL 성능 규칙 (반드시 적용)
+
+```typescript
+// 1. 독립적인 비동기 작업 → Promise.all
+// ❌ Bad
+const user = await fetchUser()
+const posts = await fetchPosts()
+
+// ✅ Good
+const [user, posts] = await Promise.all([fetchUser(), fetchPosts()])
+
+// 2. 데이터 의존 컴포넌트만 → Suspense
+function Dashboard() {
+  return (
+    <div>
+      <Header />  {/* 즉시 렌더 */}
+      <Suspense fallback={<Skeleton />}>
+        <DataSection />  {/* 스트리밍 */}
+      </Suspense>
+    </div>
+  )
+}
+
+// 3. Barrel file 회피 → 직접 import 또는 optimizePackageImports
+import Check from 'lucide-react/dist/esm/icons/check'
+
+// 4. 대용량 컴포넌트 → Dynamic import
+const Editor = dynamic(() => import('@/components/editor'), { ssr: false })
+```
+
+### 🟠 HIGH 성능 규칙 (강력 권고)
+
+```typescript
+// 1. 요청 내 중복 호출 → React.cache()
+export const getUser = cache(async (id) => db.user.findUnique({ where: { id } }))
+
+// 2. RSC 경계 → 필요한 데이터만 전달
+<ClientComponent name={user.name} />  // 전체 객체 X
+
+// 3. 긴 리스트 → content-visibility 또는 가상화
+<div style={{ contentVisibility: 'auto', containIntrinsicSize: '0 80px' }}>
+```
+
+### 접근성 규칙 (UI-GUIDELINES.md)
+
+```tsx
+// 1. 아이콘 버튼 → aria-label 필수
+<Button aria-label="닫기"><X /></Button>
+
+// 2. Semantic HTML 우선
+<button onClick={...}>Click</button>  // div + onClick 금지
+
+// 3. 폼 입력 → label + autocomplete 필수
+<Label htmlFor="email">이메일</Label>
+<Input id="email" type="email" autoComplete="email" />
+
+// 4. focus-visible 스타일 필수
+className="focus-visible:ring-2 focus-visible:ring-ring"
+
+// 5. 모션 감도 존중
+const shouldReduce = useReducedMotion()
+transition={{ duration: shouldReduce ? 0 : 0.2 }}
+```
+
+### Anti-Patterns 검출
+
+코드 생성 시 다음 패턴을 검출하고 자동 수정합니다:
+
+- `outline-none` without `focus-visible` replacement
+- `div` with `onClick` but no `role`/`tabIndex`
+- Icon button without `aria-label`
+- Form input without `label`
+- `transition: all` - 특정 속성만 지정
+- 50+ items without virtualization
+- Sequential awaits for independent operations
 
 ---
 

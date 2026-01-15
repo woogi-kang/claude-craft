@@ -66,7 +66,8 @@ Agents are multi-skill orchestrators that combine multiple skills into coherent 
 ├── 💻 개발/           # 개발 및 마이그레이션
 ├── ⚖️ 법무/           # 계약서 검토 및 법무 지원
 ├── 🎨 디자인/         # 프론트엔드 디자인
-└── (확장 가능)        # 🎯 관리, 🏗️ 설계, ✅ 품질보증, 🔍 QA, 🚀 인프라, 📚 문서화 등
+├── 🎯 기획/           # 서비스 기획 및 전략
+└── (확장 가능)        # 🏗️ 설계, ✅ 품질보증, 🔍 QA, 🚀 인프라, 📚 문서화 등
 ```
 
 | Category | Agent | Skills | Description |
@@ -77,10 +78,11 @@ Agents are multi-skill orchestrators that combine multiple skills into coherent 
 | **📣 마케팅** | marketing-agent | 15 | 마케팅 전략 및 실행물 제작 |
 | **💻 개발** | flutter-to-nextjs-agent | 8 | Flutter → Next.js 마이그레이션 |
 | **💻 개발** | flutter-expert-agent | 31 | Flutter 앱 개발 (Clean Architecture + Riverpod 3 + TDD) |
-| **💻 개발** | nextjs-expert-agent | 31 | Next.js 웹앱 개발 (Clean Architecture + TanStack Query + Zustand + TDD) |
+| **💻 개발** | nextjs-expert-agent | 31 | Next.js 웹앱 개발 (Clean Architecture + TanStack Query + Zustand + TDD + Vercel Best Practices) |
 | **💻 개발** | fastapi-expert-agent | 37 | FastAPI 백엔드 개발 (Clean Architecture + SQLAlchemy 2.0 + TDD) |
 | **⚖️ 법무** | legal-contract-agent | 12 | 계약서 검토, 위험 분석, 협상 지원 |
 | **🎨 디자인** | frontend-design-agent | 18 | 독창적 웹/모바일 프론트엔드 디자인 |
+| **🎯 기획** | planning-agent | 29 | 아이디어→런칭까지 서비스 기획 (Lean Canvas, PRD, GTM) |
 
 ### Skills
 
@@ -101,13 +103,15 @@ Skills are located in `.claude/skills/<category>/<agent-name>-skills/<number>-<s
 ├── 💻 개발/
 │   ├── flutter-to-nextjs-skills/   (8 skills)
 │   ├── flutter-expert-agent-skills/ (31 skills + 6 references)
-│   ├── nextjs-expert-agent-skills/  (31 skills + 6 references)
+│   ├── nextjs-expert-agent-skills/  (31 skills + 8 references)
 │   ├── fastapi-expert-agent-skills/ (37 skills + 6 references)
 │   └── nextjs-boilerplate-skill/   (standalone)
 ├── ⚖️ 법무/
 │   └── legal-contract-agent-skills/ (12 skills)
-└── 🎨 디자인/
-    └── frontend-design-agent-skills/ (18 skills + 7 references)
+├── 🎨 디자인/
+│   └── frontend-design-agent-skills/ (18 skills + 8 references)
+└── 🎯 기획/
+    └── planning-agent-skills/       (29 skills + 6 references)
 ```
 
 ### Standalone Skills
@@ -197,6 +201,15 @@ Flutter 프로젝트를 Next.js로 마이그레이션하는 Agent입니다. 8개
 **Reference Files:**
 - `WIDGET-MAP.md`: Flutter Widget → React/Tailwind 매핑
 - `STATE-MAP.md`: 상태관리 패턴 매핑
+
+**Best Practices 자동 적용:**
+변환 시 Vercel Best Practices가 자동으로 적용됩니다:
+| Flutter | Next.js | 규칙 |
+|---------|---------|------|
+| `GestureDetector(onTap:)` | `<button aria-label="">` | 접근성 |
+| `FutureBuilder` | `<Suspense>` + async | Waterfall 제거 |
+| `AnimatedContainer` | `motion.div` + GPU속성 | 성능 |
+| 병렬 API 호출 | `Promise.all()` | 성능 |
 
 ### Legal Contract Agent
 
@@ -336,11 +349,105 @@ Flutter 프로젝트를 Next.js로 마이그레이션하는 Agent입니다. 8개
 **Reference Files:**
 - `_references/TYPOGRAPHY-RECIPES.md`: 50+ 폰트 조합, 금지 목록
 - `_references/COLOR-SYSTEM.md`: oklch 팔레트, 다크모드
-- `_references/MOTION-PATTERNS.md`: Framer Motion 레시피 30+
+- `_references/MOTION-PATTERNS.md`: Framer Motion 레시피 30+ (GPU 가속 필수)
 - `_references/BACKGROUND-EFFECTS.md`: 그래디언트, 노이즈, 글래스
 - `_references/LAYOUT-TECHNIQUES.md`: 비대칭, 오버랩, Bento
 - `_references/ANTI-PATTERNS.md`: AI Slop 체크리스트
 - `_references/ACCESSIBILITY-CHECKLIST.md`: WCAG 2.2, 신경다양성
+- `nextjs-expert-agent-skills/_references/UI-GUIDELINES.md`: 웹 인터페이스 100+ 규칙 (Cross-reference)
+
+### Planning Agent
+
+아이디어에서 런칭까지 서비스 기획을 지원하는 종합 Agent입니다. 29개 Skills + 6개 References로 구성:
+
+**타겟 사용자:**
+- 1인 창업자 / 사이드 프로젝트
+- 스타트업 PM / 기획자
+- 팀 단위 프로젝트
+
+**출력 형식:** Markdown (Notion 호환)
+
+**Phase 1 - Discovery (발견):**
+- **Idea Intake**: Problem-Solution Fit 분석, 아이디어 구체화
+- **Value Proposition**: UVP Canvas, Why Now, Differentiation
+- **Target User**: 페르소나, JTBD, 공감 지도
+
+**Phase 2 - Research (조사):**
+- **Market Research**: TAM/SAM/SOM, Porter's 5 Forces, Why Now
+- **Competitor Analysis**: Feature Matrix, Positioning Map
+- **User Research**: 인터뷰 가이드, 설문 설계
+
+**Phase 3 - Validation (검증):**
+- **Lean Canvas**: 9블록 비즈니스 모델
+- **Business Model**: Unit Economics, LTV/CAC
+- **Pricing Strategy**: 가격 모델, 플랜 설계
+- **MVP Definition**: MoSCoW 우선순위, 가설 검증
+- **Legal Checklist**: 서비스 유형별 법적 요구사항
+
+**Phase 4 - Specification (명세):**
+- **PRD**: Product Requirements Document
+- **Feature Spec**: User Stories, Acceptance Criteria
+- **Information Architecture**: 사이트맵, 네비게이션
+- **User Flow**: 플로우 다이어그램, 상태 전이
+- **Wireframe Guide**: 레이아웃, 컴포넌트
+- **Data Strategy**: 이벤트 트래킹, 메트릭
+
+**Phase 5 - Estimation (산정):**
+- **Tech Stack**: 기술 추천, Make vs Buy
+- **Effort Estimation**: T-Shirt Sizing, 마일스톤
+- **Team Structure**: 역할 정의, 채용 계획
+
+**Phase 6 - Design Direction (디자인 방향):**
+- **UX Strategy**: UX 원칙, Aha Moment
+- **Brand Direction**: 톤앤매너, 시각적 방향
+
+**Phase 7 - Execution (실행):**
+- **Roadmap**: 마일스톤, Phase 전환 기준
+- **Risk Management**: 리스크 매트릭스, 대응 계획
+- **KPI/OKR**: North Star Metric, AARRR
+- **Operation Plan**: 운영 체계, 인시던트 관리
+
+**Phase 8 - Launch Prep (런칭 준비):**
+- **Growth Strategy**: AARRR 퍼널, 채널 전략
+- **Pitch Deck**: 투자 유치용 12장 구조
+- **GTM Strategy**: Go-to-Market, 런칭 타임라인
+
+**Frameworks Used:**
+| Framework | 용도 |
+|-----------|------|
+| Lean Canvas | 비즈니스 모델 |
+| TAM/SAM/SOM | 시장 규모 |
+| MoSCoW | 우선순위 |
+| JTBD | 고객 이해 |
+| Unit Economics | 수익성 분석 |
+| AARRR | 성장 지표 |
+| OKR | 목표 설정 |
+
+**Reference Files:**
+- `_references/LEAN-CANVAS-TEMPLATE.md`: Lean Canvas 템플릿
+- `_references/PRD-TEMPLATE.md`: PRD 템플릿
+- `_references/PRICING-MODELS.md`: 가격 모델 가이드
+- `_references/LEGAL-CHECKLIST.md`: 법적 요구사항
+- `_references/TECH-STACK-GUIDE.md`: 기술 스택 가이드
+- `_references/PITCH-DECK-STRUCTURE.md`: 피치덱 구조
+
+**Output Structure:** `workspace/work-plan/{project-name}/`
+```
+01-discovery/           # 아이디어, 가치제안, 타겟유저
+02-research/            # 시장조사, 경쟁분석, 사용자조사
+03-validation/          # Lean Canvas, 비즈니스모델, MVP
+04-specification/       # PRD, 기능명세, IA, 플로우
+05-estimation/          # 기술스택, 공수, 팀구성
+06-design/              # UX전략, 브랜드방향
+07-execution/           # 로드맵, 리스크, KPI, 운영
+08-launch/              # 성장전략, 피치덱, GTM
+```
+
+**Agent 연계:**
+- Frontend Design Agent: 실제 UI 디자인
+- Marketing Agent: GTM 실행
+- PPT Agent: 피치덱 제작
+- Development Agents: 개발 착수
 
 ### Flutter Expert Agent
 
@@ -443,7 +550,12 @@ lib/
 
 ### Next.js Expert Agent
 
-현대적인 Next.js 웹앱 개발을 위한 종합 Agent입니다. 31개 Skills + 6개 References로 구성:
+현대적인 Next.js 웹앱 개발을 위한 종합 Agent입니다. 31개 Skills + 8개 References로 구성:
+
+**Vercel Best Practices 통합:**
+- Impact Level 시스템: CRITICAL(🔴) → HIGH(🟠) → MEDIUM(🟡) → LOW(🔵)
+- 45가지 React/Next.js 성능 규칙 내장
+- 100+ 웹 인터페이스 가이드라인 (접근성, 폼, 애니메이션)
 
 **Tech Stack:**
 | Category | Technology | Version |
@@ -544,6 +656,8 @@ lib/
 - `_references/TEST-PATTERN.md`: TDD 피라미드
 - `_references/SERVER-ACTION-PATTERN.md`: next-safe-action 패턴
 - `_references/DATABASE-PATTERN.md`: Drizzle ORM 패턴
+- `_references/REACT-PERF-RULES.md`: Vercel 45가지 성능 규칙 (Impact Level 시스템)
+- `_references/UI-GUIDELINES.md`: 웹 인터페이스 100+ 규칙 (접근성, 폼, 애니메이션)
 
 ### FastAPI Expert Agent
 
@@ -776,6 +890,45 @@ Pricing data is embedded for Opus, Sonnet, and Haiku models.
 - `widgetbook/` - 컴포넌트 카탈로그
 - `assets/translations/` - easy_localization JSON 파일
 
+**Planning Output** - `workspace/work-plan/{project-name}/`:
+- `01-discovery/` - 아이디어, 가치제안, 타겟유저
+  - `idea-intake.md` - Problem-Solution Fit
+  - `value-proposition.md` - UVP Canvas
+  - `target-user.md` - 페르소나, JTBD
+- `02-research/` - 시장조사, 경쟁분석, 사용자조사
+  - `market-research.md` - TAM/SAM/SOM
+  - `competitor-analysis.md` - 경쟁사 분석
+  - `user-research.md` - 인터뷰, 설문
+- `03-validation/` - 검증 단계
+  - `lean-canvas.md` - 9블록 캔버스
+  - `business-model.md` - Unit Economics
+  - `pricing-strategy.md` - 가격 전략
+  - `mvp-definition.md` - MVP 범위
+  - `legal-checklist.md` - 법적 요구사항
+- `04-specification/` - 명세 단계
+  - `prd.md` - Product Requirements
+  - `feature-spec.md` - 기능 명세
+  - `information-architecture.md` - IA
+  - `user-flow.md` - 사용자 플로우
+  - `wireframe-guide.md` - 와이어프레임
+  - `data-strategy.md` - 데이터 전략
+- `05-estimation/` - 산정 단계
+  - `tech-stack.md` - 기술 스택
+  - `effort-estimation.md` - 공수 산정
+  - `team-structure.md` - 팀 구성
+- `06-design/` - 디자인 방향
+  - `ux-strategy.md` - UX 전략
+  - `brand-direction.md` - 브랜드 방향
+- `07-execution/` - 실행 단계
+  - `roadmap.md` - 로드맵
+  - `risk-management.md` - 리스크 관리
+  - `kpi-okr.md` - KPI/OKR
+  - `operation-plan.md` - 운영 계획
+- `08-launch/` - 런칭 준비
+  - `growth-strategy.md` - 성장 전략
+  - `pitch-deck-structure.md` - 피치덱 구조
+  - `gtm-strategy.md` - GTM 전략
+
 **Design Output** - `workspace/work-design/{project-name}/`:
 - `context/` - 프로젝트 컨텍스트 문서
   - `{project}-context.md` - 브리핑 및 요구사항
@@ -872,7 +1025,9 @@ flutterfire configure --project=my-app-dev \
 | `.claude/skills/💻 개발/flutter-expert-agent-skills/_references/` | Architecture, Riverpod, Test 패턴 레퍼런스 |
 | `.claude/agents/💻 개발/nextjs-expert-agent.md` | Next.js Expert Agent workflow |
 | `.claude/skills/💻 개발/nextjs-expert-agent-skills/` | Next.js Expert skills (31개 + 6 references) |
-| `.claude/skills/💻 개발/nextjs-expert-agent-skills/_references/` | Architecture, State, Test 패턴 레퍼런스 |
+| `.claude/skills/💻 개발/nextjs-expert-agent-skills/_references/` | Architecture, State, Test 패턴 + Vercel Best Practices 레퍼런스 |
+| `.claude/skills/💻 개발/nextjs-expert-agent-skills/_references/REACT-PERF-RULES.md` | Vercel 45가지 React 성능 규칙 (Impact Level 시스템) |
+| `.claude/skills/💻 개발/nextjs-expert-agent-skills/_references/UI-GUIDELINES.md` | 웹 인터페이스 100+ 가이드라인 (접근성, 폼, 애니메이션) |
 | `.claude/agents/💻 개발/fastapi-expert-agent.md` | FastAPI Expert Agent workflow |
 | `.claude/skills/💻 개발/fastapi-expert-agent-skills/` | FastAPI Expert skills (37개 + 6 references) |
 | `.claude/skills/💻 개발/fastapi-expert-agent-skills/_references/` | Architecture, Repository, Auth, API 패턴 레퍼런스 |
@@ -880,6 +1035,9 @@ flutterfire configure --project=my-app-dev \
 | `.claude/skills/⚖️ 법무/legal-contract-agent-skills/` | Legal contract skills (12개) |
 | `.claude/agents/🎨 디자인/frontend-design-agent.md` | Frontend Design Agent workflow |
 | `.claude/skills/🎨 디자인/frontend-design-agent-skills/` | Frontend Design skills (18개 + 7 references) |
+| `.claude/agents/🎯 기획/planning-agent.md` | Planning agent workflow and configuration |
+| `.claude/skills/🎯 기획/planning-agent-skills/` | Planning skills (29개 + 6 references) |
+| `.claude/skills/🎯 기획/planning-agent-skills/_references/` | Lean Canvas, PRD, Pricing, Legal, Tech Stack 레퍼런스 |
 | `workspace/work-blog/` | Tech blog drafts and research |
 | `workspace/work-social/` | Social media drafts and calendar |
 | `workspace/work-marketing/` | Marketing strategy and assets |

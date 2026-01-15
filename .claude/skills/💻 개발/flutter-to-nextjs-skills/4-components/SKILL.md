@@ -122,6 +122,83 @@ export function ProductCard({ product, onClick, className }: ProductCardProps) {
 
 ---
 
+## Best Practices 자동 적용
+
+변환 시 다음 규칙을 자동으로 적용합니다.
+
+### 접근성 변환
+
+| Flutter | Next.js | 규칙 |
+|---------|---------|------|
+| `GestureDetector(onTap:)` | `<button onClick={} aria-label="">` | Semantic HTML + 접근성 |
+| `IconButton(icon:)` | `<Button aria-label=""><Icon /></Button>` | aria-label 필수 |
+| `Image.network()` | `<Image alt="설명" />` | alt 속성 필수 |
+| `Semantics(label:)` | `aria-label=""` | ARIA 속성 매핑 |
+| `Container(onTap:)` | `<button>` (div 금지) | Semantic HTML |
+
+```tsx
+// ❌ Bad: div with onClick
+<div onClick={handleClick}>Click me</div>
+
+// ✅ Good: button with aria-label (GestureDetector 변환 시)
+<button onClick={handleClick} aria-label="상품 상세 보기">
+  Click me
+</button>
+```
+
+### 성능 변환
+
+| Flutter | Next.js | 규칙 |
+|---------|---------|------|
+| `FutureBuilder` | `<Suspense>` + async component | Waterfall 제거 |
+| 대형 위젯 | `dynamic(() => import())` | Bundle 최적화 |
+| 병렬 API 호출 | `Promise.all()` | Waterfall 제거 |
+| `ListView.builder` (50+ items) | 가상화 또는 `content-visibility` | 렌더링 성능 |
+
+```tsx
+// FutureBuilder → Suspense
+// Flutter
+FutureBuilder<User>(
+  future: fetchUser(),
+  builder: (context, snapshot) => UserCard(user: snapshot.data),
+)
+
+// Next.js
+<Suspense fallback={<UserCardSkeleton />}>
+  <UserCard />  {/* async Server Component */}
+</Suspense>
+
+async function UserCard() {
+  const user = await fetchUser()
+  return <Card>{user.name}</Card>
+}
+```
+
+### 애니메이션 변환
+
+| Flutter | Next.js | 규칙 |
+|---------|---------|------|
+| `AnimatedContainer` | `motion.div` + transform only | GPU 가속 속성만 |
+| 모든 애니메이션 | `prefers-reduced-motion` 체크 | 모션 감도 존중 |
+
+```tsx
+// ✅ Good: 모션 감도 존중
+import { useReducedMotion, motion } from 'framer-motion'
+
+function AnimatedCard() {
+  const shouldReduce = useReducedMotion()
+
+  return (
+    <motion.div
+      animate={{ scale: shouldReduce ? 1 : 1.1 }}
+      transition={{ duration: shouldReduce ? 0 : 0.3 }}
+    />
+  )
+}
+```
+
+---
+
 ## 변환 규칙
 
 ### 1. 위젯 타입별 변환

@@ -2,9 +2,25 @@
 
 Next.js 애플리케이션 성능을 최적화합니다.
 
+> **Reference**: `_references/REACT-PERF-RULES.md` - Vercel 45개 성능 규칙 참조
+> **Reference**: `_references/UI-GUIDELINES.md` - UI 성능 가이드라인 참조
+
 ## Triggers
 
 - "성능 최적화", "performance", "최적화", "lighthouse"
+
+---
+
+## Impact Level System
+
+코드 생성 및 리뷰 시 다음 우선순위를 적용합니다:
+
+| Level | Symbol | 의미 | 액션 |
+|-------|--------|------|------|
+| CRITICAL | 🔴 | 2-10x 성능 영향 | 반드시 적용 |
+| HIGH | 🟠 | 현저한 성능 개선 | 강력 권고 |
+| MEDIUM | 🔵 | 점진적 개선 | 고려 |
+| LOW | ⬜ | 마이크로 최적화 | 핫패스만 |
 
 ---
 
@@ -14,6 +30,96 @@ Next.js 애플리케이션 성능을 최적화합니다.
 |------|------|------|
 | `target` | ✅ | 최적화 대상 (images, fonts, bundle, api) |
 | `metrics` | ❌ | 목표 메트릭 (LCP, FID, CLS) |
+
+---
+
+## 🔴 CRITICAL: Waterfall 제거
+
+### Promise.all로 병렬 실행
+
+```typescript
+// ❌ Bad: Sequential awaits (3초 = 1+1+1초)
+async function loadData() {
+  const user = await fetchUser()
+  const posts = await fetchPosts()
+  const comments = await fetchComments()
+}
+
+// ✅ Good: Parallel execution (1초 = max(1,1,1)초)
+async function loadData() {
+  const [user, posts, comments] = await Promise.all([
+    fetchUser(),
+    fetchPosts(),
+    fetchComments()
+  ])
+}
+```
+
+### Suspense로 점진적 렌더링
+
+```tsx
+// ❌ Bad: 전체 페이지 대기
+async function Dashboard() {
+  const stats = await getStats()
+  const posts = await getPosts()
+  return (
+    <div>
+      <Header />
+      <Stats stats={stats} />
+      <Posts posts={posts} />
+    </div>
+  )
+}
+
+// ✅ Good: 점진적 스트리밍
+function Dashboard() {
+  return (
+    <div>
+      <Header />  {/* 즉시 렌더 */}
+      <Suspense fallback={<StatsSkeleton />}>
+        <StatsSection />  {/* 준비되면 스트리밍 */}
+      </Suspense>
+      <Suspense fallback={<PostsSkeleton />}>
+        <PostsSection />  {/* 독립적으로 스트리밍 */}
+      </Suspense>
+    </div>
+  )
+}
+```
+
+---
+
+## 🔴 CRITICAL: Bundle 최적화
+
+### Barrel File 회피
+
+```typescript
+// ❌ Bad: Barrel import (~10,000 모듈 로드)
+import { Check, X, Menu } from 'lucide-react'
+
+// ✅ Good: Direct imports
+import Check from 'lucide-react/dist/esm/icons/check'
+import X from 'lucide-react/dist/esm/icons/x'
+import Menu from 'lucide-react/dist/esm/icons/menu'
+
+// ✅ Better: optimizePackageImports 설정
+// next.config.ts
+const nextConfig = {
+  experimental: {
+    optimizePackageImports: [
+      'lucide-react',
+      '@radix-ui/react-icons',
+      'lodash',
+      'date-fns',
+    ],
+  },
+}
+```
+
+**Barrel file 영향 라이브러리:**
+- `lucide-react`, `@heroicons/react`, `react-icons` - 아이콘
+- `@radix-ui/*` - UI 컴포넌트
+- `lodash`, `date-fns` - 유틸리티
 
 ---
 
@@ -121,6 +227,120 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 body {
   font-family: var(--font-sans);
+}
+```
+
+---
+
+## 🟠 HIGH: 서버 성능
+
+### React.cache()로 요청 내 중복 제거
+
+```typescript
+import { cache } from 'react'
+
+// ✅ 같은 요청 내 여러 컴포넌트에서 호출해도 1번만 실행
+export const getCurrentUser = cache(async () => {
+  const session = await auth()
+  if (!session?.user?.id) return null
+  return await db.user.findUnique({ where: { id: session.user.id } })
+})
+
+// Header.tsx, Sidebar.tsx, Dashboard.tsx에서 각각 호출해도
+// DB 쿼리는 1번만 실행됨
+```
+
+### RSC 경계에서 데이터 최소화
+
+```tsx
+// ❌ Bad: 전체 객체 직렬화
+async function Page() {
+  const user = await getUser()  // 대용량 객체
+  return <ClientComponent user={user} />
+}
+
+// ✅ Good: 필요한 필드만 전달
+async function Page() {
+  const user = await getUser()
+  return <ClientComponent name={user.name} avatar={user.avatar} />
+}
+```
+
+---
+
+## 🟠 HIGH: 렌더링 성능
+
+### content-visibility로 오프스크린 지연
+
+```css
+/* 긴 리스트에 적용 - 10x 빠른 초기 렌더 */
+.list-item {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 80px;
+}
+
+.page-section {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
+}
+```
+
+```tsx
+// 50+ 아이템 리스트에 적용
+function MessageList({ messages }) {
+  return (
+    <div className="overflow-y-auto h-screen">
+      {messages.map(msg => (
+        <div
+          key={msg.id}
+          style={{
+            contentVisibility: 'auto',
+            containIntrinsicSize: '0 80px'
+          }}
+        >
+          <MessageItem message={msg} />
+        </div>
+      ))}
+    </div>
+  )
+}
+```
+
+### 가상화 (50+ 아이템)
+
+```tsx
+import { useVirtualizer } from '@tanstack/react-virtual'
+
+function VirtualList({ items }) {
+  const parentRef = useRef<HTMLDivElement>(null)
+
+  const virtualizer = useVirtualizer({
+    count: items.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 50,
+    overscan: 5,
+  })
+
+  return (
+    <div ref={parentRef} className="h-[400px] overflow-auto">
+      <div style={{ height: virtualizer.getTotalSize(), position: 'relative' }}>
+        {virtualizer.getVirtualItems().map(row => (
+          <div
+            key={items[row.index].id}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              transform: `translateY(${row.start}px)`,
+            }}
+          >
+            <ListItem {...items[row.index]} />
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }
 ```
 
@@ -844,8 +1064,37 @@ module.exports = {
 
 ---
 
+## Performance Checklist by Impact
+
+### 🔴 CRITICAL (반드시 적용)
+
+- [ ] 독립적인 비동기 작업 → `Promise.all()`
+- [ ] 데이터 의존 컴포넌트만 → `<Suspense>`
+- [ ] 서버 컴포넌트 형제 구성 → 병렬 fetch
+- [ ] Barrel file import → `optimizePackageImports` 또는 직접 import
+- [ ] 대용량 컴포넌트 → `dynamic(() => import())`
+
+### 🟠 HIGH (강력 권고)
+
+- [ ] 동일 요청 내 중복 호출 → `React.cache()`
+- [ ] 요청 간 캐싱 → `unstable_cache()`
+- [ ] RSC 경계 → 필요한 데이터만 전달
+- [ ] 긴 리스트 → `content-visibility` 또는 가상화
+- [ ] hover 시 → 다음 경로/컴포넌트 프리로드
+
+### 🔵 MEDIUM (권고)
+
+- [ ] 비용 높은 계산 → 메모된 별도 컴포넌트
+- [ ] 빈번한 UI 업데이트 → `startTransition`
+- [ ] 정적 JSX → 컴포넌트 밖 호이스팅
+- [ ] 인라인 객체/함수 → `useMemo`/`useCallback`
+
+---
+
 ## References
 
+- `_references/REACT-PERF-RULES.md` - **Vercel 45개 성능 규칙**
+- `_references/UI-GUIDELINES.md` - **UI 성능/접근성 가이드라인**
 - `_references/ARCHITECTURE-PATTERN.md`
 - `_references/TEST-PATTERN.md`
 

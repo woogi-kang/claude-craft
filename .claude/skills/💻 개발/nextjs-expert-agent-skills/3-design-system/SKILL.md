@@ -2,6 +2,8 @@
 
 shadcn/ui + Tailwind CSS v4 기반 디자인 시스템을 구성합니다.
 
+> **Reference**: `_references/UI-GUIDELINES.md` - UI 접근성 및 성능 가이드라인 참조
+
 ## Triggers
 
 - "디자인 시스템", "design system", "shadcn", "ui 설정"
@@ -666,6 +668,102 @@ const Calendar = dynamic(
 
 ---
 
+## 접근성 체크리스트 (UI-GUIDELINES.md 기반)
+
+### 🔴 Critical (반드시 적용)
+
+```tsx
+// 1. 아이콘 버튼에 aria-label 필수
+// ❌ Bad
+<button onClick={handleClose}>
+  <X className="h-4 w-4" />
+</button>
+
+// ✅ Good
+<button onClick={handleClose} aria-label="닫기">
+  <X className="h-4 w-4" aria-hidden="true" />
+</button>
+
+// 2. Semantic HTML 사용
+// ❌ Bad
+<div onClick={handleClick} className="cursor-pointer">Click</div>
+
+// ✅ Good
+<button onClick={handleClick}>Click</button>
+
+// 3. Form input에 label 연결
+// ❌ Bad
+<input type="email" placeholder="이메일" />
+
+// ✅ Good
+<label htmlFor="email">이메일</label>
+<input id="email" type="email" autoComplete="email" />
+```
+
+### 🟠 High (강력 권고)
+
+```tsx
+// 1. focus-visible 스타일 (outline-none 대체)
+// ❌ Bad
+<button className="outline-none">Click</button>
+
+// ✅ Good
+<button className="outline-none focus-visible:ring-2 focus-visible:ring-ring">
+  Click
+</button>
+
+// 2. 에러 메시지 연결
+<input
+  id="email"
+  aria-invalid={!!error}
+  aria-describedby={error ? 'email-error' : undefined}
+/>
+{error && (
+  <span id="email-error" role="alert" className="text-destructive">
+    {error}
+  </span>
+)}
+
+// 3. 모션 감도 존중
+import { useReducedMotion } from 'framer-motion'
+
+function AnimatedComponent() {
+  const shouldReduce = useReducedMotion()
+  return (
+    <motion.div
+      animate={{ scale: shouldReduce ? 1 : 1.1 }}
+      transition={{ duration: shouldReduce ? 0 : 0.2 }}
+    />
+  )
+}
+```
+
+### 폼 필수 속성
+
+| 필드 유형 | type | autocomplete |
+|----------|------|--------------|
+| 이메일 | `email` | `email` |
+| 비밀번호 (현재) | `password` | `current-password` |
+| 비밀번호 (새) | `password` | `new-password` |
+| 이름 | `text` | `name` |
+| 전화번호 | `tel` | `tel` |
+| 주소 | `text` | `street-address` |
+
+### Anti-Patterns 체크리스트
+
+모든 컴포넌트 생성 시 다음을 검출하고 수정합니다:
+
+- [ ] `outline-none` without `focus-visible` replacement
+- [ ] `div` with `onClick` but no `role`/`tabIndex`
+- [ ] Icon button without `aria-label`
+- [ ] Form input without `label`
+- [ ] Form input without `autocomplete`
+- [ ] `transition: all` - 특정 속성만 지정
+- [ ] Animation without `prefers-reduced-motion` check
+- [ ] Paste blocked on inputs
+
+---
+
 ## 보안 고려사항
 
 ### XSS 방지
@@ -706,6 +804,7 @@ export function PasswordInput(props: InputProps) {
 
 ## References
 
+- `_references/UI-GUIDELINES.md` - **UI 접근성 및 성능 가이드라인**
 - `_references/COMPONENT-PATTERN.md`
 - `_references/TEST-PATTERN.md`
 - `_references/ARCHITECTURE-PATTERN.md`

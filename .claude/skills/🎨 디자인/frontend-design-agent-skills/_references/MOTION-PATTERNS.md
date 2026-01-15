@@ -1335,6 +1335,58 @@ export function SnapContainer({ children }: { children: ReactNode }) {
 
 ## 접근성 고려사항
 
+### GPU 가속 속성만 사용 (🔴 CRITICAL)
+
+애니메이션 성능을 위해 GPU 가속 속성만 사용합니다.
+
+```tsx
+// ✅ Good: GPU 가속 속성 (transform + opacity)
+animate={{
+  scale: 1.1,      // transform: scale()
+  x: 10,           // transform: translateX()
+  y: 10,           // transform: translateY()
+  rotate: 5,       // transform: rotate()
+  opacity: 1,      // GPU 가속
+}}
+
+// ❌ Bad: 레이아웃 재계산 유발 (Reflow)
+animate={{
+  width: 200,      // Layout 재계산
+  height: 200,     // Layout 재계산
+  padding: 20,     // Layout 재계산
+  margin: 10,      // Layout 재계산
+  borderRadius: 8, // Paint 발생
+}}
+```
+
+#### 성능 최적화 치트시트
+
+| 속성 | 성능 | 대안 |
+|------|------|------|
+| `width/height` | ❌ | `scale` 사용 |
+| `top/left/right/bottom` | ❌ | `x/y` (translate) 사용 |
+| `margin/padding` | ❌ | `x/y` + scale 조합 |
+| `border-radius` | ⚠️ | 가능하면 회피 |
+| `box-shadow` | ⚠️ | `filter: drop-shadow` 또는 pseudo-element |
+| `color/background` | ⚠️ | crossfade 또는 opacity 전환 |
+
+#### will-change 사용
+
+```tsx
+// 복잡한 애니메이션에 will-change 힌트
+<motion.div
+  className="will-change-transform"
+  animate={{ scale: 1.1, rotate: 5 }}
+/>
+
+// CSS 직접 적용
+.animated-element {
+  will-change: transform, opacity;
+}
+```
+
+---
+
 ### 23. Reduced Motion 지원
 
 ```tsx

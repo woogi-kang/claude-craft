@@ -238,6 +238,65 @@ import { useState } from 'react'
 
 ---
 
+## Best Practices 검증 체크리스트
+
+변환된 코드가 Vercel Best Practices를 준수하는지 검증합니다.
+
+### 🔴 CRITICAL 성능 규칙 (통과 필수)
+
+- [ ] **순차 await 없음** - 독립적인 비동기 작업에 `Promise.all` 사용
+  ```typescript
+  // ❌ Bad
+  const user = await fetchUser()
+  const posts = await fetchPosts()
+
+  // ✅ Good
+  const [user, posts] = await Promise.all([fetchUser(), fetchPosts()])
+  ```
+
+- [ ] **대용량 import 없음** - 무거운 컴포넌트에 `dynamic()` 사용
+  ```typescript
+  const Editor = dynamic(() => import('@/components/editor'), { ssr: false })
+  ```
+
+- [ ] **Barrel file import 없음** - 직접 import 또는 `optimizePackageImports` 설정
+  ```typescript
+  // ❌ Bad
+  import { Check } from 'lucide-react'
+
+  // ✅ Good (next.config.ts에 optimizePackageImports 설정)
+  ```
+
+### 🟠 HIGH 성능 규칙 (강력 권고)
+
+- [ ] **React.cache() 적용** - 중복 데이터 호출에 캐싱 적용
+- [ ] **긴 리스트에 content-visibility** - 50+ 아이템에 적용
+- [ ] **RSC 경계에서 최소 데이터 전달**
+
+### 접근성 체크리스트
+
+- [ ] **모든 버튼에 접근 가능한 이름** - aria-label 또는 텍스트
+- [ ] **모든 이미지에 alt 속성** - 의미있는 설명 포함
+- [ ] **폼 입력에 label 연결** - htmlFor + id 매칭
+- [ ] **focus-visible 스타일 존재** - outline-none만 사용 금지
+- [ ] **Semantic HTML 사용** - div + onClick 대신 button/a
+- [ ] **prefers-reduced-motion 존중** - 애니메이션에 적용
+
+### Anti-Patterns 검출
+
+다음 패턴이 발견되면 수정을 권고합니다:
+
+| Pattern | 문제 | 해결 |
+|---------|------|------|
+| `outline-none` without focus style | 접근성 | `focus-visible:ring-2` 추가 |
+| `div` with `onClick` | 접근성 | `button` 사용 |
+| Icon without `aria-label` | 접근성 | label 추가 |
+| `transition: all` | 성능 | 특정 속성만 지정 |
+| 50+ items without virtualization | 성능 | 가상화 또는 `content-visibility` |
+| Sequential awaits | 성능 | `Promise.all` |
+
+---
+
 ## 성능 체크리스트
 
 ### 번들 크기 검사
