@@ -35,6 +35,15 @@ skills:
   - plan-growth-strategy
   - plan-pitch-deck
   - plan-gtm-strategy
+  # Synthesis Skills (Phase별 종합)
+  - plan-synthesis-discovery
+  - plan-synthesis-research
+  - plan-synthesis-validation
+  - plan-synthesis-specification
+  - plan-synthesis-estimation
+  - plan-synthesis-design
+  - plan-synthesis-execution
+  - plan-synthesis-launch
 ---
 
 # Planning Agent
@@ -79,7 +88,7 @@ Idea Intake 스킬로 문제/솔루션/타겟 정보 수집
 
 ## 개요
 
-Planning Agent는 29개의 전문 Skills를 통합하여 서비스 기획 전 과정을 지원합니다.
+Planning Agent는 37개의 전문 Skills (29개 기본 + 8개 Synthesis)를 통합하여 서비스 기획 전 과정을 지원합니다.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -177,7 +186,7 @@ Planning Agent는 29개의 전문 Skills를 통합하여 서비스 기획 전 �
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-## 통합 Skills (29개)
+## 통합 Skills (37개: 29개 기본 + 8개 Synthesis)
 
 ### Phase 1: Discovery (발견)
 
@@ -247,6 +256,30 @@ Planning Agent는 29개의 전문 Skills를 통합하여 서비스 기획 전 �
 | 27 | **growth-strategy** | 초기 사용자 확보 | Growth Loops |
 | 28 | **pitch-deck** | 피치덱 구조 | 10-15 Slide Structure |
 | 29 | **gtm-strategy** | Go-to-Market 전략 | Launch Checklist |
+
+### Synthesis Skills (Phase별 종합)
+
+각 Phase 완료 후 결과물을 통합하고, 품질을 검증하며, 다음 Phase로의 연결을 관리하는 종합 스킬입니다.
+
+| # | Skill | 역할 | 기능 |
+|---|-------|------|------|
+| S1 | **synthesis-discovery** | Discovery 종합 | 아이디어/가치제안/타겟 통합, 품질 검증 |
+| S2 | **synthesis-research** | Research 종합 | 시장/경쟁/사용자 리서치 통합, 인사이트 도출 |
+| S3 | **synthesis-validation** | Validation 종합 | 비즈니스 모델/MVP 통합, Go/No-Go 결정 |
+| S4 | **synthesis-specification** | Specification 종합 | PRD/기능명세/플로우 통합, 개발 Ready 체크 |
+| S5 | **synthesis-estimation** | Estimation 종합 | 기술/공수/팀 통합, 실행 가능성 평가 |
+| S6 | **synthesis-design** | Design 종합 | UX/브랜드 통합, 디자인 방향성 확정 |
+| S7 | **synthesis-execution** | Execution 종합 | 로드맵/리스크/KPI 통합, 실행 계획 완성 |
+| S8 | **synthesis-launch** | Launch 종합 | 그로스/피치/GTM 통합, 런칭 최종 점검 |
+
+**Synthesis 활용 시나리오:**
+```
+Phase 완료 → Synthesis Skill 호출 → 품질 검증 → 다음 Phase 진행
+              │
+              ├─ 누락 항목 발견 → 해당 Skill 재실행
+              ├─ 일관성 문제 → 수정 제안
+              └─ 품질 충족 → 다음 Phase로 이동
+```
 
 ## INPUT vs OUTPUT
 
@@ -334,7 +367,12 @@ launch:
    └─ 페르소나, JTBD
          │
          ▼
-   Discovery 문서 완성
+   [Synthesis-Discovery] ← 품질 검증 & 통합
+         │
+         ├─ 누락/불일치 → 해당 Skill 재실행
+         │
+         ▼
+   Discovery 문서 완성 ✓
 ```
 
 ### Phase 2: Research (리서치)
@@ -352,7 +390,10 @@ launch:
    └─ 인터뷰 가이드, 설문 설계
          │
          ▼
-   Research 리포트 완성
+   [Synthesis-Research] ← 인사이트 통합 & 검증
+         │
+         ▼
+   Research 리포트 완성 ✓
 ```
 
 ### Phase 3: Validation (검증)
@@ -378,7 +419,10 @@ launch:
     └─ 인허가, 약관, 규제 체크
          │
          ▼
-   Validation 문서 완성
+   [Synthesis-Validation] ← Go/No-Go 결정
+         │
+         ▼
+   Validation 문서 완성 ✓
 ```
 
 ### Phase 4: Specification (명세)
@@ -408,7 +452,10 @@ launch:
     └─ 데이터 수집, 분석 전략
          │
          ▼
-   Specification 문서 완성
+   [Synthesis-Specification] ← 개발 Ready 체크
+         │
+         ▼
+   Specification 문서 완성 ✓
 ```
 
 ### Phase 5: Estimation (산정)
@@ -426,7 +473,10 @@ launch:
     └─ 팀 구성, 역할 정의
          │
          ▼
-   Estimation 문서 완성
+   [Synthesis-Estimation] ← 실행 가능성 평가
+         │
+         ▼
+   Estimation 문서 완성 ✓
 ```
 
 ### Phase 6: Design Direction (디자인)
@@ -440,7 +490,10 @@ launch:
     └─ 브랜드 톤앤매너, 키워드
          │
          ▼
-   Design 가이드 완성
+   [Synthesis-Design] ← 디자인 방향성 확정
+         │
+         ▼
+   Design 가이드 완성 ✓
 ```
 
 ### Phase 7: Execution (실행)
@@ -462,7 +515,10 @@ launch:
     └─ CS, 운영 인력, SLA
          │
          ▼
-   Execution 계획 완성
+   [Synthesis-Execution] ← 실행 계획 완성도 검증
+         │
+         ▼
+   Execution 계획 완성 ✓
 ```
 
 ### Phase 8: Launch Prep (런칭 준비)
@@ -480,7 +536,10 @@ launch:
     └─ Go-to-Market, 런칭 체크리스트
          │
          ▼
-   전체 기획 완성 + 노션 Export
+   [Synthesis-Launch] ← 런칭 최종 점검
+         │
+         ▼
+   전체 기획 완성 ✓ + 노션 Export
 ```
 
 ## 사용 시나리오
@@ -601,6 +660,18 @@ Agent 실행 흐름:
 /plan-gtm           # GTM 전략
 ```
 
+### Synthesis 명령어
+```
+/plan-synthesis-discovery      # Discovery Phase 종합
+/plan-synthesis-research       # Research Phase 종합
+/plan-synthesis-validation     # Validation Phase 종합
+/plan-synthesis-specification  # Specification Phase 종합
+/plan-synthesis-estimation     # Estimation Phase 종합
+/plan-synthesis-design         # Design Phase 종합
+/plan-synthesis-execution      # Execution Phase 종합
+/plan-synthesis-launch         # Launch Phase 종합
+```
+
 ### 파이프라인 제어
 ```
 "검증까지만 해줘"
@@ -662,6 +733,16 @@ workspace/work-plan/
     │   ├── growth-strategy.md      # 그로스 전략
     │   ├── pitch-deck-outline.md   # 피치덱 구조
     │   └── gtm-strategy.md         # GTM 전략
+    │
+    ├── _synthesis/                   # Phase별 종합 문서
+    │   ├── discovery-synthesis.md    # Discovery 종합
+    │   ├── research-synthesis.md     # Research 종합
+    │   ├── validation-synthesis.md   # Validation 종합
+    │   ├── specification-synthesis.md # Specification 종합
+    │   ├── estimation-synthesis.md   # Estimation 종합
+    │   ├── design-synthesis.md       # Design 종합
+    │   ├── execution-synthesis.md    # Execution 종합
+    │   └── launch-synthesis.md       # Launch 종합
     │
     └── _exports/
         └── notion-export.md        # 노션 붙여넣기용 통합본
