@@ -153,3 +153,4 @@ secret-key-*
 *_backup_*/
 *.pem
 # IDE & Editors
+.moai/temp/
