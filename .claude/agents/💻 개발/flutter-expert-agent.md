@@ -124,54 +124,44 @@ Flutter 프로젝트의 설계부터 구현, 테스트까지 지원하는 종합
 
 ## 워크플로우
 
-```
-[사용자 요청]
-      │
-      ▼
-┌─────────────────────────────────────────────────────────────┐
-│                  Phase 1: 설계 (Architecture)                │
-│  ┌────────────┐  ┌────────────┐  ┌─────────────┐  ┌──────┐ │
-│  │  Project   │→ │Architecture│→ │Design System│→ │Feature│ │
-│  │   Setup    │  │  (Clean)   │  │  (Atomic)   │  │Design │ │
-│  └────────────┘  └────────────┘  └─────────────┘  └──────┘ │
-└─────────────────────────────────────────────────────────────┘
-      │
-      ▼
-┌─────────────────────────────────────────────────────────────┐
-│                  Phase 2: 구현 (Implementation)              │
-│                                                              │
-│     TDD Cycle (Feature 단위 반복)                            │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  ┌─────────┐   ┌─────────┐   ┌─────────┐            │   │
-│  │  │  Test   │──▶│  Code   │──▶│Refactor │──┐         │   │
-│  │  │  (Red)  │   │ (Green) │   │         │  │         │   │
-│  │  └─────────┘   └─────────┘   └─────────┘  │         │   │
-│  │       ▲                                    │         │   │
-│  │       └────────────────────────────────────┘         │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                                                              │
-│  Entity → Repository → UseCase → Notifier → View → Routing  │
-│  Network (Dio) → Database (Drift) → Platform Channel         │
-└─────────────────────────────────────────────────────────────┘
-      │
-      ▼
-┌─────────────────────────────────────────────────────────────┐
-│                  Phase 3: 테스트 (Testing)                   │
-│  ┌──────────┐  ┌────────────┐  ┌────────┐  ┌──────────┐   │
-│  │  Unit    │→ │  Widget    │→ │ Golden │→ │   E2E    │   │
-│  │  Test    │  │   Test     │  │  Test  │  │ (Patrol) │   │
-│  │ (60-70%) │  │  (15-20%)  │  │(10-15%)│  │  (5-10%) │   │
-│  └──────────┘  └────────────┘  └────────┘  └──────────┘   │
-└─────────────────────────────────────────────────────────────┘
-      │
-      ▼
-┌─────────────────────────────────────────────────────────────┐
-│              Phase 4-5: 최적화 & 검증                        │
-│  ┌────────────┐  ┌────────────┐  ┌──────────┐  ┌────────┐ │
-│  │Performance │→ │  Refactor  │→ │ Logging  │→ │ Review │ │
-│  │Optimization│  │            │  │ (Talker) │  │  & QA  │ │
-│  └────────────┘  └────────────┘  └──────────┘  └────────┘ │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph Request["사용자 요청"]
+        R["요청 분석"]
+    end
+
+    subgraph Phase1["Phase 1: 설계 (Architecture)"]
+        P1A["Project Setup"] --> P1B["Architecture<br/>(Clean)"]
+        P1B --> P1C["Design System<br/>(Atomic)"]
+        P1C --> P1D["Feature Design"]
+    end
+
+    subgraph Phase2["Phase 2: 구현 (Implementation)"]
+        subgraph TDD["TDD Cycle (Feature 단위 반복)"]
+            T1["Test<br/>(Red)"] --> T2["Code<br/>(Green)"]
+            T2 --> T3["Refactor"]
+            T3 --> T1
+        end
+        TDD --> P2A["Entity → Repository → UseCase → Notifier → View → Routing"]
+        P2A --> P2B["Network (Dio) → Database (Drift) → Platform Channel"]
+    end
+
+    subgraph Phase3["Phase 3: 테스트 (Testing)"]
+        P3A["Unit Test<br/>(60-70%)"] --> P3B["Widget Test<br/>(15-20%)"]
+        P3B --> P3C["Golden Test<br/>(10-15%)"]
+        P3C --> P3D["E2E<br/>(Patrol, 5-10%)"]
+    end
+
+    subgraph Phase45["Phase 4-5: 최적화 & 검증"]
+        P4A["Performance<br/>Optimization"] --> P4B["Refactor"]
+        P4B --> P4C["Logging<br/>(Talker)"]
+        P4C --> P4D["Review & QA"]
+    end
+
+    R --> Phase1
+    Phase1 --> Phase2
+    Phase2 --> Phase3
+    Phase3 --> Phase45
 ```
 
 ---
@@ -180,53 +170,57 @@ Flutter 프로젝트의 설계부터 구현, 테스트까지 지원하는 종합
 
 ### Clean Architecture 레이어
 
-```
-┌─────────────────────────────────────┐
-│            UI Layer                  │
-│  ┌─────────┐    ┌──────────────┐   │
-│  │  View   │◄──►│  ViewModel   │   │
-│  │ (Page)  │    │  (Notifier)  │   │
-│  └─────────┘    └──────┬───────┘   │
-└─────────────────────────┼───────────┘
-                          │
-┌─────────────────────────┼───────────┐
-│         Domain Layer                 │
-│         ┌──────────────┐            │
-│         │   UseCase    │            │
-│         └──────┬───────┘            │
-└─────────────────┼───────────────────┘
-                  │
-┌─────────────────┼───────────────────┐
-│          Data Layer                  │
-│  ┌───────────┐    ┌─────────────┐   │
-│  │Repository │◄──►│   Service   │   │
-│  │  (Impl)   │    │(API/Local)  │   │
-│  └───────────┘    └─────────────┘   │
-└─────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph UI["UI Layer"]
+        View["View<br/>(Page)"] <--> ViewModel["ViewModel<br/>(Notifier)"]
+    end
+
+    subgraph Domain["Domain Layer"]
+        UseCase["UseCase"]
+    end
+
+    subgraph Data["Data Layer"]
+        Repository["Repository<br/>(Impl)"] <--> Service["Service<br/>(API/Local)"]
+    end
+
+    ViewModel --> UseCase
+    UseCase --> Repository
 ```
 
 ### Atomic Design 계층
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                         PAGES                                    │
-│    실제 콘텐츠가 적용된 최종 화면 (HomeScreen, ProfileScreen)      │
-├─────────────────────────────────────────────────────────────────┤
-│                       TEMPLATES                                  │
-│    페이지 레이아웃 뼈대, 슬롯 구조 (MainTemplate, AuthTemplate)    │
-├─────────────────────────────────────────────────────────────────┤
-│                       ORGANISMS                                  │
-│    복잡한 UI 섹션 (Header, NavigationBar, ProductCard)           │
-├─────────────────────────────────────────────────────────────────┤
-│                       MOLECULES                                  │
-│    단일 기능 조합 (SearchBar, LabeledInput, IconButton)          │
-├─────────────────────────────────────────────────────────────────┤
-│                         ATOMS                                    │
-│    최소 단위 (AppText, AppIcon, AppButton, AppInput)             │
-├─────────────────────────────────────────────────────────────────┤
-│                        TOKENS                                    │
-│    디자인 토큰 (AppColors, AppTypography, AppSpacing, AppRadius) │
-└─────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph PAGES["PAGES"]
+        P_desc["실제 콘텐츠가 적용된 최종 화면<br/>(HomeScreen, ProfileScreen)"]
+    end
+
+    subgraph TEMPLATES["TEMPLATES"]
+        T_desc["페이지 레이아웃 뼈대, 슬롯 구조<br/>(MainTemplate, AuthTemplate)"]
+    end
+
+    subgraph ORGANISMS["ORGANISMS"]
+        O_desc["복잡한 UI 섹션<br/>(Header, NavigationBar, ProductCard)"]
+    end
+
+    subgraph MOLECULES["MOLECULES"]
+        M_desc["단일 기능 조합<br/>(SearchBar, LabeledInput, IconButton)"]
+    end
+
+    subgraph ATOMS["ATOMS"]
+        A_desc["최소 단위<br/>(AppText, AppIcon, AppButton, AppInput)"]
+    end
+
+    subgraph TOKENS["TOKENS"]
+        TK_desc["디자인 토큰<br/>(AppColors, AppTypography, AppSpacing, AppRadius)"]
+    end
+
+    PAGES --> TEMPLATES
+    TEMPLATES --> ORGANISMS
+    ORGANISMS --> MOLECULES
+    MOLECULES --> ATOMS
+    ATOMS --> TOKENS
 ```
 
 ### 디렉토리 구조

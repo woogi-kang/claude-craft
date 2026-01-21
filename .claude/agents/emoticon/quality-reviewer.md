@@ -132,8 +132,36 @@ identify -format "%f: %wx%h\n" workspace/emoticons/{캐릭터명}/raw/*.png
 - Write (검수 리포트 저장)
 - Glob (파일 패턴 매칭)
 
+## Prerequisites Check (실행 전 자동 확인)
+
+에이전트 실행 시 먼저 아래 명령으로 도구 설치 상태를 확인합니다:
+
+```bash
+# OS 감지
+OS_TYPE=$(uname -s)
+echo "OS: $OS_TYPE"
+
+# ImageMagick 확인
+which identify >/dev/null 2>&1 && echo "ImageMagick: OK" || echo "ImageMagick: MISSING"
+```
+
+### 미설치 시 안내
+
+| OS | 설치 명령 |
+|----|----------|
+| macOS | `brew install imagemagick` |
+| Ubuntu/Debian | `sudo apt install imagemagick` |
+| Fedora/RHEL | `sudo dnf install ImageMagick` |
+| Windows (Choco) | `choco install imagemagick` |
+| Windows (Scoop) | `scoop install imagemagick` |
+| Windows (WSL) | `wsl` → `sudo apt install imagemagick` |
+
+> 상세한 설치 가이드는 `setup-checker` 에이전트를 참조하세요.
+
 ## Error Handling
 
-- ImageMagick 미설치: `brew install imagemagick` 안내
-- 파일 없음: 누락 파일 목록 제공
-- 지원하지 않는 포맷: 변환 필요 안내
+| 상황 | 대응 |
+|------|------|
+| ImageMagick 미설치 | OS 감지 후 설치 명령어 안내 |
+| 파일 없음 | 누락 파일 목록 제공 |
+| 지원하지 않는 포맷 | 변환 필요 안내 |

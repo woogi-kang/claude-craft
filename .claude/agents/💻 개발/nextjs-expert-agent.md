@@ -101,62 +101,56 @@ Next.js 프로젝트의 설계부터 구현, 테스트까지 지원하는 종합
 
 ## 워크플로우
 
-```
-[사용자 요청]
-      │
-      ▼
-┌─────────────────────────────────────────────────────────────┐
-│                  Phase 1: 설정 (Setup)                       │
-│  ┌────────────┐  ┌────────────┐  ┌─────────────┐  ┌──────┐ │
-│  │  Project   │→ │Architecture│→ │Design System│→ │  DB  │ │
-│  │   Setup    │  │  (Clean)   │  │ (shadcn/ui) │  │Setup │ │
-│  └────────────┘  └────────────┘  └─────────────┘  └──────┘ │
-└─────────────────────────────────────────────────────────────┘
-      │
-      ▼
-┌─────────────────────────────────────────────────────────────┐
-│                  Phase 2: 핵심 (Core)                        │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌────────────┐  │
-│  │  Schema  │→ │API Client│→ │  State   │→ │Server Action│  │
-│  │  (Zod)   │  │(TanStack)│  │(Zustand) │  │(safe-action)│  │
-│  └──────────┘  └──────────┘  └──────────┘  └────────────┘  │
-└─────────────────────────────────────────────────────────────┘
-      │
-      ▼
-┌─────────────────────────────────────────────────────────────┐
-│                  Phase 3: 기능 (Feature)                     │
-│                                                              │
-│     TDD Cycle (Feature 단위 반복)                            │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  ┌─────────┐   ┌─────────┐   ┌─────────┐            │   │
-│  │  │  Test   │──▶│  Code   │──▶│Refactor │──┐         │   │
-│  │  │  (Red)  │   │ (Green) │   │         │  │         │   │
-│  │  └─────────┘   └─────────┘   └─────────┘  │         │   │
-│  │       ▲                                    │         │   │
-│  │       └────────────────────────────────────┘         │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                                                              │
-│  Schema → Repository → Service → Hook → Component → Route   │
-└─────────────────────────────────────────────────────────────┘
-      │
-      ▼
-┌─────────────────────────────────────────────────────────────┐
-│                  Phase 4: 테스트 (Testing)                   │
-│  ┌──────────┐  ┌────────────┐  ┌──────────┐  ┌──────────┐  │
-│  │  Unit    │→ │ Integration│→ │  Visual  │→ │   E2E    │  │
-│  │  Test    │  │    Test    │  │   Test   │  │(Playwright)│ │
-│  │ (60-70%) │  │  (15-20%)  │  │ (5-10%)  │  │  (5-10%) │  │
-│  └──────────┘  └────────────┘  └──────────┘  └──────────┘  │
-└─────────────────────────────────────────────────────────────┘
-      │
-      ▼
-┌─────────────────────────────────────────────────────────────┐
-│              Phase 5-6: 최적화 & DevOps                      │
-│  ┌────────────┐  ┌────────────┐  ┌──────────┐  ┌────────┐  │
-│  │Performance │→ │    SEO     │→ │  CI/CD   │→ │Monorepo│  │
-│  │    CWV     │  │  Metadata  │  │(Actions) │  │(Turbo) │  │
-│  └────────────┘  └────────────┘  └──────────┘  └────────┘  │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    REQ[사용자 요청] --> P1
+
+    subgraph P1["Phase 1: 설정 (Setup)"]
+        direction LR
+        S1[Project Setup] --> S2[Architecture<br/>Clean]
+        S2 --> S3[Design System<br/>shadcn/ui]
+        S3 --> S4[DB Setup]
+    end
+
+    P1 --> P2
+
+    subgraph P2["Phase 2: 핵심 (Core)"]
+        direction LR
+        C1[Schema<br/>Zod] --> C2[API Client<br/>TanStack]
+        C2 --> C3[State<br/>Zustand]
+        C3 --> C4[Server Action<br/>safe-action]
+    end
+
+    P2 --> P3
+
+    subgraph P3["Phase 3: 기능 (Feature)"]
+        direction TB
+        subgraph TDD["TDD Cycle (Feature 단위 반복)"]
+            direction LR
+            T1["Test (Red)"] --> T2["Code (Green)"]
+            T2 --> T3[Refactor]
+            T3 --> T1
+        end
+        TDD --> FLOW[Schema → Repository → Service → Hook → Component → Route]
+    end
+
+    P3 --> P4
+
+    subgraph P4["Phase 4: 테스트 (Testing)"]
+        direction LR
+        TE1["Unit Test<br/>(60-70%)"] --> TE2["Integration Test<br/>(15-20%)"]
+        TE2 --> TE3["Visual Test<br/>(5-10%)"]
+        TE3 --> TE4["E2E Playwright<br/>(5-10%)"]
+    end
+
+    P4 --> P5
+
+    subgraph P5["Phase 5-6: 최적화 & DevOps"]
+        direction LR
+        O1[Performance<br/>CWV] --> O2[SEO<br/>Metadata]
+        O2 --> O3["CI/CD<br/>(Actions)"]
+        O3 --> O4["Monorepo<br/>(Turbo)"]
+    end
 ```
 
 ---
@@ -165,53 +159,59 @@ Next.js 프로젝트의 설계부터 구현, 테스트까지 지원하는 종합
 
 ### Clean Architecture 레이어
 
-```
-┌─────────────────────────────────────┐
-│            UI Layer                  │
-│  ┌─────────────┐  ┌──────────────┐  │
-│  │   Page/     │◄►│    Hook      │  │
-│  │  Component  │  │  (TanStack)  │  │
-│  └─────────────┘  └──────┬───────┘  │
-└──────────────────────────┼──────────┘
-                           │
-┌──────────────────────────┼──────────┐
-│         Domain Layer                 │
-│         ┌──────────────┐            │
-│         │   Service    │            │
-│         └──────┬───────┘            │
-└─────────────────┼───────────────────┘
-                  │
-┌─────────────────┼───────────────────┐
-│          Data Layer                  │
-│  ┌───────────┐    ┌─────────────┐   │
-│  │Repository │◄──►│   Schema    │   │
-│  │  (Drizzle)│    │   (Zod)     │   │
-│  └───────────┘    └─────────────┘   │
-└─────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph UI["UI Layer"]
+        direction LR
+        PC["Page/<br/>Component"] <--> HK["Hook<br/>(TanStack)"]
+    end
+
+    subgraph Domain["Domain Layer"]
+        SV[Service]
+    end
+
+    subgraph Data["Data Layer"]
+        direction LR
+        RP["Repository<br/>(Drizzle)"] <--> SC["Schema<br/>(Zod)"]
+    end
+
+    HK --> SV
+    SV --> RP
 ```
 
 ### Atomic Design 계층
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                         PAGES                                    │
-│    실제 콘텐츠가 적용된 최종 화면 (app/page.tsx)                   │
-├─────────────────────────────────────────────────────────────────┤
-│                       TEMPLATES                                  │
-│    페이지 레이아웃 뼈대, 슬롯 구조 (DashboardLayout, AuthLayout) │
-├─────────────────────────────────────────────────────────────────┤
-│                       ORGANISMS                                  │
-│    복잡한 UI 섹션 (Header, Sidebar, DataTable)                   │
-├─────────────────────────────────────────────────────────────────┤
-│                       MOLECULES                                  │
-│    단일 기능 조합 (SearchBar, FormField, UserAvatar)             │
-├─────────────────────────────────────────────────────────────────┤
-│                         ATOMS                                    │
-│    최소 단위 - shadcn/ui 컴포넌트 (Button, Input, Card)          │
-├─────────────────────────────────────────────────────────────────┤
-│                        TOKENS                                    │
-│    디자인 토큰 - CSS Variables (colors, spacing, typography)     │
-└─────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph PAGES["PAGES"]
+        P1["실제 콘텐츠가 적용된 최종 화면 (app/page.tsx)"]
+    end
+
+    subgraph TEMPLATES["TEMPLATES"]
+        T1["페이지 레이아웃 뼈대, 슬롯 구조 (DashboardLayout, AuthLayout)"]
+    end
+
+    subgraph ORGANISMS["ORGANISMS"]
+        O1["복잡한 UI 섹션 (Header, Sidebar, DataTable)"]
+    end
+
+    subgraph MOLECULES["MOLECULES"]
+        M1["단일 기능 조합 (SearchBar, FormField, UserAvatar)"]
+    end
+
+    subgraph ATOMS["ATOMS"]
+        A1["최소 단위 - shadcn/ui 컴포넌트 (Button, Input, Card)"]
+    end
+
+    subgraph TOKENS["TOKENS"]
+        TO1["디자인 토큰 - CSS Variables (colors, spacing, typography)"]
+    end
+
+    PAGES --> TEMPLATES
+    TEMPLATES --> ORGANISMS
+    ORGANISMS --> MOLECULES
+    MOLECULES --> ATOMS
+    ATOMS --> TOKENS
 ```
 
 ### 디렉토리 구조

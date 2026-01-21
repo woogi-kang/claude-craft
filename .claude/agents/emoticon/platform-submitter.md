@@ -185,22 +185,65 @@ optipng -o5 kakao/*.png
 - Read (컨셉 문서 읽기)
 - Write (제출 가이드 저장)
 
-## Prerequisites
+## Prerequisites Check (실행 전 자동 확인)
 
-ImageMagick 설치 필요:
+### Step 0: 도구 설치 확인
+
+에이전트 실행 시 먼저 아래 명령으로 도구 설치 상태를 확인합니다:
+
 ```bash
-# macOS
-brew install imagemagick
+# OS 감지
+OS_TYPE=$(uname -s)
 
-# Ubuntu/Debian
-sudo apt-get install imagemagick
-
-# Windows (Chocolatey)
-choco install imagemagick
+# 도구 설치 확인
+echo "=== 도구 설치 상태 ==="
+which convert >/dev/null 2>&1 && echo "ImageMagick: OK" || echo "ImageMagick: MISSING"
+which pngquant >/dev/null 2>&1 && echo "pngquant: OK" || echo "pngquant: MISSING (선택)"
+which optipng >/dev/null 2>&1 && echo "optipng: OK" || echo "optipng: MISSING (선택)"
 ```
+
+### 미설치 시 안내
+
+도구가 미설치된 경우, OS에 맞는 설치 명령을 안내합니다:
+
+#### macOS
+```bash
+brew install imagemagick pngquant optipng
+```
+
+#### Ubuntu/Debian
+```bash
+sudo apt update && sudo apt install -y imagemagick pngquant optipng
+```
+
+#### Fedora/RHEL
+```bash
+sudo dnf install ImageMagick pngquant optipng
+```
+
+#### Windows (Chocolatey - 관리자 권한)
+```powershell
+choco install imagemagick pngquant optipng -y
+```
+
+#### Windows (Scoop)
+```powershell
+scoop install imagemagick pngquant optipng
+```
+
+#### Windows (WSL 권장)
+```bash
+wsl
+sudo apt update && sudo apt install -y imagemagick pngquant optipng
+```
+
+> 상세한 설치 가이드는 `setup-checker` 에이전트를 참조하세요.
 
 ## Error Handling
 
-- ImageMagick 미설치: 설치 명령어 안내
-- 원본 파일 없음: quality-reviewer로 재검수 안내
-- 변환 실패: 개별 파일 오류 보고
+| 상황 | 대응 |
+|------|------|
+| ImageMagick 미설치 | OS 감지 후 설치 명령어 안내 |
+| 원본 파일 없음 | quality-reviewer로 재검수 안내 |
+| 변환 실패 | 개별 파일 오류 보고 |
+| 용량 초과 | pngquant/optipng 최적화 안내 |

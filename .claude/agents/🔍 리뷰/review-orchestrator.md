@@ -322,39 +322,62 @@ voting_weights:
 
 ## Execution Flow
 
-```
-/review "{target}"
-       │
-       ├─ [Phase 0] LLM 가용성 체크
-       │   ├─ claude --version ✅
-       │   ├─ gemini --version (선택)
-       │   └─ codex --version (선택)
-       │
-       ├─ [Phase 1] 대상 분석 & 도메인 분류
-       │   └─ content | code | design
-       │
-       ├─ [Phase 2] 구조화된 프롬프트 생성
-       │   ├─ 공통 컨텍스트 구성
-       │   ├─ LLM별 역할 힌트 추가
-       │   └─ JSON 스키마 첨부
-       │
-       ├─ [Phase 3] 병렬 LLM 리뷰 수집
-       │   ├─ Claude → JSON 응답 A
-       │   ├─ Gemini → JSON 응답 B (가용시)
-       │   └─ Codex → JSON 응답 C (가용시)
-       │
-       ├─ [Phase 4] 응답 검증 & 정규화
-       │   ├─ JSON 스키마 검증
-       │   ├─ 필드 누락 체크
-       │   └─ 신뢰도 필터링
-       │
-       ├─ [Phase 5] 합의 도출
-       │   ├─ 피드백 매칭 & 클러스터링
-       │   ├─ 가중치 투표
-       │   └─ 메타-판단 (상충시)
-       │
-       └─ [Phase 6] 리포트 생성
-           └─ .moai/reports/reviews/review-{timestamp}.md
+```mermaid
+flowchart TD
+    Start(["/review {target}"]) --> Phase0
+
+    subgraph Phase0["Phase 0: LLM 가용성 체크"]
+        P0_Claude["claude --version"]
+        P0_Gemini["gemini --version (선택)"]
+        P0_Codex["codex --version (선택)"]
+    end
+
+    Phase0 --> Phase1
+
+    subgraph Phase1["Phase 1: 대상 분석 & 도메인 분류"]
+        P1_Domains{"content | code | design"}
+    end
+
+    Phase1 --> Phase2
+
+    subgraph Phase2["Phase 2: 구조화된 프롬프트 생성"]
+        P2_Context["공통 컨텍스트 구성"]
+        P2_Roles["LLM별 역할 힌트 추가"]
+        P2_Schema["JSON 스키마 첨부"]
+        P2_Context --> P2_Roles --> P2_Schema
+    end
+
+    Phase2 --> Phase3
+
+    subgraph Phase3["Phase 3: 병렬 LLM 리뷰 수집"]
+        P3_Claude["Claude -> JSON 응답 A"]
+        P3_Gemini["Gemini -> JSON 응답 B (가용시)"]
+        P3_Codex["Codex -> JSON 응답 C (가용시)"]
+    end
+
+    Phase3 --> Phase4
+
+    subgraph Phase4["Phase 4: 응답 검증 & 정규화"]
+        P4_Validate["JSON 스키마 검증"]
+        P4_Check["필드 누락 체크"]
+        P4_Filter["신뢰도 필터링"]
+        P4_Validate --> P4_Check --> P4_Filter
+    end
+
+    Phase4 --> Phase5
+
+    subgraph Phase5["Phase 5: 합의 도출"]
+        P5_Match["피드백 매칭 & 클러스터링"]
+        P5_Vote["가중치 투표"]
+        P5_Meta["메타-판단 (상충시)"]
+        P5_Match --> P5_Vote --> P5_Meta
+    end
+
+    Phase5 --> Phase6
+
+    subgraph Phase6["Phase 6: 리포트 생성"]
+        P6_Report[".moai/reports/reviews/review-{timestamp}.md"]
+    end
 ```
 
 ---

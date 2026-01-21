@@ -37,50 +37,38 @@ platforms:
 
 Social Media Agent는 15개의 전문 Skills를 통합하여 4개 플랫폼에 최적화된 콘텐츠를 제작합니다.
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    Social Media Agent                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   사용자 요청                                                    │
-│        │                                                        │
-│        ▼                                                        │
-│   ┌──────────┐   ┌──────────┐   ┌──────────┐                   │
-│   │ Strategy │ → │ Research │ → │Validation│                   │
-│   └──────────┘   └──────────┘   └──────────┘                   │
-│                                       │                         │
-│                                       ▼                         │
-│                                 ┌──────────┐                   │
-│                                 │Compliance│                   │
-│                                 └──────────┘                   │
-│                                       │                         │
-│        ┌──────────────────────────────┼──────────────────────┐  │
-│        │              │               │              │       │  │
-│        ▼              ▼               ▼              ▼       │  │
-│   ┌─────────┐   ┌─────────┐   ┌─────────┐   ┌─────────┐     │  │
-│   │Instagram│   │LinkedIn │   │    X    │   │ Threads │     │  │
-│   └─────────┘   └─────────┘   └─────────┘   └─────────┘     │  │
-│        │              │               │              │       │  │
-│        └──────────────┴───────────────┴──────────────┘       │  │
-│                                │                              │  │
-│                                ▼                              │  │
-│   ┌──────────┐   ┌──────────┐   ┌──────────┐                │  │
-│   │  Visual  │ ← │ Hashtag  │ ← │ Content  │                │  │
-│   └──────────┘   └──────────┘   └──────────┘                │  │
-│        │                                                     │  │
-│        ▼                                                     │  │
-│   ┌──────────┐   ┌──────────┐   ┌──────────┐                │  │
-│   │ Approval │ → │ Schedule │ → │ Publish  │                │  │
-│   └──────────┘   └──────────┘   └──────────┘                │  │
-│                                       │                      │  │
-│        ┌──────────────────────────────┤                      │  │
-│        │                              │                      │  │
-│        ▼                              ▼                      │  │
-│   ┌──────────┐   ┌──────────┐   ┌──────────┐                │  │
-│   │Repurpose │   │Engagement│ → │Analytics │                │  │
-│   └──────────┘   └──────────┘   └──────────┘                │  │
-│                                                              │  │
-└─────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph SocialMediaAgent["Social Media Agent"]
+        A([사용자 요청]) --> B[Strategy]
+        B --> C[Research]
+        C --> D[Validation]
+        D --> E[Compliance]
+
+        E --> J[Content]
+
+        J --> J1[Instagram]
+        J --> J2[LinkedIn]
+        J --> J3[X]
+        J --> J4[Threads]
+
+        J1 --> K[Visual]
+        J2 --> K
+        J3 --> K
+        J4 --> K
+
+        K --> L[Hashtag]
+
+        L --> M[Approval]
+        M --> N[Schedule]
+        N --> O[Publish]
+
+        O --> P[Repurpose]
+        P --> B
+        O --> Q[Engagement]
+        Q --> R[Analytics]
+        R --> B
+    end
 ```
 
 ## 지원 플랫폼
@@ -116,77 +104,62 @@ Social Media Agent는 15개의 전문 Skills를 통합하여 4개 플랫폼에 �
 
 ### Phase 1: Strategy & Research (전략 수립)
 
-```
-0. Strategy Skill
-   └─ 브랜드 보이스, 타겟 오디언스, 콘텐츠 필러 정의
-         │
-         ▼
-1. Research Skill
-   └─ 트렌드 분석, 경쟁사 모니터링, 소재 발굴
-         │
-         ▼
-   콘텐츠 전략 & 소재 확보
+```mermaid
+flowchart TD
+    A["0. Strategy Skill"] --> A1["브랜드 보이스, 타겟 오디언스, 콘텐츠 필러 정의"]
+    A1 --> B["1. Research Skill"]
+    B --> B1["트렌드 분석, 경쟁사 모니터링, 소재 발굴"]
+    B1 --> C(["콘텐츠 전략 & 소재 확보"])
 ```
 
 ### Phase 2: Content Creation (콘텐츠 제작)
 
-```
-2. Validation Skill
-   └─ 소재 팩트체크, 출처 검증
-         │
-         ▼
-3. Compliance Skill
-   └─ 저작권, 플랫폼 가이드라인, 법적 검토
-         │
-         ▼
-4. Content Skill (플랫폼별)
-   ├─ Instagram: 캐러셀, 릴스 스크립트, 캡션
-   ├─ LinkedIn: 전문 포스트, 아티클
-   ├─ X: 트윗, 스레드
-   └─ Threads: 캐주얼 포스트
-         │
-         ▼
-5. Visual Skill
-   └─ 이미지, 그래픽, 썸네일 제작
-         │
-         ▼
-6. Hashtag Skill
-   └─ 플랫폼별 해시태그 최적화
-         │
-         ▼
-   발행 준비 완료
+```mermaid
+flowchart TD
+    A["2. Validation Skill"] --> A1["소재 팩트체크, 출처 검증"]
+    A1 --> B["3. Compliance Skill"]
+    B --> B1["저작권, 플랫폼 가이드라인, 법적 검토"]
+    B1 --> C["4. Content Skill (플랫폼별)"]
+
+    C --> C1["Instagram: 캐러셀, 릴스 스크립트, 캡션"]
+    C --> C2["LinkedIn: 전문 포스트, 아티클"]
+    C --> C3["X: 트윗, 스레드"]
+    C --> C4["Threads: 캐주얼 포스트"]
+
+    C1 --> D["5. Visual Skill"]
+    C2 --> D
+    C3 --> D
+    C4 --> D
+
+    D --> D1["이미지, 그래픽, 썸네일 제작"]
+    D1 --> E["6. Hashtag Skill"]
+    E --> E1["플랫폼별 해시태그 최적화"]
+    E1 --> F(["발행 준비 완료"])
 ```
 
 ### Phase 3: Approval & Publishing (승인 및 발행)
 
-```
-7. Approval Skill
-   └─ 내부 리뷰, 수정 요청, 최종 승인
-         │
-         ├─ 수정 필요 → Content Skill로 복귀
-         │
-         ▼
-8. Schedule Skill
-   └─ 최적 발행 시간, 캘린더 배치
-         │
-         ▼
-   발행!
+```mermaid
+flowchart TD
+    A["7. Approval Skill"] --> A1["내부 리뷰, 수정 요청, 최종 승인"]
+    A1 --> B{수정 필요?}
+    B -->|Yes| C["Content Skill로 복귀"]
+    C --> A
+    B -->|No| D["8. Schedule Skill"]
+    D --> D1["최적 발행 시간, 캘린더 배치"]
+    D1 --> E(["발행!"])
 ```
 
 ### Phase 4: Post-Publish (발행 후 관리)
 
-```
-9. Repurpose Skill
-   └─ 다른 플랫폼으로 콘텐츠 재활용
-         │
-10. Engagement Skill
-    └─ 댓글 응답, DM 관리, 커뮤니티 빌딩
-         │
-11. Analytics Skill
-    └─ 성과 측정, 인사이트 도출, 개선점 파악
-         │
-         ▼
-    다음 콘텐츠 전략에 반영
+```mermaid
+flowchart TD
+    A["9. Repurpose Skill"] --> A1["다른 플랫폼으로 콘텐츠 재활용"]
+    A1 --> B["10. Engagement Skill"]
+    B --> B1["댓글 응답, DM 관리, 커뮤니티 빌딩"]
+    B1 --> C["11. Analytics Skill"]
+    C --> C1["성과 측정, 인사이트 도출, 개선점 파악"]
+    C1 --> D(["다음 콘텐츠 전략에 반영"])
 ```
 
 ## 사용 시나리오

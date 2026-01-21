@@ -68,58 +68,40 @@ skills:
 
 Legal & Contract Agent는 12개의 전문 Skills를 통합하여 계약 업무 전 과정을 지원합니다.
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                   Legal & Contract Agent                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                   │
-│   사용자 요청 (문서 업로드 또는 요청)                               │
-│        │                                                          │
-│        ▼                                                          │
-│   ┌──────────────┐                                                │
-│   │Context Intake│  ◀── 계약 유형, 당사자, 목적, 관할권 파악        │
-│   │(컨텍스트 수집)│                                                 │
-│   └──────┬───────┘                                                │
-│          │                                                        │
-│          ▼                                                        │
-│   ┌─────────────────────────────────────────────────────────┐    │
-│   │              Phase 1: 분석 (Analysis)                     │    │
-│   │  ┌────────┐  ┌────────┐  ┌────────┐                     │    │
-│   │  │Document│→ │  Risk  │→ │Summary │                     │    │
-│   │  │Analysis│  │Assess. │  │Extract │                     │    │
-│   │  └────────┘  └────────┘  └────────┘                     │    │
-│   └─────────────────────────────────────────────────────────┘    │
-│          │                                                        │
-│          ▼                                                        │
-│   ┌─────────────────────────────────────────────────────────┐    │
-│   │              Phase 2: 검토 (Review)                       │    │
-│   │  ┌────────┐  ┌────────┐  ┌────────┐                     │    │
-│   │  │Clause  │→ │Compare │→ │Compli- │                     │    │
-│   │  │Library │  │Versions│  │ance    │                     │    │
-│   │  └────────┘  └────────┘  └────────┘                     │    │
-│   └─────────────────────────────────────────────────────────┘    │
-│          │                                                        │
-│          ▼                                                        │
-│   ┌─────────────────────────────────────────────────────────┐    │
-│   │              Phase 3: 실행 (Execution)                    │    │
-│   │  ┌────────┐  ┌────────┐  ┌────────┐                     │    │
-│   │  │Redline │→ │Negoti- │→ │Document│                     │    │
-│   │  │Suggest │  │ation   │  │Generate│                     │    │
-│   │  └────────┘  └────────┘  └────────┘                     │    │
-│   └─────────────────────────────────────────────────────────┘    │
-│          │                                                        │
-│          ▼                                                        │
-│   ┌─────────────────────────────────────────────────────────┐    │
-│   │              Phase 4: 검증 (Validation)                   │    │
-│   │  ┌────────┐  ┌────────┐                                  │    │
-│   │  │Checklist│→│ Review │                                  │    │
-│   │  └────────┘  └────────┘                                  │    │
-│   └─────────────────────────────────────────────────────────┘    │
-│          │                                                        │
-│          ▼                                                        │
-│   최종 산출물 (검토 보고서, 수정된 계약서, 체크리스트)               │
-│                                                                   │
-└─────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph LCA["Legal & Contract Agent"]
+        Request([사용자 요청<br/>문서 업로드 또는 요청])
+
+        Context[Context Intake<br/>컨텍스트 수집]
+        ContextNote>"계약 유형, 당사자, 목적, 관할권 파악"]
+
+        subgraph Phase1["Phase 1: 분석 Analysis"]
+            DA[Document<br/>Analysis] --> RA[Risk<br/>Assess.] --> SE[Summary<br/>Extract]
+        end
+
+        subgraph Phase2["Phase 2: 검토 Review"]
+            CL[Clause<br/>Library] --> VC[Compare<br/>Versions] --> CC[Compliance]
+        end
+
+        subgraph Phase3["Phase 3: 실행 Execution"]
+            RS[Redline<br/>Suggest] --> NP[Negotiation] --> DG[Document<br/>Generate]
+        end
+
+        subgraph Phase4["Phase 4: 검증 Validation"]
+            CK[Checklist] --> FR[Review]
+        end
+
+        Output([최종 산출물<br/>검토 보고서, 수정된 계약서, 체크리스트])
+
+        Request --> Context
+        ContextNote -.-> Context
+        Context --> Phase1
+        Phase1 --> Phase2
+        Phase2 --> Phase3
+        Phase3 --> Phase4
+        Phase4 --> Output
+    end
 ```
 
 ## 통합 Skills
@@ -197,82 +179,77 @@ validation:
 
 ### Phase 0: Context Intake
 
-```
-0. Context Intake Skill
-   └─ 계약 유형, 당사자, 관할권, 협상 포지션 수집
-         │
-         ├─ 정보 부족 → 추가 질문
-         │
-         ▼
-   컨텍스트 문서 생성 (모든 스킬에서 참조)
+```mermaid
+flowchart TD
+    P0[0. Context Intake Skill]
+    Collect[계약 유형, 당사자, 관할권, 협상 포지션 수집]
+    Check{정보 부족?}
+    Question[추가 질문]
+    Output[컨텍스트 문서 생성<br/>모든 스킬에서 참조]
+
+    P0 --> Collect
+    Collect --> Check
+    Check -->|Yes| Question
+    Question --> Collect
+    Check -->|No| Output
 ```
 
 ### Phase 1: 분석 (Analysis)
 
-```
-1. Document Analysis Skill
-   └─ 계약서 구조 파악, 조항별 분류
-         │
-         ▼
-2. Risk Assessment Skill
-   └─ 위험 조항 식별, 심각도 평가 (Risk Matrix)
-         │
-         ▼
-3. Summary Extract Skill
-   └─ 핵심 조건 추출 (기간, 금액, 의무, 권리)
-         │
-         ▼
-   분석 완료
+```mermaid
+flowchart TD
+    S1[1. Document Analysis Skill]
+    D1[계약서 구조 파악, 조항별 분류]
+    S2[2. Risk Assessment Skill]
+    D2[위험 조항 식별, 심각도 평가<br/>Risk Matrix]
+    S3[3. Summary Extract Skill]
+    D3[핵심 조건 추출<br/>기간, 금액, 의무, 권리]
+    Complete([분석 완료])
+
+    S1 --> D1 --> S2 --> D2 --> S3 --> D3 --> Complete
 ```
 
 ### Phase 2: 검토 (Review)
 
-```
-4. Clause Library Skill
-   └─ 표준 조항 vs 검토 대상 비교 (Playbook)
-         │
-         ▼
-5. Version Compare Skill
-   └─ 버전 간 변경사항 추적 (필요시)
-         │
-         ▼
-6. Compliance Check Skill
-   └─ 관련 법규 준수 여부 확인
-         │
-         ▼
-   검토 완료
+```mermaid
+flowchart TD
+    S4[4. Clause Library Skill]
+    D4[표준 조항 vs 검토 대상 비교<br/>Playbook]
+    S5[5. Version Compare Skill]
+    D5[버전 간 변경사항 추적<br/>필요시]
+    S6[6. Compliance Check Skill]
+    D6[관련 법규 준수 여부 확인]
+    Complete([검토 완료])
+
+    S4 --> D4 --> S5 --> D5 --> S6 --> D6 --> Complete
 ```
 
 ### Phase 3: 실행 (Execution)
 
-```
-7. Redline Suggest Skill
-   └─ 조항별 수정안 제시 (보수적/균형적/적극적)
-         │
-         ▼
-8. Negotiation Points Skill
-   └─ 협상 우선순위, 양보/획득 전략
-         │
-         ▼
-9. Document Generate Skill
-   └─ 새 계약서 초안 생성 (필요시)
-         │
-         ▼
-   실행 준비 완료
+```mermaid
+flowchart TD
+    S7[7. Redline Suggest Skill]
+    D7[조항별 수정안 제시<br/>보수적/균형적/적극적]
+    S8[8. Negotiation Points Skill]
+    D8[협상 우선순위, 양보/획득 전략]
+    S9[9. Document Generate Skill]
+    D9[새 계약서 초안 생성<br/>필요시]
+    Complete([실행 준비 완료])
+
+    S7 --> D7 --> S8 --> D8 --> S9 --> D9 --> Complete
 ```
 
 ### Phase 4: 검증 (Validation)
 
-```
-10. Checklist Skill
-    └─ 계약 유형별 체크리스트 검토
-         │
-         ▼
-11. Final Review Skill
-    └─ 종합 검토 리포트, 서명 전 확인사항
-         │
-         ▼
-   최종 산출물 완성
+```mermaid
+flowchart TD
+    S10[10. Checklist Skill]
+    D10[계약 유형별 체크리스트 검토]
+    S11[11. Final Review Skill]
+    D11[종합 검토 리포트, 서명 전 확인사항]
+    Complete([최종 산출물 완성])
+
+    S10 --> D10 --> S11 --> D11 --> Complete
 ```
 
 ## 사용 시나리오
@@ -434,20 +411,17 @@ workspace/work-legal/
 
 ## 다른 에이전트와의 연동
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                  legal-contract-agent                         │
-│               (계약 검토, 위험 분석, 문서 생성)                 │
-└─────────────────────┬───────────────────────────────────────┘
-                      │ 법무 검토 완료 문서 전달
-          ┌───────────┼───────────┐
-          ▼           ▼           ▼
-┌─────────────┐ ┌───────────┐ ┌─────────────┐
-│ ppt-agent   │ │marketing  │ │ tech-blog   │
-│             │ │  -agent   │ │   -agent    │
-│(계약 요약   │ │(파트너십  │ │(법률 해설  │
-│ 프레젠테이션)│ │ 마케팅)   │ │ 블로그)    │
-└─────────────┘ └───────────┘ └─────────────┘
+```mermaid
+flowchart TD
+    LCA[legal-contract-agent<br/>계약 검토, 위험 분석, 문서 생성]
+
+    LCA -->|법무 검토 완료 문서 전달| PPT
+    LCA -->|법무 검토 완료 문서 전달| Marketing
+    LCA -->|법무 검토 완료 문서 전달| TechBlog
+
+    PPT[ppt-agent<br/>계약 요약 프레젠테이션]
+    Marketing[marketing-agent<br/>파트너십 마케팅]
+    TechBlog[tech-blog-agent<br/>법률 해설 블로그]
 ```
 
 ---
