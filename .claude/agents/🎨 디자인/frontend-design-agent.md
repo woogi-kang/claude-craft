@@ -63,14 +63,14 @@ triggers:
 - Dark/Light mode 기본값 번갈아 제안
 
 ### 4. Layout Variation Rules (레이아웃 변형 규칙)
-```
-Hero Section Variations:
-├── Centered Text (이전 사용 시 → 다음으로)
-├── Split Layout (Left Text + Right Image)
-├── Split Layout (Left Image + Right Text)
-├── Full-Bleed Background
-├── Asymmetric Grid
-└── Bento Style
+```mermaid
+flowchart LR
+    A[Hero Section Variations] --> B[Centered Text<br/>이전 사용 시 → 다음으로]
+    A --> C[Split Layout<br/>Left Text + Right Image]
+    A --> D[Split Layout<br/>Left Image + Right Text]
+    A --> E[Full-Bleed Background]
+    A --> F[Asymmetric Grid]
+    A --> G[Bento Style]
 ```
 
 ### 5. Effect Combination Pool (효과 조합 풀)
@@ -112,53 +112,37 @@ Hero Section Variations:
 
 ## 워크플로우
 
-```
-[사용자 요청]
-      │
-      ▼
-┌─────────────────────────────────────────────────────────────┐
-│           Phase 1: Discovery (탐색) - 3 Skills              │
-│  ┌──────────┐  ┌─────────────┐  ┌─────────────┐            │
-│  │ Context  │→ │ Inspiration │→ │  Direction  │            │
-│  │  파악    │  │  레퍼런스   │  │ 미적 방향   │            │
-│  └──────────┘  └─────────────┘  └─────────────┘            │
-└─────────────────────────────────────────────────────────────┘
-      │
-      ▼
-┌─────────────────────────────────────────────────────────────┐
-│           Phase 2: Foundation (기반) - 4 Skills             │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
-│  │Typography│→ │  Color   │→ │ Spacing  │→ │  Motion  │   │
-│  │  폰트    │  │  색상    │  │  간격    │  │ 애니메이션│   │
-│  └──────────┘  └──────────┘  └──────────┘  └──────────┘   │
-└─────────────────────────────────────────────────────────────┘
-      │
-      ▼
-┌─────────────────────────────────────────────────────────────┐
-│           Phase 3: Components (컴포넌트) - 4 Skills         │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌────────────┐ │
-│  │Primitives│→ │ Patterns │→ │ Effects  │→ │Interactions│ │
-│  │  기본    │  │  패턴    │  │  효과    │  │ 인터랙션  │ │
-│  └──────────┘  └──────────┘  └──────────┘  └────────────┘ │
-└─────────────────────────────────────────────────────────────┘
-      │
-      ▼
-┌─────────────────────────────────────────────────────────────┐
-│           Phase 4: Pages (페이지) - 4 Skills                │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
-│  │ Landing  │→ │Dashboard │→ │ Content  │→ │  Mobile  │   │
-│  │ 랜딩    │  │대시보드  │  │ 콘텐츠   │  │ 모바일   │   │
-│  └──────────┘  └──────────┘  └──────────┘  └──────────┘   │
-└─────────────────────────────────────────────────────────────┘
-      │
-      ▼
-┌─────────────────────────────────────────────────────────────┐
-│           Phase 5: Polish (완성) - 3 Skills                 │
-│  ┌─────────────┐  ┌────────────┐  ┌─────────────┐          │
-│  │Accessibility│→ │ Responsive │→ │ Performance │          │
-│  │   접근성    │  │   반응형   │  │    성능     │          │
-│  └─────────────┘  └────────────┘  └─────────────┘          │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    START([사용자 요청]) --> P1
+
+    subgraph P1["Phase 1: Discovery (탐색) - 3 Skills"]
+        A1[Context<br/>파악] --> A2[Inspiration<br/>레퍼런스] --> A3[Direction<br/>미적 방향]
+    end
+
+    P1 --> P2
+
+    subgraph P2["Phase 2: Foundation (기반) - 4 Skills"]
+        B1[Typography<br/>폰트] --> B2[Color<br/>색상] --> B3[Spacing<br/>간격] --> B4[Motion<br/>애니메이션]
+    end
+
+    P2 --> P3
+
+    subgraph P3["Phase 3: Components (컴포넌트) - 4 Skills"]
+        C1[Primitives<br/>기본] --> C2[Patterns<br/>패턴] --> C3[Effects<br/>효과] --> C4[Interactions<br/>인터랙션]
+    end
+
+    P3 --> P4
+
+    subgraph P4["Phase 4: Pages (페이지) - 4 Skills"]
+        D1[Landing<br/>랜딩] --> D2[Dashboard<br/>대시보드] --> D3[Content<br/>콘텐츠] --> D4[Mobile<br/>모바일]
+    end
+
+    P4 --> P5
+
+    subgraph P5["Phase 5: Polish (완성) - 3 Skills"]
+        E1[Accessibility<br/>접근성] --> E2[Responsive<br/>반응형] --> E3[Performance<br/>성능]
+    end
 ```
 
 ---

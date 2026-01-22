@@ -32,7 +32,6 @@ local.json
 dist/
 
 # Workspace outputs
-workspace/
 ppt_reference
 *-secret-key.*
 *.pyc
@@ -153,3 +152,5 @@ secret-key-*
 *_backup_*/
 *.pem
 # IDE & Editors
+.moai/temp/
+.claude/plans/
