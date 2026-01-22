@@ -215,22 +215,26 @@ Allowed Tools: Full access (all tools)
 When using Explore agent or direct exploration tools (Grep, Glob, Read), apply these optimizations to prevent performance bottlenecks with GLM models:
 
 **Principle 1: AST-Grep Priority**
+
 - Use structural search (ast-grep) before text-based search (Grep)
 - AST-Grep understands code syntax and eliminates false positives
 - Load moai-tool-ast-grep skill for complex pattern matching
 - Example: `sg -p 'class $X extends Service' --lang python` is faster than `grep -r "class.*extends.*Service"`
 
 **Principle 2: Search Scope Limitation**
+
 - Always use `path` parameter to limit search scope
 - Avoid searching entire codebase unnecessarily
 - Example: `Grep(pattern="async def", path="src/moai_adk/core/")` instead of `Grep(pattern="async def")`
 
 **Principle 3: File Pattern Specificity**
+
 - Use specific Glob patterns instead of wildcards
 - Example: `Glob(pattern="src/moai_adk/core/*.py")` instead of `Glob(pattern="src/**/*.py")`
 - Reduces files scanned by 50-80%
 
 **Principle 4: Parallel Processing**
+
 - Execute independent searches in parallel (single message, multiple tool calls)
 - Example: Search for imports in Python files AND search for types in TypeScript files simultaneously
 - Maximum 5 parallel searches to prevent context fragmentation
@@ -240,18 +244,21 @@ When using Explore agent or direct exploration tools (Grep, Glob, Read), apply t
 When invoking Explore agent or using exploration tools directly:
 
 **quick** (target: 10 seconds):
+
 - Use Glob for file discovery
 - Use Grep with specific path parameter only
 - Skip Read operations unless necessary
 - Example: `Glob("src/moai_adk/core/*.py") + Grep("async def", path="src/moai_adk/core/")`
 
 **medium** (target: 30 seconds):
+
 - Use Glob + Grep with path limitation
 - Use Read selectively for key files only
 - Load moai-tool-ast-grep for structural search if needed
 - Example: `Glob("src/**/*.py") + Grep("class Service") + Read("src/moai_adk/core/service.py")`
 
 **very thorough** (target: 2 minutes):
+
 - Use all tools including ast-grep
 - Explore full codebase with structural analysis
 - Use parallel searches across multiple domains
@@ -260,12 +267,14 @@ When invoking Explore agent or using exploration tools directly:
 ### When to Delegate to Explore Agent
 
 Use the Explore agent when:
+
 - Read-only codebase exploration is needed
 - Multiple search patterns need to be tested
 - Code structure analysis is required
 - Performance bottleneck analysis is needed
 
 Direct tool usage is acceptable when:
+
 - Single file needs to be read
 - Specific pattern search in known location
 - Quick verification task
@@ -517,12 +526,14 @@ Use the Sequential Thinking MCP tool in the following situations:
 The sequential_thinking tool accepts the following parameters:
 
 Required Parameters:
+
 - thought (string): The current thinking step content
 - nextThoughtNeeded (boolean): Whether another thought step is needed after this one
 - thoughtNumber (integer): Current thought number (starts from 1)
 - totalThoughts (integer): Estimated total thoughts needed for the analysis
 
 Optional Parameters:
+
 - isRevision (boolean): Whether this thought revises previous thinking (default: false)
 - revisesThought (integer): Which thought number is being reconsidered (used with isRevision: true)
 - branchFromThought (integer): Branching point thought number for alternative reasoning paths
@@ -544,6 +555,7 @@ The Sequential Thinking MCP tool provides structured reasoning with:
 When encountering complex decisions that require deep analysis, use the Sequential Thinking MCP tool:
 
 Step 1: Initial Call
+
 ```
 thought: "Analyzing the problem: [describe problem]"
 nextThoughtNeeded: true
@@ -552,6 +564,7 @@ totalThoughts: 5
 ```
 
 Step 2: Continue Analysis
+
 ```
 thought: "Breaking down: [sub-problem 1]"
 nextThoughtNeeded: true
@@ -560,51 +573,206 @@ totalThoughts: 5
 ```
 
 Step 3: Revision (if needed)
+
 ```
 thought: "Revising thought 2: [corrected analysis]"
-isRevision```
+isRevisi```
 thought: "Analyzing the problem: [describe problem]"
 nextThoughtNeeded: true
 thoughtNumber: 1
 totalThoughts: 5
-```hought: "Conclusion: [final answer based on analysis]"
+````
+thought: "Conclusion: [final answer based on analysis]"
 thoughtNumber: 5
 totalThoughts: 5
 nextThoughtNeeded: false
 ```
 
-### Usage G```
+### Usage```
 thought: "Breaking down: [sub-problem 1]"
 nextThoughtNeeded: true
 thoughtNumber: 2
 totalThoughts: 5
-```isRevision when correcting or refining previous thoughts
+```e isRevision when correcting or refining previous thoughts
 3. Maintain thoughtNumber sequence for context tracking
-4. Set ne```
+4. Set n```
 thought: "Revising thought 2: [corrected analysis]"
 isRevision: true
 revisesThought: 2
 thoughtNumber: 3
 totalThoughts: 5
 nextThoughtNeeded: true
-``` Progressive Disclosure System
+```.1. UltraThink Mode
 
 ### Overview
 
-MoAI-ADK implements a 3-level Progressive Disclosure system for efficient skill loading, following Anthropic's offici```
+UltraThink mode is an enhanced analysis mode that automatically applies Sequential Thinking MCP to deeply analyze user requests a```
 thought: "Conclusion: [final answer based on analysis]"
 thoughtNumber: 5
 totalThoughts: 5
 nextThoughtNeeded: false
-```1 loads metadata only, consuming approximately 100 tokens per skill. It loads during agent initialization, includes YAML frontmatter with triggers, and is always loaded for skills listed in agent frontmatter.
+```ning to break down complex problems.
+
+### Activation
+
+Users can activate UltraThink mode by adding `--ultrathink` flag to any request:
+
+```
+"Implement authentication system --ultrathink"
+"Refactor the API layer --ultrathink"
+"Debug the database connection issue --ultrathink"
+```
+
+### UltraThink Process
+
+When `--ultrathink` is detected in user request:
+
+**Step 1: Request Analysis**
+- Identify the core task and requirements
+- Detect technical keywords for agent matching
+- Recognize complexity level and scope
+
+**Step 2: Sequential Thinking Activation**
+- Load the Sequential Thinking MCP tool
+- Begin structured reasoning with estimated thought count
+- Break down the problem into manageable steps
+
+**Step 3: Execution Planning**
+- Map each subtask to appropriate agents
+- Identify parallel vs sequential execution opportunities
+- Generate optimal agent delegation strategy
+
+**Step 4: Execution**
+- Launch agents accor```
+"Implement authentication system --ultrathink"
+"Refactor the API layer --ultrathink"
+"Debug the database connection issue --ultrathink"
+```ters
+
+When using UltraThink mode, apply these parameter patterns:
+
+**Initial Analysis Call:**
+```
+thought: "Analyzing user request: [request content]"
+nextThoughtNeeded: true
+thoughtNumber: 1
+totalThoughts: [estimated number based on complexity]
+```
+
+**Subtask Decomposition:**
+```
+thought: "Breaking down into subtasks: 1) [subtask1] 2) [subtask2] 3) [subtask3]"
+nextThoughtNeeded: true
+thoughtNumber: 2
+totalThoughts: [current estimate]
+```
+
+**Agent Mapping:**
+```
+thought: "Mapping subtasks to agents: [subtask1] → expert-backend, [subtask2] → expert-frontend"
+nextThoughtNeeded: true
+thoughtNumber: 3
+totalThoughts: [current estimate]
+```
+
+**Execution Strategy:**
+```
+thought: "Execution strategy: [subtasks1,2] can run in parallel, [subtask3] depends on [subtask1]"
+nextThoughtNeeded: true
+thoughtNumber: 4
+totalThoughts: [current estimate]
+```
+
+**Final Plan:**
+```
+thought: "Final execution plan: Launch [agent1, agent2] in parallel, then [agent3]"
+thoughtNumber: [final number]
+totalThoughts: [final```
+thought: "Analyzing user request: [request content]"
+nextThoughtNeeded: true
+thoughtNumber: 1
+totalThoughts: [estimated number based on complexity]
+```ecture decisions affecting multiple files
+- Performance optimization requiring analysis
+- Security review needs
+- Refactoring with behavior preservation
+
+**UltraThink A```
+thought: "Breaking down into subtasks: 1) [subtask1] 2) [subtask2] 3) [subtask3]"
+nextThoughtNeeded: true
+thoughtNumber: 2
+totalThoughts: [current estimate]
+```Context maintenance throughout reasoning
+- Revision capability when approaches need adjustment
+
+### Example UltraThink Session
+
+**User Request:** "Implement authenticati```
+thought: "Mapping subtasks to agents: [subtask1] → expert-backend, [subtask2] → expert-frontend"
+nextThoughtNeeded: true
+thoughtNumber: 3
+totalThoughts: [current estimate]
+```model (backend), login/logout API (backend), login form UI (frontend), authentication context (frontend), and test cases (testing)."
+nextThoughtNeeded: true
+thoughtNumber: 1
+totalThoughts: ```
+thought: "Execution strategy: [subtasks1,2] can run in parallel, [subtask3] depends on [subtask1]"
+nextThoughtNeeded: true
+thoughtNumber: 4
+totalThoughts: [current estimate]
+```UI component (expert-frontend), 4) Authentication context/state management (expert-frontend), 5) Authentication test cases (expert-testing)."
+nextThoughtNeeded: true
+thoughtNumber: 2
+```
+thought: "Final execution plan: Launch [agent1, agent2] in parallel, then [agent3]"
+thoughtNumber: [final number]
+totalThoughts: [final number]
+nextThoughtNeeded: false
+``` on API from 2 → expert-frontend (sequential after backend), Subtask 5 requires implementation completion → expert-testing (sequential)."
+nextThoughtNeeded: true
+thoughtNumber: 3
+totalThoughts: 5
+```
+
+```
+thought: "Execution strategy: Phase 1 - Launch two expert-backend agents in parallel for user model and API endpoints. Phase 2 - After Phase 1 completes, launch expert-frontend for login form and auth context. Phase 3 - After implementation completes, launch expert-testing for test cases."
+nextThoughtNeeded: true
+thoughtNumber: 4
+totalThoughts: 5
+```
+
+```
+thought: "Final execution plan: Use the expert-backend subagent (parallel: user model + API), then Use the expert-frontend subagent (login form + auth context), then Use the expert-testing subagent (auth test cases)."
+thoughtNumber: 5
+totalThoughts: 5
+nextThoughtNeeded: fal```
+thought: "Analyzing request: User wants to implement an authentication system. This involves multiple domains: user model (backend), login/logout API (backend), login form UI (frontend), authentication context (frontend), and test cases (testing)."
+nextThoughtNeeded: true
+thoughtNumber: 1
+totalThoughts: 5
+```s
+**With UltraThink:** Structured reasoning before delegation, then execution
+
+UltraThink enhances decision-making for:
+- Complex multi-domain tasks
+- Ambiguous requirements needing clarification
+- Performance vs maintainability trade-offs
+- Technology selection decisions
+- Breaking changes under c```
+thought: "Subtask decomposition: 1) User model and database schema (expert-backend), 2) JWT token handling and login/logout API endpoints (expert-backend), 3) Login form UI component (expert-frontend), 4) Authentication context/state management (expert-frontend), 5) Authentication test cases (expert-testing)."
+nextThoughtNeeded: true
+thoughtNumber: 2
+totalThoughts: 5
+```. It loads during agent initialization, includes YAML frontmatter with triggers, and is always loaded for skills listed in agent frontmatter.
 
 Level 2 loads the skill body, consuming approximately 5K tokens per skill. It loads when trigger conditions match, contains the full markdown documentation, and is triggered by keywords, phases, agents, or languages.
 
-Level 3+ loads bundled files on-demand. Claude loads as needed, includes reference.md, modules/, examples/, and Claude decides when to access.
-
-### Agent Frontmatter Format
-
-Agents use the official Anthropic skills format. The skills field lists skills that are loaded at Level 1 (metadata only) by default, then at Level 2 (full body) when triggers match. Reference skills are loaded at Level 3+ on-demand by Claude.
+L```
+thought: "Agent mapping: Subtasks 1 and 2 are independent backend tasks → expert-backend (parallel), Subtasks 3 and 4 are frontend tasks but 4 depends on API from 2 → expert-frontend (sequential after backend), Subtask 5 requires implementation completion → expert-testing (sequential)."
+nextThoughtNeeded: true
+thoughtNumber: 3
+totalThoughts: 5
+```h. Reference skills are loaded at Level 3+ on-demand by Claude.
 
 ### SKILL.md Frontmatter Format
 
@@ -612,20 +780,78 @@ Skills define their Progressive Disclosure behavior. The progressive_disclosure 
 
 ### Usage
 
-The skill loading system loads skills at appropriate levels based on current context (prompt, phase, agent, language). The JIT context loader estimates token budgets based on agent skills and phase.
-
-### Benefits
-
-Achieves 67% reduction in initial token load (from ~90K to ~600 tokens for manager-spec). Provides on-demand loading of full skill content only when needed. Maintains backward compatibility with existing agent and skill definitions. Integrates seamlessly with phase-based loading.
+The s```
+thought: "Execution strategy: Phase 1 - Launch two expert-backend agents in parallel for user model and API endpoints. Phase 2 - After Phase 1 completes, launch expert-frontend for login form and auth context. Phase 3 - After implementation completes, launch expert-testing for test cases."
+nextThoughtNeeded: true
+thoughtNumber: 4
+totalThoughts: 5
+```n needed. Maintains backward compatibility with existing agent and skill definitions. Integrates seamlessly with phase-based loading.
 
 ### Implementation Status
 
-18 agents updated with skills format, 48 SKILL.md files with triggers defined, skill_loading_system.py with 3-level parsing, jit_context_loader.py with Progressive Disclosure integration.
+18 agents updated with skills format, 48 SKILL.md files with triggers defined, skill_loading_system.py with 3-level parsing, jit_context_loader.py with Progressive Disclosure inte```
+thought: "Final execution plan: Use the expert-backend subagent (parallel: user model + API), then Use the expert-frontend subagent (login form + auth context), then Use the expert-testing subagent (auth test cases)."
+thoughtNumber: 5
+totalThoughts: 5
+nextThoughtNeeded: false
+``` execution
+
+**Pre-execution Checklist**:
+
+1. **File Access Analysis**:
+   - Collect all files to be accessed by each agent
+   - Identify overlapping file access patterns
+   - Detect read-write conflicts
+
+2. **Dependency Graph Construction**:
+   - Map agent-to-agent file dependencies
+   - Identify independent task sets (no shared files)
+   - Mark dependent task sets (shared files require sequential execution)
+
+3. **Execution Mode Selection**:
+   - **Parallel**: No file overlaps → Execute simultaneously
+   - **Sequential**: File overlaps detected → Execute in dependency order
+   - **Hybrid**: Partial overlaps → Group independent tasks, run groups sequentially
+
+### Agent Tool Requirements
+
+**Mandatory Tools for Implementation Agents**:
+
+All agents that perform code modifications MUST include Read, Write, Edit, Grep, Glob, Bash, and TodoWrite tools.
+
+**Why**: Without Edit/Write tools, agents fall back to Bash commands which may fail due to platform differences (e.g., macOS BSD sed vs GNU sed).
+
+**Verification**: Verify each agent definition includes the required tools in the tools field of the YAML frontmatter.
+
+### Loop Prevention Guards
+
+**Problem**: Agents may enter infinite retry loops when repeatedly failing at the same operation (e.g., git checkout → failed edit → retry).
+
+**Solution**: Implement retry limits and failure pattern detection
+
+**Retry Strategy**:
+
+1. **Maximum Retries**: Limit operations to 3 attempts per operation
+2. **Failure Pattern Detection**: Detect repeated failures on same file or operation
+3. **Fallback Chain**: Use Edit tool first, then platform-specific alternatives if needed
+4. **User Intervention**: After 3 failed attempts, request user guidance instead of continuing retries
+
+**Anti-Pattern to Avoid**: Retry loops that restore state and attempt the same operation without changing the approach.
+
+### Platform Compatibility
+
+**macOS vs Linux Command Differences**:
+
+Platform differences exist between GNU tools (Linux) and BSD tools (macOS). For example, sed inline editing has different syntax: Linux uses `sed -i` while macOS requires `sed -i ''`.
+
+**Best Practice**: Always prefer Edit tool over sed/awk for file modifications. The Edit tool is cross-platform and avoids platform-specific syntax issues. Only use Bash for commands that cannot be done with Edit/Read/Write tools.
+
+**Platform Detection**: When Bash commands are unavoidable, detect the platform and use appropriate syntax for each operating system.
 
 ---
 
-Version: 10.4.0 (DDD + Progressive Disclosure + Auto-Parallel Task Decomposition)
-Last Updated: 2026-01-19
+Version: 10.5.0 (DDD + Progressive Disclosure + Auto-Parallel + Safeguards)
+Last Updated: 2026-01-22
 Language: English
 Core Rule: Alfred is an orchestrator; direct implementation is prohibited
 

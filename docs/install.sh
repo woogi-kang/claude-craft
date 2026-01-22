@@ -199,6 +199,20 @@ install_components() {
             success "Linked commands directory"
         fi
     fi
+
+    # 6. Install output-styles
+    if [ -d "$claude_src/output-styles" ] && [ "$(ls -A $claude_src/output-styles 2>/dev/null)" ]; then
+        rm -rf "$CLAUDE_DEST/output-styles" 2>/dev/null || true
+        if [ "$INSTALL_MODE" = "copy" ]; then
+            cp -r "$claude_src/output-styles" "$CLAUDE_DEST/"
+            success "Copied output-styles directory"
+        else
+            ln -sf "$claude_src/output-styles" "$CLAUDE_DEST/output-styles"
+            success "Linked output-styles directory"
+        fi
+        style_count=$(find "$claude_src/output-styles" -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
+        info "  → $style_count output styles installed"
+    fi
 }
 
 configure_settings() {
