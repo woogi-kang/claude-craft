@@ -103,13 +103,13 @@ Execution: 3 agents parallel → 1 agent sequential
 - Independent domains: Always parallel
 - Same domain, no dependency: Parallel
 - Sequential dependency: Chain with "after X completes"
-- Max parallel agents: 5 (prevent context fragmentation)
+- Max parallel agents: Up to 10 agents for better throughput
 
 Context Optimization:
 
-- Pass minimal context to agents (spec_id, key requirements as max 3 bullet points, architecture summary under 200 chars)
-- Exclude background information, reasoning, and non-essential details
-- Each agent gets independent 200K token session
+- Pass comprehensive context to agents (spec_id, key requirements as extended bullet points, detailed architecture summary)
+- Include background information, reasoning process, and relevant details for better understanding
+- Each agent gets independent 200K token session with sufficient context
 
 ### Phase 4: Report
 
@@ -208,6 +208,70 @@ Allowed Tools: Full access (all tools)
 
 ---
 
+## 4.1. Performance Optimization for Exploration Tools
+
+### Anti-Bottleneck Principles
+
+When using Explore agent or direct exploration tools (Grep, Glob, Read), apply these optimizations to prevent performance bottlenecks with GLM models:
+
+**Principle 1: AST-Grep Priority**
+- Use structural search (ast-grep) before text-based search (Grep)
+- AST-Grep understands code syntax and eliminates false positives
+- Load moai-tool-ast-grep skill for complex pattern matching
+- Example: `sg -p 'class $X extends Service' --lang python` is faster than `grep -r "class.*extends.*Service"`
+
+**Principle 2: Search Scope Limitation**
+- Always use `path` parameter to limit search scope
+- Avoid searching entire codebase unnecessarily
+- Example: `Grep(pattern="async def", path="src/moai_adk/core/")` instead of `Grep(pattern="async def")`
+
+**Principle 3: File Pattern Specificity**
+- Use specific Glob patterns instead of wildcards
+- Example: `Glob(pattern="src/moai_adk/core/*.py")` instead of `Glob(pattern="src/**/*.py")`
+- Reduces files scanned by 50-80%
+
+**Principle 4: Parallel Processing**
+- Execute independent searches in parallel (single message, multiple tool calls)
+- Example: Search for imports in Python files AND search for types in TypeScript files simultaneously
+- Maximum 5 parallel searches to prevent context fragmentation
+
+### Thoroughness-Based Tool Selection
+
+When invoking Explore agent or using exploration tools directly:
+
+**quick** (target: 10 seconds):
+- Use Glob for file discovery
+- Use Grep with specific path parameter only
+- Skip Read operations unless necessary
+- Example: `Glob("src/moai_adk/core/*.py") + Grep("async def", path="src/moai_adk/core/")`
+
+**medium** (target: 30 seconds):
+- Use Glob + Grep with path limitation
+- Use Read selectively for key files only
+- Load moai-tool-ast-grep for structural search if needed
+- Example: `Glob("src/**/*.py") + Grep("class Service") + Read("src/moai_adk/core/service.py")`
+
+**very thorough** (target: 2 minutes):
+- Use all tools including ast-grep
+- Explore full codebase with structural analysis
+- Use parallel searches across multiple domains
+- Example: `Glob + Grep + ast-grep + parallel Read of key files`
+
+### When to Delegate to Explore Agent
+
+Use the Explore agent when:
+- Read-only codebase exploration is needed
+- Multiple search patterns need to be tested
+- Code structure analysis is required
+- Performance bottleneck analysis is needed
+
+Direct tool usage is acceptable when:
+- Single file needs to be read
+- Specific pattern search in known location
+- Quick verification task
+
+---
+
 ## 5. SPEC-Based Workflow
 
 ### Development Methodology
@@ -218,7 +282,52 @@ MoAI uses DDD (Domain-Driven Development) as its development methodology:
 - Behavior preservation through characterization tests
 - Incremental improvements with existing test validation
 
-Configuration: @.moai/config/sections/quality.yaml (constitution.development_mode: ddd)
+Configuration: # Quality & Constitution Settings
+# TRUST 5 Framework: Tested, Readable, Unified, Secured, Trackable
+
+constitution:
+  # Development methodology - DDD only
+  development_mode: ddd
+  # ddd: Domain-Driven Development (ANALYZE-PRESERVE-IMPROVE)
+  # - Refactoring with behavior preservation
+  # - Characterization tests for legacy code
+  # - Incremental improvements
+
+  # TRUST 5 quality framework enforcement
+  enforce_quality: true # Enable TRUST 5 quality principles
+  test_coverage_target: 85 # Target: 85% coverage for AI-assisted development
+
+  # DDD settings (Domain-Driven Development)
+  ddd_settings:
+    require_existing_tests: true # Require existing tests before refactoring
+    characterization_tests: true # Create characterization tests for uncovered code
+    behavior_snapshots: true # Use snapshot testing for complex outputs
+    max_transformation_size: small # small | medium | large - controls change granularity
+
+  # Coverage exemptions (discouraged - use sparingly with justification)
+  coverage_exemptions:
+    enabled: false # Allow coverage exemptions (default: false)
+    require_justification: true # Require justification for exemptions
+    max_exempt_percentage: 5 # Maximum 5% of codebase can be exempted
+
+  # Test quality criteria (Quality > Numbers principle)
+  test_quality:
+    specification_based: true # Tests must verify specified behavior
+    meaningful_assertions: true # Assertions must have clear purpose
+    avoid_implementation_coupling: true # Tests should not couple to implementation details
+    mutation_testing_enabled: false # Optional: mutation testing for effectiveness validation
+
+  # Simplicity principles (separate from TRUST 5)
+  principles:
+    simplicity:
+      max_parallel_tasks: 10 # Maximum parallel operations for focus (NOT concurrent projects)
+
+report_generation:
+  enabled: true # Enable report generation
+  auto_create: false # Auto-create full reports (false = minimal)
+  warn_user: true # Ask before generating reports
+  user_choice: Minimal # Default: Minimal, Full, None
+ (constitution.development_mode: ddd)
 
 ### MoAI Command Flow
 
@@ -302,8 +411,24 @@ Subagents invoked via Task() operate in isolated, stateless contexts and cannot 
 
 User and language configuration is automatically loaded from:
 
-@.moai/config/sections/user.yaml
-@.moai/config/sections/language.yaml
+# User Settings (CLAUDE.md Reference)
+# This file is auto-loaded by CLAUDE.md for personalization
+
+user:
+  name: "" # User name for greetings (empty = default greeting)
+
+# Language Settings (CLAUDE.md Reference)
+# This file is auto-loaded by CLAUDE.md for language configuration
+
+language:
+  conversation_language: en            # User-facing responses (ko, en, ja, es, zh, fr, de)
+  conversation_language_name: English   # Display name (auto-updated)
+  agent_prompt_language: en            # Internal agent instructions
+  git_commit_messages: en              # Git commit message language
+  code_comments: en                    # Source code comment language
+  documentation: en                    # Documentation files language (standardized as single source)
+  error_messages: en                   # Error message language
+
 
 ### Language Rules
 
@@ -367,12 +492,18 @@ Each sub-agent execution gets a unique agentId stored in agent-{agentId}.jsonl f
 
 ---
 
-## 11. Strategic Thinking
+## 11. Sequential Thinking
 
 ### Activation Triggers
 
-Activate deep analysis (Ultrathink) keywords in the following situations:
+Use the Sequential Thinking MCP tool in the following situations:
 
+- Breaking down complex problems into steps
+- Planning and design with room for revision
+- Analysis that might need course correction
+- Problems where the full scope might not be clear initially
+- Tasks that need to maintain context over multiple steps
+- Situations where irrelevant information needs to be filtered out
 - Architecture decisions affect 3+ files
 - Technology selection between multiple options
 - Performance vs maintainability trade-offs
@@ -381,144 +512,115 @@ Activate deep analysis (Ultrathink) keywords in the following situations:
 - Multiple approaches exist to solve the same problem
 - Repetitive errors occur
 
-### Thinking Process
+### Tool Parameters
 
-- Phase 1 - Prerequisite Check: Use AskUserQuestion to confirm implicit prerequisites
-- Phase 2 - First Principles: Apply Five Whys, distinguish hard constraints from preferences
-- Phase 3 - Alternative Generation: Generate 2-3 different approaches (conservative, balanced, aggressive)
-- Phase 4 - Trade-off Analysis: Evaluate across Performance, Maintainability, Cost, Risk, Scalability
-- Phase 5 - Bias Check: Verify not fixated on first solution, review contrary evidence
+The sequential_thinking tool accepts the following parameters:
 
----
+Required Parameters:
+- thought (string): The current thinking step content
+- nextThoughtNeeded (boolean): Whether another thought step is needed after this one
+- thoughtNumber (integer): Current thought number (starts from 1)
+- totalThoughts (integer): Estimated total thoughts needed for the analysis
 
-## 12. Progressive Disclosure System
+Optional Parameters:
+- isRevision (boolean): Whether this thought revises previous thinking (default: false)
+- revisesThought (integer): Which thought number is being reconsidered (used with isRevision: true)
+- branchFromThought (integer): Branching point thought number for alternative reasoning paths
+- branchId (string): Identifier for the reasoning branch
+- needsMoreThoughts (boolean): If more thoughts are needed beyond current estimate
+
+### Sequential Thinking Process
+
+The Sequential Thinking MCP tool provides structured reasoning with:
+
+- Step-by-step breakdown of complex problems
+- Context maintenance across multiple reasoning steps
+- Ability to revise and adjust thinking based on new information
+- Filtering of irrelevant information for focus on key issues
+- Course correction during analysis when needed
+
+### Usage Pattern
+
+When encountering complex decisions that require deep analysis, use the Sequential Thinking MCP tool:
+
+Step 1: Initial Call
+```
+thought: "Analyzing the problem: [describe problem]"
+nextThoughtNeeded: true
+thoughtNumber: 1
+totalThoughts: 5
+```
+
+Step 2: Continue Analysis
+```
+thought: "Breaking down: [sub-problem 1]"
+nextThoughtNeeded: true
+thoughtNumber: 2
+totalThoughts: 5
+```
+
+Step 3: Revision (if needed)
+```
+thought: "Revising thought 2: [corrected analysis]"
+isRevision```
+thought: "Analyzing the problem: [describe problem]"
+nextThoughtNeeded: true
+thoughtNumber: 1
+totalThoughts: 5
+```hought: "Conclusion: [final answer based on analysis]"
+thoughtNumber: 5
+totalThoughts: 5
+nextThoughtNeeded: false
+```
+
+### Usage G```
+thought: "Breaking down: [sub-problem 1]"
+nextThoughtNeeded: true
+thoughtNumber: 2
+totalThoughts: 5
+```isRevision when correcting or refining previous thoughts
+3. Maintain thoughtNumber sequence for context tracking
+4. Set ne```
+thought: "Revising thought 2: [corrected analysis]"
+isRevision: true
+revisesThought: 2
+thoughtNumber: 3
+totalThoughts: 5
+nextThoughtNeeded: true
+``` Progressive Disclosure System
 
 ### Overview
 
-MoAI-ADK implements a 3-level Progressive Disclosure system for efficient skill loading, following Anthropic's official pattern. This reduces initial token consumption by 67%+ while maintaining full functionality.
+MoAI-ADK implements a 3-level Progressive Disclosure system for efficient skill loading, following Anthropic's offici```
+thought: "Conclusion: [final answer based on analysis]"
+thoughtNumber: 5
+totalThoughts: 5
+nextThoughtNeeded: false
+```1 loads metadata only, consuming approximately 100 tokens per skill. It loads during agent initialization, includes YAML frontmatter with triggers, and is always loaded for skills listed in agent frontmatter.
 
-### Three Levels
+Level 2 loads the skill body, consuming approximately 5K tokens per skill. It loads when trigger conditions match, contains the full markdown documentation, and is triggered by keywords, phases, agents, or languages.
 
-**Level 1: Metadata Only (~100 tokens per skill)**
-
-- Loaded during agent initialization
-- Contains YAML frontmatter with triggers
-- Always loaded for skills listed in agent frontmatter
-
-**Level 2: Skill Body (~5K tokens per skill)**
-
-- Loaded when trigger conditions match
-- Contains full markdown documentation
-- Triggered by keywords, phases, agents, or languages
-
-**Level 3+: Bundled Files (unlimited)**
-
-- Loaded on-demand by Claude
-- Includes reference.md, modules/, examples/
-- Claude decides when to access
+Level 3+ loads bundled files on-demand. Claude loads as needed, includes reference.md, modules/, examples/, and Claude decides when to access.
 
 ### Agent Frontmatter Format
 
-Agents use the official Anthropic `skills:` format:
-
-```yaml
----
-name: manager-spec
-description: SPEC creation specialist
-tools: Read, Write, Edit, ...
-model: inherit
-permissionMode: default
-
-# Progressive Disclosure: 3-Level Skill Loading
-# Skills are loaded at Level 1 (metadata only) by default (~100 tokens per skill)
-# Full skill body (Level 2, ~5K tokens) is loaded when triggers match
-# Reference skills (Level 3+) are loaded on-demand by Claude
-skills: moai-foundation-claude, moai-foundation-core, moai-workflow-spec
----
-```
+Agents use the official Anthropic skills format. The skills field lists skills that are loaded at Level 1 (metadata only) by default, then at Level 2 (full body) when triggers match. Reference skills are loaded at Level 3+ on-demand by Claude.
 
 ### SKILL.md Frontmatter Format
 
-Skills define their Progressive Disclosure behavior:
+Skills define their Progressive Disclosure behavior. The progressive_disclosure section sets enabled status and token estimates. The triggers section defines keyword, phase, agent, and language-specific trigger conditions.
 
-```yaml
----
-name: moai-workflow-spec
-description: SPEC workflow specialist
-version: 1.0.0
+### Usage
 
-# Progressive Disclosure Configuration
-progressive_disclosure:
-  enabled: true
-  level1_tokens: ~100
-  level2_tokens: ~5000
-
-# Trigger Conditions for Level 2 Loading
-triggers:
-  keywords: ["SPEC", "requirement", "EARS", "planning"]
-  phases: ["plan"]
-  agents: ["manager-spec", "manager-strategy"]
-  languages: ["python", "typescript"]
----
-```
-
-### Usage Examples
-
-**Loading skills with Progressive Disclosure:**
-
-```python
-from src.moai_adk.core.skill_loading_system import (
-    load_agent_skills,
-    ProgressiveDisclosureLevel,
-)
-
-# Load skills for current context
-context = {
-    "prompt": "Create a SPEC document for user authentication",
-    "phase": "plan",
-    "agent": "manager-spec",
-    "language": "python"
-}
-
-skills_list = [
-    "moai-foundation-claude",
-    "moai-foundation-core",
-    "moai-workflow-spec"
-]
-
-loaded = load_agent_skills(skills_list, context)
-# Returns skills at appropriate levels based on triggers
-```
-
-**Estimating token budget:**
-
-```python
-from src.moai_adk.core.jit_context_loader import (
-    estimate_progressive_budget,
-    Phase,
-)
-
-budget = estimate_progressive_budget(
-    agent_skills="moai-foundation-claude, moai-workflow-spec",
-    phase=Phase.SPEC,
-    context={"prompt": "Create SPEC"}
-)
-# Returns: {"level1_tokens": 200, "level2_tokens": 5000, "total_tokens": 5200}
-```
+The skill loading system loads skills at appropriate levels based on current context (prompt, phase, agent, language). The JIT context loader estimates token budgets based on agent skills and phase.
 
 ### Benefits
 
-- **67% reduction** in initial token load (from ~90K to ~600 tokens for manager-spec)
-- **On-demand loading**: Full skill content only when needed
-- **Backward compatible**: Works with existing agent/skill definitions
-- **JIT integration**: Seamlessly integrates with phase-based loading
+Achieves 67% reduction in initial token load (from ~90K to ~600 tokens for manager-spec). Provides on-demand loading of full skill content only when needed. Maintains backward compatibility with existing agent and skill definitions. Integrates seamlessly with phase-based loading.
 
 ### Implementation Status
 
-- ✅ 18 agents updated with `skills:` format
-- ✅ 48 SKILL.md files with triggers defined
-- ✅ skill_loading_system.py with 3-level parsing
-- ✅ jit_context_loader.py with Progressive Disclosure integration
+18 agents updated with skills format, 48 SKILL.md files with triggers defined, skill_loading_system.py with 3-level parsing, jit_context_loader.py with Progressive Disclosure integration.
 
 ---
 

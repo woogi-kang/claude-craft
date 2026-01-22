@@ -153,3 +153,4 @@ secret-key-*
 *.pem
 # IDE & Editors
 .moai/temp/
+.claude/plans/
