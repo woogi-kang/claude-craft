@@ -532,3 +532,19 @@ export function IconArrowRightBlue({ className, size = 20 }: IconProps) {
     </svg>
   );
 }
+
+export function IconToggle({ className, active = true }: IconProps & { active?: boolean }) {
+  return (
+    <svg
+      className={className}
+      width={34}
+      height={20}
+      viewBox="0 0 30 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect width="30" height="16" rx="8" fill={active ? "#017AFF" : "#DBE0E7"} />
+      <circle cx={active ? 22 : 8} cy="8" r="6" fill="white" />
+    </svg>
+  );
+}
