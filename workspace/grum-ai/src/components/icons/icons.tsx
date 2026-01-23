@@ -702,3 +702,68 @@ export function IconArrowDownGray({ className, size = 20 }: IconProps) {
     </svg>
   );
 }
+
+export function IconPinLocation({ className, size = 14 }: IconProps) {
+  return (
+    <svg
+      className={className}
+      width={size}
+      height={size}
+      viewBox="0 0 14 14"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M7 7.58333C8.10457 7.58333 9 6.6879 9 5.58333C9 4.47876 8.10457 3.58333 7 3.58333C5.89543 3.58333 5 4.47876 5 5.58333C5 6.6879 5.89543 7.58333 7 7.58333Z"
+        stroke="#017AFF"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M7 12.8333C9.33333 10.5 11.6667 8.41068 11.6667 5.58333C11.6667 2.82191 9.76142 0.583328 7 0.583328C4.23858 0.583328 2.33333 2.82191 2.33333 5.58333C2.33333 8.41068 4.66667 10.5 7 12.8333Z"
+        stroke="#017AFF"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function IconArrowRightSmall({ className, size = 10 }: IconProps) {
+  return (
+    <svg
+      className={className}
+      width={size}
+      height={size}
+      viewBox="0 0 10 10"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M3.75 2.5L6.25 5L3.75 7.5"
+        stroke="#111111"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function IconSearchMono({ className, size = 20 }: IconProps) {
+  return (
+    <svg
+      className={className}
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle cx="9" cy="9" r="5.5" stroke="#017AFF" strokeWidth="1.5" />
+      <path d="M13 13L17 17" stroke="#017AFF" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
