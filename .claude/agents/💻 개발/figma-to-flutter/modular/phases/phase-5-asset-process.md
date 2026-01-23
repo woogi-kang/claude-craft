@@ -1,3 +1,7 @@
+---
+name: "Phase 5: Asset Process"
+---
+
 # Phase 5: Asset Process
 
 > 이미지, 아이콘, 폰트 에셋 처리

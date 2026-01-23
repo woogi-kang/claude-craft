@@ -1,3 +1,7 @@
+---
+name: "Phase 1: Design Scan"
+---
+
 # Phase 1: Design Scan
 
 > Figma 디자인 구조 분석

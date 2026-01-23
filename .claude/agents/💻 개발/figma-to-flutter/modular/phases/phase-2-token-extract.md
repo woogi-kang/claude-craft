@@ -1,3 +1,7 @@
+---
+name: "Phase 2: Token Extract"
+---
+
 # Phase 2: Token Extract
 
 > Figma 디자인 토큰을 Flutter ThemeData로 변환

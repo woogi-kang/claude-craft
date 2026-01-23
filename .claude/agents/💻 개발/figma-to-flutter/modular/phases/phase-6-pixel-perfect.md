@@ -1,3 +1,7 @@
+---
+name: "Phase 6: Pixel-Perfect Validation"
+---
+
 # Phase 6: Pixel-Perfect Validation
 
 > Figma 디자인과 1:1 검증
