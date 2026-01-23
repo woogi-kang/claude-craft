@@ -4,7 +4,7 @@ description: |
   디자인/UX 리뷰 전문 에이전트. UI 목업, 와이어프레임, 디자인 시스템을 평가합니다.
   review-orchestrator에 의해 호출됩니다.
 tools: Read, Grep, Glob
-model: inherit
+model: opus
 ---
 
 # Review Design - 디자인/UX 리뷰 전문가

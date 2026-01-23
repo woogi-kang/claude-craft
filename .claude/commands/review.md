@@ -3,7 +3,7 @@ description: "멀티-LLM 리뷰 - Claude, Gemini, Codex가 함께 리뷰하고 �
 argument-hint: "<file_path>"
 type: utility
 allowed-tools: AskUserQuestion, Bash, Read, Write, Glob, Grep, Task
-model: inherit
+model: opus
 ---
 
 # /review - 멀티-LLM 리뷰 커맨드

@@ -4,7 +4,7 @@ description: |
   콘텐츠 리뷰 전문 에이전트. 기획서, 마케팅 카피, 문서의 품질을 평가합니다.
   review-orchestrator에 의해 호출됩니다.
 tools: Read, Grep, Glob
-model: inherit
+model: opus
 ---
 
 # Review Content - 콘텐츠 리뷰 전문가

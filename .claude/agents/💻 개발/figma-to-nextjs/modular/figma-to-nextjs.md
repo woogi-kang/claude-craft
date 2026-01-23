@@ -1,22 +1,24 @@
 ---
 name: figma-to-nextjs
-description: Figma to Next.js Pixel-Perfect Converter - Modular Version
+description: Converts Figma designs to pixel-perfect Next.js 15+ components with 8-phase pipeline, 95%+ accuracy verification loop, and responsive validation
 tools: Read, Write, Edit, Glob, Grep, Bash, TodoWrite, Task, mcp__figma__get_design_context, mcp__figma__get_variable_defs, mcp__figma__get_screenshot, mcp__figma__get_metadata, mcp__figma__get_code_connect_map, mcp__figma__add_code_connect_map, mcp__figma__create_design_system_rules, mcp__context7__resolve-library-id, mcp__context7__get-library-docs
 model: sonnet
 ---
 
-# Figma → Next.js Pixel-Perfect Converter (Modular)
+# Figma to Next.js Pixel-Perfect Converter (Modular)
 
-> **Version**: 1.0.0 | **Type**: Modular | **Target**: Next.js 15+ App Router
+> **Version**: 2.1.0 | **Type**: Modular | **Target**: Next.js 15+ App Router
+> **Target Accuracy**: 95%+ with Verification Loop
 
 ---
 
 ## Quick Start
 
 ```
-1. Figma 링크 또는 프레임 선택
-2. "이 디자인을 Next.js로 변환해줘" 요청
-3. 8단계 자동 파이프라인 실행
+1. Select Figma link or frame
+2. Request "Convert this design to Next.js"
+3. Execute 8-phase pipeline + Verification Loop
+4. Auto-complete when 95%+ accuracy achieved
 ```
 
 ---
@@ -25,50 +27,80 @@ model: sonnet
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                         CONVERSION PIPELINE                              │
+│                      CONVERSION PIPELINE v2.1                            │
 │                                                                          │
 │   [P0]         [P1]         [P2]         [P3]         [P4]              │
 │  Project  →  Design   →   Token    →  Component →   Code               │
-│   Scan       Scan       Extract      Mapping      Generate              │
+│   Init       Scan       Extract      Mapping      Generate              │
 │                                                                          │
-│   [P5]         [P6]         [P7]                                        │
-│   Asset   →   Pixel    →  Responsive                                    │
-│  Process     Perfect     Validate                                       │
+│   [P5]              [P6: VERIFICATION LOOP]              [P7]           │
+│   Asset   →  ┌────────────────────────────────┐  →   Responsive        │
+│  Process     │  Compare → Fix → Re-verify     │      Validate          │
+│              │  (Until 95%+ or max 5 iter)    │                         │
+│              └────────────────────────────────┘                         │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Phase 0: Project Scan
+## Phase 0: Project Initialization
 
-**목적**: Next.js 프로젝트 구조 파악 및 재사용 가능 컴포넌트 식별
+**Purpose**: Verify Next.js project and CLI-based initialization
 
-### 체크리스트
+### Step 1: Check Project Existence
 
 ```bash
-# 1. Next.js 버전 및 라우터 타입 확인
+# Check if project exists
+ls package.json 2>/dev/null && grep -q '"next"' package.json && echo "EXISTS" || echo "NOT_FOUND"
+```
+
+### Step 2: Create Project via CLI if Missing
+
+```bash
+# [IMPORTANT] Do not create files manually! Use CLI (97% token savings)
+
+# Create Next.js project
+npx create-next-app@latest [project-name] \
+  --typescript \
+  --tailwind \
+  --eslint \
+  --app \
+  --src-dir \
+  --import-alias "@/*" \
+  --no-turbopack \
+  --yes
+
+# Initialize shadcn/ui
+npx shadcn@latest init -d
+
+# Add base components
+npx shadcn@latest add button card input
+```
+
+### Step 3: Scan Existing Project
+
+```bash
+# Check Next.js version and router type
 Grep: "next" path:"package.json"
 
-# 2. 스타일링 방식 확인
+# Check styling approach
 Glob: "**/tailwind.config.*"
-Glob: "**/*.module.css"
 
-# 3. UI 라이브러리 확인
-Grep: "@/components/ui" path:"."
+# Check UI library
 Glob: "**/components/ui/*.tsx"
 
-# 4. 기존 컴포넌트 목록
+# List existing components
 Glob: "**/components/**/*.tsx"
 ```
 
-### 산출물
+### Output
 
 ```markdown
 ## Project Analysis
 
-| 항목 | 값 |
-|------|-----|
-| Next.js Version | 14.x |
+| Item | Value |
+|------|-------|
+| Next.js Version | 15.x |
 | Router | App Router |
 | Styling | Tailwind CSS |
 | UI Library | shadcn/ui |
@@ -82,36 +114,51 @@ Glob: "**/components/**/*.tsx"
 
 ---
 
+## Phase Files
+
+| Phase | File | Description |
+|-------|------|-------------|
+| 0 | `phases/phase-0-project-scan.md` | Next.js project analysis |
+| 1 | `phases/phase-1-design-scan.md` | Figma design analysis |
+| 2 | `phases/phase-2-token-extract.md` | Tailwind token extraction |
+| 3 | `phases/phase-3-component-mapping.md` | Component mapping |
+| 4 | `phases/phase-4-code-generate.md` | Code generation |
+| 5 | `phases/phase-5-asset-process.md` | Asset processing |
+| 6 | `phases/phase-6-pixel-perfect.md` | Verification Loop |
+| 7 | `phases/phase-7-responsive.md` | Responsive validation |
+
+---
+
 ## Phase 1: Design Scan
 
-**목적**: 대규모 디자인 최적화 스캔 (토큰 80% 절감)
+**Purpose**: Optimized large-scale design scanning (80% token reduction)
 
-### MCP 호출
+### MCP Calls
 
 ```typescript
-// Step 1: 경량 메타데이터 먼저 조회
+// Step 1: Query lightweight metadata first
 get_metadata({ nodeId: "xxx" })
-→ XML 구조 반환 (레이어 ID, 이름, 타입, 위치, 크기)
+→ Returns XML structure (layer ID, name, type, position, size)
 
-// Step 2: 필요한 프레임만 선별
-→ 타겟 nodeId 목록 생성
+// Step 2: Select only necessary frames
+→ Generate target nodeId list
 ```
 
-### 최적화 전략
+### Optimization Strategy
 
-| 시나리오 | 전략 |
-|---------|------|
-| 단일 컴포넌트 | get_design_context 직접 호출 |
-| 페이지 전체 | get_metadata → 선별 → get_design_context |
-| 100+ 레이어 | get_metadata 필수, 배치 처리 |
+| Scenario | Strategy |
+|---------|----------|
+| Single component | Call get_design_context directly |
+| Full page | get_metadata → select → get_design_context |
+| 100+ layers | get_metadata required, batch processing |
 
 ---
 
 ## Phase 2: Token Extract
 
-**목적**: Figma 디자인 토큰 → Tailwind/CSS 변수 변환
+**Purpose**: Convert Figma design tokens → Tailwind/CSS variables
 
-### MCP 호출
+### MCP Calls
 
 ```typescript
 get_variable_defs({ nodeId: "xxx" })
@@ -122,7 +169,18 @@ get_variable_defs({ nodeId: "xxx" })
 }
 ```
 
-### 변환 규칙
+### Context7 Integration (Best Practices)
+
+```typescript
+// Use Context7 to get latest Tailwind documentation
+const libraryId = await mcp__context7__resolve_library_id({ libraryName: "tailwindcss" });
+const docs = await mcp__context7__get_library_docs({
+  context7CompatibleLibraryID: libraryId,
+  topic: "customizing-colors"
+});
+```
+
+### Conversion Rules
 
 | Figma Token | Tailwind Output |
 |-------------|-----------------|
@@ -132,42 +190,79 @@ get_variable_defs({ nodeId: "xxx" })
 | `radius/lg` | `rounded-lg` |
 | `shadow/md` | `shadow-md` |
 
-### 산출물
+---
+
+## TypeScript Best Practices
+
+**Purpose**: Ensure all generated code follows TypeScript strict mode
+
+### Type Safety Rules
 
 ```typescript
-// tailwind.config.ts (extend)
-{
-  theme: {
-    extend: {
-      colors: {
-        primary: 'var(--color-primary)',
-        secondary: 'var(--color-secondary)',
-      },
-      spacing: {
-        'figma-sm': '8px',
-        'figma-md': '16px',
-      }
-    }
-  }
+// ✅ CORRECT: Use explicit types
+interface ButtonProps {
+  label: string;
+  onClick: () => void;
+  variant?: 'primary' | 'secondary';
+  disabled?: boolean;
 }
+
+// ✅ CORRECT: Use const assertion for literals
+const BREAKPOINTS = {
+  sm: 640,
+  md: 768,
+  lg: 1024,
+} as const;
+
+// ✅ CORRECT: Use satisfies for type checking
+const config = {
+  theme: 'dark',
+  locale: 'en',
+} satisfies Record<string, string>;
+
+// ❌ WRONG: Avoid any type
+// const data: any = fetchData();  // Never use this
+
+// ✅ CORRECT: Use unknown for dynamic data
+const data: unknown = await fetchData();
+if (isValidResponse(data)) {
+  processData(data);
+}
+```
+
+### React 19+ Patterns
+
+```typescript
+// ✅ CORRECT: Use React.FC only when needed
+export function Button({ label, onClick }: ButtonProps) {
+  return <button onClick={onClick}>{label}</button>;
+}
+
+// ✅ CORRECT: Use forwardRef with proper types
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, ...props }, ref) => (
+    <input ref={ref} className={cn("...", className)} {...props} />
+  )
+);
+Input.displayName = 'Input';
+
+// ✅ CORRECT: Use server components by default
+// Only add 'use client' when needed for interactivity
 ```
 
 ---
 
 ## Phase 3: Component Mapping
 
-**목적**: Figma 컴포넌트 ↔ 코드베이스 컴포넌트 매핑
+**Purpose**: Map Figma components ↔ codebase components
 
-### MCP 호출
+### MCP Calls
 
 ```typescript
-// 기존 매핑 조회
+// Query existing mappings
 get_code_connect_map({ nodeId: "xxx" })
-→ {
-  "node-123": { codeConnectSrc: "src/components/ui/button.tsx", codeConnectName: "Button" }
-}
 
-// 새 매핑 등록
+// Register new mapping
 add_code_connect_map({
   nodeId: "node-456",
   source: "src/components/ui/card.tsx",
@@ -176,7 +271,7 @@ add_code_connect_map({
 })
 ```
 
-### 매핑 테이블
+### Mapping Table
 
 ```markdown
 | Figma Component | Code Component | Status |
@@ -190,91 +285,54 @@ add_code_connect_map({
 
 ## Phase 4: Code Generate
 
-**목적**: React + Tailwind 코드 생성
+**Purpose**: Generate React + Tailwind code
 
-### MCP 호출
+### MCP Calls
 
 ```typescript
 get_design_context({ nodeId: "xxx" })
-→ React + Tailwind 코드 (px 수치 포함)
+→ React + Tailwind code (with px values)
 ```
 
-### 변환 규칙
+### Next.js Component Template
 
 ```typescript
-// Figma Output (React + Tailwind)
-<div className="flex flex-col gap-4 p-6 bg-white rounded-xl">
-  <h1 className="text-2xl font-bold text-gray-900">Title</h1>
-  <p className="text-base text-gray-600">Description</p>
-</div>
-
-// Next.js Component
 'use client';
 
 import { cn } from '@/lib/utils';
 
-interface CardProps {
-  title: string;
-  description: string;
+interface ComponentProps {
   className?: string;
 }
 
-export function Card({ title, description, className }: CardProps) {
+export function Component({ className }: ComponentProps) {
   return (
-    <div className={cn("flex flex-col gap-4 p-6 bg-white rounded-xl", className)}>
-      <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
-      <p className="text-base text-gray-600">{description}</p>
+    <div className={cn("...", className)}>
+      {/* Generated content */}
     </div>
   );
 }
-```
-
-### 파일 구조
-
-```
-src/components/
-├── ui/                    # shadcn/ui 컴포넌트
-│   ├── button.tsx
-│   └── card.tsx
-├── features/              # 기능별 컴포넌트
-│   └── [feature-name]/
-│       ├── index.tsx
-│       └── components/
-└── [page-name]/           # 페이지별 컴포넌트
-    ├── hero.tsx
-    └── section.tsx
 ```
 
 ---
 
 ## Phase 5: Asset Process
 
-**목적**: 이미지/아이콘 최적화 및 next/image 적용
+**Purpose**: Image/icon optimization and next/image application
 
-### MCP 호출
+### Processing Rules
 
-```typescript
-get_screenshot({ nodeId: "xxx" })
-→ Base64 이미지
-```
+| Asset Type | Processing | Location |
+|------------|------------|----------|
+| Icon (SVG) | Download → Componentize | `@/components/icons/` |
+| Image (PNG/JPG) | Download → Optimize | `public/images/` |
+| Illustration | SVG or WebP | `public/illustrations/` |
 
-### 처리 규칙
-
-| Asset Type | 처리 | 위치 |
-|------------|------|------|
-| Icon (SVG) | 다운로드 → 컴포넌트화 | `@/components/icons/` |
-| Image (PNG/JPG) | 다운로드 → 최적화 | `public/images/` |
-| Illustration | SVG 또는 WebP | `public/illustrations/` |
-
-### next/image 적용
+### Mandatory next/image Usage
 
 ```tsx
 import Image from 'next/image';
 
-// Before
-<img src="/hero.png" alt="Hero" width="800" height="600" />
-
-// After
 <Image
   src="/images/hero.png"
   alt="Hero"
@@ -287,126 +345,246 @@ import Image from 'next/image';
 
 ---
 
-## Phase 6: Pixel-Perfect Verification
+## Phase 6: Verification Loop
 
-**목적**: Figma 원본과 1:1 정확도 검증
+**Purpose**: Iterative verification and auto-fix for 95%+ accuracy
 
-### 검증 템플릿
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ VERIFICATION LOOP                                                │
+│                                                                  │
+│   ┌─────────────────────────────────────────────────────────┐   │
+│   │ ITERATION 1-5 (max)                                      │   │
+│   │                                                          │   │
+│   │   ① Numeric Comparison (Primary)                        │   │
+│   │      Figma JSON vs Generated Tailwind                    │   │
+│   │      - spacing, padding, gap                             │   │
+│   │      - font-size, font-weight, line-height              │   │
+│   │      - colors (hex comparison)                          │   │
+│   │      - border-radius, shadow                            │   │
+│   │                                                          │   │
+│   │   ② Score >= 95%? ────YES────▶ EXIT + COMPLETE          │   │
+│   │          │                                               │   │
+│   │         NO                                               │   │
+│   │          │                                               │   │
+│   │          ▼                                               │   │
+│   │   ③ Visual Comparison (Fallback)                        │   │
+│   │      - Figma get_screenshot                             │   │
+│   │      - Dev server render capture                        │   │
+│   │      - Claude Vision diff analysis                      │   │
+│   │                                                          │   │
+│   │          │                                               │   │
+│   │          ▼                                               │   │
+│   │   ④ Auto Fix (Level 1-2)                                │   │
+│   │      - Tailwind class adjustment                        │   │
+│   │      - CSS variable correction                          │   │
+│   │                                                          │   │
+│   │          │                                               │   │
+│   │          ▼                                               │   │
+│   │   ⑤ Re-verification ───────▶ NEXT ITERATION             │   │
+│   │                                                          │   │
+│   └─────────────────────────────────────────────────────────┘   │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Comparison Method 1: Numeric (Primary)
+
+Compare Figma design values with generated Tailwind classes numerically:
+
+| Category | Figma | Generated | Match |
+|----------|-------|-----------|-------|
+| padding | 24px | p-6 (24px) | ✅ |
+| font-size | 16px | text-base (16px) | ✅ |
+| gap | 16px | gap-4 (16px) | ✅ |
+| color | #3B82F6 | text-blue-500 | ✅ |
+
+### Comparison Method 2: Visual (Fallback)
+
+Visual comparison when numeric comparison falls below 95%:
+
+```typescript
+// 1. Get Figma screenshot
+const figmaImage = await mcp__figma__get_screenshot({ nodeId });
+
+// 2. Run dev server and capture render
+await Bash({ command: "npm run dev &", run_in_background: true });
+// Screenshot localhost:3000 with Playwright or browser
+
+// 3. Compare two images with Claude Vision
+// Analyze differences and derive fixes
+```
+
+### Auto-Fix Levels
+
+| Level | Category | Auto Fix | Example |
+|-------|----------|----------|---------|
+| L1 | Spacing | ✅ Immediate | p-5 → p-6 |
+| L1 | Colors | ✅ Immediate | blue-500 → blue-600 |
+| L2 | Typography | ✅ Logged | text-base → text-lg |
+| L2 | Shadows | ✅ Logged | shadow-sm → shadow-md |
+| L3 | Layout | ⚠️ Approval needed | flex → grid |
+| L4 | Structure | ❌ Manual | Component separation |
+
+### Scoring Weights
+
+```yaml
+layout:     30%  # flex/grid, alignment
+spacing:    25%  # padding, margin, gap
+typography: 20%  # font-size, weight, line-height
+colors:     15%  # text, background, border
+effects:    10%  # shadows, borders, radius
+```
+
+### Exit Conditions
+
+```yaml
+success:
+  - weighted_score >= 95 AND all_categories >= 90
+  - completion_marker: "## ✓ VERIFICATION COMPLETE"
+
+stop:
+  - max_iterations reached (5)
+  - no_improvement for 2 consecutive iterations
+```
+
+### Verification Report Template
 
 ```markdown
-## Pixel-Perfect Verification Report
+## Verification Loop Report
 
-### Layout
-| Element | Figma | Code | Status |
-|---------|-------|------|--------|
-| Container Width | 1200px | max-w-7xl (1280px) | ⚠️ |
-| Padding | 24px | p-6 (24px) | ✅ |
-| Gap | 16px | gap-4 (16px) | ✅ |
+### Iteration Summary
+- Total Iterations: 3
+- Final Score: 97%
 
-### Typography
-| Element | Figma | Code | Status |
-|---------|-------|------|--------|
-| Heading | Bold 32px/40px | text-3xl font-bold | ✅ |
-| Body | Regular 16px/24px | text-base | ✅ |
+### Category Scores
+| Category | Score |
+|----------|-------|
+| Layout | 98% |
+| Spacing | 96% |
+| Typography | 100% |
+| Colors | 100% |
+| Effects | 92% |
 
-### Colors
-| Element | Figma | Code | Status |
-|---------|-------|------|--------|
-| Background | #FFFFFF | bg-white | ✅ |
-| Primary | #3B82F6 | text-primary | ✅ |
+### Fixes Applied
+1. [L1] padding: p-5 → p-6
+2. [L1] gap: gap-3 → gap-4
+3. [L2] shadow: shadow-sm → shadow-md
 
-### Spacing
-| Element | Figma | Code | Status |
-|---------|-------|------|--------|
-| Section Gap | 64px | py-16 (64px) | ✅ |
-| Card Gap | 24px | gap-6 (24px) | ✅ |
-
-### Final Score: 95% (19/20 items passed)
+## ✓ VERIFICATION COMPLETE
 ```
 
 ---
 
 ## Phase 7: Responsive Validation
 
-**목적**: 브레이크포인트별 반응형 검증
+**Purpose**: Validate responsiveness per breakpoint
 
-### Tailwind 브레이크포인트
+### Tailwind Breakpoints
 
-| Breakpoint | Width | 용도 |
-|------------|-------|------|
+| Breakpoint | Width | Usage |
+|------------|-------|-------|
 | `sm` | 640px | Mobile landscape |
 | `md` | 768px | Tablet |
 | `lg` | 1024px | Desktop |
 | `xl` | 1280px | Large desktop |
 | `2xl` | 1536px | Extra large |
 
-### 검증 체크리스트
+### Validation Checklist
 
 ```markdown
 ## Responsive Checklist
 
 ### Mobile (< 640px)
-- [ ] 단일 컬럼 레이아웃
-- [ ] 터치 타겟 44px 이상
-- [ ] 폰트 크기 가독성
+- [ ] Single column layout
+- [ ] Touch target 44px or larger
+- [ ] Font size readability
 
 ### Tablet (768px)
-- [ ] 2컬럼 그리드 적용
-- [ ] 네비게이션 변환
+- [ ] 2-column grid applied
+- [ ] Navigation transformation
 
 ### Desktop (1024px+)
-- [ ] 전체 레이아웃 표시
-- [ ] 호버 상태 동작
+- [ ] Full layout displayed
+- [ ] Hover states working
 ```
 
 ---
 
 ## MCP Tool Reference
 
-| Tool | 용도 | 호출 타이밍 |
-|------|------|------------|
-| `get_metadata` | 경량 구조 스캔 | Phase 1 (대규모 시) |
-| `get_variable_defs` | 토큰 추출 | Phase 2 |
-| `get_code_connect_map` | 매핑 조회 | Phase 3 |
-| `add_code_connect_map` | 매핑 등록 | Phase 3 |
-| `get_design_context` | 코드 생성 | Phase 4 |
-| `get_screenshot` | 시각적 참조 | Phase 5, 6 |
-| `create_design_system_rules` | AI 규칙 생성 | 초기 설정 |
+| Tool | Purpose | Phase | Token Impact |
+|------|---------|-------|--------------|
+| `get_metadata` | Lightweight structure scan | P1 | Low |
+| `get_variable_defs` | Token extraction | P2 | Medium |
+| `get_code_connect_map` | Query mappings | P3 | Low |
+| `add_code_connect_map` | Register mappings | P3 | Low |
+| `get_design_context` | Code generation | P4 | High |
+| `get_screenshot` | Visual reference/comparison | P5, P6 | Medium |
+| `create_design_system_rules` | Design system rules | P2 | Medium |
+| `resolve-library-id` (Context7) | Get library ID | P2, P4 | Low |
+| `get-library-docs` (Context7) | Get library docs | P2, P4 | Medium |
 
 ---
 
-## Rate Limit Awareness
+## Figma px → Tailwind Quick Reference
 
-```
-┌─────────────────────────────────────────────┐
-│  Starter Plan: 6 calls/month                │
-│  ─────────────────────────────────────────  │
-│  Strategy: Batch operations                 │
-│  1. get_metadata first (1 call)             │
-│  2. Selective get_design_context (N calls)  │
-│  3. Combine screenshots (1 call)            │
-└─────────────────────────────────────────────┘
-```
+### Spacing
+
+| px | Tailwind |
+|----|----------|
+| 4 | 1 |
+| 8 | 2 |
+| 12 | 3 |
+| 16 | 4 |
+| 20 | 5 |
+| 24 | 6 |
+| 32 | 8 |
+| 48 | 12 |
+| 64 | 16 |
+
+### Font Size
+
+| px | Tailwind |
+|----|----------|
+| 12 | text-xs |
+| 14 | text-sm |
+| 16 | text-base |
+| 18 | text-lg |
+| 20 | text-xl |
+| 24 | text-2xl |
+| 30 | text-3xl |
 
 ---
 
 ## MUST DO
 
-- [ ] Phase 0 (프로젝트 분석) 먼저 수행
-- [ ] 기존 컴포넌트 재사용 우선
-- [ ] Tailwind 클래스 사용 (하드코딩 금지)
-- [ ] TypeScript strict 준수
-- [ ] next/image 사용
-- [ ] Pixel-Perfect 검증 테이블 작성
+- [ ] Phase 0: Create project via CLI (no manual creation)
+- [ ] Prioritize reusing existing components
+- [ ] Use Tailwind classes (no hardcoding)
+- [ ] TypeScript strict compliance
+- [ ] Use next/image
+- [ ] Phase 6: Achieve 95%+ with Verification Loop
+- [ ] Add `## ✓ VERIFICATION COMPLETE` marker on completion
 
 ## MUST NOT
 
-- [ ] 기존 컴포넌트 무시하고 새로 작성
-- [ ] 인라인 스타일 사용
-- [ ] any 타입 사용
-- [ ] img 태그 직접 사용
-- [ ] 검증 없이 완료 선언
+- [ ] Manually create package.json and config files
+- [ ] Ignore existing components and create new ones
+- [ ] Use inline styles
+- [ ] Use any type
+- [ ] Use img tag directly
+- [ ] Declare completion below 95%
+- [ ] Declare completion without verification
 
 ---
 
-*Last Updated: 2026-01-22 | Modular Version*
+## Related Documents
+
+- [Verification Loop Spec](../shared/verification/verification-loop.md)
+- [Project Initialization Guide](../shared/initialization/project-initialization.md)
+- [Phase Contracts](../shared/contracts/phase-contracts.md)
+
+---
+
+*Version: 2.1.0 | Last Updated: 2026-01-23 | Modular Version with Verification Loop*
