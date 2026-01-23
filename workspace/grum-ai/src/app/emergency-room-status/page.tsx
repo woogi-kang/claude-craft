@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { LeftSidebar, StatusBar, ChatHistory } from "@/components/layout";
 import {
@@ -12,23 +13,55 @@ interface FilterTabProps {
   label: string;
   value?: string;
   hasArrow?: boolean;
+  isActive?: boolean;
 }
 
-function FilterTab({ label, value, hasArrow = true }: FilterTabProps) {
+function FilterTab({ label, value, hasArrow = true, isActive = false }: FilterTabProps) {
   return (
     <div className="flex items-center gap-[8px] px-[12px] py-[6px]">
-      <span className="font-normal text-[14px] leading-[20px] text-[#767676]">
+      <span className={`font-normal text-[14px] leading-[20px] ${isActive ? 'text-[#111111]' : 'text-[#767676]'}`}>
         {label}
       </span>
       {value && (
         <div className="flex items-center gap-[4px]">
-          <span className="font-semibold text-[14px] leading-[20px] text-[#111111]">
+          <span className={`font-semibold text-[14px] leading-[20px] ${isActive ? 'text-[#017AFF]' : 'text-[#111111]'}`}>
             {value}
           </span>
           {hasArrow && <IconArrowRightSmall size={10} />}
         </div>
       )}
       {!value && hasArrow && <IconArrowRightSmall size={10} />}
+    </div>
+  );
+}
+
+function EmptyState() {
+  return (
+    <div className="flex flex-col items-center w-[464px] bg-white rounded-[12px]">
+      {/* Empty State Illustration */}
+      <div className="flex flex-col items-center pt-[20px] pb-[14px]">
+        <div className="relative w-[140px] h-[140px]">
+          <Image
+            src="/images/empty-states/emergency-room-search.png"
+            alt="검색 결과 없음"
+            fill
+            className="object-contain"
+          />
+        </div>
+      </div>
+
+      {/* Empty State Text */}
+      <p className="font-bold text-[18px] leading-[26px] text-[#111111] text-center">
+        해당하는 응급실이 없어요.
+      </p>
+
+      {/* Info Box */}
+      <div className="flex items-center justify-center w-[420px] mt-[14px] p-[12px] bg-[#F5F7FA] rounded-[10px]">
+        <p className="font-normal text-[14px] leading-[22px] text-[#767676] text-center">
+          &quot;내 주변&quot; 버튼을 눌러 근처 응급실을 찾거나<br />
+          병원명, 지역을 다시 설정해주세요.
+        </p>
+      </div>
     </div>
   );
 }
@@ -169,6 +202,10 @@ function HospitalCard() {
 }
 
 function EmergencyRoomStatusContent() {
+  // State to control empty state display - set to true for empty state demo
+  const [showEmptyState, setShowEmptyState] = useState(true);
+  const resultCount = showEmptyState ? 0 : 49;
+
   return (
     <div className="flex flex-col items-center w-full h-full overflow-auto">
       <div className="flex flex-col items-center py-[40px] w-[780px]">
@@ -220,8 +257,8 @@ function EmergencyRoomStatusContent() {
               {/* Filter Tabs */}
               <div className="flex items-center">
                 <FilterTab label="내 주변" hasArrow />
-                <FilterTab label="지역" value="전체" />
-                <FilterTab label="세부" value="전체" />
+                <FilterTab label="지역" value="전체" isActive />
+                <FilterTab label="세부지역" value="전체" />
               </div>
 
               {/* Results Count and Sort */}
@@ -231,7 +268,7 @@ function EmergencyRoomStatusContent() {
                     전체
                   </span>
                   <span className="font-bold text-[14px] leading-[16px] text-[#017AFF]">
-                    49
+                    {resultCount}
                   </span>
                 </div>
                 <div className="flex items-center gap-[4px]">
@@ -242,9 +279,13 @@ function EmergencyRoomStatusContent() {
                 </div>
               </div>
 
-              {/* Hospital Cards */}
+              {/* Hospital Cards or Empty State */}
               <div className="flex flex-col gap-[16px]">
-                <HospitalCard />
+                {showEmptyState ? (
+                  <EmptyState />
+                ) : (
+                  <HospitalCard />
+                )}
               </div>
             </div>
           </div>
