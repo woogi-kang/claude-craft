@@ -1,4 +1,5 @@
 ---
+name: "Phase 1: Design Scan"
 phase_id: 1
 phase_name: "Design Scan"
 description: "Scan Figma design structure and create layer map with 80% token reduction"

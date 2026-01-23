@@ -1,3 +1,7 @@
+---
+name: "Verification Loop System"
+---
+
 # Verification Loop System
 
 > Iterative verification and auto-fix system for achieving 95%+ pixel-perfect accuracy

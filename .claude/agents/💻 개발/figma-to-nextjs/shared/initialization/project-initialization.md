@@ -1,3 +1,7 @@
+---
+name: "Project Initialization Guide"
+---
+
 # Project Initialization Guide
 
 > CLI-based project creation for token efficiency

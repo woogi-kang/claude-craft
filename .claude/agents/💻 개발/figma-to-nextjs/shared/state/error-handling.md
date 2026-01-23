@@ -1,3 +1,7 @@
+---
+name: "Error Handling Framework"
+---
+
 # Error Handling Framework
 
 > Comprehensive error classification, recovery strategies, and graceful degradation for Figma-to-Next.js conversion

@@ -1,4 +1,5 @@
 ---
+name: "Phase 7: Responsive Validation"
 phase_id: 7
 phase_name: "Responsive Validation"
 description: "Verify responsive behavior across breakpoints and generate final report"
