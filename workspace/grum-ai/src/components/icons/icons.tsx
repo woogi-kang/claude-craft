@@ -242,6 +242,32 @@ export function IconPlus({ className, size = 16 }: IconProps) {
   );
 }
 
+export function IconPlusGray({ className, size = 16 }: IconProps) {
+  return (
+    <svg
+      className={className}
+      width={size}
+      height={size}
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M8 1.5V14.5"
+        stroke="#B5BFCD"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M14.5 8H1.5"
+        stroke="#B5BFCD"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export function IconSecret({ className, size = 16 }: IconProps) {
   return (
     <svg
