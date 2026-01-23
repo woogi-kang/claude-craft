@@ -1,3 +1,7 @@
+---
+name: "Prompt Engineer Agent"
+---
+
 # Prompt Engineer Agent
 
 다양한 AI 이미지 생성 도구에 최적화된 프롬프트를 생성하는 에이전트입니다.

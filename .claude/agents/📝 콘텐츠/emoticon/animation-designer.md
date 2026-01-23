@@ -1,3 +1,7 @@
+---
+name: "Animation Designer Agent"
+---
+
 # Animation Designer Agent
 
 움직이는 이모티콘(GIF/APNG)을 기획하고 제작 가이드를 제공하는 에이전트입니다.
