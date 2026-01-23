@@ -640,3 +640,65 @@ export function IconQuestionCircle({ className, size = 20, variant = "gray" }: I
     </svg>
   );
 }
+
+export function IconShareGray({ className, size = 20 }: IconProps) {
+  return (
+    <svg
+      className={className}
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M5.5 1.5C3.29086 1.5 1.5 3.25888 1.5 5.42857C1.5 7.09707 2.55908 8.52264 4.05303 9.09221C4.08165 8.59236 4.19079 8.11364 4.36792 7.66836C3.53019 7.25907 2.95455 6.40986 2.95455 5.42857C2.95455 4.04786 4.09418 2.92857 5.5 2.92857H9.86364C11.2695 2.92857 12.4091 4.04786 12.4091 5.42857C12.4091 6.80929 11.2695 7.92857 9.86364 7.92857H9.5C9.09833 7.92857 8.77273 8.24836 8.77273 8.64286C8.77273 9.03736 9.09833 9.35714 9.5 9.35714H9.86364C12.0728 9.35714 13.8636 7.59829 13.8636 5.42857C13.8636 3.25888 12.0728 1.5 9.86364 1.5H5.5ZM14.6735 7.36671C15.4775 7.68257 16.0455 8.45471 16.0455 9.35714C16.0455 10.5406 15.0687 11.5 13.8636 11.5H8.77273C7.56775 11.5 6.59091 10.5406 6.59091 9.35714C6.59091 8.17364 7.56775 7.21429 8.77273 7.21429H9.5C9.90167 7.21429 10.2273 6.8945 10.2273 6.5C10.2273 6.1055 9.90167 5.78571 9.50007 5.78571H8.77273C6.76442 5.78571 5.13636 7.38471 5.13636 9.35714C5.13636 11.3296 6.76442 12.9286 8.77273 12.9286H13.8636C15.8719 12.9286 17.5 11.3296 17.5 9.35714C17.5 7.757 16.4285 6.40257 14.9518 5.94836C14.9343 6.44493 14.8375 6.92164 14.6735 7.36671Z"
+        fill="#999999"
+        stroke="#999999"
+        strokeWidth="0.5"
+      />
+    </svg>
+  );
+}
+
+export function IconDownloadGray({ className, size = 20 }: IconProps) {
+  return (
+    <svg
+      className={className}
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M3 13.5V17H17V13.5M10 3V6.5V12.3333M10 12.3333L6.5 8.83333M10 12.3333L13.5 8.83333"
+        stroke="#999999"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function IconArrowDownGray({ className, size = 20 }: IconProps) {
+  return (
+    <svg
+      className={className}
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M5 7L10 14L15 7"
+        stroke="#B5BFCD"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
