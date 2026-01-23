@@ -489,7 +489,8 @@ export function IconLogoBlue({ className }: { className?: string }) {
   );
 }
 
-export function IconExclamationCircle({ className, size = 20 }: IconProps) {
+export function IconExclamationCircle({ className, size = 20, variant = "gray" }: IconProps & { variant?: "gray" | "blue" }) {
+  const fillColor = variant === "blue" ? "#017AFF" : "#B5BFCD";
   return (
     <svg
       className={className}
@@ -499,7 +500,7 @@ export function IconExclamationCircle({ className, size = 20 }: IconProps) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <circle cx="10" cy="10" r="9" fill="#B5BFCD" />
+      <circle cx="10" cy="10" r="9" fill={fillColor} />
       <path
         d="M10 5.5V11"
         stroke="white"

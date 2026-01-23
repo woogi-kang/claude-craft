@@ -45,14 +45,25 @@ function SectionRow({ title, children }: SectionRowProps) {
   );
 }
 
-function StatusBadge({ label }: { label: string }) {
+interface StatusBadgeProps {
+  label: string;
+  rightText?: string;
+}
+
+function StatusBadge({ label, rightText }: StatusBadgeProps) {
   return (
-    <div className="flex items-center justify-center gap-[10px] h-[40px] px-[20px] bg-[#F5F7FA] border border-[#E5E5EC] rounded-[25px] w-full">
-      <IconExclamationCircle size={20} />
+    <div className="flex items-center gap-[10px] h-[40px] px-[20px] bg-[#F5F7FA] border border-[#E5E5EC] rounded-[25px] w-full">
+      <IconExclamationCircle size={20} variant="blue" />
       <span className="font-semibold text-[15px] leading-[23px] text-[#111111]">
         {label}
       </span>
-      <div className="flex-1" />
+      <div className="flex-1 flex items-center justify-end">
+        {rightText && (
+          <span className="font-normal text-[15px] leading-[23px] text-[#767676]">
+            {rightText}
+          </span>
+        )}
+      </div>
     </div>
   );
 }
@@ -86,7 +97,7 @@ function MyPageContent() {
           {/* Health Profile Section */}
           <SectionRow title="건강 프로필">
             <div className="flex flex-col gap-[10px] w-full">
-              <StatusBadge label="미이용" />
+              <StatusBadge label="이용 중" />
               <PrimaryButton label="건강프로필 확인" />
             </div>
           </SectionRow>
@@ -94,7 +105,7 @@ function MyPageContent() {
           {/* Subscription Plan Section */}
           <SectionRow title="구독 플랜">
             <div className="flex flex-col gap-[10px] w-full">
-              <StatusBadge label="미이용" />
+              <StatusBadge label="플러스 이용 중" rightText="다음 결제일 : 25.07.11" />
               <PrimaryButton label="플랜 변경 및 확인" />
             </div>
           </SectionRow>
