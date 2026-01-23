@@ -1,3 +1,7 @@
+---
+name: "Phase 3: Widget Mapping"
+---
+
 # Phase 3: Widget Mapping
 
 > Figma 컴포넌트를 Flutter 위젯으로 매핑

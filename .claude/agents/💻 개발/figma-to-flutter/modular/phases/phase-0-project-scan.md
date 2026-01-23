@@ -1,3 +1,7 @@
+---
+name: "Phase 0: Project Scan"
+---
+
 # Phase 0: Project Scan
 
 > Flutter 프로젝트 구조 분석

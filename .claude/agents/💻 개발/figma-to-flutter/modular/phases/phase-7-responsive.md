@@ -1,3 +1,7 @@
+---
+name: "Phase 7: Responsive Validation"
+---
+
 # Phase 7: Responsive Validation
 
 > 다양한 화면 크기에서 반응형 검증
