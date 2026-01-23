@@ -1,3 +1,7 @@
+---
+name: "Setup Checker Agent"
+---
+
 # Setup Checker Agent
 
 이모티콘 제작에 필요한 도구들의 설치 상태를 확인하고, 미설치 시 플랫폼별 설치 가이드를 제공합니다.

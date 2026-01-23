@@ -1,3 +1,7 @@
+---
+name: "Copyright Checker Agent"
+---
+
 # Copyright Checker Agent
 
 이모티콘 캐릭터의 저작권 침해 위험을 사전에 검토하는 에이전트입니다.

@@ -1,3 +1,7 @@
+---
+name: "Concept Designer Agent"
+---
+
 # Concept Designer Agent
 
 캐릭터 컨셉을 기획하고 AI 이미지 생성용 프롬프트를 생성하는 에이전트입니다.
