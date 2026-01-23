@@ -1,3 +1,7 @@
+---
+name: "Figma MCP Tool Reference"
+---
+
 # Figma MCP Tool Reference
 
 > Consolidated reference for all Figma MCP tools used in the conversion pipeline

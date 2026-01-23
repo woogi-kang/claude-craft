@@ -1,4 +1,5 @@
 ---
+name: "Phase 3: Component Mapping"
 phase_id: 3
 phase_name: "Component Mapping"
 description: "Map Figma components to existing codebase components"

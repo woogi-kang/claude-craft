@@ -1,3 +1,7 @@
+---
+name: "Phase Contract System"
+---
+
 # Phase Contract System
 
 > Explicit dependencies, inputs, outputs, and rollback strategies for each conversion phase

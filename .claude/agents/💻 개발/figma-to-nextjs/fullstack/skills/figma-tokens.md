@@ -1,3 +1,7 @@
+---
+name: "Figma Tokens"
+---
+
 # Skill: Figma Tokens
 
 > Figma 디자인 토큰 추출 및 변환 스킬

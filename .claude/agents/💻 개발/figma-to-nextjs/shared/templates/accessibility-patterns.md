@@ -1,3 +1,7 @@
+---
+name: "Accessibility Patterns"
+---
+
 # Accessibility Patterns
 
 > WCAG 2.1 AA compliant patterns for Figma-to-Next.js code generation

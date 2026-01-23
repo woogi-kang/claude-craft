@@ -1,3 +1,7 @@
+---
+name: "Figma to Next.js Usage Guide"
+---
+
 # Figma → Next.js Converter Usage Guide
 
 > 모듈형(B)과 풀스택(C) 버전 사용 가이드

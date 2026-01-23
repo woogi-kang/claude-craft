@@ -1,4 +1,5 @@
 ---
+name: "Phase 5: Asset Process"
 phase_id: 5
 phase_name: "Asset Process"
 description: "Extract, optimize, and integrate images and icons with next/image"
@@ -18,18 +19,26 @@ outputs:
 
 validation:
   success_criteria:
-    - All referenced assets downloaded
+    - All referenced assets downloaded (100% - no exceptions)
     - Images in correct formats
     - Asset paths match component imports
+    - Zero placeholder/substitute assets used
   quality_gates:
     - Images optimized (WebP/AVIF)
     - SVGs cleaned and minified
     - next/image used for raster images
+    - All assets sourced from Figma only
 
 rollback:
-  on_failure: use_placeholder_assets
-  cleanup: [downloaded_assets]
+  on_failure: halt_and_alert_user
+  retry_policy:
+    retryable_errors: [timeout, 429, 500, 502, 503, connection_reset]
+    fatal_errors: [404, 403, invalid_node_id, file_deleted]
+    max_retry: unlimited
+    backoff: exponential
+  cleanup: none
   can_resume: true
+  user_action_required: true
 
 mcp_calls:
   estimated: 2-4
@@ -67,7 +76,65 @@ mcp_calls:
 
 ---
 
-## Step 5-2: 에셋 다운로드
+## Step 5-2: 에셋 다운로드 (Retry Until Success)
+
+> **CRITICAL**: 모든 에셋이 다운로드될 때까지 진행 불가. 단 하나라도 누락 시 Phase 6 진입 금지.
+
+### Retry Strategy
+
+```typescript
+async function downloadAssetWithRetry(nodeId: string, assetName: string) {
+  const RETRYABLE_ERRORS = ['timeout', 'ECONNRESET', '429', '500', '502', '503'];
+  const FATAL_ERRORS = ['404', '403', 'INVALID_NODE'];
+
+  let attempt = 0;
+  let delay = 2000; // Start with 2 seconds
+
+  while (true) {
+    attempt++;
+    console.log(`[Attempt ${attempt}] Downloading: ${assetName} (${nodeId})`);
+
+    try {
+      const result = await get_screenshot({ nodeId });
+      console.log(`✅ Success: ${assetName}`);
+      return result;
+
+    } catch (error) {
+      const errorType = classifyError(error);
+
+      // FATAL ERROR → Immediate HALT
+      if (FATAL_ERRORS.includes(errorType)) {
+        throw new AssetFatalError({
+          type: 'HALT_WORKFLOW',
+          asset: assetName,
+          nodeId: nodeId,
+          error: errorType,
+          message: `Asset download failed with unrecoverable error.
+                    Cannot substitute with placeholders or icon libraries.
+                    User action required.`
+        });
+      }
+
+      // RETRYABLE ERROR → Wait and retry
+      console.log(`⚠️ Retryable error (${errorType}), waiting ${delay/1000}s...`);
+      await sleep(delay);
+      delay = Math.min(delay * 2, 60000); // Max 60 seconds
+    }
+  }
+}
+```
+
+### 에러 유형별 처리
+
+| Error Type | Action | Retry |
+|------------|--------|-------|
+| timeout | 대기 후 재시도 | ♾️ 무한 |
+| 429 (rate limit) | 대기 후 재시도 | ♾️ 무한 |
+| 500/502/503 | 대기 후 재시도 | ♾️ 무한 |
+| connection reset | 대기 후 재시도 | ♾️ 무한 |
+| **404 (not found)** | **즉시 중단** | ❌ |
+| **403 (forbidden)** | **즉시 중단** | ❌ |
+| **invalid nodeId** | **즉시 중단** | ❌ |
 
 ### MCP 호출
 
@@ -183,15 +250,21 @@ export function FeatureIcon({ className }: { className?: string }) {
 }
 ```
 
-### 방법 2: lucide-react 사용 (권장)
+### 방법 2: Figma SVG 직접 import (권장)
+
+> ⚠️ **FORBIDDEN**: lucide-react, heroicons 등 아이콘 라이브러리 사용 금지
+> 모든 아이콘은 반드시 Figma에서 다운로드해야 함
 
 ```tsx
-import { Layers, Zap, Shield } from 'lucide-react';
+// Figma에서 다운로드한 SVG를 직접 import
+import FeatureIcon1 from '@/public/icons/feature-1.svg';
+import FeatureIcon2 from '@/public/icons/feature-2.svg';
+import FeatureIcon3 from '@/public/icons/feature-3.svg';
 
 // 사용
-<Layers className="w-6 h-6 text-primary" />
-<Zap className="w-6 h-6 text-primary" />
-<Shield className="w-6 h-6 text-primary" />
+<FeatureIcon1 className="w-6 h-6 text-primary" />
+<FeatureIcon2 className="w-6 h-6 text-primary" />
+<FeatureIcon3 className="w-6 h-6 text-primary" />
 ```
 
 ### 방법 3: @svgr/webpack (커스텀 SVG)
@@ -327,12 +400,19 @@ export function Logo() {
 ```markdown
 # Asset Processing Report
 
-## Assets Processed
-| Asset | Type | Size | Location |
-|-------|------|------|----------|
-| hero-bg.png | PNG | 245KB | public/images/hero/ |
-| logo.svg | SVG | 2KB | public/logos/ |
-| feature-1.svg | SVG | 1KB | public/icons/ |
+## Asset Inventory Verification
+| Expected | Downloaded | Status |
+|----------|------------|--------|
+| 12 | 12 | ✅ 100% |
+
+## Assets Processed (All from Figma)
+| Asset | Type | Size | Location | Source |
+|-------|------|------|----------|--------|
+| hero-bg.png | PNG | 245KB | public/images/hero/ | Figma ✅ |
+| logo.svg | SVG | 2KB | public/logos/ | Figma ✅ |
+| feature-1.svg | SVG | 1KB | public/icons/ | Figma ✅ |
+| feature-2.svg | SVG | 1KB | public/icons/ | Figma ✅ |
+| feature-3.svg | SVG | 1KB | public/icons/ | Figma ✅ |
 
 ## Optimization Results
 - Original Total: 512KB
@@ -341,16 +421,37 @@ export function Logo() {
 
 ## Usage Summary
 - next/image: 5 instances
-- SVG components: 3
-- lucide-react: 8 icons
+- SVG components (Figma): 8 icons
+- Icon libraries used: 0 (FORBIDDEN)
+- Placeholders used: 0 (FORBIDDEN)
 
-## Checklist
+## CRITICAL Checklist
 - [x] All images in public/
 - [x] next/image used
 - [x] sizes attribute set
 - [x] priority for LCP
 - [x] Alt text provided
+- [x] **100% assets from Figma (no substitutes)**
+- [x] **Zero icon library usage**
+- [x] **Zero placeholder images**
+- [x] **Asset count matches inventory**
 ```
+
+---
+
+## FORBIDDEN Actions (Zero Tolerance)
+
+다음 행동은 절대 허용되지 않음:
+
+| Action | Why Forbidden |
+|--------|---------------|
+| `import { Icon } from 'lucide-react'` | 아이콘 라이브러리 사용 금지 |
+| `import { Icon } from '@heroicons/react'` | 아이콘 라이브러리 사용 금지 |
+| `<div className="bg-gray-200" />` (as image placeholder) | 플레이스홀더 금지 |
+| "Similar icon used instead" | 대체 아이콘 금지 |
+| "Will add asset later" | 에셋 스킵 금지 |
+
+**위반 시**: 워크플로우 즉시 중단, Phase 6 진입 불가
 
 ---
 

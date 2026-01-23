@@ -1,4 +1,5 @@
 ---
+name: "Phase 2: Token Extract"
 phase_id: 2
 phase_name: "Token Extract"
 description: "Extract Figma design tokens and generate Tailwind/CSS configuration"

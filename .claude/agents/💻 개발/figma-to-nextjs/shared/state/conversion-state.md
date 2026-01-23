@@ -1,3 +1,7 @@
+---
+name: "Conversion State Management"
+---
+
 # Conversion State Management
 
 > Session persistence, checkpointing, and resume capability for Figma-to-Next.js conversion

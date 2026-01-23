@@ -1,4 +1,5 @@
 ---
+name: "Phase 4: Code Generate"
 phase_id: 4
 phase_name: "Code Generate"
 description: "Generate React/TSX components from Figma design context"

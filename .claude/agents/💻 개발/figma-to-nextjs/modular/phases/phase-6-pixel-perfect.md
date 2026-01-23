@@ -1,4 +1,5 @@
 ---
+name: "Phase 6: Pixel-Perfect Verification"
 phase_id: 6
 phase_name: "Pixel-Perfect Verification"
 description: "Compare rendered output with Figma design for visual accuracy"

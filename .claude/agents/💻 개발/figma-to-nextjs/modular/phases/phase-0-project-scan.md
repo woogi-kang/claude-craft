@@ -1,4 +1,5 @@
 ---
+name: "Phase 0: Project Scan"
 phase_id: 0
 phase_name: "Project Scan"
 description: "Analyze Next.js project structure and identify reusable components"

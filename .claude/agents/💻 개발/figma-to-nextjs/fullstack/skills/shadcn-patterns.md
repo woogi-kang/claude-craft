@@ -1,3 +1,7 @@
+---
+name: "shadcn/ui Patterns"
+---
+
 # Skill: shadcn/ui Patterns
 
 > Figma 컴포넌트를 shadcn/ui로 매핑하는 패턴 라이브러리

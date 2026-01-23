@@ -1,3 +1,7 @@
+---
+name: "Tailwind Mapping"
+---
+
 # Skill: Tailwind Mapping
 
 > Figma 속성을 Tailwind CSS 클래스로 정확하게 매핑

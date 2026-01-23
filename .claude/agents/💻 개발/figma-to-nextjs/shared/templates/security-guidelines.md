@@ -1,3 +1,7 @@
+---
+name: "Security Guidelines"
+---
+
 # Security Guidelines
 
 > Security best practices for Figma-to-Next.js code generation
