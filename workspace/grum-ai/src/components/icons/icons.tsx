@@ -591,3 +591,26 @@ export function IconCheckCircleGray({ className, size = 20, checked = false }: I
     </svg>
   );
 }
+
+export function IconQuestionCircle({ className, size = 20, variant = "gray" }: IconProps & { variant?: "gray" | "blue" }) {
+  const fillColor = variant === "blue" ? "#017AFF" : "#B5BFCD";
+  return (
+    <svg
+      className={className}
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle cx="10" cy="10" r="9" fill={fillColor} />
+      <path
+        d="M7.5 7.5C7.5 6.11929 8.61929 5 10 5C11.3807 5 12.5 6.11929 12.5 7.5C12.5 8.88071 11.3807 10 10 10V11.5"
+        stroke="white"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <circle cx="10" cy="14" r="1" fill="white" />
+    </svg>
+  );
+}
