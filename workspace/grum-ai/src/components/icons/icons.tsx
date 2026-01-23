@@ -548,3 +548,46 @@ export function IconToggle({ className, active = true }: IconProps & { active?: 
     </svg>
   );
 }
+
+export function IconArrowDownBlue({ className, size = 20 }: IconProps) {
+  return (
+    <svg
+      className={className}
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M4 7L10 13L16 7"
+        stroke="#017AFF"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function IconCheckCircleGray({ className, size = 20, checked = false }: IconProps & { checked?: boolean }) {
+  return (
+    <svg
+      className={className}
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle cx="10" cy="10" r="9" fill={checked ? "#017AFF" : "#B5BFCD"} />
+      <path
+        d="M13.5 7.16667L8.5 12.1667L6.5 10.1667"
+        stroke="white"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
