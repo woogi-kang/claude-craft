@@ -154,3 +154,4 @@ secret-key-*
 # IDE & Editors
 .moai/temp/
 .claude/plans/
+mcp.json
