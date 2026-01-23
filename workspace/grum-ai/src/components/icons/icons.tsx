@@ -488,3 +488,46 @@ export function IconLogoBlue({ className }: { className?: string }) {
     </svg>
   );
 }
+
+export function IconExclamationCircle({ className, size = 20 }: IconProps) {
+  return (
+    <svg
+      className={className}
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle cx="10" cy="10" r="9" fill="#B5BFCD" />
+      <path
+        d="M10 5.5V11"
+        stroke="white"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <circle cx="10" cy="14" r="1" fill="white" />
+    </svg>
+  );
+}
+
+export function IconArrowRightBlue({ className, size = 20 }: IconProps) {
+  return (
+    <svg
+      className={className}
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M7.5 5L12.5 10L7.5 15"
+        stroke="#017AFF"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
