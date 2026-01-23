@@ -8,7 +8,7 @@ description: |
   JA: レビュー, フィードバック, 評価, 批評, 監査
   ZH: 评审, 反馈, 评估, 审查, 批评
 tools: Read, Write, Edit, Grep, Glob, Bash, TodoWrite, Task, AskUserQuestion
-model: inherit
+model: opus
 permissionMode: bypassPermissions
 ---
 

@@ -3,7 +3,7 @@ description: "Smart commit - Analyze changes and create logical commits"
 argument-hint: "[message]"
 type: utility
 allowed-tools: AskUserQuestion, Bash, Read, Glob, Grep
-model: inherit
+model: opus
 ---
 
 ## Pre-execution Context
