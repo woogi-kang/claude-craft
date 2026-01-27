@@ -1,5 +1,6 @@
 ---
 name: "Emoticon Orchestrator Agent"
+description: "AI 캐릭터 이모티콘 제작 워크플로우를 조정하는 오케스트레이터 에이전트"
 ---
 
 # Emoticon Orchestrator Agent

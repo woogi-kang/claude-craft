@@ -1,5 +1,6 @@
 ---
 name: "Platform Submitter Agent"
+description: "이모티콘을 각 플랫폼 규격에 맞게 변환하고 제출을 준비하는 에이전트"
 ---
 
 # Platform Submitter Agent

@@ -1,5 +1,6 @@
 ---
 name: "Setup Checker Agent"
+description: "이모티콘 제작에 필요한 도구들의 설치 상태를 확인하고 가이드를 제공하는 에이전트"
 ---
 
 # Setup Checker Agent

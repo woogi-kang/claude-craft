@@ -1,5 +1,6 @@
 ---
 name: "Copyright Checker Agent"
+description: "이모티콘 캐릭터의 저작권 침해 위험을 사전에 검토하는 에이전트"
 ---
 
 # Copyright Checker Agent
