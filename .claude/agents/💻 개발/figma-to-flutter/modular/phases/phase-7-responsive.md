@@ -1,5 +1,6 @@
 ---
 name: "Phase 7: Responsive Validation"
+description: "Responsive layout validation for Flutter"
 ---
 
 # Phase 7: Responsive Validation

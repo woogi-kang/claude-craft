@@ -1,5 +1,6 @@
 ---
 name: "Phase 1: Design Scan"
+description: "Figma design analysis for Flutter conversion"
 ---
 
 # Phase 1: Design Scan

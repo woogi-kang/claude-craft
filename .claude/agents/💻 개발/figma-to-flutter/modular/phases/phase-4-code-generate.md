@@ -1,5 +1,6 @@
 ---
 name: "Phase 4: Code Generate"
+description: "Flutter widget code generation from Figma design"
 ---
 
 # Phase 4: Code Generate

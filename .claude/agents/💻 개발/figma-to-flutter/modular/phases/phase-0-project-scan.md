@@ -1,5 +1,6 @@
 ---
 name: "Phase 0: Project Scan"
+description: "Flutter project structure analysis"
 ---
 
 # Phase 0: Project Scan

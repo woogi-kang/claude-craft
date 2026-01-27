@@ -1,5 +1,6 @@
 ---
 name: "Phase 6: Pixel-Perfect Validation"
+description: "Pixel-perfect verification with Flutter golden tests"
 ---
 
 # Phase 6: Pixel-Perfect Validation

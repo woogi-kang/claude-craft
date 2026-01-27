@@ -1,5 +1,6 @@
 ---
 name: "Phase 3: Widget Mapping"
+description: "Figma components to Flutter widgets mapping"
 ---
 
 # Phase 3: Widget Mapping
