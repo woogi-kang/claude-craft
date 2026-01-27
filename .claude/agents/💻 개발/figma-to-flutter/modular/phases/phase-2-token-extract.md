@@ -1,5 +1,6 @@
 ---
 name: "Phase 2: Token Extract"
+description: "Design token extraction for Flutter theming"
 ---
 
 # Phase 2: Token Extract

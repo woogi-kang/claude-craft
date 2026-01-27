@@ -1,5 +1,6 @@
 ---
 name: "Phase 5: Asset Process"
+description: "Image and icon asset processing for Flutter"
 ---
 
 # Phase 5: Asset Process
