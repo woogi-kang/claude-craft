@@ -1,5 +1,6 @@
 ---
 name: "Quality Reviewer Agent"
+description: "생성된 이모티콘 이미지의 품질을 검수하는 에이전트"
 ---
 
 # Quality Reviewer Agent

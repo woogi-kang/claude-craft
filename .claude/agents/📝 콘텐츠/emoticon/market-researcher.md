@@ -1,5 +1,6 @@
 ---
 name: "Market Researcher Agent"
+description: "이모티콘 시장 트렌드와 경쟁 상황을 조사하는 에이전트"
 ---
 
 # Market Researcher Agent
