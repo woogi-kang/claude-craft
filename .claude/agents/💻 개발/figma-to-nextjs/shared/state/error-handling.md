@@ -1,5 +1,6 @@
 ---
 name: "Error Handling Framework"
+description: "Error classification and recovery strategies"
 ---
 
 # Error Handling Framework

@@ -1,5 +1,6 @@
 ---
 name: "Figma MCP Tool Reference"
+description: "Figma MCP tools reference and API documentation"
 ---
 
 # Figma MCP Tool Reference

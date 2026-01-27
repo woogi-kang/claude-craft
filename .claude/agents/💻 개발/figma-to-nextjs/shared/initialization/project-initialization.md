@@ -1,5 +1,6 @@
 ---
 name: "Project Initialization Guide"
+description: "CLI-based Next.js project creation and setup"
 ---
 
 # Project Initialization Guide

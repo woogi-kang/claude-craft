@@ -1,5 +1,6 @@
 ---
 name: "Phase Contract System"
+description: "Phase dependencies, inputs, outputs, and rollback strategies"
 ---
 
 # Phase Contract System
