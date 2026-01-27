@@ -1,5 +1,6 @@
 ---
 name: "Accessibility Patterns"
+description: "WCAG 2.1 AA compliant patterns for code generation"
 ---
 
 # Accessibility Patterns

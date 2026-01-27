@@ -1,5 +1,6 @@
 ---
 name: "Figma Tokens"
+description: "Figma design token extraction and CSS variable conversion"
 ---
 
 # Skill: Figma Tokens

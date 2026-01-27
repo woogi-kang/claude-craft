@@ -1,5 +1,6 @@
 ---
 name: "Verification Loop System"
+description: "Iterative verification loop for pixel-perfect accuracy"
 ---
 
 # Verification Loop System

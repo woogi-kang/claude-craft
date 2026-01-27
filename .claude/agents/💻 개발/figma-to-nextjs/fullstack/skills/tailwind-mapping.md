@@ -1,5 +1,6 @@
 ---
 name: "Tailwind Mapping"
+description: "Figma properties to Tailwind CSS classes mapping"
 ---
 
 # Skill: Tailwind Mapping

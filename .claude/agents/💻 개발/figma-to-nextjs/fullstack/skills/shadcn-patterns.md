@@ -1,5 +1,6 @@
 ---
 name: "shadcn/ui Patterns"
+description: "Figma component to shadcn/ui mapping patterns"
 ---
 
 # Skill: shadcn/ui Patterns

@@ -1,3 +1,8 @@
+---
+name: Figma to Next.js Pro Flow
+description: 8-phase pipeline flow documentation for figma-to-nextjs-pro agent with dual-agent verification achieving 95%+ pixel-perfect accuracy
+---
+
 # Figma → Next.js Pro 컨버터 플로우
 
 > **버전**: 2.2.0 | **에이전트**: figma-to-nextjs-pro | **모델**: Opus

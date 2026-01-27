@@ -1,5 +1,6 @@
 ---
 name: "Conversion State Management"
+description: "Session persistence and checkpointing for Figma conversion"
 ---
 
 # Conversion State Management

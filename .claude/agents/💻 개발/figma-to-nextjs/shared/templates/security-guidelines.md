@@ -1,5 +1,6 @@
 ---
 name: "Security Guidelines"
+description: "Security best practices for generated code"
 ---
 
 # Security Guidelines
