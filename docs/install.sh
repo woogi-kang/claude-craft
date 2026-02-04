@@ -3,7 +3,7 @@
 # MoAI-ADK: 37 Agents, 303 Skills, Hooks, Rules
 #
 # Usage:
-#   curl -LsSf https://raw.githubusercontent.com/woogi-kang/claude-craft/main/docs/install.sh | sh
+#   curl -LsSf https://raw.githubusercontent.com/woogi-kang/claude-craft/master/docs/install.sh | sh
 #
 # Options (via environment variables):
 #   INSTALL_MODE=copy   # copy files instead of symlinks (default: link)
@@ -260,7 +260,7 @@ main() {
     echo -e "    3. Or use ${CYAN}/moai plan \"your feature\"${NC}"
     echo ""
     echo -e "  ${BOLD}To update:${NC}"
-    echo -e "    curl -LsSf https://raw.githubusercontent.com/woogi-kang/claude-craft/main/docs/install.sh | sh"
+    echo -e "    curl -LsSf https://raw.githubusercontent.com/woogi-kang/claude-craft/master/docs/install.sh | sh"
     echo ""
     echo -e "  ${BOLD}To uninstall:${NC}"
     echo -e "    rm -rf ~/.claude/{agents,skills,hooks,rules,commands,output-styles}"

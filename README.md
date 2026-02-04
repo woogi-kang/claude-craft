@@ -8,7 +8,7 @@ Claude Craft는 [Claude Code](https://claude.ai/code) (Anthropic의 공식 CLI �
 
 ```bash
 # One-line 설치 (권장)
-curl -LsSf https://raw.githubusercontent.com/woogi-kang/claude-craft/main/docs/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/woogi-kang/claude-craft/master/docs/install.sh | sh
 
 # 또는 수동 설치
 git clone https://github.com/woogi-kang/claude-craft.git ~/.claude-craft
@@ -98,13 +98,13 @@ MoAI는 Claude Code의 전략적 오케스트레이터입니다. 자연어 요�
 
 ```bash
 # 기본 설치 (심볼릭 링크)
-curl -LsSf https://raw.githubusercontent.com/woogi-kang/claude-craft/main/docs/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/woogi-kang/claude-craft/master/docs/install.sh | sh
 
 # 복사 모드 설치
-INSTALL_MODE=copy curl -LsSf https://raw.githubusercontent.com/woogi-kang/claude-craft/main/docs/install.sh | sh
+INSTALL_MODE=copy curl -LsSf https://raw.githubusercontent.com/woogi-kang/claude-craft/master/docs/install.sh | sh
 
 # 커스텀 디렉토리
-INSTALL_DIR=~/my-claude-craft curl -LsSf https://raw.githubusercontent.com/woogi-kang/claude-craft/main/docs/install.sh | sh
+INSTALL_DIR=~/my-claude-craft curl -LsSf https://raw.githubusercontent.com/woogi-kang/claude-craft/master/docs/install.sh | sh
 ```
 
 ### 수동 설치
@@ -245,7 +245,7 @@ claude-craft/
 
 ```bash
 # 원격 업데이트
-curl -LsSf https://raw.githubusercontent.com/woogi-kang/claude-craft/main/docs/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/woogi-kang/claude-craft/master/docs/install.sh | sh
 
 # 로컬 업데이트
 cd ~/.claude-craft && git pull && ./scripts/install.sh
