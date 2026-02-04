@@ -16,12 +16,12 @@ skills: moai-foundation-claude, moai-foundation-core, moai-library-mermaid, moai
 
 # Documentation Manager Expert
 
-Version: 1.0.0
-Last Updated: 2025-12-07
+Version: 1.1.0
+Last Updated: 2026-01-22
 
 ## Orchestration Metadata
 
-can_resume: false
+can_resume: true
 typical_chain_position: terminal
 depends_on: ["manager-ddd", "manager-quality"]
 spawns_subagents: false
@@ -29,11 +29,22 @@ token_budget: medium
 context_retention: low
 output_format: Professional documentation with Nextra framework setup, MDX content, Mermaid diagrams, and markdown linting reports
 
+checkpoint_strategy:
+  enabled: true
+  interval: every_phase
+  location: .moai/memory/checkpoints/docs/
+  resume_capability: true
+
+memory_management:
+  context_trimming: aggressive
+  max_files_before_checkpoint: 20
+  auto_checkpoint_on_memory_pressure: true
+
 ---
 
 ## Essential Reference
 
-IMPORTANT: This agent follows Alfred's core execution directives defined in @CLAUDE.md:
+IMPORTANT: This agent follows MoAI's core execution directives defined in @CLAUDE.md:
 
 - Rule 1: 8-Step User Request Analysis Process
 - Rule 3: Behavioral Constraints (Never execute directly, always delegate)
@@ -154,6 +165,52 @@ Run all validation phases and generate comprehensive validation report covering:
 
 ---
 
+## Checkpoint and Resume Capability
+
+### Memory-Aware Checkpointing
+
+To prevent V8 heap memory overflow during large documentation generation sessions, this agent implements checkpoint-based recovery.
+
+**Checkpoint Strategy**:
+- Checkpoint after each phase completion (Source Analysis, Architecture Design, Content Generation, Quality Assurance)
+- Checkpoint location: `.moai/memory/checkpoints/docs/`
+- Auto-checkpoint on memory pressure detection
+
+**Checkpoint Content**:
+- Current phase and progress
+- Generated documentation structure
+- Mermaid diagrams created
+- Validation results
+- File generation queue
+
+**Resume Capability**:
+- Can resume from any phase checkpoint
+- Continues from last completed phase
+- Preserves partial documentation progress
+
+### Memory Management
+
+**Aggressive Context Trimming**:
+- Automatically trim conversation history after each phase
+- Preserve only essential state in checkpoints
+- Maintain full context only for current operation
+
+**Memory Pressure Detection**:
+- Monitor for signs of memory pressure (slow GC, repeated collections)
+- Trigger proactive checkpoint before memory exhaustion
+- Allow graceful resumption from saved state
+
+**Usage**:
+```bash
+# Normal execution (auto-checkpointing)
+/moai sync SPEC-AUTH-001
+
+# Resume from checkpoint after crash
+/moai sync SPEC-AUTH-001 --resume latest
+```
+
+---
+
 ## Skills Integration
 
 ### Primary Skills (from YAML frontmatter Line 7)
@@ -166,10 +223,10 @@ Core documentation skills (auto-loaded):
 - moai-foundation-claude: Claude Code authoring patterns, skills/agents/commands
 - moai-library-nextra: Nextra framework setup and optimization
 
-# Conditional skills (auto-loaded by Alfred when needed)
+# Conditional skills (auto-loaded by MoAI when needed)
 
 conditional_skills = [
-"moai-domain-uiux", # WCAG compliance, accessibility patterns, Figma integration
+"moai-domain-uiux", # WCAG compliance, accessibility patterns, Pencil MCP integration
 "moai-lang-python", # Python documentation patterns
 "moai-lang-typescript", # TypeScript documentation patterns
 "moai-workflow-project", # Project documentation management
@@ -434,15 +491,15 @@ run: npm ci
 
 - name: Generate documentation from source
 run: |
-npx @alfred/nextra-expert generate \\
+npx @moai/nextra-expert generate \\
 --source ./src \\
 --output ./docs \\
 --config .nextra/config.json
 
 - name: Validate markdown and Mermaid
 run: |
-npx @alfred/docs-linter validate ./docs
-npx @alfred/mermaid-validator check ./docs
+npx @moai/docs-linter validate ./docs
+npx @moai/mermaid-validator check ./docs
 
 - name: Test documentation build
 run: npm run build:docs
@@ -472,10 +529,10 @@ working-directory: ./docs
 
 **Basic Documentation Generation Workflow:**
 
-Use Alfred delegation to generate comprehensive documentation:
+Use MoAI delegation to generate comprehensive documentation:
 
 ```bash
-# Delegation instruction for Alfred
+# Delegation instruction for MoAI
 "Use the manager-docs subagent to generate professional Nextra documentation from the @src/ directory.
 
 Requirements:
@@ -495,10 +552,10 @@ Config: .nextra/theme.config.tsx"
 
 **Advanced Custom Documentation Workflow:**
 
-Use Alfred delegation for specialized documentation requirements:
+Use MoAI delegation for specialized documentation requirements:
 
 ```bash
-# Delegation instruction for Alfred
+# Delegation instruction for MoAI
 "Use the manager-docs subagent to create specialized documentation with custom requirements:
 
 Target Audience: Intermediate developers
@@ -595,4 +652,4 @@ Downstream Agents (this agent typically calls):
 Parallel Agents (work alongside):
 
 - workflow-spec: Synchronize SPEC documentation with generated docs
-- design-uiux: Integrate design system documentation from Figma
+- design-uiux: Integrate design system documentation from Pencil

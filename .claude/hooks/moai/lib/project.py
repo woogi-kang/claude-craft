@@ -12,13 +12,22 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
-import yaml
-
-# Import TimeoutError from lib.timeout (canonical definition)
+# Import yaml with helpful error message
 try:
-    from lib.timeout import TimeoutError  # noqa: F401
+    import yaml
+except ImportError as e:
+    raise ImportError(
+        "PyYAML is required for MoAI-ADK hooks. "
+        "Install with: pip install pyyaml\n"
+        f"Or use: uv run --with pyyaml <hook_script>\n"
+        f"Original error: {e}"
+    ) from e
+
+# Import TimeoutError from lib.unified_timeout_manager (canonical definition)
+try:
+    from lib.unified_timeout_manager import TimeoutError  # noqa: F401
 except ImportError:
-    # Fallback if lib.timeout not available
+    # Fallback if unified_timeout_manager not available
     class TimeoutError(Exception):  # type: ignore[no-redef]
         """Signal-based timeout exception"""
 
@@ -56,7 +65,7 @@ def find_project_root(start_path: str | Path = ".") -> Path:
     Examples:
         >>> find_project_root(".")
         Path("/Users/user/my-project")
-        >>> find_project_root(".claude/hooks/alfred")
+        >>> find_project_root(".claude/hooks/moai")
         Path("/Users/user/my-project")  # Found root 3 levels up
 
     Note:
@@ -647,7 +656,7 @@ def get_package_version_info(cwd: str = ".") -> dict[str, Any]:
 
     # 1. Find project root (ensure cache is always in correct location)
     # This prevents creating .moai/cache in wrong locations when hooks run
-    # from subdirectories like .claude/hooks/alfred/
+    # from subdirectories like .claude/hooks/moai/
     project_root = find_project_root(cwd)
 
     # 2. Initialize cache (skip if VersionCache couldn't be imported)
