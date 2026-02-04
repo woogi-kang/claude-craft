@@ -1,563 +1,283 @@
 # Claude Craft
 
-> Claude Code를 위한 커스텀 확장 컬렉션 - Agents, Skills, Statusline, Hooks
+> MoAI-ADK: Claude Code를 위한 AI 개발 키트 - 37개 Agents, 303개 Skills, Hooks, Rules
 
-Claude Craft는 [Claude Code](https://claude.ai/code) (Anthropic의 공식 CLI 도구)를 확장하여 복잡한 콘텐츠 제작 워크플로우를 자동화하는 오픈소스 프로젝트입니다.
+Claude Craft는 [Claude Code](https://claude.ai/code) (Anthropic의 공식 CLI 도구)를 확장하여 복잡한 개발 워크플로우를 자동화하는 오픈소스 프로젝트입니다.
+
+## Quick Start
+
+```bash
+# One-line 설치 (권장)
+curl -LsSf https://raw.githubusercontent.com/woogi-kang/claude-craft/main/docs/install.sh | sh
+
+# 또는 수동 설치
+git clone https://github.com/woogi-kang/claude-craft.git ~/.claude-craft
+cd ~/.claude-craft && ./scripts/install.sh
+```
 
 ## 주요 기능
 
-### 1. Multi-Skill Agents
+### MoAI Orchestrator
 
-여러 Skills를 조합하여 복잡한 작업을 자동화하는 Agent 시스템
+MoAI는 Claude Code의 전략적 오케스트레이터입니다. 자연어 요청을 분석하고 적절한 에이전트에 위임합니다.
 
-| Agent | 설명 | Skills |
-|-------|------|--------|
-| **PPT Agent** | 프레젠테이션 제작 자동화 | 11개 (리서치 → 검증 → 구조 → 콘텐츠 → 디자인 → 시각화 → AI이미지 → 검토 → 개선 → PPTX → PDF) |
-| **Tech Blog Agent** | Hashnode 블로그 작성 자동화 | 4개 (리서치 → 초안 → 검토 → 발행) |
-| **Social Media Agent** | 멀티플랫폼 SNS 콘텐츠 제작 | 15개 (전략 → 리서치 → 검증 → 컴플라이언스 → 콘텐츠 → 비주얼 → 해시태그 → 승인 → 스케줄 → 리퍼포징 → 참여 → 분석) |
-| **Marketing Agent** | 마케팅 전략 및 실행물 제작 | 15개 (컨텍스트 → 리서치 → 페르소나 → 포지셔닝 → 전략 → 캠페인 → 퍼널 → 여정 → 카피 → LP → 이메일 → 광고 → AB테스트 → KPI → 리뷰) |
-| **Flutter to Next.js Agent** | Flutter → Next.js 마이그레이션 | 8개 (분석 → 매핑 → 스캐폴딩 → 컴포넌트 → 상태관리 → 라우팅 → 검증 → 리뷰) |
-| **Flutter Expert Agent** | Flutter 앱 개발 (Clean Architecture + Riverpod 3 + TDD) | 31개 (Setup → Core → State → Feature → Test → DevOps → Security) |
-| **Next.js Expert Agent** | Next.js 웹앱 개발 (Clean Architecture + TanStack Query + Zustand + TDD) | 31개 (Setup → Core → Feature → Test → Optimization → DevOps → Integration) |
-| **FastAPI Expert Agent** | FastAPI 백엔드 개발 (Clean Architecture + SQLAlchemy 2.0 + TDD) | 37개 (Setup → Core → Security → Data → Feature → API → Test → DevOps) |
-| **Legal Contract Agent** | 계약서 검토, 위험 분석, 협상 지원 | 12개 (분석 → 검토 → 실행 → 검증) |
-| **Frontend Design Agent** | 독창적 웹/모바일 프론트엔드 디자인 (Anti-AI-Slop) | 18개 (Discovery → Foundation → Components → Pages → Polish) |
+```bash
+# 자연어로 요청
+"FastAPI로 사용자 인증 API 만들어줘"
+"이 코드 리팩토링해줘"
+"보안 취약점 분석해줘"
 
-### Standalone Skills
-
-Agent에 속하지 않는 독립 Skill:
-
-| Skill | 설명 |
-|-------|------|
-| **Next.js Boilerplate** | AI 시대 최적화된 Next.js 15+ 프로젝트 보일러플레이트 생성 (Clean Architecture, Auth, Supabase, Drizzle, Testing, Docker, MCP, CI/CD 선택적 지원) |
-
-### 2. Real-time Cost Statusline
-
-Claude Code 세션의 비용을 실시간으로 추적하는 커스텀 상태표시줄
-
-```
-🤖 Opus 4.5 | 💰 $2.09 session / $28.03 today / $2.09 block (3h 58m left) | 🔥 $5.23/hr
+# 명시적 워크플로우
+/moai plan "새로운 기능 설명"    # SPEC 문서 생성
+/moai run SPEC-001              # DDD 기반 구현
+/moai sync SPEC-001             # 문서화 및 PR 생성
 ```
 
-- 세션별, 일별, 블록별 비용 추적
-- 현재 블록 남은 시간 표시
-- 시간당 소모율 계산
-- Opus, Sonnet, Haiku 모델 지원
+### Agent System (37개)
 
-### 3. PPT Design System
+#### MoAI Core Agents (20개)
 
-10개 산업 테마 × 10개 슬라이드 템플릿 × 5개 컬러 팔레트의 체계적인 디자인 시스템
+| Category | Agents | 설명 |
+|----------|--------|------|
+| **Manager** (7) | manager-spec, manager-ddd, manager-docs, manager-quality, manager-project, manager-strategy, manager-git | 워크플로우 조율 및 프로젝트 관리 |
+| **Expert** (9) | expert-backend, expert-frontend, expert-security, expert-devops, expert-performance, expert-debug, expert-testing, expert-refactoring, expert-chrome-extension | 도메인 전문 구현 |
+| **Builder** (4) | builder-agent, builder-command, builder-skill, builder-plugin | Claude Code 확장 생성 |
 
-**산업별 테마:**
-- Healthcare, Education, Fintech, AI/Tech, Sustainability
-- Startup, Luxury, Creative, Real Estate, F&B
+#### Domain Agents (17개)
 
-**슬라이드 템플릿:**
-- Cover, Contents, Section Divider, Content, Statistics
-- Split Layout, Team, Quote, Timeline, Closing
+| Category | Agents | 설명 |
+|----------|--------|------|
+| **개발** | flutter-expert, nextjs-expert, fastapi-expert, flutter-to-nextjs | 프레임워크별 전문 개발 |
+| **콘텐츠** | ppt-agent, tech-blog-agent, social-media-agent | 콘텐츠 제작 자동화 |
+| **마케팅** | marketing-agent | 마케팅 전략 및 실행물 |
+| **기획** | planning-agent, emoticon-orchestrator | 서비스 기획 및 자동화 |
+| **법무** | legal-contract-agent, corporate-legal-agent | 계약서 검토 및 법인 운영 |
+| **재무** | finance-orchestrator, payment-orchestrator | 재무 자동화 및 결제 관리 |
+| **디자인** | frontend-design-agent | Anti-AI-Slop 독창적 디자인 |
+| **리뷰** | review-orchestrator, review-code, review-security, review-architecture, review-content, review-design | 멀티-LLM 리뷰 시스템 |
 
-### 4. Social Media Multi-Platform Support
+### Skill System (303개)
 
-4개 플랫폼에 최적화된 콘텐츠 제작
+#### MoAI Skills (52개)
 
-- **Instagram**: 피드, 릴스, 스토리, 캐러셀
-- **LinkedIn**: 텍스트 포스트, 아티클, 캐러셀
-- **X (Twitter)**: 트윗, 스레드, 인용 트윗
-- **Threads**: 텍스트, 이미지 포스트
+| Category | Count | Examples |
+|----------|-------|----------|
+| **Foundation** | 5 | moai-foundation-claude, moai-foundation-core, moai-foundation-quality |
+| **Languages** | 16 | Python, TypeScript, Go, Rust, Java, Kotlin, Swift, Flutter 등 |
+| **Domains** | 4 | Backend, Frontend, Database, UI/UX |
+| **Platforms** | 11 | Supabase, Firebase, Vercel, Railway, Neon, Auth0, Clerk 등 |
+| **Workflows** | 9 | DDD, SPEC, Testing, Loop, Thinking 등 |
+| **Libraries** | 3 | shadcn/ui, Mermaid, Nextra |
+| **Tools** | 2 | AST-grep, SVG |
 
-### 5. Automation Hooks
+#### Domain Skills (251개)
 
-새로운 Agent/Skill 추가 시 자동으로 구조를 감지하고 보고하는 Hook 시스템
+개발, 콘텐츠, 마케팅, 법무, 재무, 디자인, 기획 각 도메인별 전문 Skills
 
-- **PostToolUse Hook**: Write/Edit 작업 후 자동 실행
-- **sync-docs.sh**: Agent/Skill 구조 스캔 및 보고
-- Agent나 Skill 파일 변경 시 자동으로 프로젝트 구조 파악
+### Quality Framework (TRUST 5)
+
+모든 코드는 5가지 품질 기준을 충족해야 합니다:
+
+- **T**ested: 85%+ 커버리지, 특성화 테스트
+- **R**eadable: 명확한 네이밍, 영문 주석
+- **U**nified: 일관된 스타일, 포매팅
+- **S**ecured: OWASP 준수, 입력 검증
+- **T**rackable: Conventional Commits, 이슈 참조
+
+### Progressive Disclosure
+
+토큰 효율성을 위한 3단계 로딩 시스템:
+
+- **Level 1**: 메타데이터만 (~100 tokens)
+- **Level 2**: 본문 로딩 (~5K tokens)
+- **Level 3**: 번들 파일 (on-demand)
 
 ## 설치
 
+### 자동 설치 (권장)
+
 ```bash
-# 저장소 클론
-git clone https://github.com/woogi-kang/claude-craft.git ~/Development/claude-craft
+# 기본 설치 (심볼릭 링크)
+curl -LsSf https://raw.githubusercontent.com/woogi-kang/claude-craft/main/docs/install.sh | sh
 
-# 설치 스크립트 실행 (기본: 심볼릭 링크)
-cd ~/Development/claude-craft
-./scripts/install.sh
+# 복사 모드 설치
+INSTALL_MODE=copy curl -LsSf https://raw.githubusercontent.com/woogi-kang/claude-craft/main/docs/install.sh | sh
 
-# 또는 복사 모드로 설치 (독립 설치)
-./scripts/install.sh --copy
-
-# 배포 패키지 생성
-./scripts/install.sh --export
+# 커스텀 디렉토리
+INSTALL_DIR=~/my-claude-craft curl -LsSf https://raw.githubusercontent.com/woogi-kang/claude-craft/main/docs/install.sh | sh
 ```
 
-설치 스크립트는 다음을 수행합니다:
-1. `.claude/statusline.py`를 `~/.claude/`에 복사
-2. `.claude/agents/`를 `~/.claude/agents/`에 링크/복사
-3. `.claude/skills/`를 `~/.claude/skills/`에 링크/복사
-4. `.claude/hooks/`를 `~/.claude/hooks/`에 링크/복사
-5. `settings.json`에 statusline 및 hooks 설정
+### 수동 설치
+
+```bash
+git clone https://github.com/woogi-kang/claude-craft.git ~/.claude-craft
+cd ~/.claude-craft
+./scripts/install.sh          # 심볼릭 링크 (개발용)
+./scripts/install.sh --copy   # 파일 복사 (독립 설치)
+./scripts/install.sh --export # 배포 패키지 생성
+```
+
+### 설치되는 컴포넌트
+
+| Component | Location | 설명 |
+|-----------|----------|------|
+| agents/ | ~/.claude/agents/ | 37개 에이전트 정의 |
+| skills/ | ~/.claude/skills/ | 303개 스킬 정의 |
+| hooks/ | ~/.claude/hooks/ | 자동화 훅 스크립트 |
+| rules/ | ~/.claude/rules/ | 언어별/워크플로우 규칙 |
+| commands/ | ~/.claude/commands/ | 슬래시 커맨드 |
+| output-styles/ | ~/.claude/output-styles/ | 출력 스타일 (Alfred, Yoda, R2D2) |
+| statusline.py | ~/.claude/statusline.py | 실시간 비용 추적 |
 
 ## 프로젝트 구조
 
 ```
 claude-craft/
-├── .claude/                         # Claude Code 호환 패키지
-│   ├── agents/                      # Agent 정의
-│   │   ├── 📝 콘텐츠/
-│   │   │   ├── ppt-agent.md
-│   │   │   ├── tech-blog-agent.md
-│   │   │   └── social-media-agent.md
-│   │   ├── 📣 마케팅/
-│   │   │   └── marketing-agent.md
-│   │   ├── 💻 개발/
-│   │   │   ├── flutter-to-nextjs-agent.md
-│   │   │   ├── flutter-expert-agent.md
-│   │   │   ├── nextjs-expert-agent.md
-│   │   │   └── fastapi-expert-agent.md
-│   │   ├── ⚖️ 법무/
-│   │   │   └── legal-contract-agent.md
-│   │   └── 🎨 디자인/
-│   │       └── frontend-design-agent.md
+├── .claude/                      # Claude Code 호환 패키지
+│   ├── agents/                   # 에이전트 정의 (37개)
+│   │   ├── moai/                 # MoAI Core Agents (20개)
+│   │   │   ├── manager-*.md      # Manager Agents (7개)
+│   │   │   ├── expert-*.md       # Expert Agents (9개)
+│   │   │   └── builder-*.md      # Builder Agents (4개)
+│   │   ├── 💻 개발/              # Development Agents
+│   │   ├── 📝 콘텐츠/            # Content Agents
+│   │   ├── 📣 마케팅/            # Marketing Agents
+│   │   ├── 🎯 기획/              # Planning Agents
+│   │   ├── ⚖️ 법무/              # Legal Agents
+│   │   ├── 💰 재무/              # Finance Agents
+│   │   ├── 🎨 디자인/            # Design Agents
+│   │   └── 🔍 리뷰/              # Review Agents
 │   │
-│   ├── skills/                      # Skill 정의
-│   │   ├── 📝 콘텐츠/
-│   │   │   ├── ppt-agent-skills/        # PPT Skills (11개)
-│   │   │   ├── tech-blog-agent-skills/  # Blog Skills (4개)
-│   │   │   └── social-media-agent-skills/ # SNS Skills (15개)
-│   │   ├── 📣 마케팅/
-│   │   │   └── marketing-agent-skills/  # Marketing Skills (15개)
-│   │   ├── 💻 개발/
-│   │   │   ├── flutter-to-nextjs-skills/    # 8개
-│   │   │   ├── flutter-expert-agent-skills/ # 31개 + 6 refs
-│   │   │   ├── nextjs-expert-agent-skills/  # 31개 + 6 refs
-│   │   │   ├── fastapi-expert-agent-skills/ # 37개 + 6 refs
-│   │   │   └── nextjs-boilerplate-skill/
-│   │   ├── ⚖️ 법무/
-│   │   │   └── legal-contract-agent-skills/ # Legal Skills (12개)
-│   │   └── 🎨 디자인/
-│   │       └── frontend-design-agent-skills/ # 18개 + 7 refs
+│   ├── skills/                   # 스킬 정의 (303개)
+│   │   ├── moai-*/               # MoAI Skills (52개)
+│   │   │   ├── moai-foundation-* # Foundation Skills (5개)
+│   │   │   ├── moai-lang-*       # Language Skills (16개)
+│   │   │   ├── moai-domain-*     # Domain Skills (4개)
+│   │   │   ├── moai-platform-*   # Platform Skills (11개)
+│   │   │   ├── moai-workflow-*   # Workflow Skills (9개)
+│   │   │   └── moai-*/           # Other MoAI Skills
+│   │   └── 💻 개발/ 등           # Domain Skills (251개)
 │   │
-│   ├── hooks/                       # Hook 스크립트
-│   │   ├── post-write-hook.sh
-│   │   └── sync-docs.sh
+│   ├── hooks/                    # Hook 스크립트
+│   │   └── moai/                 # MoAI Hooks
+│   │       ├── session_start__*  # 세션 시작 훅
+│   │       ├── session_end__*    # 세션 종료 훅
+│   │       ├── pre_tool__*       # 도구 실행 전 훅
+│   │       ├── post_tool__*      # 도구 실행 후 훅
+│   │       └── lib/              # 공통 라이브러리
 │   │
-│   └── statusline.py                # 비용 추적 스크립트
+│   ├── rules/                    # Rules 시스템
+│   │   └── moai/
+│   │       ├── core/             # 핵심 규칙 (TRUST 5, Constitution)
+│   │       ├── workflow/         # 워크플로우 규칙
+│   │       ├── development/      # 개발 규칙
+│   │       └── languages/        # 언어별 규칙 (16개)
+│   │
+│   ├── commands/                 # 슬래시 커맨드
+│   ├── output-styles/            # 출력 스타일
+│   └── statusline.py             # 비용 추적
 │
-├── workspace/                       # 작업 결과물
-│   ├── output/                      # PPT 결과물
-│   │   └── <project-name>/
-│   │       ├── slides/
-│   │       ├── design-system/
-│   │       ├── *.pptx
-│   │       └── *.pdf
-│   ├── work-blog/                   # 블로그 작업
-│   │   ├── research/
-│   │   ├── drafts/
-│   │   └── published/
-│   ├── work-social/                 # SNS 작업
-│   ├── work-marketing/              # 마케팅 작업
-│   │   ├── context/
-│   │   ├── research/
-│   │   ├── personas/
-│   │   ├── strategy/
-│   │   ├── copy/
-│   │   ├── landing-pages/
-│   │   ├── email-sequences/
-│   │   ├── ads/
-│   │   └── reports/
-│   ├── work-design/                 # 프론트엔드 디자인 작업
-│   │   └── <project-name>/
-│   │       ├── app/                 # Next.js App
-│   │       └── components/          # React Components
-│   ├── work-plan/                   # 기획 문서
-│   └── flutter-migration/           # Flutter → Next.js 변환
-│       └── <project-name>/
-│           ├── analysis/            # 분석 리포트
-│           └── nextjs/              # 변환된 프로젝트
+├── .moai/                        # MoAI 설정
+│   ├── config/                   # YAML 설정
+│   │   ├── config.yaml           # 메인 설정
+│   │   └── sections/             # 분리된 설정
+│   │       ├── language.yaml     # 언어 설정
+│   │       ├── quality.yaml      # 품질 설정
+│   │       └── user.yaml         # 사용자 설정
+│   └── announcements/            # 다국어 공지
+│
+├── docs/
+│   └── install.sh                # 원격 설치 스크립트
 │
 ├── scripts/
-│   └── install.sh                   # 설치 스크립트
+│   └── install.sh                # 로컬 설치 스크립트
 │
-├── CLAUDE.md                        # Claude Code 가이드
+├── CLAUDE.md                     # MoAI 실행 지침
 └── README.md
 ```
 
 ## 사용법
 
-### PPT Agent
+### 기본 사용
 
 ```bash
-# Claude Code 실행 후
-"AI 스타트업 투자 피치덱 만들어줘"
-"Flutter vs React Native 비교 발표자료 만들어줘"
-```
-
-**워크플로우:**
-```
-Research → Validation → Structure → Content → Design System
-    ↓
-Visual + Image Gen → Review → Refinement → Export (PPTX + PDF)
-```
-
-**빌드:**
-```bash
-cd workspace/output/<project-name>
-npm install
-npm run build:all    # PPTX + PDF 동시 생성
-```
-
-### Tech Blog Agent
-
-```bash
-# Claude Code 실행 후
-"React Server Components에 대한 블로그 작성해줘"
-"/blog-research TypeScript patterns"
-"/blog-publish"
-```
-
-**워크플로우:**
-```
-Research → Draft → Review → Publish (Hashnode)
-```
-
-### Social Media Agent
-
-```bash
-# Claude Code 실행 후
-"AI 트렌드에 대한 소셜 콘텐츠 만들어줘"
-"LinkedIn용 포스트 써줘"
-"이번 주 콘텐츠 캘린더 만들어줘"
-```
-
-**워크플로우:**
-```
-Strategy → Research → Validation → Compliance
-    ↓
-Content (Instagram/LinkedIn/X/Threads) → Visual → Hashtag
-    ↓
-Approval → Schedule → Publish → Engagement → Analytics
-```
-
-### Marketing Agent
-
-```bash
-# Claude Code 실행 후
-"개발자용 API 모니터링 툴 마케팅해줘. 경쟁사는 Datadog."
-"랜딩페이지 카피 써줘"
-"이메일 온보딩 시퀀스 만들어줘"
-```
-
-**워크플로우:**
-```
-Context Intake → Market Research → Persona → Positioning → Strategy
-    ↓
-Campaign → Funnel → Customer Journey
-    ↓
-Copywriting → Landing Page → Email Sequence → Ads Creative
-    ↓
-A/B Testing → Analytics KPI → Review
-```
-
-**주요 프레임워크:**
-- 전략: 3C, STP, PESO, AARRR, SMART Goals
-- 카피: AIDA, PAS, BAB, FAB
-- 최적화: CRO 체크리스트, A/B 테스트
-
-**퀄리티 기대치:** 80% 완성도 초안, 피드백 루프로 시니어 마케터 수준까지 개선 가능
-
-### Flutter to Next.js Agent
-
-```bash
-# Claude Code 실행 후
+# Claude Code 실행 후 자연어로 요청
+"Next.js로 대시보드 만들어줘"
 "이 Flutter 앱을 Next.js로 마이그레이션해줘"
-"Flutter BLoC을 Zustand로 변환해줘"
-"GoRouter를 App Router로 변환해줘"
+"API 보안 취약점 분석해줘"
 ```
 
-**워크플로우:**
-```
-Analyze → Mapping → Scaffold → Components → State → Routing → Validate → Review
-```
-
-**기술 스택 변환:**
-| Flutter | Next.js |
-|---------|---------|
-| Widget | React Component (shadcn/ui) |
-| BLoC/Riverpod/Provider/GetX | Zustand |
-| Repository + Stream | React Query |
-| GoRouter/Navigator | App Router |
-| http/dio | Server Actions + fetch |
-
-**주요 특징:**
-- Zustand로 상태관리 통일 (BLoC, Riverpod, Provider, GetX 모두 지원)
-- shadcn/ui 기반 UI 컴포넌트 (필요시 커스텀)
-- 1:1 기능 동일성 유지
-- 모바일 웹 + 데스크탑 웹 반응형 지원
-- 점진적 변환 (화면/기능 단위)
-
-### Flutter Expert Agent
+### SPEC 워크플로우
 
 ```bash
-# Claude Code 실행 후
-"Flutter 앱 만들어줘"
-"Riverpod으로 상태관리 설정해줘"
-"로그인 피처 구현해줘"
-"유닛 테스트 작성해줘"
+# 1. 기획 (SPEC 문서 생성)
+/moai plan "사용자 인증 시스템 구현"
+
+# 2. 구현 (DDD 기반)
+/moai run SPEC-001
+
+# 3. 문서화 및 PR
+/moai sync SPEC-001
 ```
 
-**워크플로우:**
-```
-Setup → Architecture → Flavor → Firebase/Supabase
-    ↓
-Design System → Error Handling → Network → Database
-    ↓
-Riverpod → DI → Feature → Routing → Form → Pagination → Offline
-    ↓
-Unit Test → Widget Test → Golden Test → E2E Test
-    ↓
-CI/CD → Widgetbook → i18n → Security → Deep Link → Accessibility
-```
-
-**기술 스택:**
-| Category | Technology |
-|----------|------------|
-| 상태관리 | Riverpod 3 (AsyncNotifier, Mutations) |
-| 라우팅 | GoRouter + Type-Safe Builder |
-| 네트워크 | Dio + Retrofit |
-| 로컬DB | Drift (SQLite) |
-| 테스트 | Vitest, Robot Pattern, Alchemist, Patrol |
-| 백엔드 | Firebase 또는 Supabase |
-
-### Next.js Expert Agent
+### 특수 기능
 
 ```bash
-# Claude Code 실행 후
-"Next.js 앱 만들어줘"
-"사용자 피처 구현해줘"
-"TanStack Query로 API 연동해줘"
-"Playwright E2E 테스트 작성해줘"
+# UltraThink 모드 (깊은 분석)
+"아키텍처 설계해줘 --ultrathink"
+
+# 특정 에이전트 지정
+"expert-security 에이전트로 보안 분석해줘"
+
+# 루프 모드 (자동 수정)
+/moai loop "테스트 통과할 때까지 수정"
 ```
 
-**워크플로우:**
+## Statusline
+
+실시간 비용 추적 상태표시줄:
+
 ```
-Project Setup → Architecture → Design System → Database → Auth → Env → i18n
-    ↓
-Schema → API Client → State → Server Action → Error Handling → Middleware
-    ↓
-Feature → Form → Routing → Pagination → File Upload → Realtime
-    ↓
-Unit Test → Integration Test → E2E Test → Visual Test
-    ↓
-Performance → SEO → CI/CD → Monorepo
-    ↓
-Analytics → Email → Payment → Security
+🤖 Opus 4.5 | 💰 $2.09 session / $28.03 today / $2.09 block (3h 58m left) | 🔥 $5.23/hr
 ```
 
-**기술 스택:**
-| Category | Technology |
-|----------|------------|
-| Framework | Next.js 15+ (App Router, Server Components) |
-| Server State | TanStack Query |
-| Client State | Zustand (with persist, immer) |
-| URL State | nuqs |
-| UI | shadcn/ui + Tailwind CSS v4 |
-| Forms | React Hook Form + Zod |
-| Auth | Auth.js v5 or Clerk |
-| Database | Drizzle ORM + PostgreSQL (Neon) |
-| Server Actions | next-safe-action |
-| Testing | Vitest + Playwright + MSW |
-
-### Next.js Boilerplate Skill
+## 업데이트
 
 ```bash
-# Claude Code 실행 후
-"Next.js 프로젝트 만들어줘"
-"/nextjs-boilerplate"
+# 원격 업데이트
+curl -LsSf https://raw.githubusercontent.com/woogi-kang/claude-craft/main/docs/install.sh | sh
+
+# 로컬 업데이트
+cd ~/.claude-craft && git pull && ./scripts/install.sh
 ```
 
-**옵션:**
-- Clean Architecture, Auth (NextAuth), Supabase, Drizzle ORM
-- Testing (Vitest + Playwright), Docker, MCP Server, CI/CD
-
-### FastAPI Expert Agent
+## 제거
 
 ```bash
-# Claude Code 실행 후
-"FastAPI 백엔드 만들어줘"
-"사용자 API 구현해줘"
-"JWT 인증 설정해줘"
-"pytest로 테스트 작성해줘"
-```
+# 설치된 컴포넌트 제거
+rm -rf ~/.claude/{agents,skills,hooks,rules,commands,output-styles}
+rm ~/.claude/statusline.py
 
-**워크플로우:**
-```
-Project Setup → Architecture → Database → Environment → DI Container
-    ↓
-Service Layer → Error Handling → Logging → Middleware → Health Check → Validation
-    ↓
-Authentication → Authorization → API Keys → Security Hardening
-    ↓
-Repository → Unit of Work → Query Optimization → Caching
-    ↓
-Feature → File Upload → WebSocket → Background Tasks → Scheduled Jobs
-    ↓
-OpenAPI Docs → API Versioning → Response Design
-    ↓
-Unit Test → Integration Test → E2E Test
-    ↓
-Docker → Kubernetes → CI/CD → Observability
-```
-
-**기술 스택:**
-| Category | Technology |
-|----------|------------|
-| Framework | FastAPI (async, Pydantic V2) |
-| Database | SQLAlchemy 2.0 (asyncpg) |
-| Migrations | Alembic |
-| Auth | OAuth2 + JWT |
-| Background | Celery / ARQ |
-| Caching | Redis |
-| Logging | structlog |
-| Testing | pytest + pytest-asyncio |
-| Container | Docker + Kubernetes |
-
-### Frontend Design Agent
-
-```bash
-# Claude Code 실행 후
-"UI 디자인해줘"
-"랜딩페이지 만들어줘"
-"대시보드 디자인 해줘"
-"SaaS 앱 디자인"
-```
-
-**워크플로우:**
-```
-Context → Inspiration → Direction (12개 Aesthetic Templates)
-    ↓
-Typography → Color → Spacing → Motion
-    ↓
-Primitives → Patterns → Effects → Interactions
-    ↓
-Landing → Dashboard → Content → Mobile
-    ↓
-Accessibility → Responsive → Performance
-```
-
-**핵심 철학 - Anti-AI-Slop:**
-- **금지 폰트**: Inter, Roboto, Arial, Open Sans, Poppins
-- **금지 패턴**: 보라색 그라데이션 on 흰배경, 동일 카드 나열
-- **목표**: 매번 다른 독창적인 디자인
-
-**12개 Aesthetic Templates:**
-| 템플릿 | 적용 분야 |
-|--------|----------|
-| Barely-There Minimal | SaaS, AI |
-| Soft Maximalism | 브랜드 |
-| Anti-Design Chaos | 포트폴리오 |
-| Liquid Glass | 앱 |
-| Editorial Magazine | 미디어 |
-| Retro-Futuristic | 게임 |
-| Organic Natural | 웰니스 |
-| Luxury Refined | 럭셔리 |
-| Tech Documentation | 개발자 도구 |
-| Brutalist Raw | 갤러리 |
-| Playful Rounded | 교육 |
-| Grade-School Bold | 스타트업 |
-
-**기술 스택:**
-| Category | Technology |
-|----------|------------|
-| Framework | Next.js 15+ (App Router) |
-| Styling | Tailwind CSS v4 |
-| Animation | tw-animate-css + Framer Motion 12+ |
-| Components | shadcn/ui + Motion Primitives |
-| Color Space | oklch (perceptually uniform) |
-
-## Statusline 설정
-
-설치 후 자동으로 설정됩니다. 수동 설정이 필요한 경우:
-
-```json
-// ~/.claude/settings.json
-{
-  "statusLine": {
-    "type": "command",
-    "command": "python3 ~/.claude/statusline.py"
-  }
-}
-```
-
-## Hooks 설정
-
-Agent/Skill 파일 변경 시 자동으로 구조를 감지하는 hook입니다.
-
-```json
-// ~/.claude/settings.json
-{
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash ~/.claude/hooks/post-write-hook.sh \"$CLAUDE_TOOL_USE_FILE_PATH\""
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-**Hook 동작 방식:**
-1. Claude Code에서 Write/Edit 도구 사용
-2. `post-write-hook.sh`가 파일 경로 확인
-3. `.claude/agents/` 또는 `.claude/skills/` 경로의 AGENT.md/SKILL.md 변경 감지
-4. `sync-docs.sh` 실행하여 구조 보고
-
-**수동 실행:**
-```bash
-# 현재 agent/skill 구조 확인
-bash .claude/hooks/sync-docs.sh
-```
-
-## 다른 머신에서 동기화
-
-```bash
-cd ~/Development/claude-craft
-git pull
-./scripts/install.sh
+# 저장소 제거 (선택)
+rm -rf ~/.claude-craft
 ```
 
 ## 기여하기
 
-새로운 Agent나 Skill을 추가하려면:
+### 새 Agent 추가
 
-1. **Agent 추가**: `.claude/agents/<agent-name>/AGENT.md` 생성
-2. **Skill 추가**: `.claude/skills/<agent-name>-skills/<number>-<skill-name>/SKILL.md` 생성
+```bash
+# .claude/agents/<category>/<agent-name>.md 생성
+# 또는 MoAI builder 사용
+"새로운 데이터 분석 에이전트 만들어줘"
+```
 
-### Skill 작성 규칙
+### 새 Skill 추가
 
-```yaml
----
-name: skill-name
-description: |
-  스킬 설명
-
-  활성화 조건:
-  - "트리거 키워드 1"
-  - "트리거 키워드 2"
----
-
-# Skill Title
-
-## 핵심 기능
-...
-
-## 다음 단계
-1. → `next-skill`: 설명
+```bash
+# .claude/skills/<skill-name>/SKILL.md 생성
+# 또는 MoAI builder 사용
+"Pandas 데이터 분석 스킬 만들어줘"
 ```
 
 ## 라이선스
@@ -568,8 +288,7 @@ MIT
 
 - [Claude Code](https://claude.ai/code) - Anthropic 공식 CLI
 - [Claude Code Documentation](https://docs.anthropic.com/claude-code)
-- [PptxGenJS](https://gitbrent.github.io/PptxGenJS/) - PPTX 생성 라이브러리
 
 ---
 
-Made with Claude Code
+Made with Claude Code | MoAI-ADK v11.0.0

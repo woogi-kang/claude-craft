@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# claude-craft installer v2.0
+# claude-craft installer v3.0
+# MoAI-ADK: 37 Agents, 303 Skills, Hooks, Rules
+#
 # This script sets up Claude Code customizations from .claude/ directory
 #
 # Usage:
@@ -18,119 +20,111 @@ CLAUDE_DEST="$HOME/.claude"
 
 MODE="${1:---link}"
 
-echo "==================================="
-echo "  Claude Craft Installer v2.0"
-echo "==================================="
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+BOLD='\033[1m'
+
+echo ""
+echo -e "${CYAN}╔═══════════════════════════════════════════════════════════╗${NC}"
+echo -e "${CYAN}║${NC}  ${BOLD}Claude Craft Installer v3.0${NC}                             ${CYAN}║${NC}"
+echo -e "${CYAN}║${NC}     MoAI-ADK: 37 Agents, 303 Skills                        ${CYAN}║${NC}"
+echo -e "${CYAN}╚═══════════════════════════════════════════════════════════╝${NC}"
 echo ""
 
 # Validate source directory
 if [ ! -d "$CLAUDE_SRC" ]; then
-    echo "Error: .claude/ directory not found in $PROJECT_DIR"
+    echo -e "${RED}Error:${NC} .claude/ directory not found in $PROJECT_DIR"
     exit 1
 fi
 
 # Ensure ~/.claude exists
 mkdir -p "$CLAUDE_DEST"
 
+# Component installation function
+install_component() {
+    local step="$1"
+    local total="$2"
+    local name="$3"
+    local src_path="$4"
+    local dest_path="$5"
+    local mode="$6"
+    local count_pattern="$7"
+    local count_name="$8"
+
+    echo -e "[${step}/${total}] Installing ${name}..."
+
+    if [ -d "$src_path" ] && [ "$(ls -A $src_path 2>/dev/null)" ]; then
+        rm -rf "$dest_path" 2>/dev/null || true
+
+        if [ "$mode" = "copy" ]; then
+            cp -r "$src_path" "$dest_path"
+            echo -e "      ${GREEN}✓${NC} Copied to $dest_path"
+        else
+            ln -sf "$src_path" "$dest_path"
+            echo -e "      ${GREEN}✓${NC} Linked to $dest_path"
+        fi
+
+        if [ -n "$count_pattern" ]; then
+            local count=$(find "$src_path" -name "$count_pattern" 2>/dev/null | wc -l | tr -d ' ')
+            echo -e "        → $count $count_name"
+        fi
+    else
+        echo -e "      ${YELLOW}⚠${NC} Skipped (not found)"
+    fi
+}
+
 case "$MODE" in
     --link|-l)
-        echo "Mode: Symbolic Links (development)"
+        echo -e "Mode: ${CYAN}Symbolic Links${NC} (development)"
         echo ""
+        INSTALL_MODE="link"
 
         # 1. Install statusline.py (always copy for execution)
-        echo "[1/4] Installing statusline.py..."
-        cp "$CLAUDE_SRC/statusline.py" "$CLAUDE_DEST/"
-        chmod +x "$CLAUDE_DEST/statusline.py"
-        echo "      -> Copied to $CLAUDE_DEST/statusline.py"
-
-        # 2. Link agents directory
-        echo "[2/4] Linking agents..."
-        if [ -d "$CLAUDE_SRC/agents" ] && [ "$(ls -A $CLAUDE_SRC/agents 2>/dev/null)" ]; then
-            rm -rf "$CLAUDE_DEST/agents" 2>/dev/null || true
-            ln -sf "$CLAUDE_SRC/agents" "$CLAUDE_DEST/agents"
-            echo "      -> Linked $CLAUDE_DEST/agents"
-            for category_dir in "$CLAUDE_SRC/agents"/*/; do
-                if [ -d "$category_dir" ]; then
-                    category=$(basename "$category_dir")
-                    agent_count=$(find "$category_dir" -maxdepth 1 -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
-                    echo "         - $category/ ($agent_count agents)"
-                fi
-            done
-        else
-            echo "      -> Skipped (no agents found)"
+        echo "[1/7] Installing statusline.py..."
+        if [ -f "$CLAUDE_SRC/statusline.py" ]; then
+            cp "$CLAUDE_SRC/statusline.py" "$CLAUDE_DEST/"
+            chmod +x "$CLAUDE_DEST/statusline.py"
+            echo -e "      ${GREEN}✓${NC} Copied to $CLAUDE_DEST/statusline.py"
         fi
 
-        # 3. Link skills directory
-        echo "[3/4] Linking skills..."
-        if [ -d "$CLAUDE_SRC/skills" ] && [ "$(ls -A $CLAUDE_SRC/skills 2>/dev/null)" ]; then
-            rm -rf "$CLAUDE_DEST/skills" 2>/dev/null || true
-            ln -sf "$CLAUDE_SRC/skills" "$CLAUDE_DEST/skills"
-            echo "      -> Linked $CLAUDE_DEST/skills"
-            for skill_dir in "$CLAUDE_SRC/skills"/*/; do
-                if [ -d "$skill_dir" ]; then
-                    skill_name=$(basename "$skill_dir")
-                    skill_count=$(find "$skill_dir" -name "SKILL.md" 2>/dev/null | wc -l | tr -d ' ')
-                    echo "         - $skill_name ($skill_count skills)"
-                fi
-            done
-        else
-            echo "      -> Skipped (no skills found)"
-        fi
-
-        # 4. Link hooks directory
-        echo "[4/4] Linking hooks..."
-        if [ -d "$CLAUDE_SRC/hooks" ] && [ "$(ls -A $CLAUDE_SRC/hooks 2>/dev/null)" ]; then
-            rm -rf "$CLAUDE_DEST/hooks" 2>/dev/null || true
-            ln -sf "$CLAUDE_SRC/hooks" "$CLAUDE_DEST/hooks"
-            echo "      -> Linked $CLAUDE_DEST/hooks"
-        else
-            echo "      -> Skipped (no hooks found)"
-        fi
+        # 2-7. Link directories
+        install_component 2 7 "agents" "$CLAUDE_SRC/agents" "$CLAUDE_DEST/agents" "link" "*.md" "agents"
+        install_component 3 7 "skills" "$CLAUDE_SRC/skills" "$CLAUDE_DEST/skills" "link" "SKILL.md" "skills"
+        install_component 4 7 "hooks" "$CLAUDE_SRC/hooks" "$CLAUDE_DEST/hooks" "link" "" ""
+        install_component 5 7 "rules" "$CLAUDE_SRC/rules" "$CLAUDE_DEST/rules" "link" "*.md" "rules"
+        install_component 6 7 "commands" "$CLAUDE_SRC/commands" "$CLAUDE_DEST/commands" "link" "*.md" "commands"
+        install_component 7 7 "output-styles" "$CLAUDE_SRC/output-styles" "$CLAUDE_DEST/output-styles" "link" "*.md" "output styles"
         ;;
 
     --copy|-c)
-        echo "Mode: Copy Files (standalone install)"
+        echo -e "Mode: ${CYAN}Copy Files${NC} (standalone install)"
         echo ""
+        INSTALL_MODE="copy"
 
         # 1. Install statusline.py
-        echo "[1/4] Copying statusline.py..."
-        cp "$CLAUDE_SRC/statusline.py" "$CLAUDE_DEST/"
-        chmod +x "$CLAUDE_DEST/statusline.py"
-        echo "      -> Copied to $CLAUDE_DEST/statusline.py"
-
-        # 2. Copy agents directory
-        echo "[2/4] Copying agents..."
-        if [ -d "$CLAUDE_SRC/agents" ] && [ "$(ls -A $CLAUDE_SRC/agents 2>/dev/null)" ]; then
-            rm -rf "$CLAUDE_DEST/agents" 2>/dev/null || true
-            cp -r "$CLAUDE_SRC/agents" "$CLAUDE_DEST/"
-            echo "      -> Copied to $CLAUDE_DEST/agents"
-        else
-            echo "      -> Skipped (no agents found)"
+        echo "[1/7] Installing statusline.py..."
+        if [ -f "$CLAUDE_SRC/statusline.py" ]; then
+            cp "$CLAUDE_SRC/statusline.py" "$CLAUDE_DEST/"
+            chmod +x "$CLAUDE_DEST/statusline.py"
+            echo -e "      ${GREEN}✓${NC} Copied to $CLAUDE_DEST/statusline.py"
         fi
 
-        # 3. Copy skills directory
-        echo "[3/4] Copying skills..."
-        if [ -d "$CLAUDE_SRC/skills" ] && [ "$(ls -A $CLAUDE_SRC/skills 2>/dev/null)" ]; then
-            rm -rf "$CLAUDE_DEST/skills" 2>/dev/null || true
-            cp -r "$CLAUDE_SRC/skills" "$CLAUDE_DEST/"
-            echo "      -> Copied to $CLAUDE_DEST/skills"
-        else
-            echo "      -> Skipped (no skills found)"
-        fi
-
-        # 4. Copy hooks directory
-        echo "[4/4] Copying hooks..."
-        if [ -d "$CLAUDE_SRC/hooks" ] && [ "$(ls -A $CLAUDE_SRC/hooks 2>/dev/null)" ]; then
-            rm -rf "$CLAUDE_DEST/hooks" 2>/dev/null || true
-            cp -r "$CLAUDE_SRC/hooks" "$CLAUDE_DEST/"
-            echo "      -> Copied to $CLAUDE_DEST/hooks"
-        else
-            echo "      -> Skipped (no hooks found)"
-        fi
+        # 2-7. Copy directories
+        install_component 2 7 "agents" "$CLAUDE_SRC/agents" "$CLAUDE_DEST/agents" "copy" "*.md" "agents"
+        install_component 3 7 "skills" "$CLAUDE_SRC/skills" "$CLAUDE_DEST/skills" "copy" "SKILL.md" "skills"
+        install_component 4 7 "hooks" "$CLAUDE_SRC/hooks" "$CLAUDE_DEST/hooks" "copy" "" ""
+        install_component 5 7 "rules" "$CLAUDE_SRC/rules" "$CLAUDE_DEST/rules" "copy" "*.md" "rules"
+        install_component 6 7 "commands" "$CLAUDE_SRC/commands" "$CLAUDE_DEST/commands" "copy" "*.md" "commands"
+        install_component 7 7 "output-styles" "$CLAUDE_SRC/output-styles" "$CLAUDE_DEST/output-styles" "copy" "*.md" "output styles"
         ;;
 
     --export|-e)
-        echo "Mode: Export Distribution Package"
+        echo -e "Mode: ${CYAN}Export Distribution Package${NC}"
         echo ""
 
         DIST_DIR="$PROJECT_DIR/dist"
@@ -141,13 +135,25 @@ case "$MODE" in
 
         echo "Creating distribution package..."
         cd "$PROJECT_DIR"
-        zip -r "$DIST_DIR/$PACKAGE_NAME" .claude/ -x "*.DS_Store"
+
+        # Create zip with all necessary files
+        zip -r "$DIST_DIR/$PACKAGE_NAME" \
+            .claude/ \
+            .moai/ \
+            CLAUDE.md \
+            README.md \
+            scripts/install.sh \
+            -x "*.DS_Store" \
+            -x "*/__pycache__/*" \
+            -x "*.pyc"
 
         echo ""
-        echo "Package created: $DIST_DIR/$PACKAGE_NAME"
+        echo -e "${GREEN}Package created:${NC} $DIST_DIR/$PACKAGE_NAME"
         echo ""
         echo "To install on another machine:"
-        echo "  unzip $PACKAGE_NAME -d ~/.claude/"
+        echo "  1. unzip $PACKAGE_NAME"
+        echo "  2. cd claude-craft-*"
+        echo "  3. ./scripts/install.sh --copy"
         exit 0
         ;;
 
@@ -159,11 +165,20 @@ case "$MODE" in
         echo "  --copy, -c    Copy files (for standalone installation)"
         echo "  --export, -e  Create distribution zip package"
         echo "  --help, -h    Show this help message"
+        echo ""
+        echo "Components installed:"
+        echo "  • agents/       37 AI agents (MoAI + Domain)"
+        echo "  • skills/       303 skills (52 MoAI + 251 Domain)"
+        echo "  • hooks/        Automation scripts"
+        echo "  • rules/        16 language rules + workflows"
+        echo "  • commands/     Slash commands"
+        echo "  • output-styles/ Alfred, Yoda, R2D2 styles"
+        echo "  • statusline.py Real-time cost tracking"
         exit 0
         ;;
 
     *)
-        echo "Unknown option: $MODE"
+        echo -e "${RED}Unknown option:${NC} $MODE"
         echo "Use --help for usage information"
         exit 1
         ;;
@@ -175,52 +190,48 @@ echo "Checking settings.json..."
 SETTINGS_FILE="$CLAUDE_DEST/settings.json"
 
 if [ -f "$SETTINGS_FILE" ]; then
-    if grep -q "statusLine" "$SETTINGS_FILE"; then
-        echo "  -> statusLine already configured"
-    else
-        echo "  -> Please add statusLine config to $SETTINGS_FILE"
-    fi
+    echo -e "  ${GREEN}✓${NC} settings.json exists (preserving)"
 
-    if grep -q "hooks" "$SETTINGS_FILE"; then
-        echo "  -> hooks already configured"
+    if grep -q "statusLine" "$SETTINGS_FILE"; then
+        echo -e "    → statusLine already configured"
     else
-        echo "  -> Please add hooks config to $SETTINGS_FILE"
+        echo -e "    ${YELLOW}⚠${NC} Add statusLine config manually if needed"
     fi
 else
-    echo "  -> settings.json not found. Creating with default config..."
+    echo "  Creating default settings.json..."
     cat > "$SETTINGS_FILE" << 'EOF'
 {
   "statusLine": {
     "type": "command",
     "command": "python3 ~/.claude/statusline.py"
-  },
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash ~/.claude/hooks/post-write-hook.sh \"$CLAUDE_TOOL_USE_FILE_PATH\""
-          }
-        ]
-      }
-    ]
   }
 }
 EOF
-    echo "  -> Created $SETTINGS_FILE"
+    echo -e "  ${GREEN}✓${NC} Created $SETTINGS_FILE"
 fi
 
+# Summary
 echo ""
-echo "==================================="
-echo "  Installation Complete!"
-echo "==================================="
+echo -e "${GREEN}╔═══════════════════════════════════════════════════════════╗${NC}"
+echo -e "${GREEN}║${NC}  ${BOLD}✓ Installation Complete!${NC}                                ${GREEN}║${NC}"
+echo -e "${GREEN}╚═══════════════════════════════════════════════════════════╝${NC}"
 echo ""
-echo "Installed components:"
-echo "  - Statusline (cost tracking)"
-echo "  - Agents (workflow orchestrators)"
-echo "  - Skills (individual capabilities)"
-echo "  - Hooks (automation scripts)"
+echo -e "${BOLD}Installed Components:${NC}"
+echo "  • agents/       37 AI agents (MoAI + Domain)"
+echo "  • skills/       303 skills (52 MoAI + 251 Domain)"
+echo "  • hooks/        Automation scripts"
+echo "  • rules/        16 language rules + workflows"
+echo "  • commands/     Slash commands"
+echo "  • output-styles/ Alfred, Yoda, R2D2 styles"
+echo "  • statusline.py Real-time cost tracking"
 echo ""
-echo "Restart Claude Code to apply changes."
+echo -e "${BOLD}Paths:${NC}"
+echo -e "  Source:  ${CYAN}$CLAUDE_SRC${NC}"
+echo -e "  Target:  ${CYAN}$CLAUDE_DEST${NC}"
+echo -e "  Mode:    ${CYAN}$INSTALL_MODE${NC}"
+echo ""
+echo -e "${BOLD}Next steps:${NC}"
+echo "  1. Restart Claude Code to apply changes"
+echo -e "  2. Try ${CYAN}\"Hello, build me a FastAPI server\"${NC}"
+echo -e "  3. Or use ${CYAN}/moai plan \"your feature\"${NC}"
+echo ""

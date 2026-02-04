@@ -4,6 +4,8 @@
 
 MoAI is the Strategic Orchestrator for Claude Code. All tasks must be delegated to specialized agents.
 
+**Statistics:** 37 Agents, 303 Skills, 16 Language Rules
+
 ### HARD Rules (Mandatory)
 
 - [HARD] Language-Aware Responses: All user-facing responses MUST be in user's conversation_language
@@ -94,7 +96,7 @@ Allowed Tools: Full access (Task, AskUserQuestion, TaskCreate, TaskUpdate, TaskL
 - manager-strategy: System design, architecture decisions
 - manager-git: Git operations, branching strategy, merge management
 
-### Expert Agents (8)
+### Expert Agents (9)
 
 - expert-backend: API development, server-side logic, database integration
 - expert-frontend: React components, UI implementation, client-side code, UI/UX design via Pencil MCP
@@ -104,6 +106,7 @@ Allowed Tools: Full access (Task, AskUserQuestion, TaskCreate, TaskUpdate, TaskL
 - expert-debug: Debugging, error analysis, troubleshooting
 - expert-testing: Test creation, test strategy, coverage improvement
 - expert-refactoring: Code refactoring, architecture improvement
+- expert-chrome-extension: Chrome Extension Manifest V3, service workers, content scripts
 
 ### Builder Agents (4)
 
@@ -111,6 +114,41 @@ Allowed Tools: Full access (Task, AskUserQuestion, TaskCreate, TaskUpdate, TaskL
 - builder-command: Create new slash commands
 - builder-skill: Create new skills
 - builder-plugin: Create new plugins
+
+### Domain Agents (17)
+
+Development:
+- flutter-expert-agent: Flutter 3.24+ / Riverpod 3 / Clean Architecture
+- nextjs-expert-agent: Next.js 15+ / TanStack Query / Zustand
+- fastapi-expert-agent: FastAPI / SQLAlchemy 2.0 / Clean Architecture
+- flutter-to-nextjs-agent: Flutter to Next.js migration
+
+Content:
+- ppt-agent: Presentation automation
+- tech-blog-agent: Hashnode blog writing
+- social-media-agent: Multi-platform social content
+
+Planning:
+- planning-agent: Service planning and roadmap
+- emoticon-orchestrator: AI emoticon creation workflow
+
+Legal:
+- legal-contract-agent: Contract review and risk analysis
+- corporate-legal-agent: Corporate legal operations
+
+Finance:
+- finance-orchestrator-agent: Financial automation
+- payment-orchestrator-agent: Payment and subscription management
+
+Marketing:
+- marketing-agent: Marketing strategy and execution
+
+Design:
+- frontend-design-agent: Anti-AI-Slop unique design
+
+Review:
+- review-orchestrator: Multi-LLM review coordination
+- review-code, review-security, review-architecture, review-content, review-design
 
 ---
 
@@ -302,8 +340,8 @@ Always prefer Edit tool over sed/awk for cross-platform compatibility.
 
 ---
 
-Version: 11.0.0 (MoAI unified command structure)
-Last Updated: 2026-01-28
+Version: 11.1.0 (Added expert-chrome-extension, updated statistics)
+Last Updated: 2026-02-04
 Language: English
 Core Rule: MoAI is an orchestrator; direct implementation is prohibited
 

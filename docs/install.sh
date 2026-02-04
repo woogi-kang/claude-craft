@@ -1,9 +1,9 @@
 #!/bin/bash
-# claude-craft Remote Installer
+# claude-craft Remote Installer v3.0
+# MoAI-ADK: 37 Agents, 303 Skills, Hooks, Rules
 #
 # Usage:
-#   curl -LsSf https://woogi.github.io/claude-craft/install.sh | sh
-#   curl -LsSf https://raw.githubusercontent.com/woogi/claude-craft/main/docs/install.sh | sh
+#   curl -LsSf https://raw.githubusercontent.com/woogi-kang/claude-craft/main/docs/install.sh | sh
 #
 # Options (via environment variables):
 #   INSTALL_MODE=copy   # copy files instead of symlinks (default: link)
@@ -15,9 +15,9 @@ set -e
 # Configuration
 # ═══════════════════════════════════════════════════════════════════════
 
-REPO_URL="https://github.com/woogi/claude-craft.git"
+REPO_URL="https://github.com/woogi-kang/claude-craft.git"
 REPO_NAME="claude-craft"
-VERSION="latest"
+VERSION="11.1.0"
 
 # Installation directories
 INSTALL_DIR="${INSTALL_DIR:-$HOME/.claude-craft}"
@@ -41,8 +41,8 @@ BOLD='\033[1m'
 print_banner() {
     echo ""
     echo -e "${CYAN}╔═══════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${CYAN}║${NC}  ${BOLD}🎩 Claude Craft Installer${NC}                               ${CYAN}║${NC}"
-    echo -e "${CYAN}║${NC}     AI-Powered Development Environment                    ${CYAN}║${NC}"
+    echo -e "${CYAN}║${NC}  ${BOLD}Claude Craft Installer v3.0${NC}                             ${CYAN}║${NC}"
+    echo -e "${CYAN}║${NC}     MoAI-ADK: 37 Agents, 303 Skills                        ${CYAN}║${NC}"
     echo -e "${CYAN}╚═══════════════════════════════════════════════════════════╝${NC}"
     echo ""
 }
@@ -135,6 +135,33 @@ clone_or_update_repo() {
     fi
 }
 
+install_component() {
+    local name="$1"
+    local src_path="$2"
+    local dest_path="$3"
+    local count_pattern="$4"
+    local count_name="$5"
+
+    if [ -d "$src_path" ] && [ "$(ls -A $src_path 2>/dev/null)" ]; then
+        rm -rf "$dest_path" 2>/dev/null || true
+        if [ "$INSTALL_MODE" = "copy" ]; then
+            cp -r "$src_path" "$dest_path"
+            success "Copied $name"
+        else
+            ln -sf "$src_path" "$dest_path"
+            success "Linked $name"
+        fi
+        if [ -n "$count_pattern" ]; then
+            local count=$(find "$src_path" -name "$count_pattern" 2>/dev/null | wc -l | tr -d ' ')
+            info "  → $count $count_name installed"
+        fi
+        return 0
+    else
+        warn "Skipped $name (not found)"
+        return 1
+    fi
+}
+
 install_components() {
     local claude_src="$INSTALL_DIR/.claude"
 
@@ -148,71 +175,23 @@ install_components() {
         success "Installed statusline.py"
     fi
 
-    # 2. Install agents
-    if [ -d "$claude_src/agents" ] && [ "$(ls -A $claude_src/agents 2>/dev/null)" ]; then
-        rm -rf "$CLAUDE_DEST/agents" 2>/dev/null || true
-        if [ "$INSTALL_MODE" = "copy" ]; then
-            cp -r "$claude_src/agents" "$CLAUDE_DEST/"
-            success "Copied agents directory"
-        else
-            ln -sf "$claude_src/agents" "$CLAUDE_DEST/agents"
-            success "Linked agents directory"
-        fi
-        agent_count=$(find "$claude_src/agents" -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
-        info "  → $agent_count agents installed"
-    fi
+    # 2. Install agents (37 total)
+    install_component "agents" "$claude_src/agents" "$CLAUDE_DEST/agents" "*.md" "agents"
 
-    # 3. Install skills
-    if [ -d "$claude_src/skills" ] && [ "$(ls -A $claude_src/skills 2>/dev/null)" ]; then
-        rm -rf "$CLAUDE_DEST/skills" 2>/dev/null || true
-        if [ "$INSTALL_MODE" = "copy" ]; then
-            cp -r "$claude_src/skills" "$CLAUDE_DEST/"
-            success "Copied skills directory"
-        else
-            ln -sf "$claude_src/skills" "$CLAUDE_DEST/skills"
-            success "Linked skills directory"
-        fi
-        skill_count=$(find "$claude_src/skills" -name "SKILL.md" 2>/dev/null | wc -l | tr -d ' ')
-        info "  → $skill_count skills installed"
-    fi
+    # 3. Install skills (303 total)
+    install_component "skills" "$claude_src/skills" "$CLAUDE_DEST/skills" "SKILL.md" "skills"
 
     # 4. Install hooks
-    if [ -d "$claude_src/hooks" ] && [ "$(ls -A $claude_src/hooks 2>/dev/null)" ]; then
-        rm -rf "$CLAUDE_DEST/hooks" 2>/dev/null || true
-        if [ "$INSTALL_MODE" = "copy" ]; then
-            cp -r "$claude_src/hooks" "$CLAUDE_DEST/"
-            success "Copied hooks directory"
-        else
-            ln -sf "$claude_src/hooks" "$CLAUDE_DEST/hooks"
-            success "Linked hooks directory"
-        fi
-    fi
+    install_component "hooks" "$claude_src/hooks" "$CLAUDE_DEST/hooks" "" ""
 
-    # 5. Install commands
-    if [ -d "$claude_src/commands" ] && [ "$(ls -A $claude_src/commands 2>/dev/null)" ]; then
-        rm -rf "$CLAUDE_DEST/commands" 2>/dev/null || true
-        if [ "$INSTALL_MODE" = "copy" ]; then
-            cp -r "$claude_src/commands" "$CLAUDE_DEST/"
-            success "Copied commands directory"
-        else
-            ln -sf "$claude_src/commands" "$CLAUDE_DEST/commands"
-            success "Linked commands directory"
-        fi
-    fi
+    # 5. Install rules (16 languages + core)
+    install_component "rules" "$claude_src/rules" "$CLAUDE_DEST/rules" "*.md" "rules"
 
-    # 6. Install output-styles
-    if [ -d "$claude_src/output-styles" ] && [ "$(ls -A $claude_src/output-styles 2>/dev/null)" ]; then
-        rm -rf "$CLAUDE_DEST/output-styles" 2>/dev/null || true
-        if [ "$INSTALL_MODE" = "copy" ]; then
-            cp -r "$claude_src/output-styles" "$CLAUDE_DEST/"
-            success "Copied output-styles directory"
-        else
-            ln -sf "$claude_src/output-styles" "$CLAUDE_DEST/output-styles"
-            success "Linked output-styles directory"
-        fi
-        style_count=$(find "$claude_src/output-styles" -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
-        info "  → $style_count output styles installed"
-    fi
+    # 6. Install commands
+    install_component "commands" "$claude_src/commands" "$CLAUDE_DEST/commands" "*.md" "commands"
+
+    # 7. Install output-styles
+    install_component "output-styles" "$claude_src/output-styles" "$CLAUDE_DEST/output-styles" "*.md" "output styles"
 }
 
 configure_settings() {
@@ -227,19 +206,6 @@ configure_settings() {
   "statusLine": {
     "type": "command",
     "command": "python3 ~/.claude/statusline.py"
-  },
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash ~/.claude/hooks/post-write-hook.sh \"$CLAUDE_TOOL_USE_FILE_PATH\""
-          }
-        ]
-      }
-    ]
   }
 }
 EOF
@@ -274,20 +240,32 @@ main() {
     echo -e "${GREEN}║${NC}  ${BOLD}✓ Installation Complete!${NC}                                ${GREEN}║${NC}"
     echo -e "${GREEN}╚═══════════════════════════════════════════════════════════╝${NC}"
     echo ""
-    echo -e "  Installation directory: ${CYAN}$INSTALL_DIR${NC}"
-    echo -e "  Claude config:          ${CYAN}$CLAUDE_DEST${NC}"
-    echo -e "  Install mode:           ${CYAN}$INSTALL_MODE${NC}"
+    echo -e "  ${BOLD}Installed Components:${NC}"
+    echo -e "    • agents/       37 AI agents (MoAI + Domain)"
+    echo -e "    • skills/       303 skills (52 MoAI + 251 Domain)"
+    echo -e "    • hooks/        Automation scripts"
+    echo -e "    • rules/        16 language rules + workflows"
+    echo -e "    • commands/     Slash commands"
+    echo -e "    • output-styles/ Alfred, Yoda, R2D2 styles"
+    echo -e "    • statusline.py Real-time cost tracking"
+    echo ""
+    echo -e "  ${BOLD}Paths:${NC}"
+    echo -e "    Installation:   ${CYAN}$INSTALL_DIR${NC}"
+    echo -e "    Claude config:  ${CYAN}$CLAUDE_DEST${NC}"
+    echo -e "    Install mode:   ${CYAN}$INSTALL_MODE${NC}"
     echo ""
     echo -e "  ${BOLD}Next steps:${NC}"
     echo -e "    1. Restart Claude Code to apply changes"
-    echo -e "    2. Try ${CYAN}/moai:alfred \"hello world\"${NC} to test"
+    echo -e "    2. Try ${CYAN}\"Hello, build me a FastAPI server\"${NC}"
+    echo -e "    3. Or use ${CYAN}/moai plan \"your feature\"${NC}"
     echo ""
     echo -e "  ${BOLD}To update:${NC}"
-    echo -e "    curl -LsSf https://woogi.github.io/claude-craft/install.sh | sh"
+    echo -e "    curl -LsSf https://raw.githubusercontent.com/woogi-kang/claude-craft/main/docs/install.sh | sh"
     echo ""
     echo -e "  ${BOLD}To uninstall:${NC}"
+    echo -e "    rm -rf ~/.claude/{agents,skills,hooks,rules,commands,output-styles}"
+    echo -e "    rm ~/.claude/statusline.py"
     echo -e "    rm -rf $INSTALL_DIR"
-    echo -e "    rm -rf $CLAUDE_DEST/{agents,skills,hooks,commands}"
     echo ""
 }
 
