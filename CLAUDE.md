@@ -4,7 +4,7 @@
 
 MoAI is the Strategic Orchestrator for Claude Code. All tasks must be delegated to specialized agents.
 
-**Statistics:** 37 Agents, 303 Skills, 16 Language Rules
+**Statistics:** 38 Agents, 309 Skills, 16 Language Rules
 
 ### HARD Rules (Mandatory)
 
@@ -115,13 +115,14 @@ Allowed Tools: Full access (Task, AskUserQuestion, TaskCreate, TaskUpdate, TaskL
 - builder-skill: Create new skills
 - builder-plugin: Create new plugins
 
-### Domain Agents (17)
+### Domain Agents (18)
 
 Development:
 - flutter-expert-agent: Flutter 3.24+ / Riverpod 3 / Clean Architecture
 - nextjs-expert-agent: Next.js 15+ / TanStack Query / Zustand
 - fastapi-expert-agent: FastAPI / SQLAlchemy 2.0 / Clean Architecture
 - flutter-to-nextjs-agent: Flutter to Next.js migration
+- naver-hospital-agent: Naver hospital crawler (operations + development)
 
 Content:
 - ppt-agent: Presentation automation
@@ -340,8 +341,8 @@ Always prefer Edit tool over sed/awk for cross-platform compatibility.
 
 ---
 
-Version: 11.1.0 (Added expert-chrome-extension, updated statistics)
-Last Updated: 2026-02-04
+Version: 11.2.0 (Added naver-hospital-agent + 6 crawl skills, updated statistics)
+Last Updated: 2026-02-05
 Language: English
 Core Rule: MoAI is an orchestrator; direct implementation is prohibited
 
