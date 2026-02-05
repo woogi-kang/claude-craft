@@ -1,0 +1,16 @@
+[project]
+name = "naver-hospital-crawler"
+version = "0.1.0"
+description = "Naver Map hospital data crawler with anti-detection"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.0",
+    "pydantic-settings>=2.0",
+    "playwright>=1.40",
+    "httpx>=0.25",
+    "aiosqlite>=0.19",
+    "rich>=13.0",
+]
+
+[project.scripts]
+naver-crawler = "crawl.naver_hospital.__main__:cli_main"
