@@ -14,7 +14,7 @@ user-invocable: false
 metadata:
   version: "1.0.0"
   category: "domain"
-  status: "active"
+  status: "deprecated"
   updated: "2026-02-05"
   modularized: "true"
   tags: "crawler, naver, stealth, anti-detection, fingerprint, throttle, ban, captcha"
@@ -43,6 +43,8 @@ triggers:
   phases:
     - "run"
 ---
+
+> **DEPRECATED**: This skill references the deleted `crawl/` codebase. It has been superseded by `moai-clinic-*` skills which target the new `clinic-crawl/` codebase.
 
 # Crawler Stealth & Anti-Detection
 

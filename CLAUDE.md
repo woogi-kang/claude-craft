@@ -122,7 +122,8 @@ Development:
 - nextjs-expert-agent: Next.js 15+ / TanStack Query / Zustand
 - fastapi-expert-agent: FastAPI / SQLAlchemy 2.0 / Clean Architecture
 - flutter-to-nextjs-agent: Flutter to Next.js migration
-- naver-hospital-agent: Naver hospital crawler (operations + development)
+- naver-hospital-agent: Naver hospital crawler (deprecated)
+- clinic-crawler-agent: Korean skin clinic website crawler (social channels + doctor info)
 
 Content:
 - ppt-agent: Presentation automation
@@ -341,7 +342,7 @@ Always prefer Edit tool over sed/awk for cross-platform compatibility.
 
 ---
 
-Version: 11.2.0 (Added naver-hospital-agent + 6 crawl skills, updated statistics)
+Version: 11.3.0 (Deprecated naver-hospital-agent + 6 crawl skills, added clinic-crawler-agent)
 Last Updated: 2026-02-05
 Language: English
 Core Rule: MoAI is an orchestrator; direct implementation is prohibited
