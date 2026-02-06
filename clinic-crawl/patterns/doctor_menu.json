@@ -1,0 +1,79 @@
+{
+  "menu_labels": {
+    "primary": [
+      "의료진",
+      "의료진 소개",
+      "의료진소개",
+      "원장 소개",
+      "원장소개",
+      "전문의 소개",
+      "전문의소개",
+      "DOCTOR",
+      "Doctor",
+      "Our Doctors",
+      "Medical Staff"
+    ],
+    "secondary": [
+      "원장님",
+      "대표원장",
+      "의료팀",
+      "진료진",
+      "진료 안내",
+      "Staff",
+      "Team",
+      "About Us",
+      "클리닉 소개"
+    ],
+    "submenu_parents": [
+      "병원 소개",
+      "클리닉 소개",
+      "About",
+      "소개",
+      "병원 안내",
+      "클리닉 안내"
+    ]
+  },
+  "url_patterns": [
+    "/doctor",
+    "/doctors",
+    "/staff",
+    "/team",
+    "/about",
+    "/introduce",
+    "/sub/doctor",
+    "/page/doctor",
+    "/contents/doctor"
+  ],
+  "content_selectors": {
+    "doctor_card": [
+      ".doctor-card",
+      ".doctor-item",
+      ".staff-item",
+      ".team-member",
+      ".doctor-info",
+      ".doctor-list > li",
+      ".staff-list > li"
+    ],
+    "doctor_name": [
+      ".doctor-name",
+      ".staff-name",
+      ".doctor-card h3",
+      ".doctor-card h4",
+      ".name"
+    ],
+    "doctor_photo": [
+      ".doctor-photo img",
+      ".doctor-img img",
+      ".staff-photo img",
+      ".doctor-card img",
+      ".team-member img"
+    ],
+    "credentials": [
+      ".doctor-career",
+      ".doctor-history",
+      ".career-list",
+      ".credentials",
+      ".doctor-card ul"
+    ]
+  }
+}

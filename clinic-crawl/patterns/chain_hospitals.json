@@ -1,0 +1,65 @@
+{
+  "_description": "Chain hospital domains with branch counts. Selectors populated after first successful crawl.",
+  "chains": {
+    "velyb.kr": {
+      "branch_count": 55,
+      "url_pattern": "subdomain",
+      "selectors": {},
+      "notes": "All branches use same URL. Branch differentiation via popup or content."
+    },
+    "maypure.co.kr": {
+      "branch_count": 41,
+      "url_pattern": "path",
+      "selectors": {},
+      "notes": "Branches via path segments"
+    },
+    "tonesclinic.co.kr": {
+      "branch_count": 23,
+      "url_pattern": "path",
+      "selectors": {},
+      "notes": "Non-standard menu names. SNS in dedicated menu."
+    },
+    "hus-hu.com": {
+      "branch_count": 15,
+      "url_pattern": "subdomain",
+      "selectors": {}
+    },
+    "ckbclinic.com": {
+      "branch_count": 12,
+      "url_pattern": "path",
+      "selectors": {}
+    },
+    "izakclinic.com": {
+      "branch_count": 10,
+      "url_pattern": "path",
+      "selectors": {}
+    },
+    "aoziclinic.co.kr": {
+      "branch_count": 9,
+      "url_pattern": "path",
+      "selectors": {}
+    },
+    "lineaclinic.com": {
+      "branch_count": 8,
+      "url_pattern": "subdomain",
+      "selectors": {}
+    },
+    "orskin.co.kr": {
+      "branch_count": 7,
+      "url_pattern": "path",
+      "selectors": {}
+    },
+    "renewme.co.kr": {
+      "branch_count": 7,
+      "url_pattern": "path",
+      "selectors": {}
+    }
+  },
+  "optimization_strategy": {
+    "step1": "Crawl one sample branch per chain domain",
+    "step2": "Record successful CSS selectors for social links and doctor pages",
+    "step3": "Verify selectors on 2-3 random sibling branches",
+    "step4": "If verification passes, apply selectors to all remaining siblings",
+    "step5": "If verification fails, fall back to per-hospital agent crawl"
+  }
+}

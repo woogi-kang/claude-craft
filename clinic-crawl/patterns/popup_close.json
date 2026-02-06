@@ -1,0 +1,93 @@
+{
+  "close_strategies": [
+    {
+      "name": "x_button",
+      "description": "Close button with X icon or close class",
+      "selectors": [
+        "button.close",
+        ".popup-close",
+        ".modal-close",
+        ".btn-close",
+        "[aria-label='닫기']",
+        "[aria-label='Close']",
+        ".popup .close",
+        ".modal .close",
+        ".layer-close",
+        ".pop-close",
+        ".closeBtn",
+        ".close-btn"
+      ],
+      "priority": 1
+    },
+    {
+      "name": "text_button",
+      "description": "Button with close text in Korean or English",
+      "text_patterns": [
+        "닫기",
+        "CLOSE",
+        "Close",
+        "확인",
+        "OK",
+        "창닫기",
+        "팝업닫기"
+      ],
+      "priority": 2
+    },
+    {
+      "name": "checkbox_then_close",
+      "description": "Check 'don't show again' checkbox, then click close",
+      "checkbox_selectors": [
+        "input[type='checkbox']",
+        ".today-close input",
+        ".popup-today input"
+      ],
+      "checkbox_labels": [
+        "오늘 하루동안 열지않기",
+        "오늘 하루 열지 않기",
+        "오늘 그만 보기",
+        "다시 보지 않기",
+        "하루동안 보지않기",
+        "Don't show today"
+      ],
+      "priority": 3,
+      "notes": "Must check checkbox BEFORE clicking close button"
+    },
+    {
+      "name": "overlay_click",
+      "description": "Click the background overlay to dismiss",
+      "selectors": [
+        ".modal-backdrop",
+        ".popup-overlay",
+        ".popup-bg",
+        ".dim",
+        ".dimmed",
+        ".overlay"
+      ],
+      "priority": 4
+    }
+  ],
+  "popup_detection": {
+    "container_selectors": [
+      ".popup",
+      ".modal",
+      ".layer-popup",
+      ".pop-layer",
+      "#popup",
+      "[class*='popup']",
+      "[class*='modal']",
+      "[role='dialog']"
+    ],
+    "visibility_check": "Check display, visibility, opacity, and z-index CSS properties",
+    "max_attempts": 3,
+    "wait_after_close_ms": 500
+  },
+  "cookie_suppression": {
+    "common_cookie_names": [
+      "popup_close",
+      "todayClose",
+      "popup_today",
+      "layer_close"
+    ],
+    "notes": "Set cookies to suppress popups before page load if possible"
+  }
+}

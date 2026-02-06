@@ -1,0 +1,60 @@
+{
+  "kakao": {
+    "patterns": [
+      "pf.kakao.com/",
+      "open.kakao.com/o/",
+      "talk.kakao.com/",
+      "kakao.com/channel/"
+    ],
+    "widget_signatures": [
+      "kakao.channel.chat",
+      "Kakao.Channel",
+      "kakaocdn.net/js_plugins"
+    ]
+  },
+  "naver_talk": {
+    "patterns": [
+      "talk.naver.com/",
+      "naver.me/"
+    ]
+  },
+  "line": {
+    "patterns": [
+      "line.me/",
+      "lin.ee/"
+    ]
+  },
+  "wechat": {
+    "patterns": [
+      "u.wechat.com/",
+      "weixin.qq.com/"
+    ],
+    "notes": "Often available only as QR code image. Check img tags with qr/wechat keywords."
+  },
+  "whatsapp": {
+    "patterns": [
+      "wa.me/",
+      "api.whatsapp.com/"
+    ]
+  },
+  "telegram": {
+    "patterns": [
+      "t.me/"
+    ]
+  },
+  "facebook_messenger": {
+    "patterns": [
+      "m.me/"
+    ]
+  },
+  "extraction_locations": [
+    "href attributes in <a> tags",
+    "onclick handlers (href='#none' pattern)",
+    "position:fixed floating elements",
+    "footer sections",
+    "meta tags (og:url, description)",
+    "iframe src attributes",
+    "JavaScript variables and SDK initialization",
+    "QR code images (especially WeChat)"
+  ]
+}
