@@ -44,7 +44,7 @@ Self-contained Korean skin clinic website crawler for extracting social consulta
 | Tool | Purpose |
 |------|---------|
 | **Playwright MCP** | `browser_navigate`, `browser_snapshot`, `browser_click`, `browser_evaluate`, `browser_take_screenshot` |
-| **Gemini CLI** | `gemini -p "prompt" < image.png` for OCR on image-based pages |
+| **Gemini CLI** | `gemini -p "Read the image file at <path>..." -y` for OCR (MUST convert PNG to JPEG first via `sips`) |
 | **Storage Script** | `python3 scripts/clinic-storage/storage_manager.py` for SQLite + CSV |
 | **Bash** | Execute Gemini CLI and storage script |
 | **Read** | Load reference patterns on demand from references/ |
@@ -105,8 +105,10 @@ Load `references/patterns/doctor-navigation.md` for menu labels and selectors.
 
 **If page is image-based** (fewer than 5 text nodes with doctor info):
 - Load `references/workflows/gemini-ocr.md`
-- Screenshot doctor section
-- Call Gemini CLI for OCR extraction
+- Screenshot doctor section with `browser_take_screenshot`
+- Convert PNG to JPEG: `sips -s format jpeg -s formatOptions 85 input.png --out output.jpg`
+- Call Gemini CLI: `gemini -p "Read the image file at <path> and extract..." -y`
+- **NEVER skip OCR** - you MUST execute Gemini CLI and parse the results
 - Mark results with `ocr_source: true`
 
 ### Step 4: Save Results

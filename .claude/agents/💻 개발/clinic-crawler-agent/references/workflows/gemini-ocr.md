@@ -2,6 +2,8 @@
 
 Use Gemini CLI to extract text from image-based doctor pages where DOM extraction fails.
 
+**THIS STEP IS MANDATORY** when image-based content is detected. Do NOT skip OCR and report "OCR needed" - you MUST execute Gemini CLI and return the extracted data.
+
 ## When to Use
 
 Trigger conditions (any of):
@@ -9,6 +11,7 @@ Trigger conditions (any of):
 - Page content is primarily rendered as images
 - DOM selectors from doctor-navigation.md return no results
 - Known image-heavy clinic platform detected
+- Social channel info (e.g., KakaoTalk ID) only visible in images
 
 ## Procedure
 
@@ -21,11 +24,25 @@ browser_take_screenshot -> save to data/clinic-results/screenshots/hospital_{no}
 
 If multiple doctor cards exist, screenshot each separately for better OCR accuracy.
 
-### 2. Call Gemini CLI
+### 2. Convert to JPEG
+
+**CRITICAL**: Gemini CLI crashes with heap out of memory on PNG files. Always convert to JPEG first:
 
 ```bash
-gemini -p "Analyze this Korean skin clinic doctor page image.
-Extract ALL doctors/medical staff with the following JSON format:
+sips -s format jpeg -s formatOptions 85 data/clinic-results/screenshots/hospital_{no}_doctors.png --out data/clinic-results/screenshots/hospital_{no}_doctors.jpg
+```
+
+Target: under 500KB file size. If still too large, reduce width:
+```bash
+sips --resampleWidth 1024 -s format jpeg -s formatOptions 85 input.png --out output.jpg
+```
+
+### 3. Call Gemini CLI
+
+**IMPORTANT**: Do NOT use stdin (`< image.jpg`). Instead, reference the file path in the prompt and use `-y` flag for auto-approval:
+
+```bash
+gemini -p "Read the image file at data/clinic-results/screenshots/hospital_{no}_doctors.jpg and extract all Korean text about doctors/medical staff. Return ONLY valid JSON:
 {
   \"doctors\": [
     {
@@ -37,18 +54,22 @@ Extract ALL doctors/medical staff with the following JSON format:
       \"career\": [\"list of career history\"]
     }
   ]
-}
-Return ONLY valid JSON. Extract Korean text accurately." < data/clinic-results/screenshots/hospital_{no}_doctors.png
+}" -y 2>&1 | grep -A 200 '```'
 ```
 
-### 3. Parse and Validate
+Key flags:
+- `-p "prompt"`: Non-interactive headless mode
+- `-y`: YOLO mode - auto-approves read_file tool to access the image
+- `2>&1 | grep -A 200 '```'`: Filters to only the JSON code block output
 
-- Parse JSON output from Gemini
+### 4. Parse and Validate
+
+- Parse JSON output from Gemini (extract content between ``` markers)
 - Validate each doctor has at least a name
 - Mark all extracted doctors with `ocr_source: true`
-- If Gemini returns invalid JSON, log error and skip OCR
+- If Gemini returns invalid JSON, retry once with simplified prompt, then skip
 
-### 4. Merge Results
+### 5. Merge Results
 
 - Combine OCR results with any DOM-extracted data
 - De-duplicate by doctor name
@@ -57,6 +78,7 @@ Return ONLY valid JSON. Extract Korean text accurately." < data/clinic-results/s
 ## Error Handling
 
 - Gemini CLI not available: Skip OCR, log warning, proceed with DOM-only results
-- Gemini timeout (>30s): Kill process, proceed without OCR
+- Gemini timeout (>60s): Kill process, proceed without OCR
 - Invalid JSON response: Retry once with simplified prompt, then skip
-- Image too large: Resize to max 2048px width before sending
+- PNG heap crash: Always convert to JPEG first (see Step 2)
+- Image too large (>1MB JPEG): Resize to max 1024px width before sending
