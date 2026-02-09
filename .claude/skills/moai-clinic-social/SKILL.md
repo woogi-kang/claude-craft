@@ -50,7 +50,7 @@ triggers:
 Fast regex extraction from raw HTML without browser rendering.
 Catches ~60% of social links. High confidence (0.8).
 
-Patterns: See clinic-crawl/patterns/social_urls.json
+Patterns: See .claude/agents/💻 개발/clinic-crawler-agent/references/patterns/social-channels.md
 
 ### Pass 2: Static DOM
 Browser-rendered DOM analysis via Playwright snapshot.
@@ -117,5 +117,4 @@ WeChat links are often QR-only (no clickable URL):
 
 ## Reference
 
-See: clinic-crawl/clinic_crawl/scripts/extract_social.py
-See: clinic-crawl/patterns/social_urls.json
+See: .claude/agents/💻 개발/clinic-crawler-agent/references/patterns/social-channels.md

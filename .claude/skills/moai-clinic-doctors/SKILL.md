@@ -131,5 +131,4 @@ Korean medical credentials follow patterns:
 
 ## Reference
 
-See: clinic-crawl/clinic_crawl/scripts/extract_doctors.py
-See: clinic-crawl/patterns/doctor_menu.json
+See: .claude/agents/💻 개발/clinic-crawler-agent/references/patterns/doctor-navigation.md

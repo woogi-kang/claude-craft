@@ -116,5 +116,4 @@ Uses non-standard menu labels. "SNS" instead of typical social-related labels. D
 
 ## Reference
 
-See: clinic-crawl/patterns/chain_hospitals.json
-See: clinic-crawl/clinic_crawl/storage.py (chain_patterns table)
+See: .claude/agents/💻 개발/clinic-crawler-agent/references/patterns/chain-hospitals.md

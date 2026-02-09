@@ -108,4 +108,4 @@ Use browser_evaluate to set these cookies after initial navigation.
 
 ## Reference
 
-See: clinic-crawl/patterns/popup_close.json
+See: .claude/agents/💻 개발/clinic-crawler-agent/references/patterns/popup-dismissal.md
