@@ -16,8 +16,20 @@ import csv
 import json
 import sqlite3
 import sys
+import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
+
+VALID_PLATFORMS = {
+    "KakaoTalk", "NaverTalk", "Line", "WeChat", "WhatsApp",
+    "Telegram", "FacebookMessenger", "Instagram", "YouTube",
+    "NaverBlog", "NaverBooking", "Facebook", "Phone", "SMS",
+}
+
+VALID_STATUSES = {
+    "success", "partial", "failed", "archived",
+    "requires_manual", "age_restricted", "unsupported",
+}
 
 DB_DEFAULT = "data/clinic-results/hospitals.db"
 
@@ -26,10 +38,13 @@ CREATE TABLE IF NOT EXISTS hospitals (
     hospital_no INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     url TEXT,
+    final_url TEXT,
     category TEXT,
     phone TEXT,
     address TEXT,
     status TEXT DEFAULT 'pending',
+    cms_platform TEXT,
+    schema_version TEXT DEFAULT '2.0.0',
     crawled_at TEXT,
     created_at TEXT DEFAULT (datetime('now')),
     updated_at TEXT DEFAULT (datetime('now'))
@@ -42,6 +57,7 @@ CREATE TABLE IF NOT EXISTS social_channels (
     url TEXT NOT NULL,
     extraction_method TEXT,
     confidence REAL DEFAULT 1.0,
+    status TEXT DEFAULT 'active',
     created_at TEXT DEFAULT (datetime('now')),
     FOREIGN KEY (hospital_no) REFERENCES hospitals(hospital_no),
     UNIQUE(hospital_no, platform, url)
@@ -57,6 +73,9 @@ CREATE TABLE IF NOT EXISTS doctors (
     education_json TEXT DEFAULT '[]',
     career_json TEXT DEFAULT '[]',
     credentials_json TEXT DEFAULT '[]',
+    branch TEXT,
+    branches_json TEXT DEFAULT '[]',
+    extraction_source TEXT,
     ocr_source INTEGER DEFAULT 0,
     created_at TEXT DEFAULT (datetime('now')),
     FOREIGN KEY (hospital_no) REFERENCES hospitals(hospital_no)
@@ -67,6 +86,8 @@ CREATE TABLE IF NOT EXISTS crawl_errors (
     hospital_no INTEGER NOT NULL,
     error_type TEXT,
     message TEXT,
+    step TEXT,
+    retryable INTEGER DEFAULT 0,
     created_at TEXT DEFAULT (datetime('now')),
     FOREIGN KEY (hospital_no) REFERENCES hospitals(hospital_no)
 );
@@ -82,83 +103,158 @@ def get_db(db_path: str) -> sqlite3.Connection:
     return conn
 
 
+def _normalize(text: str) -> str:
+    """Normalize Unicode to NFC form for consistent storage/comparison."""
+    if text:
+        return unicodedata.normalize("NFC", text)
+    return text
+
+
+def _escape_csv_formula(value: str) -> str:
+    """Escape CSV injection prefixes (=, +, -, @) for safe Excel import."""
+    if isinstance(value, str) and value and value[0] in ("=", "+", "-", "@"):
+        return "'" + value
+    return value
+
+
+def _validate_channel(ch: dict) -> dict:
+    """Validate and sanitize social channel data."""
+    platform = ch.get("platform", "")
+    if platform and platform not in VALID_PLATFORMS:
+        print(f"Warning: Unknown platform '{platform}', storing as-is", file=sys.stderr)
+    confidence = ch.get("confidence", 1.0)
+    if not (0.0 <= confidence <= 1.0):
+        confidence = max(0.0, min(1.0, confidence))
+    ch["confidence"] = confidence
+    return ch
+
+
 def save_result(db_path: str, data: dict) -> None:
     conn = get_db(db_path)
     now = datetime.now(timezone.utc).isoformat()
 
     hospital_no = data["hospital_no"]
-    name = data.get("name", "")
+    name = _normalize(data.get("name", ""))
     url = data.get("url", "")
     category = data.get("category", "")
     phone = data.get("phone", "")
-    address = data.get("address", "")
+    address = _normalize(data.get("address", ""))
     status = data.get("status", "success")
+    if status not in VALID_STATUSES:
+        print(f"Warning: Unknown status '{status}', defaulting to 'partial'", file=sys.stderr)
+        status = "partial"
 
-    conn.execute(
-        """INSERT INTO hospitals (hospital_no, name, url, category, phone, address, status, crawled_at, updated_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-           ON CONFLICT(hospital_no) DO UPDATE SET
-             name=excluded.name, url=excluded.url, category=excluded.category,
-             phone=excluded.phone, address=excluded.address, status=excluded.status,
-             crawled_at=excluded.crawled_at, updated_at=excluded.updated_at""",
-        (hospital_no, name, url, category, phone, address, status, now, now),
-    )
+    doctors = data.get("doctors", [])
+    new_status = status
 
-    for ch in data.get("social_channels", []):
+    # Case 2 guard: Don't overwrite successful crawl with failed one that has no data
+    existing = conn.execute(
+        "SELECT status, crawled_at FROM hospitals WHERE hospital_no = ?",
+        (hospital_no,),
+    ).fetchone()
+    if existing and existing["status"] == "success" and new_status == "failed":
+        if not doctors and not data.get("social_channels", []):
+            print(
+                f"Warning: Skipping failed overwrite of successful hospital #{hospital_no}",
+                file=sys.stderr,
+            )
+            conn.close()
+            return
+
+    # Case 1 & 3: Wrap ALL operations in a single transaction
+    try:
+        conn.execute("BEGIN IMMEDIATE")
+
+        final_url = data.get("final_url", "")
+        cms_platform = data.get("cms_platform", "")
+        schema_version = data.get("schema_version", "2.0.0")
+
         conn.execute(
-            """INSERT OR IGNORE INTO social_channels
-               (hospital_no, platform, url, extraction_method, confidence)
-               VALUES (?, ?, ?, ?, ?)""",
-            (
-                hospital_no,
-                ch.get("platform", ""),
-                ch.get("url", ""),
-                ch.get("extraction_method", ""),
-                ch.get("confidence", 1.0),
-            ),
+            """INSERT INTO hospitals (hospital_no, name, url, final_url, category, phone, address, status, cms_platform, schema_version, crawled_at, updated_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+               ON CONFLICT(hospital_no) DO UPDATE SET
+                 name=excluded.name, url=excluded.url, final_url=excluded.final_url,
+                 category=excluded.category, phone=excluded.phone, address=excluded.address,
+                 status=excluded.status, cms_platform=excluded.cms_platform,
+                 schema_version=excluded.schema_version,
+                 crawled_at=excluded.crawled_at, updated_at=excluded.updated_at""",
+            (hospital_no, name, url, final_url, category, phone, address, new_status, cms_platform, schema_version, now, now),
         )
 
-    # Remove existing doctors for this hospital before inserting new ones
-    conn.execute("DELETE FROM doctors WHERE hospital_no = ?", (hospital_no,))
-    for doc in data.get("doctors", []):
-        conn.execute(
-            """INSERT INTO doctors
-               (hospital_no, name, name_english, role, photo_url,
-                education_json, career_json, credentials_json, ocr_source)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-            (
-                hospital_no,
-                doc.get("name", ""),
-                doc.get("name_english", ""),
-                doc.get("role", ""),
-                doc.get("photo_url", ""),
-                json.dumps(doc.get("education", []), ensure_ascii=False),
-                json.dumps(doc.get("career", []), ensure_ascii=False),
-                json.dumps(doc.get("credentials", []), ensure_ascii=False),
-                1 if doc.get("ocr_source") else 0,
-            ),
-        )
-
-    for err in data.get("errors", []):
-        if isinstance(err, str):
+        # Remove old social channels then insert new
+        conn.execute("DELETE FROM social_channels WHERE hospital_no = ?", (hospital_no,))
+        for ch in data.get("social_channels", []):
+            ch = _validate_channel(ch)
             conn.execute(
-                "INSERT INTO crawl_errors (hospital_no, error_type, message) VALUES (?, ?, ?)",
-                (hospital_no, "general", err),
-            )
-        elif isinstance(err, dict):
-            conn.execute(
-                "INSERT INTO crawl_errors (hospital_no, error_type, message) VALUES (?, ?, ?)",
-                (hospital_no, err.get("type", "general"), err.get("message", "")),
-            )
-        else:
-            conn.execute(
-                "INSERT INTO crawl_errors (hospital_no, error_type, message) VALUES (?, ?, ?)",
-                (hospital_no, "unknown", str(err)),
+                """INSERT OR IGNORE INTO social_channels
+                   (hospital_no, platform, url, extraction_method, confidence, status)
+                   VALUES (?, ?, ?, ?, ?, ?)""",
+                (
+                    hospital_no,
+                    ch.get("platform", ""),
+                    ch.get("url", ""),
+                    ch.get("extraction_method", ""),
+                    ch.get("confidence", 1.0),
+                    ch.get("status", "active"),
+                ),
             )
 
-    conn.commit()
-    conn.close()
-    print(f"Saved hospital #{hospital_no} ({name})")
+        # Case 2: Only delete doctors if new crawl has doctor data
+        if doctors:
+            conn.execute("DELETE FROM doctors WHERE hospital_no = ?", (hospital_no,))
+            for doc in doctors:
+                doc_name = _normalize(doc.get("name", ""))
+                conn.execute(
+                    """INSERT INTO doctors
+                       (hospital_no, name, name_english, role, photo_url,
+                        education_json, career_json, credentials_json,
+                        branch, branches_json, extraction_source, ocr_source)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                    (
+                        hospital_no,
+                        doc_name,
+                        doc.get("name_english", ""),
+                        doc.get("role", ""),
+                        doc.get("photo_url", ""),
+                        json.dumps(doc.get("education") or [], ensure_ascii=False),
+                        json.dumps(doc.get("career") or [], ensure_ascii=False),
+                        json.dumps(doc.get("credentials") or [], ensure_ascii=False),
+                        doc.get("branch", ""),
+                        json.dumps(doc.get("branches") or [], ensure_ascii=False),
+                        doc.get("extraction_source", ""),
+                        1 if doc.get("ocr_source") else 0,
+                    ),
+                )
+
+        # Clear old errors and insert new
+        conn.execute("DELETE FROM crawl_errors WHERE hospital_no = ?", (hospital_no,))
+        for err in data.get("errors", []):
+            if isinstance(err, str):
+                conn.execute(
+                    "INSERT INTO crawl_errors (hospital_no, error_type, message, step, retryable) VALUES (?, ?, ?, ?, ?)",
+                    (hospital_no, "general", err, "", 0),
+                )
+            elif isinstance(err, dict):
+                conn.execute(
+                    "INSERT INTO crawl_errors (hospital_no, error_type, message, step, retryable) VALUES (?, ?, ?, ?, ?)",
+                    (hospital_no, err.get("type", "general"), err.get("message", ""),
+                     err.get("step", ""), 1 if err.get("retryable") else 0),
+                )
+            else:
+                conn.execute(
+                    "INSERT INTO crawl_errors (hospital_no, error_type, message, step, retryable) VALUES (?, ?, ?, ?, ?)",
+                    (hospital_no, "unknown", str(err), "", 0),
+                )
+
+        conn.commit()
+        print(f"Saved hospital #{hospital_no} ({name})")
+
+    except Exception as e:
+        conn.rollback()
+        print(f"Error: Transaction failed for hospital #{hospital_no}: {e}", file=sys.stderr)
+        raise
+    finally:
+        conn.close()
 
 
 def export_csv(db_path: str, output_dir: str) -> None:
@@ -166,13 +262,18 @@ def export_csv(db_path: str, output_dir: str) -> None:
     out = Path(output_dir)
     out.mkdir(parents=True, exist_ok=True)
 
+    def _safe_row(row):
+        """Escape CSV formula injection prefixes for safe Excel import."""
+        return [_escape_csv_formula(str(v) if v is not None else "") for v in row]
+
     # Hospitals CSV
     rows = conn.execute("SELECT * FROM hospitals ORDER BY hospital_no").fetchall()
     if rows:
         with open(out / "hospitals.csv", "w", newline="", encoding="utf-8-sig") as f:
             writer = csv.writer(f)
             writer.writerow(rows[0].keys())
-            writer.writerows(rows)
+            for row in rows:
+                writer.writerow(_safe_row(row))
         print(f"Exported {len(rows)} hospitals -> {out / 'hospitals.csv'}")
 
     # Social channels CSV
@@ -183,7 +284,8 @@ def export_csv(db_path: str, output_dir: str) -> None:
         with open(out / "social_channels.csv", "w", newline="", encoding="utf-8-sig") as f:
             writer = csv.writer(f)
             writer.writerow(rows[0].keys())
-            writer.writerows(rows)
+            for row in rows:
+                writer.writerow(_safe_row(row))
         print(f"Exported {len(rows)} social channels -> {out / 'social_channels.csv'}")
 
     # Doctors CSV
@@ -194,7 +296,8 @@ def export_csv(db_path: str, output_dir: str) -> None:
         with open(out / "doctors.csv", "w", newline="", encoding="utf-8-sig") as f:
             writer = csv.writer(f)
             writer.writerow(rows[0].keys())
-            writer.writerows(rows)
+            for row in rows:
+                writer.writerow(_safe_row(row))
         print(f"Exported {len(rows)} doctors -> {out / 'doctors.csv'}")
 
     conn.close()

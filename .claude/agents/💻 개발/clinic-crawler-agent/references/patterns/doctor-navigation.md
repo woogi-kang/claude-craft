@@ -39,6 +39,13 @@ Common doctor page URL segments:
 - `.doctor-photo img`, `.doctor-img img`
 - `.staff-photo img`, `.doctor-card img`
 - `.team-member img`
+- **CSS background-image fallback**:
+  ```javascript
+  document.querySelectorAll('[class*="photo"], [class*="image"], [class*="avatar"]').forEach(el => {
+    const bg = getComputedStyle(el).backgroundImage;
+    if (bg && bg !== 'none') { /* extract url() */ }
+  });
+  ```
 
 ### Credentials
 - `.doctor-career`, `.doctor-history`
@@ -51,8 +58,83 @@ Common doctor page URL segments:
 2. If not found, check secondary labels
 3. If found inside submenu parent, expand parent first then click
 4. After navigation, wait for page load (check for doctor-related content)
-5. Extract using content selectors
-6. If selectors fail (image-based page), trigger Gemini OCR workflow
+5. **AJAX detection**: If URL unchanged but DOM changed, doctor page loaded via AJAX
+6. **Login wall check**: If `[type="password"]` or "회원"/"로그인" text detected, skip extraction
+7. Extract using content selectors
+8. If selectors fail (image-based page), trigger Gemini OCR workflow
+
+### No Doctor Menu Fallback
+If no menu label matches after all primary/secondary/submenu checks:
+1. Return to homepage
+2. Scan for doctor content on main page (hero, about, team sections)
+3. Check URL for doctor-like segments (`/about`, `/introduce`)
+4. If single-doctor clinic, extract from main page with `extraction_source: "main_page"`
+
+## UI Pattern Detection (Pre-Extraction)
+
+Before extracting doctor data, detect and handle these UI patterns:
+
+### Tabs / Accordion
+- Detect: `[role="tab"]`, `[role="tabpanel"]`, `.accordion-item`, `.tab-pane`
+- For each collapsed tab/section:
+  1. Check `aria-selected="false"` or `display: none`
+  2. `browser_click` on tab header
+  3. Wait for content reveal (1000ms)
+  4. Extract doctor info from expanded section
+
+### Slider / Carousel
+- Detect: `[class*="swiper"]`, `[class*="carousel"]`, `[class*="slider"]`
+- For each slide:
+  1. Extract visible doctors
+  2. Click next arrow/dot
+  3. Wait for slide transition (2000ms)
+  4. Extract newly visible doctors
+  5. Stop when returning to first slide or no new doctors
+
+### Separate Profile Pages (One Page Per Doctor)
+- Detect: Doctor list page shows names as clickable links (few text items, many `<a>` elements)
+- For each doctor link:
+  1. Record link URL
+  2. `browser_click` to navigate to profile page
+  3. Extract full doctor info from dedicated page
+  4. Navigate back to list page
+  5. Repeat for remaining links
+
+### Expandable Content ("더보기" / "Read More")
+- Detect: Buttons/links with text "더보기", "read more", "expand", "show more"
+- For each expandable section:
+  1. Check adjacent hidden element (`display: none`, `max-height: 0`)
+  2. `browser_click` on expand button
+  3. Wait for content reveal (1000ms)
+  4. Re-extract credentials/career from expanded content
+
+## Name Parsing and Staff Filtering
+
+### Korean Honorific Separation
+Raw text like "박미래 원장" should be split:
+```
+Pattern: (name) (honorific/role)
+Regex: ^(.+?)\s+(원장|대표원장|부원장|전문의|의사|레지던트|인턴)$
+Result: name = "박미래", role = "원장"
+```
+
+### Staff Role Filtering
+**Keep** (doctor roles):
+- 원장, 대표원장, 부원장, 전문의, 의사, 레지던트, 인턴
+
+**Exclude** (non-doctor roles):
+- 간호사, 간호조무사, 피부관리사, 상담사, 코디네이터, 스텝, 직원
+
+If role field is empty, parse name/title text for keywords to classify.
+
+### Credential Splitting
+When credentials are on a single line with mixed separators:
+1. Detect primary separator (most frequent: `/` vs `,` vs `•`)
+2. Split by detected separator
+3. Classify each item:
+   - **Education**: contains 대학, 학위, 졸업, 수료
+   - **Career**: contains 병원, 클리닉, 근무, 전공의
+   - **Credentials**: contains 정회원, 학회, 자격, 인증, 협회
 
 ## Multi-Branch Site Handling
 
