@@ -71,47 +71,49 @@ Load these on demand using the Read tool when needed:
 
 ## Crawl Workflow (Per Hospital)
 
-### Step 1: Navigate and Dismiss Popups
+See `references/workflows/crawl-workflow.md` for full detail with code snippets.
 
-1. Navigate to hospital URL using `browser_navigate`
-2. Take `browser_snapshot` to check for popups
-3. If popup detected, load `references/patterns/popup-dismissal.md` and apply strategies
-4. Re-snapshot to verify clean state
+### Step 0: Pre-flight Check
+- Validate URL, check DB for duplicates (skip if success within 7 days)
 
-### Step 2: Extract Social Channels
+### Step 1: Navigate and Resolve
+- `browser_navigate` to URL
+- **Redirect detection**: capture `window.location.href`, record `final_url` if changed
+- **i18n detection**: if non-Korean path (`/en/`, `/ja/`), navigate to Korean version
 
+### Step 2: Dismiss Popups
+- Load `references/patterns/popup-dismissal.md`, max 3 attempts
+
+### Step 3: SPA Content Wait
+- If snapshot returns minimal DOM (< 10 nodes), wait 5s for hydration
+- Check framework markers (`#__next`, `#app`, `#root`), wait additional 3s if found
+
+### Step 4: Extract Social Channels (4-Pass)
 Load `references/patterns/social-channels.md` for platform patterns.
+- Pass 1: Static DOM (href scan)
+- Pass 1.5: **iframe detection** (chat widgets, embedded channels)
+- Pass 2: Dynamic JS (onclick, SDK)
+- Pass 3: QR/Images (Gemini OCR)
+- Pass 4: **URL validation** (de-duplicate, strip tracking params, dead link check)
 
-Pass 1 - Static DOM:
-- Scan `browser_snapshot` for social URLs in href attributes
-- Check footer, sidebar, header, floating elements
-
-Pass 2 - Dynamic JavaScript:
-- Use `browser_evaluate` to check onclick handlers, SDK scripts
-- Detect chat widget SDKs (Kakao Channel, etc.)
-
-Pass 3 - QR/Images (optional):
-- Find images with QR-related attributes
-- Screenshot and analyze with Gemini CLI if needed
-
-### Step 3: Find and Extract Doctor Information
-
+### Step 5: Find and Extract Doctor Information
 Load `references/patterns/doctor-navigation.md` for menu labels and selectors.
 
 1. Scan navigation menu for doctor-related labels
-2. Click the doctor menu link
-3. Take snapshot of doctor page
+2. **Multi-branch handling**: if chain site, match branch by address city/district
+3. Click the doctor menu link, take snapshot
 4. Extract: names, roles, photos, credentials, education, career
+5. **Pagination**: detect "다음"/"더보기", iterate up to 5 pages
 
 **If page is image-based** (fewer than 5 text nodes with doctor info):
 - Load `references/workflows/gemini-ocr.md`
 - Screenshot doctor section with `browser_take_screenshot`
 - Convert PNG to JPEG: `sips -s format jpeg -s formatOptions 85 input.png --out output.jpg`
-- Call Gemini CLI: `gemini -p "Read the image file at <path> and extract..." -y`
+- Call Gemini CLI: `gemini -p "Read the image file at <path>..." -y --include-directories data/clinic-results/screenshots`
 - **NEVER skip OCR** - you MUST execute Gemini CLI and parse the results
 - Mark results with `ocr_source: true`
 
-### Step 4: Save Results
+### Step 6: Save Results
 
 Save to SQLite via storage script:
 ```bash
@@ -120,12 +122,14 @@ python3 scripts/clinic-storage/storage_manager.py save \
   --db data/clinic-results/hospitals.db
 ```
 
-### Step 5: Return Structured Results
+**Screenshot cleanup**: Delete PNGs/JPGs after successful save. Keep if status is "partial".
+
+### Step 7: Return Structured Results
 
 Return JSON matching `references/shared/data-models.md` schema:
-- hospital_no, name, url, status
-- social_channels (platform, url, extraction_method)
-- doctors (name, role, credentials, education, career, ocr_source)
+- hospital_no, name, url, final_url, status
+- social_channels (platform, url, extraction_method, status)
+- doctors (name, role, credentials, education, career, branch, ocr_source)
 - errors (any issues encountered)
 
 ---

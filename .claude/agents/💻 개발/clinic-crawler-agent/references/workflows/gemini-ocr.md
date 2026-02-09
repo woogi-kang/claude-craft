@@ -39,7 +39,9 @@ sips --resampleWidth 1024 -s format jpeg -s formatOptions 85 input.png --out out
 
 ### 3. Call Gemini CLI
 
-**IMPORTANT**: Do NOT use stdin (`< image.jpg`). Instead, reference the file path in the prompt and use `-y` flag for auto-approval:
+**IMPORTANT**: Do NOT use stdin (`< image.jpg`). Instead, reference the file path in the prompt and use `-y` flag for auto-approval.
+
+**Limit file scanning** with `--include-directories` to prevent Gemini from scanning the entire project:
 
 ```bash
 gemini -p "Read the image file at data/clinic-results/screenshots/hospital_{no}_doctors.jpg and extract all Korean text about doctors/medical staff. Return ONLY valid JSON:
@@ -54,12 +56,13 @@ gemini -p "Read the image file at data/clinic-results/screenshots/hospital_{no}_
       \"career\": [\"list of career history\"]
     }
   ]
-}" -y 2>&1 | grep -A 200 '```'
+}" -y --include-directories data/clinic-results/screenshots 2>&1 | grep -A 200 '```'
 ```
 
 Key flags:
 - `-p "prompt"`: Non-interactive headless mode
 - `-y`: YOLO mode - auto-approves read_file tool to access the image
+- `--include-directories data/clinic-results/screenshots`: Limits file scanning to screenshots only (prevents slow project-wide scan)
 - `2>&1 | grep -A 200 '```'`: Filters to only the JSON code block output
 
 ### 4. Parse and Validate
@@ -75,6 +78,16 @@ Key flags:
 - De-duplicate by doctor name
 - Prefer DOM data over OCR when both available
 
+### 6. Cleanup Screenshots
+
+After successful OCR extraction and DB save:
+```bash
+rm -f data/clinic-results/screenshots/hospital_{no}_*.png
+rm -f data/clinic-results/screenshots/hospital_{no}_*.jpg
+```
+
+Keep screenshots only if OCR failed (for manual review or re-attempt).
+
 ## Error Handling
 
 - Gemini CLI not available: Skip OCR, log warning, proceed with DOM-only results
@@ -82,3 +95,4 @@ Key flags:
 - Invalid JSON response: Retry once with simplified prompt, then skip
 - PNG heap crash: Always convert to JPEG first (see Step 2)
 - Image too large (>1MB JPEG): Resize to max 1024px width before sending
+- Project scan slow: Use `--include-directories` to limit scope (see Step 3)

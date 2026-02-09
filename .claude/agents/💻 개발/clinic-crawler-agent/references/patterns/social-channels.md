@@ -64,12 +64,21 @@ Note: WeChat links are often available only as QR code images. Check `<img>` tag
 7. JavaScript variables and SDK initialization
 8. QR code images (especially WeChat)
 
-## Three-Pass Extraction Strategy
+## Four-Pass Extraction Strategy
 
 ### Pass 1: Static DOM
 - Scan all `<a href>` attributes for platform URL patterns
 - Check footer, sidebar, header sections
 - Look for floating elements (`position:fixed`, `position:sticky`)
+
+### Pass 1.5: iframe Detection
+- Use `browser_evaluate` to find all `<iframe>` elements:
+  ```javascript
+  Array.from(document.querySelectorAll('iframe')).map(f => ({src: f.src, id: f.id, class: f.className}))
+  ```
+- Check iframe `src` for social platform domains (kakao, naver, line)
+- Check for chat widget iframes (channel.io, zendesk, tawk.to, crisp)
+- If iframe contains a social channel, record with `extraction_method: "iframe"`
 
 ### Pass 2: Dynamic JavaScript
 - Check `onclick` handlers (common pattern: `href="#none"` with `onclick="window.open('...')"`)
@@ -80,3 +89,11 @@ Note: WeChat links are often available only as QR code images. Check `<img>` tag
 - Find `<img>` tags with QR-related attributes (`qr`, `wechat`, `weixin`, `kakao`)
 - Download and decode using image analysis
 - Convert decoded URLs to social links
+
+### Pass 4: URL Validation
+For each extracted URL:
+1. **Format check**: Verify URL has valid scheme (http/https)
+2. **De-duplicate**: Normalize URLs (strip trailing slash, remove tracking params)
+   - Remove: `?utm_*`, `?ref=*`, `?fbclid=*`, `?gclid=*`
+3. **Platform classify**: Match normalized URL to platform patterns above
+4. **Dead link detection**: If URL returns immediate redirect to error page or generic domain, mark as `"status": "dead"`
