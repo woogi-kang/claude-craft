@@ -83,9 +83,51 @@ The save command expects JSON matching this structure:
 }
 ```
 
+### Dashboard
+
+```bash
+python scripts/clinic-storage/storage_manager.py dashboard \
+  --db data/clinic-results/hospitals.db \
+  --target 4256
+```
+
+Shows: progress %, success rate, today's crawls, status breakdown, platform discovery rates, recent failure patterns.
+
+### Retry Queue
+
+```bash
+python scripts/clinic-storage/storage_manager.py retry-queue \
+  --db data/clinic-results/hospitals.db
+```
+
+Shows up to 50 hospitals eligible for retry, prioritized: partial > failed(transient), sorted by retry count and age.
+
+### Incremental Export
+
+```bash
+python scripts/clinic-storage/storage_manager.py export \
+  --db data/clinic-results/hospitals.db \
+  --output data/clinic-results/exports/ \
+  --since 2026-02-09
+```
+
+Exports only hospitals changed since the given date. Files suffixed with `_since_YYYYMMDD`.
+
 ## SQLite Schema
 
 - `hospitals` - One row per hospital (hospital_no PK)
 - `social_channels` - One row per channel (unique by hospital_no + platform + url)
 - `doctors` - One row per doctor (education/career/credentials as JSON arrays)
 - `crawl_errors` - Error log
+- `ocr_cache` - Image hash to OCR result cache (30-day TTL)
+
+## Schema Migrations
+
+Migrations are applied automatically via `PRAGMA user_version` tracking.
+New columns/tables are added incrementally without breaking existing data.
+
+Current migrations:
+- v1: `social_channels.verified_at` column
+- v2: `doctors.ocr_confidence` column
+- v3: `crawl_errors.retry_count` column
+- v4: `ocr_cache` table

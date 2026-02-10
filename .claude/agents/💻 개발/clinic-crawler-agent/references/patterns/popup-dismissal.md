@@ -53,6 +53,43 @@ Selectors:
 - `.modal-backdrop`, `.popup-overlay`, `.popup-bg`
 - `.dim`, `.dimmed`, `.overlay`
 
+## Strategy 5: Age Verification Gate (Priority 5)
+
+Classify age verification popups into two types before acting:
+
+**Type A - Informational confirmation** (auto-accept):
+- Simple "예/아니오" or "네, 19세 이상입니다" button without input fields
+- Detection: No `input[type="text"]`, no `input[type="tel"]`, no authentication module
+- Action: Click the affirmative button ("예", "네", "19세 이상", "확인")
+- Selectors:
+  - `button:has-text("예")`, `button:has-text("네")`
+  - `button:has-text("19세 이상")`, `a:has-text("성인입니다")`
+
+**Type B - Real identity verification** (skip):
+- Requires phone number, resident registration number, or 3rd-party auth module
+- Detection: `input[type="text"]`, `input[type="tel"]`, iframe with auth provider
+- Action: Mark as `age_restricted`, do not bypass
+- Auth provider markers: `nice.checkplus`, `dreamsecurity`, `inicis.com/auth`
+
+Classification logic:
+```javascript
+const hasInputField = document.querySelector('input[type="text"], input[type="tel"], input[type="number"]');
+const hasAuthIframe = document.querySelector('iframe[src*="nice"], iframe[src*="dreamsecurity"], iframe[src*="inicis"]');
+if (hasInputField || hasAuthIframe) return 'TYPE_B_REAL_AUTH';
+else return 'TYPE_A_INFORMATIONAL';
+```
+
+## Strategy 6: Google Maps Embedded Info (Priority 6)
+
+Extract contact info from embedded Google Maps iframes:
+
+Detection: `iframe[src*="google.com/maps"]`
+Action:
+- Parse iframe `src` URL for `!1s` place identifier
+- Check surrounding DOM elements for phone/address text
+- Look for `<a href="tel:">` links near the maps iframe
+- Record phone numbers with `extraction_method: "maps_embed"`
+
 ## Cookie Suppression
 
 Set cookies before page load to prevent popups:

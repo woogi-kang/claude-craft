@@ -65,10 +65,18 @@ Common doctor page URL segments:
 
 ### No Doctor Menu Fallback
 If no menu label matches after all primary/secondary/submenu checks:
-1. Return to homepage
-2. Scan for doctor content on main page (hero, about, team sections)
-3. Check URL for doctor-like segments (`/about`, `/introduce`)
-4. If single-doctor clinic, extract from main page with `extraction_source: "main_page"`
+
+1. **Sitemap check** (try first):
+   - Navigate to `{base_url}/sitemap.xml`
+   - Parse for URLs matching: `/doctor`, `/staff`, `/team`, `/about`, `/introduce`, `/의료진`, `/원장`
+   - Navigate to first matching URL, attempt extraction
+   - Record `extraction_source: "sitemap"`
+
+2. **Main page scan** (if sitemap fails):
+   - Return to homepage
+   - Scan for doctor content on main page (hero, about, team sections)
+   - Check URL for doctor-like segments (`/about`, `/introduce`)
+   - If single-doctor clinic, extract from main page with `extraction_source: "main_page"`
 
 ## UI Pattern Detection (Pre-Extraction)
 

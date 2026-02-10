@@ -160,6 +160,8 @@ Never crash on a single hospital. Log the error and continue to next.
 | requires_manual | CAPTCHA/login required | Never (manual only) |
 | age_restricted | 19+ verification needed | Never (manual only) |
 | unsupported | Flash/ActiveX content | Never (manual only) |
+| encoding_error | Garbled text (>10% corruption) | Never (manual only) |
+| robots_blocked | Blocked by robots.txt | Never (manual only) |
 
 ## Duplicate Crawl Prevention
 
@@ -188,3 +190,5 @@ After each major navigation, check if page is an error/maintenance page:
 | Rate limit | SSL invalid cert |
 | Connection reset | Site permanently offline |
 | Browser crash | CAPTCHA/login required |
+| Encoding corruption (<10%) | Encoding corruption (>10%) |
+| | robots.txt blocked |

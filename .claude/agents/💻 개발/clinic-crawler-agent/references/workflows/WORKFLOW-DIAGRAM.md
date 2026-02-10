@@ -267,13 +267,112 @@ Return structured result
 | DB save OK? | done / JSON fallback | No SQLite error |
 | Cleanup screenshots? | delete / keep | status success vs partial |
 
+## Component Interaction Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    participant O as MoAI Orchestrator
+    participant A as Crawler Agent
+    participant P as Playwright MCP
+    participant W as Website
+    participant G as OCR Provider
+    participant S as Storage Script
+    participant DB as SQLite DB
+
+    O->>A: Crawl hospital #N at URL
+    A->>DB: Step 0: Check duplicate
+    DB-->>A: status/crawled_at
+
+    alt New or re-crawl needed
+        A->>P: Step 1: browser_navigate(url)
+        P->>W: HTTP GET
+        W-->>P: HTML + JS
+        P-->>A: Page loaded
+        A->>P: browser_evaluate(location.href)
+        P-->>A: final_url (redirect check)
+
+        A->>P: Step 2: browser_snapshot
+        P-->>A: DOM tree
+        A->>A: Detect popups
+        opt Popup found
+            A->>P: browser_click(close button)
+            P-->>A: Popup dismissed
+        end
+
+        A->>P: Step 3: browser_evaluate(MutationObserver)
+        P-->>A: DOM stable (dynamic wait)
+
+        Note over A,P: Step 4: Social Channel Extraction
+        A->>P: Pass 1: browser_snapshot (static DOM)
+        P-->>A: href links
+        A->>P: Pass 1.5: browser_evaluate (iframes)
+        P-->>A: iframe srcs
+        A->>P: Pass 2: browser_evaluate (JS/SDK/Shadow DOM)
+        P-->>A: Dynamic links
+        A->>P: Pass 2.5: browser_evaluate (scroll)
+        P-->>A: Scroll-triggered widgets
+        opt QR codes detected
+            A->>P: Pass 3: browser_take_screenshot
+            P-->>A: QR image
+            A->>G: OCR decode QR
+            G-->>A: Decoded URL
+        end
+        A->>A: Pass 4: Validate + deduplicate URLs
+
+        Note over A,P: Step 5: Doctor Navigation
+        A->>P: browser_snapshot (nav menu)
+        P-->>A: Menu labels
+        A->>A: Match doctor menu label
+        alt Menu found
+            A->>P: browser_click(doctor link)
+            P->>W: Navigate to doctor page
+            W-->>P: Doctor page HTML
+        else Sitemap fallback
+            A->>P: browser_navigate(sitemap.xml)
+            P-->>A: Sitemap XML
+            A->>P: browser_navigate(doctor URL from sitemap)
+        else Main page fallback
+            A->>A: Scan main page content
+        end
+
+        Note over A,G: Step 6: Doctor Extraction
+        A->>P: browser_snapshot (doctor content)
+        P-->>A: DOM content
+        alt DOM has text content
+            A->>A: Extract via selectors
+        else Image-based page
+            A->>P: browser_take_screenshot
+            P-->>A: Screenshot PNG
+            A->>A: Convert PNG to JPEG + preprocess
+            A->>A: Check OCR cache
+            alt Cache hit
+                A->>A: Use cached result
+            else Cache miss
+                A->>G: OCR request (Gemini/Vision/Tesseract)
+                G-->>A: Extracted text JSON
+                A->>A: Validate + calc ocr_confidence
+                A->>DB: Cache OCR result
+            end
+        end
+
+        Note over A,S: Step 7: Save Results
+        A->>S: save --json-file result.json
+        S->>DB: INSERT/UPDATE (atomic transaction)
+        DB-->>S: OK
+        S-->>A: Saved
+        A-->>O: Return structured JSON result
+    else Skip (cached/blocked)
+        A-->>O: Return cached/skip status
+    end
+```
+
 ## Edge Cases Covered
 
 | # | Edge Case | Solution | Step |
 |---|-----------|----------|------|
 | 1 | URL redirect | Capture final_url, check chain match | Step 1 |
 | 2 | iframe social channels | Pass 1.5 iframe detection | Step 4 |
-| 3 | SPA/CSR empty DOM | Wait 5s + framework check + 3s hydration | Step 3 |
+| 3 | SPA/CSR empty DOM | MutationObserver dynamic wait (max 10s) | Step 3 |
 | 4 | Paginated doctor list | Iterate up to 5 pages | Step 5 |
 | 5 | Multi-branch sites | Match branch by address city/district | Step 5 |
 | 6 | Duplicate crawl | DB check, skip if success < 7 days | Step 0 |
@@ -281,3 +380,14 @@ Return structured result
 | 8 | i18n paths | Detect non-Korean, navigate to /ko/ | Step 1 |
 | 9 | Screenshot accumulation | Delete after successful save | Step 6 |
 | 10 | Gemini file scan | --include-directories flag | Step 5 OCR |
+| 11 | robots.txt blocked | Check before crawl, mark robots_blocked | Step 0 |
+| 12 | Shadow DOM links | Traverse shadow roots in Pass 2 | Step 4 |
+| 13 | window.open intercept | Override + click consultation buttons | Step 4 |
+| 14 | EUC-KR encoding | Garbled text ratio detection | Step 1 |
+| 15 | Age gate (Type A) | Auto-accept informational confirmation | Step 2 |
+| 16 | Sitemap fallback | Parse sitemap.xml for doctor URLs | Step 5 |
+| 17 | OCR provider fallback | Gemini → Vision → Tesseract chain | Step 6 |
+| 18 | OCR result caching | SHA256 image hash, 30-day TTL | Step 6 |
+| 19 | CSS pseudo-element URLs | Scan ::before/::after content property | Step 4 |
+| 20 | WebSocket chat widgets | Detect via performance entries | Step 4 |
+| 21 | Google Maps iframe | Extract phone from surrounding DOM | Step 4 |

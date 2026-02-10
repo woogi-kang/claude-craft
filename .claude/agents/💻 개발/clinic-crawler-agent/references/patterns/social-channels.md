@@ -131,6 +131,16 @@ Korean phone regex: `(?:0\d{1,2}[-.\s]?\d{3,4}[-.\s]?\d{4}|\+82[-.\s]?\d{1,2}[-.
 - Check iframe `src` for social platform domains (kakao, naver, line)
 - Check for chat widget iframes (channel.io, zendesk, tawk.to, crisp)
 - **Sandboxed iframes**: Read src from parent DOM attribute, not iframe content
+- **Google Maps iframe** (`extraction_method: "maps_embed"`):
+  ```javascript
+  document.querySelectorAll('iframe[src*="google.com/maps"], iframe[src*="maps.google"]').forEach(f => {
+    // Extract phone from surrounding DOM context
+    const parent = f.closest('section, div, article') || f.parentElement;
+    const text = parent?.innerText || '';
+    const phones = text.match(/(?:0\d{1,2})[-.\s]?\d{3,4}[-.\s]?\d{4}/g);
+    if (phones) phones.forEach(p => results.push({ platform: 'Phone', url: p, method: 'maps_embed' }));
+  });
+  ```
 - If iframe contains a social channel, record with `extraction_method: "iframe"`
 
 ### Pass 1.75: Structured Data (`extraction_method: "structured_data"`)
@@ -148,15 +158,85 @@ Korean phone regex: `(?:0\d{1,2}[-.\s]?\d{3,4}[-.\s]?\d{4}|\+82[-.\s]?\d{1,2}[-.
 - Check `onclick` handlers (common pattern: `href="#none"` with `onclick="window.open('...')"`)
 - **Decode obfuscated links**: Look for `atob()`, `decodeURIComponent()`, `unescape()` in handlers
 - **Async handlers**: Extract URLs from `setTimeout(() => window.open(...))` patterns
+- **window.open intercept** (`extraction_method: "window_open_intercept"`):
+  ```javascript
+  const capturedUrls = [];
+  const origOpen = window.open;
+  window.open = function(url) { if (url) capturedUrls.push(url); return null; };
+  // Click all consultation-related buttons ("상담", "문의", "채팅", "톡")
+  document.querySelectorAll('button, a, [role="button"]').forEach(el => {
+    const text = el.textContent || '';
+    if (/상담|문의|채팅|톡|consultation|chat/i.test(text)) {
+      try { el.click(); } catch(e) {}
+    }
+  });
+  window.open = origOpen;
+  return capturedUrls;
+  ```
+  - Filter captured URLs against platform patterns
+  - Record with `extraction_method: "window_open_intercept"`
+- **Shadow DOM traversal** (`extraction_method: "shadow_dom"`):
+  ```javascript
+  const shadowLinks = [];
+  document.querySelectorAll('*').forEach(el => {
+    if (el.shadowRoot) {
+      el.shadowRoot.querySelectorAll('a[href]').forEach(a => {
+        shadowLinks.push({ href: a.href, text: a.textContent });
+      });
+      // Recurse into nested shadow DOMs
+      el.shadowRoot.querySelectorAll('*').forEach(inner => {
+        if (inner.shadowRoot) {
+          inner.shadowRoot.querySelectorAll('a[href]').forEach(a => {
+            shadowLinks.push({ href: a.href, text: a.textContent });
+          });
+        }
+      });
+    }
+  });
+  return shadowLinks;
+  ```
+  - Filter against platform URL patterns
+  - Record with `extraction_method: "shadow_dom"`
+- **CSS pseudo-element content** (`extraction_method: "css_pseudo"`):
+  ```javascript
+  const pseudoUrls = [];
+  document.querySelectorAll('[class*="social"], [class*="contact"], [class*="sns"], footer a').forEach(el => {
+    ['::before', '::after'].forEach(pseudo => {
+      const content = getComputedStyle(el, pseudo).content;
+      if (content && content !== 'none' && content !== 'normal') {
+        const urlMatch = content.match(/https?:\/\/[^\s"')]+/);
+        if (urlMatch) pseudoUrls.push(urlMatch[0]);
+      }
+    });
+  });
+  return pseudoUrls;
+  ```
+- **WebSocket-based chat widgets** (`extraction_method: "websocket_widget"`):
+  ```javascript
+  const wsWidgets = [];
+  performance.getEntriesByType('resource')
+    .filter(e => /wss?:\/\//.test(e.name))
+    .forEach(e => {
+      if (/intercom|drift|hubspot|crisp|zendesk|freshchat|livechat/.test(e.name)) {
+        wsWidgets.push({ type: e.name.match(/(intercom|drift|hubspot|crisp|zendesk|freshchat|livechat)/)?.[0], url: e.name });
+      }
+    });
+  return wsWidgets;
+  ```
+  - Map detected widget to platform-specific consultation URL
 - Detect chat widget SDKs (`extraction_method: "widget_sdk"`):
   - Kakao Channel: `window.Kakao?.Channel`
   - channel.io: `window.ChannelIO`
   - tawk.to: `window.tawk_chat`
   - Crisp: `window.Crisp?.chat`
   - Zendesk: `window.zE`
+  - Intercom: `window.Intercom`
+  - Drift: `window.drift`
+  - HubSpot: `window.HubSpotConversations`
+  - Freshchat: `window.fcWidget`
 - Extract SDK initialization parameters for actual social links
 - Use `browser_evaluate` to extract hidden social links from JS variables
-- Record with `extraction_method: "dom_dynamic"` or `"widget_sdk"`
+- Record with `extraction_method: "dom_dynamic"`, `"widget_sdk"`, `"shadow_dom"`, `"window_open_intercept"`, `"css_pseudo"`, or `"websocket_widget"`
 
 ### Pass 2.5: Scroll-triggered Elements (`extraction_method: "scroll_triggered"`)
 - Simulate scroll to reveal lazy-loaded floating chat buttons:

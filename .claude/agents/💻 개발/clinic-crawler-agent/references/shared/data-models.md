@@ -33,6 +33,8 @@ Top-level result object returned by the agent after crawling one hospital.
 | requires_manual | CAPTCHA/login required | Never |
 | age_restricted | 19+ verification needed | Never |
 | unsupported | Flash/ActiveX content | Never |
+| encoding_error | Garbled text (>10% corruption) | Never |
+| robots_blocked | Blocked by robots.txt | Never |
 
 ## SocialChannel
 
@@ -48,7 +50,7 @@ Top-level result object returned by the agent after crawling one hospital.
 KakaoTalk, NaverTalk, NaverBooking, Line, WeChat, WhatsApp, Telegram, FacebookMessenger, Instagram, YouTube, NaverBlog, Facebook, Phone, SMS
 
 ### Extraction Methods
-dom_static, dom_dynamic, floating_element, iframe, structured_data, widget_sdk, scroll_triggered, qr_decode, deep_link, ocr, phone_text
+dom_static, dom_dynamic, floating_element, iframe, structured_data, widget_sdk, scroll_triggered, qr_decode, deep_link, ocr, phone_text, shadow_dom, window_open_intercept, css_pseudo, websocket_widget
 
 ## DoctorInfo
 
@@ -63,8 +65,9 @@ dom_static, dom_dynamic, floating_element, iframe, structured_data, widget_sdk, 
 | credentials | array[string] | no | Certifications, memberships |
 | branch | string | no | Branch name for multi-branch sites |
 | branches | array[string] | no | Multiple branches if doctor works at several |
-| extraction_source | string | no | "doctor_page", "main_page", "profile_page" |
+| extraction_source | string | no | "doctor_page", "main_page", "profile_page", "sitemap" |
 | ocr_source | boolean | no | true if extracted via Gemini OCR |
+| ocr_confidence | float | no | 0.0-1.0, OCR result confidence score |
 
 ## ErrorInfo
 

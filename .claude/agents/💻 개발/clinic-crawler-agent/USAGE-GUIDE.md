@@ -2,24 +2,54 @@
 
 ## Quick Start
 
-### Crawl a single hospital
+### Mode 1: Single Hospital (LLM Agent via Playwright MCP)
+
+Best for: edge cases, complex sites, manual review of failures.
+
 ```
 Use the clinic-crawler-agent to crawl hospital #6 (고은미인의원) at http://www.goeunmiin.co.kr/
 Extract social consultation channels and doctor information.
 Save results to data/clinic-results/hospitals.db
 ```
 
-### Crawl multiple hospitals sequentially
-```
-Use the clinic-crawler-agent to crawl the following hospitals one by one:
-1. Hospital #6 (고은미인의원) at http://www.goeunmiin.co.kr/
-2. Hospital #15 (톡스앤필의원) at http://www.toxnfill10.com/
-3. Hospital #28 (서울미의원) at http://www.seoulmi.kr
-Save each result to data/clinic-results/hospitals.db
+IMPORTANT: Playwright MCP shares a single browser. Run hospitals sequentially (one at a time) in this mode.
+
+### Mode 2: Parallel Batch (Python Playwright - Isolated Browsers)
+
+Best for: bulk crawling 10+ hospitals with true parallel execution.
+
+```bash
+# 10 random Seoul clinics, 5 parallel browsers:
+python3 scripts/clinic-storage/crawl_batch.py \
+  --csv data/clinic-results/skin_clinics.csv \
+  --filter-city 서울 --sample 10 --parallel 5
+
+# Specific hospitals, 3 parallel:
+python3 scripts/clinic-storage/crawl_batch.py \
+  --csv data/clinic-results/skin_clinics.csv \
+  --numbers 6,15,28 --parallel 3
+
+# All Seoul clinics (skip already-crawled):
+python3 scripts/clinic-storage/crawl_batch.py \
+  --csv data/clinic-results/skin_clinics.csv \
+  --filter-city 서울 --parallel 5
+
+# Dry run (preview without crawling):
+python3 scripts/clinic-storage/crawl_batch.py \
+  --csv data/clinic-results/skin_clinics.csv \
+  --filter-city 서울 --sample 10 --dry-run
 ```
 
-IMPORTANT: Run hospitals sequentially (one at a time), not in parallel.
-Playwright MCP uses a single browser instance that cannot handle concurrent navigations.
+Each hospital gets its own headless Chromium browser. No shared state, no conflicts.
+
+### Single Hospital with Isolated Browser
+
+```bash
+python3 scripts/clinic-storage/crawl_single.py \
+  --no 6 --name "고은미인의원" --url "http://www.goeunmiin.co.kr/"
+```
+
+Options: `--timeout 60`, `--headed` (show browser for debugging), `--db path/to/db`
 
 ## What Gets Extracted
 
@@ -75,7 +105,8 @@ Requires: Gemini CLI installed (`brew install gemini-cli`)
 ## Troubleshooting
 
 ### Browser conflicts with parallel execution
-Run hospitals sequentially. Parallel Playwright MCP calls share the same browser.
+Use Mode 2 (crawl_batch.py) for parallel crawling. Each process gets its own browser.
+Mode 1 (Playwright MCP) shares a single browser and must be run sequentially.
 
 ### Popup blocking the page
 The agent tries up to 3 dismissal strategies automatically.
@@ -84,3 +115,16 @@ If still blocked, it proceeds with whatever content is accessible.
 ### Image-based pages with no OCR
 If Gemini CLI is not installed, the agent skips OCR and returns partial results.
 Install with: `brew install gemini-cli`
+
+### Installing Python Playwright (for Mode 2)
+```bash
+pip install playwright
+python -m playwright install chromium
+```
+
+### Debugging a failed crawl
+```bash
+# Run single hospital with visible browser:
+python3 scripts/clinic-storage/crawl_single.py \
+  --no 123 --name "Test" --url "https://example.com" --headed
+```

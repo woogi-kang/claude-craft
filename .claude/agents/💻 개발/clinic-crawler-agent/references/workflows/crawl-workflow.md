@@ -2,15 +2,46 @@
 
 End-to-end crawl procedure for a single hospital website.
 
+## Step Failure Matrix
+
+Each step has a defined failure policy:
+
+| Step | On Failure | Status | Continue? |
+|------|-----------|--------|-----------|
+| Step 0 | URL invalid or skip condition met | skipped | No |
+| Step 1 | Navigation/anti-bot/error page | failed | No (Step 4-6 skipped) |
+| Step 2 | Popup won't close after 3 attempts | warn | Yes (popups may block content) |
+| Step 3 | SPA content never loads | partial | Yes (extract what's available) |
+| Step 4 | No social channels found | ok | Yes (empty array, not failure) |
+| Step 5 | No doctor menu found | ok | Yes (try sitemap, then main page fallback) |
+| Step 6 | Extraction fails / OCR fails | partial | Yes (save partial results) |
+| Step 7 | Storage fails | error | Return JSON result directly |
+
+Rollback rules:
+- Step 1 failure → skip all extraction, save failed status immediately
+- Step 2 failure → log warning, proceed (extraction may be incomplete)
+- Step 4+5 both empty → status "partial" (site accessible but no data found)
+- Step 6 OCR failure → keep DOM results, mark `ocr_source: false`
+- Step 7 storage failure → retry once, then return JSON to caller
+
 ## Step 0: Pre-flight Check
 
 - Validate URL format (http/https)
+- **robots.txt check**: Before any page access, check `/robots.txt`:
+  ```bash
+  browser_navigate to {base_url}/robots.txt
+  ```
+  - Parse `Disallow` directives for relevant paths (`/doctor`, `/staff`, `/about`)
+  - If target paths are disallowed: mark status "robots_blocked", skip hospital
+  - If `Crawl-delay` directive exists: apply delay between requests (min 1s, max 30s)
+  - If robots.txt returns 404 or empty: proceed normally (no restrictions)
+  - Cache robots.txt per domain (reuse for chain hospital siblings)
 - **Duplicate check**: Query DB for existing hospital_no
   ```bash
   python3 -c "import sqlite3; c=sqlite3.connect('data/clinic-results/hospitals.db'); r=c.execute('SELECT status, crawled_at FROM hospitals WHERE hospital_no=?',({no},)).fetchone(); print(r)"
   ```
   - If exists with status "success" and crawled within 7 days: skip (return cached)
-  - If exists with status "archived", "requires_manual", "age_restricted", or "unsupported": skip
+  - If exists with status "archived", "requires_manual", "age_restricted", "unsupported", "encoding_error", or "robots_blocked": skip
   - If exists with status "partial" or "failed": re-crawl
   - If not exists: proceed
 - **Domain variant check**: Normalize domain (strip .co.kr/.kr/.com) to detect duplicate crawls of same hospital at different TLDs
@@ -37,6 +68,14 @@ End-to-end crawl procedure for a single hospital website.
    - "점검", "불가", "오류", "유지보수" → mark as partial, do not extract
 9. **Encoding detection**: Check `document.characterSet`
    - If EUC-KR or ISO-2022-KR detected, log warning (Playwright handles conversion)
+   - **Garbled text detection**: After snapshot, check for encoding corruption:
+     ```javascript
+     const text = document.body.innerText;
+     const garbledRatio = (text.match(/[?�\ufffd]/g) || []).length / Math.max(text.length, 1);
+     if (garbledRatio > 0.1) return 'ENCODING_CORRUPT';
+     ```
+   - If garbled ratio > 10%, mark status "encoding_error" and log for manual review
+   - If garbled ratio 1-10%, proceed with warning (partial corruption)
 10. **CloudFlare/CAPTCHA detection**:
     - If page shows "Checking your browser" or CAPTCHA, wait 15s for auto-resolve
     - If still blocked, mark as requires_manual and skip
@@ -57,15 +96,29 @@ End-to-end crawl procedure for a single hospital website.
 2. **Unsupported content detection**: Check for Flash/ActiveX (`embed[type*="flash"]`, `object[classid*="ActiveX"]`)
    - If found, record as status "unsupported" with error message
 3. **SPA detection**: If `browser_snapshot` returns minimal DOM (< 10 meaningful nodes):
-   - Use `browser_wait_for` with selector `body *` and timeout 5000ms
-   - Re-take `browser_snapshot`
-   - If still empty after wait, use `browser_evaluate` to check for framework markers:
+   - **Dynamic wait with MutationObserver** (preferred over fixed timeout):
      ```javascript
-     document.querySelector('#__next') || document.querySelector('#app') || document.querySelector('#root')
+     await new Promise((resolve) => {
+       let timer;
+       const observer = new MutationObserver(() => {
+         clearTimeout(timer);
+         timer = setTimeout(() => { observer.disconnect(); resolve('stable'); }, 2000);
+       });
+       observer.observe(document.body, { childList: true, subtree: true });
+       // Hard timeout: 10s max wait
+       setTimeout(() => { observer.disconnect(); resolve('timeout'); }, 10000);
+       // Kick-start: if no mutations within 2s, resolve immediately
+       timer = setTimeout(() => { observer.disconnect(); resolve('idle'); }, 2000);
+     });
      ```
-   - Wait additional 3000ms for hydration, then re-snapshot
+   - Re-take `browser_snapshot` after stabilization
+   - **Framework marker check**: If still sparse, check for:
+     ```javascript
+     document.querySelector('#__next') || document.querySelector('#app') || document.querySelector('#root') || document.querySelector('[data-reactroot]')
+     ```
+   - If framework detected but content sparse, wait additional 3000ms for hydration
 4. **GTM detection**: If `window.dataLayer` or `window.gtag` exists, wait additional 2000ms for GTM-injected content
-5. If content still not loaded, record as "partial" and proceed with available content
+5. If content still not loaded after dynamic wait, record as "partial" and proceed with available content
 
 ## Step 4: Extract Social Channels
 
@@ -146,11 +199,21 @@ For each extracted social channel URL:
   - Click the matching branch tab/link before extracting doctors
   - Match by city/district name (e.g., "하남" from "경기도 하남시")
 
-**No doctor menu found (fallback):**
-- If no menu label matched after checking all primary/secondary/submenu labels:
-  - Go back to homepage
-  - Scan main page for doctor-related content (hero section, about section)
-  - If found, extract from main page with `extraction_source: "main_page"`
+**No doctor menu found (fallback chain):**
+If no menu label matched after checking all primary/secondary/submenu labels:
+
+1. **Sitemap fallback** (try first):
+   - Navigate to `{base_url}/sitemap.xml`
+   - If found, parse XML for URLs containing doctor-related segments:
+     - `/doctor`, `/doctors`, `/staff`, `/team`, `/about`, `/introduce`
+     - `/의료진`, `/원장`, `/전문의`
+   - Navigate to the first matching URL and attempt extraction
+   - Record with `extraction_source: "sitemap"`
+
+2. **Main page fallback** (if sitemap fails or not found):
+   - Go back to homepage
+   - Scan main page for doctor-related content (hero section, about section)
+   - If found, extract from main page with `extraction_source: "main_page"`
 
 ## Step 6: Extract Doctor Information
 

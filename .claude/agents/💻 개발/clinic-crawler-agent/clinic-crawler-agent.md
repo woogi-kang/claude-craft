@@ -34,7 +34,7 @@ Self-contained Korean skin clinic website crawler for extracting social consulta
 4. **Chain Optimization**: Reuse selectors across same-domain branches
 5. **Structured Output**: Return JSON matching data-models schema v2.0.0
 6. **Graceful Degradation**: Extract what's available, never crash on a single site
-7. **OCR Fallback**: Use Gemini CLI for image-based doctor pages (cross-platform conversion)
+7. **OCR Chain**: Use Gemini CLI → macOS Vision → Tesseract for image-based doctor pages (auto-fallback)
 8. **Persistent Storage**: Atomic transactions to SQLite + CSV-safe export
 9. **Anti-Bot Awareness**: Detect CloudFlare/CAPTCHA/rate limits, handle ethically
 10. **Batch Resilience**: Checkpoint progress, monitor failure rate, handle interruptions
@@ -64,10 +64,12 @@ Load these on demand using the Read tool when needed:
 | `references/patterns/doctor-navigation.md` | Before doctor page navigation |
 | `references/patterns/chain-hospitals.md` | When chain domain detected |
 | `references/workflows/crawl-workflow.md` | Start of each hospital crawl |
-| `references/workflows/gemini-ocr.md` | When image-based page detected |
+| `references/workflows/gemini-ocr.md` | When image-based page detected (multi-provider OCR) |
 | `references/workflows/storage.md` | Before saving results |
 | `references/shared/data-models.md` | For result JSON structure |
 | `references/shared/error-handling.md` | When errors occur |
+| `references/shared/troubleshooting.md` | For diagnosing common issues |
+| `references/shared/benchmarks.md` | For performance expectations |
 
 ---
 
@@ -151,6 +153,7 @@ rm -f /tmp/crawl_result_{no}.json
 **Always check exit code** - if storage fails, return JSON result directly.
 **Screenshot cleanup**: Delete PNGs/JPGs after successful save. Keep if status is "partial".
 **Batch progress**: Write completion status to batch checkpoint file.
+**Auto CSV export**: Both `crawl_single.py` and `crawl_batch.py` automatically export CSV to `data/clinic-results/exports/` after successful crawls (hospitals.csv, social_channels.csv, doctors.csv).
 
 ### Step 7: Return Structured Results
 
@@ -171,6 +174,55 @@ Use the clinic-crawler-agent to crawl hospital #123 (고은미인의원) at http
 Extract social consultation channels and doctor information.
 Save results to data/clinic-results/hospitals.db
 ```
+
+## Execution Modes
+
+### Mode 1: Sequential (Playwright MCP) - Single Hospital / Edge Cases
+
+The agent uses Playwright MCP tools for single-hospital crawls where LLM intelligence is needed for edge cases (complex popups, unusual layouts, manual review).
+
+```
+Use the clinic-crawler-agent to crawl hospital #123 (고은미인의원) at https://www.goeunmiin.co.kr/
+```
+
+**Limitation**: Playwright MCP shares a single browser instance. Do NOT run multiple agents in parallel using this mode.
+
+### Mode 2: Parallel Batch (Python Playwright) - Bulk Crawling
+
+For parallel batch processing, use the standalone Python crawler scripts. Each process launches its own isolated headless Chromium browser - no shared state, no conflicts.
+
+```bash
+# Crawl 10 random Seoul clinics, 5 in parallel:
+python3 scripts/clinic-storage/crawl_batch.py \
+  --csv data/clinic-results/skin_clinics.csv \
+  --filter-city 서울 --sample 10 --parallel 5
+
+# Crawl specific hospitals:
+python3 scripts/clinic-storage/crawl_batch.py \
+  --csv data/clinic-results/skin_clinics.csv \
+  --numbers 123,456,789 --parallel 3
+
+# Single hospital with isolated browser:
+python3 scripts/clinic-storage/crawl_single.py \
+  --no 123 --name "고은미인의원" --url "https://www.goeunmiin.co.kr/"
+```
+
+Key features:
+- Each hospital gets its own headless Chromium browser (true process isolation)
+- `asyncio.Semaphore` controls concurrency (default: 3 parallel)
+- SQLite WAL mode allows concurrent writes from parallel workers
+- Automatic skip of already-crawled hospitals
+- JSON output to stdout, logs to stderr
+- Monitor with: `python3 scripts/clinic-storage/storage_manager.py dashboard`
+
+### When to Use Which Mode
+
+| Scenario | Mode | Reason |
+|----------|------|--------|
+| Single complex hospital | Mode 1 (MCP) | LLM adapts to edge cases |
+| Bulk crawl (10+ hospitals) | Mode 2 (Batch) | True browser isolation, throughput |
+| Failed hospital retry | Mode 1 (MCP) | LLM can diagnose specific issues |
+| Full dataset crawl (4000+) | Mode 2 (Batch) | Automated, parallel, resilient |
 
 ## Error Handling
 
