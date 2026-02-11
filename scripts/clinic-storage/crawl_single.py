@@ -666,11 +666,11 @@ JS_EXTRACT_DOCTORS = """
     {
         const seen2 = new Set();
         const items = document.body.querySelectorAll(
-            'li, article, section, .item, .card, .member, [class*="team"], [class*="profile"], [class*="intro"]'
+            'li, article, section, .item, .card, .member, [class*="team"], [class*="profile"], [class*="intro"], div[class*="doctor"], div[class*="staff"]'
         );
         for (const card of items) {
             const text = card.textContent || '';
-            if (text.length > 2000 || text.length < 4) continue;
+            if (text.length > 5000 || text.length < 4) continue;
             if (!rolePattern.test(text)) continue;
             const doc = extractFromCard(card, 'dom', seen2);
             if (doc && isPlausibleName(doc.name)) s2.push(doc);
@@ -708,6 +708,32 @@ JS_EXTRACT_DOCTORS = """
         }
     }
 
+    // ── Strategy 4: Heading-based scan (h1-h5, strong, b) ──
+    const s4 = [];
+    {
+        const seen4 = new Set();
+        const headings = document.querySelectorAll('h1, h2, h3, h4, h5, strong, b, .title, [class*="name"]');
+        for (const el of headings) {
+            const text = (el.textContent || '').trim();
+            if (text.length < 2 || text.length > 4) continue;
+            if (!isPlausibleName(text)) continue;
+            const parent = el.closest('div, section, article, li, td') || el.parentElement;
+            const context = (parent?.textContent || '').substring(0, 500);
+            if (!rolePattern.test(context)) continue;
+            if (seen4.has(text)) continue;
+            seen4.add(text);
+            let role = 'specialist';
+            const roleMatch = context.match(/(대표원장|부원장|원장|전문의|의사)/);
+            if (roleMatch) role = roleMatch[1];
+            let photo = '';
+            const img = parent?.querySelector('img');
+            if (img) photo = img.src || img.getAttribute('data-src') || '';
+            const allText4 = document.body.innerText || '';
+            const ctx = extractContext(text, allText4);
+            s4.push({ name: text, name_english: '', role, photo_url: photo, ...ctx, branch: '', branches: [], extraction_source: 'dom_heading', ocr_source: false });
+        }
+    }
+
     // ── Merge: deduplicate by name, combine best info ──
     const merged = new Map();
     function mergeDoc(doc) {
@@ -723,10 +749,11 @@ JS_EXTRACT_DOCTORS = """
         }
     }
 
-    // Priority order: S1 (best selectors) → S2 (generic) → S3 (text)
+    // Priority order: S1 (best selectors) → S2 (generic) → S3 (text) → S4 (headings)
     for (const d of s1) mergeDoc(d);
     for (const d of s2) mergeDoc(d);
     for (const d of s3) mergeDoc(d);
+    for (const d of s4) mergeDoc(d);
 
     return Array.from(merged.values());
 }
@@ -1189,6 +1216,33 @@ async def crawl_hospital(hospital_no: int, name: str, url: str, db_path: str,
             except Exception:
                 pass
 
+            # Step 6a: Click tabs with doctor keywords to reveal hidden content
+            try:
+                tab_texts = await page.evaluate("""
+                () => {
+                    const tabEls = document.querySelectorAll(
+                        '[role="tab"], .tab-link, .tabs > *, .tab-item, [class*="tab"] a, [class*="tab"] button'
+                    );
+                    const kw = ['의료진', '원장', '전문의', '대표', 'doctor', 'staff', '소개'];
+                    return Array.from(tabEls)
+                        .filter(t => {
+                            const txt = (t.textContent || '').trim().toLowerCase();
+                            return txt.length < 20 && kw.some(k => txt.includes(k));
+                        })
+                        .map(t => (t.textContent || '').trim())
+                        .slice(0, 5);
+                }
+                """)
+                for tab_text in (tab_texts or []):
+                    try:
+                        await page.get_by_text(tab_text, exact=True).first.click(timeout=3000)
+                        await page.wait_for_timeout(1000)
+                        log(f"#{hospital_no} Clicked doctor tab: {tab_text}")
+                    except Exception:
+                        pass
+            except Exception:
+                pass
+
             log(f"#{hospital_no} Extracting doctor info")
             try:
                 # Check if page is image-based
@@ -1202,56 +1256,93 @@ async def crawl_hospital(hospital_no: int, name: str, url: str, db_path: str,
                 else:
                     log(f"#{hospital_no} Image-based page detected, attempting OCR")
                     # Take screenshot for OCR
-                    screenshot_path = f"/tmp/clinic_crawl_{hospital_no}_{int(time.time())}.jpg"
-                    await page.screenshot(path=screenshot_path, full_page=False, type="jpeg", quality=85)
-
-                    # Try Gemini CLI OCR
+                    # Scroll to bottom to trigger lazy image loading, then back
                     try:
-                        ocr_result = subprocess.run(
-                            ["gemini", "-p",
-                             f"Read the image file at {screenshot_path}. "
-                             "Extract doctor/medical staff information in JSON format. "
-                             "Return a JSON array where each item has: name, role, credentials (array), "
-                             "education (array), career (array). Only return the JSON, nothing else.",
-                             "-y"],
-                            capture_output=True, text=True, timeout=60,
-                        )
-                        if ocr_result.returncode == 0:
-                            ocr_text = ocr_result.stdout
-                            # Multi-strategy JSON parse
-                            json_match = re.search(r"```(?:json)?\s*(\[[\s\S]*?\])\s*```", ocr_text)
-                            if json_match:
-                                doctors_raw = json.loads(json_match.group(1))
-                            else:
-                                json_match = re.search(r"\[[\s\S]*\]", ocr_text)
-                                if json_match:
-                                    doctors_raw = json.loads(json_match.group(0))
-                                else:
-                                    doctors_raw = []
+                        scroll_h = await page.evaluate("() => document.body.scrollHeight")
+                        for pos in range(0, scroll_h, 600):
+                            await page.evaluate(f"window.scrollTo(0, {pos})")
+                            await page.wait_for_timeout(300)
+                        await page.evaluate("window.scrollTo(0, 0)")
+                        await page.wait_for_timeout(500)
+                    except Exception:
+                        pass
 
-                            for doc in doctors_raw:
-                                if not doc.get("name") or len(doc["name"]) < 2:
-                                    continue
-                                result["doctors"].append({
-                                    "name": doc.get("name", ""),
-                                    "name_english": "",
-                                    "role": doc.get("role", "specialist"),
-                                    "photo_url": "",
-                                    "education": doc.get("education", []),
-                                    "career": doc.get("career", []),
-                                    "credentials": doc.get("credentials", []),
-                                    "branch": "",
-                                    "branches": [],
-                                    "extraction_source": "ocr",
-                                    "ocr_source": True,
+                    screenshot_path = f"/tmp/clinic_crawl_{hospital_no}_{int(time.time())}.jpg"
+                    await page.screenshot(path=screenshot_path, full_page=True, type="jpeg", quality=85)
+
+                    # If full-page screenshot too large (>800KB), split into viewport chunks
+                    screenshot_paths = [screenshot_path]
+                    try:
+                        fsize = os.path.getsize(screenshot_path)
+                        if fsize > 800_000:
+                            log(f"#{hospital_no} Screenshot {fsize//1024}KB, splitting into chunks")
+                            os.remove(screenshot_path)
+                            screenshot_paths = []
+                            vp_height = 900
+                            scroll_h = await page.evaluate("() => document.body.scrollHeight")
+                            for i, pos in enumerate(range(0, scroll_h, vp_height)):
+                                await page.evaluate(f"window.scrollTo(0, {pos})")
+                                await page.wait_for_timeout(300)
+                                chunk_path = f"/tmp/clinic_crawl_{hospital_no}_{int(time.time())}_{i}.jpg"
+                                await page.screenshot(path=chunk_path, full_page=False, type="jpeg", quality=85)
+                                screenshot_paths.append(chunk_path)
+                                if len(screenshot_paths) >= 5:
+                                    break
+                    except Exception:
+                        if not screenshot_paths:
+                            screenshot_paths = [screenshot_path]
+
+                    # Try Gemini CLI OCR (process all chunks)
+                    ocr_seen_names = set()
+                    try:
+                        for sp in screenshot_paths:
+                            ocr_result = subprocess.run(
+                                ["gemini", "-p",
+                                 f"Read the image file at {sp}. "
+                                 "Extract doctor/medical staff information in JSON format. "
+                                 "Return a JSON array where each item has: name, role, credentials (array), "
+                                 "education (array), career (array). Only return the JSON, nothing else.",
+                                 "-y"],
+                                capture_output=True, text=True, timeout=60,
+                            )
+                            if ocr_result.returncode == 0:
+                                ocr_text = ocr_result.stdout
+                                # Multi-strategy JSON parse
+                                json_match = re.search(r"```(?:json)?\s*(\[[\s\S]*?\])\s*```", ocr_text)
+                                if json_match:
+                                    doctors_raw = json.loads(json_match.group(1))
+                                else:
+                                    json_match = re.search(r"\[[\s\S]*\]", ocr_text)
+                                    if json_match:
+                                        doctors_raw = json.loads(json_match.group(0))
+                                    else:
+                                        doctors_raw = []
+
+                                for doc in doctors_raw:
+                                    name = doc.get("name", "")
+                                    if not name or len(name) < 2 or name in ocr_seen_names:
+                                        continue
+                                    ocr_seen_names.add(name)
+                                    result["doctors"].append({
+                                        "name": name,
+                                        "name_english": "",
+                                        "role": doc.get("role", "specialist"),
+                                        "photo_url": "",
+                                        "education": doc.get("education", []),
+                                        "career": doc.get("career", []),
+                                        "credentials": doc.get("credentials", []),
+                                        "branch": "",
+                                        "branches": [],
+                                        "extraction_source": "ocr",
+                                        "ocr_source": True,
+                                    })
+                            else:
+                                log(f"#{hospital_no} Gemini CLI error: {ocr_result.stderr[:200]}")
+                                result["errors"].append({
+                                    "type": "ocr_error", "message": ocr_result.stderr[:200],
+                                    "step": "doctor_ocr", "retryable": True,
                                 })
-                            log(f"#{hospital_no} OCR extracted {len(result['doctors'])} doctors")
-                        else:
-                            log(f"#{hospital_no} Gemini CLI error: {ocr_result.stderr[:200]}")
-                            result["errors"].append({
-                                "type": "ocr_error", "message": ocr_result.stderr[:200],
-                                "step": "doctor_ocr", "retryable": True,
-                            })
+                        log(f"#{hospital_no} OCR extracted {len(result['doctors'])} doctors from {len(screenshot_paths)} chunk(s)")
                     except FileNotFoundError:
                         log(f"#{hospital_no} Gemini CLI not installed, skipping OCR")
                         result["errors"].append({
@@ -1265,11 +1356,12 @@ async def crawl_hospital(hospital_no: int, name: str, url: str, db_path: str,
                             "step": "doctor_ocr", "retryable": True,
                         })
                     finally:
-                        # Cleanup screenshot
-                        try:
-                            os.remove(screenshot_path)
-                        except OSError:
-                            pass
+                        # Cleanup all screenshot chunks
+                        for sp in screenshot_paths:
+                            try:
+                                os.remove(sp)
+                            except OSError:
+                                pass
 
             except Exception as e:
                 result["errors"].append({"type": "extraction", "message": str(e)[:200], "step": "doctor_extract", "retryable": True})
