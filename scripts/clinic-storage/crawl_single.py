@@ -16,6 +16,7 @@ import asyncio
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -70,13 +71,49 @@ DOCTOR_PRIMARY = [
 DOCTOR_SECONDARY = [
     "원장님", "대표원장", "의료팀", "진료진", "진료 안내",
     "클리닉 소개", "Staff", "Team", "About Us",
+    "병원소개", "병원 소개", "About Umi", "About TheHill",
 ]
 DOCTOR_SUBMENU_PARENTS = [
-    "병원 소개", "클리닉 소개", "소개", "병원 안내", "클리닉 안내", "About",
+    "병원 소개", "병원소개", "클리닉 소개", "소개", "병원 안내", "클리닉 안내",
+    "About", "About Us", "병원소개/위치",
 ]
+# Regex pattern: "{hospital_name_fragment} 소개" as submenu parent (e.g. "시아 소개")
+_SUBMENU_PARENT_INTRO_RE = re.compile(r".{1,10}\s*소개$")
 
 DOCTOR_ROLES_KEEP = {"원장", "대표원장", "부원장", "전문의", "의사", "레지던트", "인턴"}
 DOCTOR_ROLES_EXCLUDE = {"간호사", "간호조무사", "피부관리사", "상담사", "코디네이터", "스텝", "직원"}
+
+# Korean name validation - top ~60 surnames covering 99%+ of population
+KOREAN_SURNAMES = set("김이박최정강조윤장임한오서신권황안송류전홍고문양손배백허유남노하곡성차주우방공민변탁도진지엄채원천구현은봉추위석선설마길연")
+# Common verb/adjective endings that get misidentified as given names
+_NON_NAME_SUFFIXES = {
+    "싶은", "있는", "없는", "않는", "되는", "하는", "같은", "때문", "부터",
+    "에서", "으로", "까지", "에게", "한다", "된다", "니다", "입니", "세요",
+    "해서", "해야", "라고", "아서", "어서", "이라", "라는", "하고", "지만",
+}
+_NON_NAME_WORDS = {"대표원", "원대표", "부대표", "병원장"}
+# Title/role suffixes that are NOT given names (e.g. 정대표 = 정 + 대표)
+_NON_NAME_GIVEN = {"대표", "원장", "부장", "과장", "실장", "팀장", "소개", "안내"}
+
+
+def _is_plausible_korean_name(name: str) -> bool:
+    """Check if a string is plausibly a Korean person's name."""
+    if not name or len(name) < 2 or len(name) > 4:
+        return False
+    # All characters should be Korean syllables (가-힣)
+    if not all('\uac00' <= c <= '\ud7a3' for c in name):
+        return False
+    # First character should be a known surname
+    if name[0] not in KOREAN_SURNAMES:
+        return False
+    # Exclude common non-name patterns
+    if name in _NON_NAME_WORDS:
+        return False
+    if name[1:] in _NON_NAME_SUFFIXES:
+        return False
+    if name[1:] in _NON_NAME_GIVEN:
+        return False
+    return True
 
 ROLE_RE = re.compile(r"^(.+?)\s+(원장|대표원장|부원장|전문의|의사|레지던트|인턴)$")
 
@@ -444,7 +481,7 @@ JS_FIND_DOCTOR_MENU = """
 ([primaryLabels, secondaryLabels, submenuParents]) => {
     const allLinks = Array.from(document.querySelectorAll('nav a, header a, .menu a, .gnb a, .lnb a, [class*="nav"] a, [class*="menu"] a, a'));
     const results = [];
-    const doctorUrlRe = /\\/doctor|\\/staff|\\/team|\\/의료진|\\/원장|\\/전문의/;
+    const doctorUrlRe = /\\/doctor|\\/staff|\\/team|\\/의료진|\\/원장|\\/전문의|about.*(?:doctor|team|staff)/i;
     const genericUrlRe = /^\\/(?:about|introduce|clinic|소개|병원)(?:[#?/]|$)/i;
 
     for (const a of allLinks) {
@@ -483,8 +520,9 @@ JS_FIND_DOCTOR_MENU = """
         document.querySelectorAll(sel).forEach(parent => {
             const parentLink = parent.querySelector(':scope > a');
             const parentText = (parentLink?.textContent || '').trim();
-            if (!submenuParents.some(label => parentText.includes(label))) return;
-            parent.querySelectorAll('ul a, .sub a, .submenu a, .depth2 a, .snb a').forEach(child => {
+            const isIntroParent = /.\s*소개$/.test(parentText);
+            if (!isIntroParent && !submenuParents.some(label => parentText.includes(label))) return;
+            parent.querySelectorAll('ul a, .sub a, .submenu a, .depth2 a, .snb a, a').forEach(child => {
                 const childText = (child.textContent || '').trim();
                 const childHref = child.href || child.getAttribute('href') || '';
                 for (const label of primaryLabels) {
@@ -497,6 +535,27 @@ JS_FIND_DOCTOR_MENU = """
                         });
                         return;
                     }
+                }
+                // Also check secondary labels under parent menus
+                for (const label of secondaryLabels) {
+                    if (childText === label || childText.includes(label)) {
+                        results.push({
+                            text: childText, href: childHref, priority: 1,
+                            visible: child.offsetParent !== null,
+                            element: child.outerHTML.substring(0, 200),
+                            parentMenu: parentText,
+                        });
+                        return;
+                    }
+                }
+                // Check if child URL matches doctor patterns
+                if (doctorUrlRe.test(childHref)) {
+                    results.push({
+                        text: childText, href: childHref, priority: 1,
+                        visible: child.offsetParent !== null,
+                        element: child.outerHTML.substring(0, 200),
+                        parentMenu: parentText,
+                    });
                 }
             });
         });
@@ -655,6 +714,17 @@ JS_EXTRACT_DOCTORS = """
             '.doctor-info', '.doctor-list > li', '.staff-list > li',
             '[class*="doctor"]', '[class*="staff"]',
         ];
+        // Also try finding containers that HAVE a .doctor-name child
+        if (document.querySelector('.doctor-name')) {
+            const nameEls = document.querySelectorAll('.doctor-name');
+            for (const el of nameEls) {
+                const card = el.closest('div, section, article, li, td, tr') || el.parentElement;
+                if (card) {
+                    const doc = extractFromCard(card, 'dom', seen1);
+                    if (doc) s1.push(doc);
+                }
+            }
+        }
         for (const sel of cardSelectors) {
             const found = document.querySelectorAll(sel);
             if (found.length > 0 && found.length < 50) {
@@ -710,6 +780,17 @@ JS_EXTRACT_DOCTORS = """
             if (seen3.has(name) || !isPlausibleName(name)) continue;
             seen3.add(name);
             const ctx = extractContext(name, allText);
+            s3.push({ name, name_english: '', role, photo_url: '', ...ctx, branch: '', branches: [], extraction_source: 'dom_text', ocr_source: false });
+        }
+
+        // Pattern C: spaced Korean name + role (e.g. "서 인 예 대표원장")
+        const spacedNameRoleRe = /([가-힣])\\s([가-힣])\\s?([가-힣])?\\s*(대표원장|부원장|원장|전문의|의사)/g;
+        while ((m = spacedNameRoleRe.exec(allText)) !== null && s3.length < MAX) {
+            const name = (m[1] + m[2] + (m[3] || '')).trim();
+            const role = m[4];
+            if (seen3.has(name) || !isPlausibleName(name)) continue;
+            seen3.add(name);
+            const ctx = extractContext(m[0], allText);
             s3.push({ name, name_english: '', role, photo_url: '', ...ctx, branch: '', branches: [], extraction_source: 'dom_text', ocr_source: false });
         }
     }
@@ -774,7 +855,7 @@ JS_CHECK_IMAGE_BASED = """
     const textNodes = [];
     while (walker.nextNode()) {
         const text = walker.currentNode.textContent.trim();
-        if (text.length > 2 && /원장|대표원장|부원장|전문의|의사|학력|경력|약력|자격|졸업|수료|대학원|대학교|정회원|학회|인턴|레지던트|수련|피부과/.test(text)) {
+        if (text.length >= 2 && /원장|대표원장|부원장|전문의|의사|학력|경력|약력|자격|졸업|수료|대학원|대학교|정회원|학회|인턴|레지던트|수련|피부과/.test(text)) {
             textNodes.push(text);
         }
     }
@@ -990,9 +1071,14 @@ async def crawl_hospital(hospital_no: int, name: str, url: str, db_path: str,
                             return h === host || h.endsWith('.' + host);
                         } catch { return false; }
                     });
+                    const internalHrefs = internal.map(a => ({
+                        href: a.href,
+                        text: (a.textContent || '').trim().toLowerCase(),
+                    }));
                     return {
                         textLen: text.length,
                         totalLinks: links.length,
+                        internalLinks: internalHrefs,
                         firstHref: internal[0]?.href || null,
                     };
                 }
@@ -1000,7 +1086,16 @@ async def crawl_hospital(hospital_no: int, name: str, url: str, db_path: str,
                 if (splash_info.get("totalLinks", 99) <= 10
                         and splash_info.get("textLen", 9999) < 500
                         and splash_info.get("firstHref")):
-                    first_link = splash_info["firstHref"]
+                    # Pick best link from splash page (prefer skin/face/clinic keywords)
+                    internal_links = splash_info.get("internalLinks", [])
+                    best_link = splash_info["firstHref"]
+                    if len(internal_links) > 1:
+                        skin_kw = re.compile(r"face|skin|피부|clinic|derma", re.IGNORECASE)
+                        for link in internal_links:
+                            if skin_kw.search(link.get("href", "")) or skin_kw.search(link.get("text", "")):
+                                best_link = link["href"]
+                                break
+                    first_link = best_link
                     log(f"#{hospital_no} Splash page detected "
                         f"({splash_info['totalLinks']} links, {splash_info['textLen']} chars), "
                         f"navigating to {first_link}")
@@ -1119,10 +1214,11 @@ async def crawl_hospital(hospital_no: int, name: str, url: str, db_path: str,
             log(f"#{hospital_no} Total social channels: {len(result['social_channels'])}")
 
             # ---------------------------------------------------------------
-            # Step 5: Find and Navigate to Doctor Page
+            # Step 5: Collect ALL Candidate URLs for Doctor Page
             # ---------------------------------------------------------------
             log(f"#{hospital_no} Looking for doctor page")
             doctor_page_found = False
+            candidate_urls = []  # list of (url, source_label)
 
             # Step 5a: Reveal hidden submenus via hover before searching
             try:
@@ -1141,149 +1237,312 @@ async def crawl_hospital(hospital_no: int, name: str, url: str, db_path: str,
             except Exception:
                 pass
 
+            # Step 5a: Collect doctor menu links
             try:
                 doctor_links = await page.evaluate(
                     JS_FIND_DOCTOR_MENU,
                     [DOCTOR_PRIMARY, DOCTOR_SECONDARY, DOCTOR_SUBMENU_PARENTS],
                 )
+                for link in (doctor_links or []):
+                    href = link.get("href", "")
+                    if href and href.startswith("http"):
+                        candidate_urls.append((href, f"menu:{link['text']}"))
                 if doctor_links:
-                    best = doctor_links[0]
-                    is_hidden = not best.get("visible", True)
-                    log(f"#{hospital_no} Found doctor menu: {best['text']} -> {best['href']}"
-                        f"{' (hidden submenu)' if is_hidden else ''}")
-                    href = best.get("href", "")
-                    if is_hidden and href and href.startswith("http"):
-                        # Hidden link (dropdown submenu) - navigate directly
-                        try:
-                            await page.goto(href, wait_until="domcontentloaded", timeout=15000)
-                            doctor_page_found = True
-                        except Exception:
-                            pass
-                    else:
-                        # Visible link - try click first, fallback to goto
-                        try:
-                            link_text = best["text"]
-                            link = page.get_by_text(link_text, exact=True).first
-                            await link.click(timeout=10000)
-                            await page.wait_for_timeout(2000)
-                            doctor_page_found = True
-                        except Exception:
-                            if href and href.startswith("http"):
-                                try:
-                                    await page.goto(href, wait_until="domcontentloaded", timeout=15000)
-                                    doctor_page_found = True
-                                except Exception:
-                                    pass
+                    log(f"#{hospital_no} Found {len(doctor_links)} doctor menu link(s)")
                 else:
                     log(f"#{hospital_no} No doctor menu found")
             except Exception as e:
                 log(f"#{hospital_no} Doctor menu search error: {str(e)[:100]}")
 
-            # Step 5b: Sitemap fallback (independent try block)
-            if not doctor_page_found:
+            # Step 5b-1: Navigate to intro/about pages, scan for doctor sub-links
+            # Also add the intro/about pages themselves as candidates
+            # Always run regardless of 5a results (menu links may be wrong pages)
+            if True:
                 try:
-                    sitemap_url = f"{base_url}/sitemap.xml"
-                    await page.goto(sitemap_url, wait_until="domcontentloaded", timeout=10000)
-                    sitemap_text = await page.evaluate("() => document.body?.innerText || ''")
-                    doc_patterns = ["/doctor", "/staff", "/team", "/about", "/introduce",
-                                   "/의료진", "/원장", "/전문의"]
-                    for pattern in doc_patterns:
-                        match = re.search(rf"(https?://[^\s<]+{re.escape(pattern)}[^\s<]*)", sitemap_text)
-                        if match:
-                            doc_url = match.group(1)
-                            log(f"#{hospital_no} Sitemap fallback: {doc_url}")
-                            await page.goto(doc_url, wait_until="domcontentloaded", timeout=15000)
-                            doctor_page_found = True
-                            break
-                except Exception:
-                    pass
+                    intro_links = await page.evaluate("""() => {
+                        const kw = ['소개', 'about', 'intro'];
+                        return Array.from(document.querySelectorAll('a[href]'))
+                            .filter(a => {
+                                const text = (a.textContent || '').trim().toLowerCase();
+                                const href = (a.href || '').toLowerCase();
+                                return text.length < 20 && kw.some(k => text.includes(k) || href.includes(k));
+                            })
+                            .map(a => ({text: a.textContent.trim(), href: a.href}))
+                            .filter(l => l.href && !l.href.includes('#'))
+                            .slice(0, 5);
+                    }""")
+                    for link in (intro_links or []):
+                        log(f"#{hospital_no} Scanning intro page: {link['text']} -> {link['href']}")
+                        try:
+                            await page.goto(link["href"], wait_until="domcontentloaded", timeout=15000)
+                            await page.wait_for_timeout(1500)
+                            # Re-scan for doctor links on this page
+                            doctor_links_2nd = await page.evaluate("""() => {
+                                const docKw = ['의료진', '원장', '전문의', 'doctor', 'staff', 'team'];
+                                return Array.from(document.querySelectorAll('a[href]'))
+                                    .filter(a => {
+                                        const text = (a.textContent || '').trim().toLowerCase();
+                                        const href = (a.href || '').toLowerCase();
+                                        return docKw.some(k => text.includes(k) || href.includes('/doctor') || href.includes('/staff') || href.includes('/team'));
+                                    })
+                                    .map(a => ({text: a.textContent.trim(), href: a.href}))
+                                    .slice(0, 3);
+                            }""")
+                            for dl in (doctor_links_2nd or []):
+                                if dl['href'] and dl['href'].startswith("http"):
+                                    candidate_urls.append((dl['href'], f"intro_sub:{dl['text']}"))
+                        except Exception:
+                            pass
+                        # Add the intro/about page itself as a candidate (may contain doctor info directly)
+                        candidate_urls.append((link['href'], f"intro_page:{link['text']}"))
+                except Exception as e:
+                    log(f"#{hospital_no} Intro page scan error: {str(e)[:100]}")
 
-            # Step 5c: Main page fallback (independent try block)
-            if not doctor_page_found:
-                try:
-                    await page.goto(url, wait_until="domcontentloaded", timeout=15000)
-                    log(f"#{hospital_no} Main page fallback for doctor extraction")
-                except Exception:
-                    pass
-
-            # ---------------------------------------------------------------
-            # Step 6: Extract Doctor Information
-            # ---------------------------------------------------------------
-            # Scroll page to trigger lazy loading (imweb CMS etc.)
-            # Use page-level waits between scrolls so the browser actually
-            # fires IntersectionObserver / scroll events that load content.
-            # IMPORTANT: Do NOT scroll back to top — imweb unloads content
-            # when sections leave the viewport (bidirectional lazy loading).
+            # Step 5b-2: Sitemap - collect ALL matching URLs
             try:
-                for _ in range(10):
-                    await page.evaluate("window.scrollBy(0, 600)")
-                    await page.wait_for_timeout(500)
-                await page.wait_for_timeout(1000)
+                sitemap_url = f"{base_url}/sitemap.xml"
+                await page.goto(sitemap_url, wait_until="domcontentloaded", timeout=10000)
+                sitemap_text = await page.evaluate("() => document.body?.innerText || ''")
+                doc_patterns = ["/doctor", "/staff", "/team", "/about", "/introduce",
+                               "/intro", "/의료진", "/원장", "/전문의"]
+                for pattern in doc_patterns:
+                    matches = re.findall(rf"(https?://[^\s<]+{re.escape(pattern)}[^\s<]*)", sitemap_text)
+                    for doc_url in matches:
+                        candidate_urls.append((doc_url, f"sitemap:{pattern}"))
             except Exception:
                 pass
 
-            # Step 6a: Click tabs with doctor keywords to reveal hidden content
-            try:
-                tab_texts = await page.evaluate("""
-                () => {
-                    const tabEls = document.querySelectorAll(
-                        '[role="tab"], .tab-link, .tabs > *, .tab-item, [class*="tab"] a, [class*="tab"] button'
-                    );
-                    const kw = ['의료진', '원장', '전문의', '대표', 'doctor', 'staff', '소개'];
-                    return Array.from(tabEls)
-                        .filter(t => {
-                            const txt = (t.textContent || '').trim().toLowerCase();
-                            return txt.length < 20 && kw.some(k => txt.includes(k));
+            # Step 5c: Main page as last resort (always included)
+            candidate_urls.append((url, "main_page"))
+
+            # Deduplicate preserving priority order
+            seen_urls = set()
+            unique_candidates = []
+            for c_url, source in candidate_urls:
+                normalized = c_url.rstrip('/')
+                if normalized not in seen_urls:
+                    seen_urls.add(normalized)
+                    unique_candidates.append((c_url, source))
+
+            log(f"#{hospital_no} Collected {len(unique_candidates)} candidate URLs:")
+            for i, (c_url, source) in enumerate(unique_candidates):
+                log(f"#{hospital_no}   [{i+1}] {source} -> {c_url}")
+
+            # ---------------------------------------------------------------
+            # Step 6: Extract Doctor Info - iterate through ALL candidates
+            # ---------------------------------------------------------------
+            # Define OCR helpers before the candidate loop
+            ocr_prompt_tpl = (
+                "Read the image file at {path}.\n\n"
+                "This is a screenshot from a Korean dermatology/skin clinic website's "
+                "doctor introduction page (의료진 소개).\n\n"
+                "Extract ONLY doctor/physician information. Look for:\n"
+                "- Names: 2-3 Korean characters (한글). Common surnames: "
+                "김,이,박,최,정,강,조,윤,장,임,한,오,서,신,권,황,안,송,류,전,홍\n"
+                "- Titles: 대표원장, 원장, 부원장, 전문의, 피부과전문의\n"
+                "- Education: contains 대학교, 졸업, 수료, 석사, 박사, 의학전문대학원\n"
+                "- Career: contains 병원, 클리닉, 센터, 수련, 전공의, 레지던트\n"
+                "- Credentials: contains 학회, 정회원, 전문의, 자격, 인증\n\n"
+                "IGNORE: navigation menus, hospital name/address/phone, "
+                "nurses (간호사), coordinators (코디네이터), consultants (상담사).\n\n"
+                "Return ONLY a valid JSON array. No explanation, no markdown fences.\n"
+                "Each item: {{\"name\":\"...\",\"role\":\"...\","
+                "\"education\":[...],\"career\":[...],\"credentials\":[...]}}\n"
+                "If no doctors found, return: []"
+            )
+
+            def _parse_ocr_json(text):
+                """Parse JSON array from Gemini OCR output with robust fallback."""
+                json_match = re.search(r"```(?:json)?\s*(\[[\s\S]*?\])\s*```", text)
+                if json_match:
+                    try:
+                        return json.loads(json_match.group(1))
+                    except json.JSONDecodeError:
+                        pass
+                json_match = re.search(r"\[[\s\S]*?\]", text)
+                if json_match:
+                    try:
+                        return json.loads(json_match.group(0))
+                    except json.JSONDecodeError:
+                        pass
+                json_match = re.search(r"\[[\s\S]*\]", text)
+                if json_match:
+                    raw = json_match.group(0)
+                    for i in range(len(raw) - 1, 0, -1):
+                        if raw[i] == ']':
+                            try:
+                                return json.loads(raw[:i+1])
+                            except json.JSONDecodeError:
+                                continue
+                return []
+
+            def _run_gemini_ocr(prompt, image_path):
+                """Run Gemini CLI with image via --include-directories for vision mode."""
+                image_dir = os.path.dirname(image_path)
+                r = subprocess.run(
+                    ["gemini", "-p", prompt,
+                     "-y", "--include-directories", image_dir],
+                    capture_output=True, text=True, timeout=90,
+                )
+                if r.returncode == 0:
+                    return _parse_ocr_json(r.stdout)
+                return []
+
+            def _append_ocr_doctors(doctors_raw, seen_names, result_doctors):
+                """Append unique OCR doctors to result list. Returns count added."""
+                added = 0
+                for doc in doctors_raw:
+                    name = doc.get("name", "")
+                    if name and len(name) >= 2 and name not in seen_names:
+                        seen_names.add(name)
+                        result_doctors.append({
+                            "name": name, "name_english": "",
+                            "role": doc.get("role", "specialist"),
+                            "photo_url": "",
+                            "education": doc.get("education", []),
+                            "career": doc.get("career", []),
+                            "credentials": doc.get("credentials", []),
+                            "branch": "", "branches": [],
+                            "extraction_source": "ocr", "ocr_source": True,
                         })
-                        .map(t => (t.textContent || '').trim())
-                        .slice(0, 5);
-                }
-                """)
-                for tab_text in (tab_texts or []):
-                    try:
-                        await page.get_by_text(tab_text, exact=True).first.click(timeout=3000)
-                        await page.wait_for_timeout(1000)
-                        log(f"#{hospital_no} Clicked doctor tab: {tab_text}")
-                    except Exception:
-                        pass
-            except Exception:
-                pass
+                        added += 1
+                return added
 
-            log(f"#{hospital_no} Extracting doctor info")
+            ocr_seen_names = set()
+            last_screenshot_path = None
+            temp_screenshots = []
+
             try:
-                # Check if page is image-based
-                is_image_based = await page.evaluate(JS_CHECK_IMAGE_BASED)
+                for cand_idx, (cand_url, cand_source) in enumerate(unique_candidates):
+                    if result["doctors"]:
+                        break  # Already found doctors
 
-                if not is_image_based:
-                    # DOM extraction
-                    doctors = await page.evaluate(JS_EXTRACT_DOCTORS)
-                    result["doctors"] = doctors
-                    log(f"#{hospital_no} Extracted {len(doctors)} doctors from DOM")
-                else:
-                    log(f"#{hospital_no} Image-based page detected, attempting OCR")
-                    # Take screenshot for OCR
-                    # Scroll to bottom to trigger lazy image loading, then back
+                    log(f"#{hospital_no} Trying candidate {cand_idx+1}/{len(unique_candidates)}: {cand_source}")
+
+                    # Navigate to candidate
                     try:
-                        scroll_h = await page.evaluate("() => document.body.scrollHeight")
-                        for pos in range(0, scroll_h, 600):
-                            await page.evaluate(f"window.scrollTo(0, {pos})")
-                            await page.wait_for_timeout(300)
-                        await page.evaluate("window.scrollTo(0, 0)")
-                        await page.wait_for_timeout(500)
+                        await page.goto(cand_url, wait_until="domcontentloaded", timeout=15000)
+                        await page.wait_for_timeout(1500)
+                    except Exception as e:
+                        log(f"#{hospital_no} Navigation failed for {cand_url}: {str(e)[:100]}")
+                        continue
+
+                    # Scroll for lazy loading
+                    try:
+                        for _ in range(10):
+                            await page.evaluate("window.scrollBy(0, 600)")
+                            await page.wait_for_timeout(500)
+                        await page.wait_for_timeout(1000)
                     except Exception:
                         pass
 
-                    screenshot_path = f"/tmp/clinic_crawl_{hospital_no}_{int(time.time())}.jpg"
-                    await page.screenshot(path=screenshot_path, full_page=True, type="jpeg", quality=85)
-
-                    # If full-page screenshot too large (>800KB), split into viewport chunks
-                    screenshot_paths = [screenshot_path]
+                    # Click tabs with doctor keywords
                     try:
-                        fsize = os.path.getsize(screenshot_path)
-                        if fsize > 800_000:
-                            log(f"#{hospital_no} Screenshot {fsize//1024}KB, splitting into chunks")
-                            os.remove(screenshot_path)
-                            screenshot_paths = []
+                        tab_texts = await page.evaluate("""
+                        () => {
+                            const tabEls = document.querySelectorAll(
+                                '[role="tab"], .tab-link, .tabs > *, .tab-item, [class*="tab"] a, [class*="tab"] button'
+                            );
+                            const kw = ['의료진', '원장', '전문의', '대표', 'doctor', 'staff', '소개'];
+                            return Array.from(tabEls)
+                                .filter(t => {
+                                    const txt = (t.textContent || '').trim().toLowerCase();
+                                    return txt.length < 20 && kw.some(k => txt.includes(k));
+                                })
+                                .map(t => (t.textContent || '').trim())
+                                .slice(0, 5);
+                        }
+                        """)
+                        for tab_text in (tab_texts or []):
+                            try:
+                                await page.get_by_text(tab_text, exact=True).first.click(timeout=3000)
+                                await page.wait_for_timeout(1000)
+                                log(f"#{hospital_no} Clicked tab: {tab_text}")
+                            except Exception:
+                                pass
+                    except Exception:
+                        pass
+
+                    # DOM extraction
+                    try:
+                        is_image_based = await page.evaluate(JS_CHECK_IMAGE_BASED)
+
+                        need_ocr = is_image_based
+                        if not is_image_based:
+                            doctors = await page.evaluate(JS_EXTRACT_DOCTORS)
+                            if doctors:
+                                # Validate names - filter to plausible Korean names only
+                                valid_doctors = [d for d in doctors if _is_plausible_korean_name(d.get("name", ""))]
+                                if valid_doctors:
+                                    result["doctors"] = valid_doctors
+                                    doctor_page_found = True
+                                    log(f"#{hospital_no} DOM: {len(valid_doctors)} valid / {len(doctors)} total from {cand_source}")
+                                    break
+                                else:
+                                    log(f"#{hospital_no} DOM: {len(doctors)} entries but 0 valid names from {cand_source}, falling back to OCR")
+                                    need_ocr = True
+                            else:
+                                log(f"#{hospital_no} DOM: 0 doctors from {cand_source}")
+                                need_ocr = True
+                        else:
+                            log(f"#{hospital_no} Image-based page: {cand_source}")
+
+                        if need_ocr:
+                            # Scroll to load lazy images
+                            try:
+                                scroll_h = await page.evaluate("() => document.body.scrollHeight")
+                                for pos in range(0, scroll_h, 600):
+                                    await page.evaluate(f"window.scrollTo(0, {pos})")
+                                    await page.wait_for_timeout(300)
+                            except Exception:
+                                pass
+
+                            ts = int(time.time())
+                            fullpage_path = f"/tmp/clinic_crawl_{hospital_no}_{ts}.jpg"
+                            await page.evaluate("window.scrollTo(0, 0)")
+                            await page.wait_for_timeout(300)
+                            await page.screenshot(path=fullpage_path, full_page=True, type="jpeg", quality=85)
+                            last_screenshot_path = fullpage_path
+                            temp_screenshots.append(fullpage_path)
+
+                            # Tier B: one OCR attempt per candidate
+                            try:
+                                log(f"#{hospital_no} OCR Tier B on {cand_source}")
+                                prompt_b = ocr_prompt_tpl.replace("{path}", fullpage_path)
+                                doctors_raw = _run_gemini_ocr(prompt_b, fullpage_path)
+                                added = _append_ocr_doctors(doctors_raw, ocr_seen_names, result["doctors"])
+                                if result["doctors"]:
+                                    doctor_page_found = True
+                                    log(f"#{hospital_no} OCR: {added} doctors from {cand_source}")
+                                    break
+                                else:
+                                    log(f"#{hospital_no} OCR: 0 doctors from {cand_source}")
+                            except subprocess.TimeoutExpired:
+                                log(f"#{hospital_no} OCR timeout on {cand_source}, trying next candidate")
+                            except FileNotFoundError:
+                                log(f"#{hospital_no} Gemini CLI not installed")
+                                break
+
+                    except Exception as e:
+                        log(f"#{hospital_no} Extraction error on {cand_source}: {str(e)[:100]}")
+
+                # After ALL candidates exhausted - final OCR fallback (Tier B retry + Tier C)
+                if not result["doctors"] and last_screenshot_path:
+                    log(f"#{hospital_no} All {len(unique_candidates)} candidates returned 0. Final OCR attempt.")
+
+                    # Tier B retry on last screenshot
+                    try:
+                        log(f"#{hospital_no} OCR Tier B retry on last page")
+                        prompt_retry = ocr_prompt_tpl.replace("{path}", last_screenshot_path)
+                        retry_docs = _run_gemini_ocr(prompt_retry, last_screenshot_path)
+                        _append_ocr_doctors(retry_docs, ocr_seen_names, result["doctors"])
+                    except Exception:
+                        pass
+
+                    if not result["doctors"]:
+                        # Tier C: viewport chunks on last page
+                        chunk_paths = []
+                        try:
                             vp_height = 900
                             scroll_h = await page.evaluate("() => document.body.scrollHeight")
                             for i, pos in enumerate(range(0, scroll_h, vp_height)):
@@ -1291,86 +1550,169 @@ async def crawl_hospital(hospital_no: int, name: str, url: str, db_path: str,
                                 await page.wait_for_timeout(300)
                                 chunk_path = f"/tmp/clinic_crawl_{hospital_no}_{int(time.time())}_{i}.jpg"
                                 await page.screenshot(path=chunk_path, full_page=False, type="jpeg", quality=85)
-                                screenshot_paths.append(chunk_path)
-                                if len(screenshot_paths) >= 5:
+                                chunk_paths.append(chunk_path)
+                                if len(chunk_paths) >= 8:
                                     break
-                    except Exception:
-                        if not screenshot_paths:
-                            screenshot_paths = [screenshot_path]
+                            log(f"#{hospital_no} OCR Tier C: {len(chunk_paths)} viewport chunks")
+                        except Exception:
+                            pass
 
-                    # Try Gemini CLI OCR (process all chunks)
-                    ocr_seen_names = set()
-                    try:
-                        for sp in screenshot_paths:
-                            ocr_result = subprocess.run(
-                                ["gemini", "-p",
-                                 f"Read the image file at {sp}. "
-                                 "Extract doctor/medical staff information in JSON format. "
-                                 "Return a JSON array where each item has: name, role, credentials (array), "
-                                 "education (array), career (array). Only return the JSON, nothing else.",
-                                 "-y"],
-                                capture_output=True, text=True, timeout=60,
-                            )
-                            if ocr_result.returncode == 0:
-                                ocr_text = ocr_result.stdout
-                                # Multi-strategy JSON parse
-                                json_match = re.search(r"```(?:json)?\s*(\[[\s\S]*?\])\s*```", ocr_text)
-                                if json_match:
-                                    doctors_raw = json.loads(json_match.group(1))
-                                else:
-                                    json_match = re.search(r"\[[\s\S]*\]", ocr_text)
-                                    if json_match:
-                                        doctors_raw = json.loads(json_match.group(0))
-                                    else:
-                                        doctors_raw = []
-
-                                for doc in doctors_raw:
-                                    name = doc.get("name", "")
-                                    if not name or len(name) < 2 or name in ocr_seen_names:
-                                        continue
-                                    ocr_seen_names.add(name)
-                                    result["doctors"].append({
-                                        "name": name,
-                                        "name_english": "",
-                                        "role": doc.get("role", "specialist"),
-                                        "photo_url": "",
-                                        "education": doc.get("education", []),
-                                        "career": doc.get("career", []),
-                                        "credentials": doc.get("credentials", []),
-                                        "branch": "",
-                                        "branches": [],
-                                        "extraction_source": "ocr",
-                                        "ocr_source": True,
-                                    })
-                            else:
-                                log(f"#{hospital_no} Gemini CLI error: {ocr_result.stderr[:200]}")
-                                result["errors"].append({
-                                    "type": "ocr_error", "message": ocr_result.stderr[:200],
-                                    "step": "doctor_ocr", "retryable": True,
-                                })
-                        log(f"#{hospital_no} OCR extracted {len(result['doctors'])} doctors from {len(screenshot_paths)} chunk(s)")
-                    except FileNotFoundError:
-                        log(f"#{hospital_no} Gemini CLI not installed, skipping OCR")
-                        result["errors"].append({
-                            "type": "ocr_unavailable", "message": "Gemini CLI not installed",
-                            "step": "doctor_ocr", "retryable": False,
-                        })
-                    except subprocess.TimeoutExpired:
-                        log(f"#{hospital_no} Gemini CLI timeout")
-                        result["errors"].append({
-                            "type": "ocr_timeout", "message": "Gemini CLI timed out",
-                            "step": "doctor_ocr", "retryable": True,
-                        })
-                    finally:
-                        # Cleanup all screenshot chunks
-                        for sp in screenshot_paths:
+                        for cp in chunk_paths:
                             try:
-                                os.remove(sp)
-                            except OSError:
+                                prompt_c = ocr_prompt_tpl.replace("{path}", cp)
+                                chunk_docs = _run_gemini_ocr(prompt_c, cp)
+                                _append_ocr_doctors(chunk_docs, ocr_seen_names, result["doctors"])
+                            except Exception:
                                 pass
+
+                        temp_screenshots.extend(chunk_paths)
+
+                    if result["doctors"]:
+                        doctor_page_found = True
+                        log(f"#{hospital_no} Final OCR: {len(result['doctors'])} doctors found")
+
+                # ── Phase 2: AI-assisted navigation discovery ──
+                # When all rule-based candidates failed, let Gemini analyze the
+                # main page and suggest where the doctor page might be.
+                if not result["doctors"]:
+                    log(f"#{hospital_no} Phase 2: AI navigation discovery from main page")
+                    try:
+                        await page.goto(url, wait_until="domcontentloaded", timeout=15000)
+                        await page.wait_for_timeout(2000)
+
+                        ts_nav = int(time.time())
+                        nav_path = f"/tmp/clinic_nav_{hospital_no}_{ts_nav}.jpg"
+                        await page.screenshot(path=nav_path, full_page=False, type="jpeg", quality=85)
+                        temp_screenshots.append(nav_path)
+
+                        nav_prompt = (
+                            f"Read the image file at {nav_path}.\n\n"
+                            "This is a Korean skin/dermatology clinic website homepage.\n\n"
+                            "TASK 1: Are doctor names, photos, or medical credentials "
+                            "visible on THIS page? If yes, extract them.\n\n"
+                            "TASK 2: Look at the navigation menu (top bar, sidebar, footer). "
+                            "Which menu or link most likely leads to a doctor/medical staff page?\n"
+                            "Common labels: 의료진, 원장, 전문의, 병원소개, About, Staff, Team\n\n"
+                            "Return ONLY JSON (no markdown fences):\n"
+                            "{\"doctors\": [{\"name\": \"...\", \"role\": \"...\"}], "
+                            "\"suggested_paths\": [\"/path1\", \"/path2\"]}\n"
+                            "doctors: any doctors visible on THIS page ([] if none)\n"
+                            "suggested_paths: relative URL paths likely containing doctor info"
+                        )
+
+                        r_nav = subprocess.run(
+                            ["gemini", "-p", nav_prompt,
+                             "-y", "--include-directories", os.path.dirname(nav_path)],
+                            capture_output=True, text=True, timeout=90,
+                        )
+
+                        if r_nav.returncode == 0:
+                            nav_json = re.search(r'\{[\s\S]*\}', r_nav.stdout)
+                            if nav_json:
+                                nav_data = json.loads(nav_json.group(0))
+
+                                # Check doctors found on main page
+                                for doc in nav_data.get("doctors", []):
+                                    name = doc.get("name", "")
+                                    if name and _is_plausible_korean_name(name) and name not in ocr_seen_names:
+                                        ocr_seen_names.add(name)
+                                        result["doctors"].append({
+                                            "name": name, "name_english": "",
+                                            "role": doc.get("role", "specialist"),
+                                            "photo_url": "",
+                                            "education": doc.get("education", []),
+                                            "career": doc.get("career", []),
+                                            "credentials": doc.get("credentials", []),
+                                            "branch": "", "branches": [],
+                                            "extraction_source": "ai_nav", "ocr_source": True,
+                                        })
+
+                                if result["doctors"]:
+                                    doctor_page_found = True
+                                    log(f"#{hospital_no} AI found {len(result['doctors'])} doctors on main page")
+
+                                # Try AI-suggested paths
+                                if not result["doctors"]:
+                                    ai_paths = nav_data.get("suggested_paths", [])
+                                    log(f"#{hospital_no} AI suggested {len(ai_paths)} paths: {ai_paths}")
+
+                                    for ai_path in ai_paths[:3]:
+                                        try:
+                                            ai_url = urljoin(base_url + "/", ai_path)
+                                            if ai_url.rstrip('/') in seen_urls:
+                                                continue
+
+                                            log(f"#{hospital_no} Trying AI suggestion: {ai_path} -> {ai_url}")
+                                            await page.goto(ai_url, wait_until="domcontentloaded", timeout=15000)
+                                            await page.wait_for_timeout(2000)
+
+                                            # Scroll
+                                            for _ in range(8):
+                                                await page.evaluate("window.scrollBy(0, 600)")
+                                                await page.wait_for_timeout(400)
+
+                                            # DOM extraction + validation
+                                            doctors = await page.evaluate(JS_EXTRACT_DOCTORS)
+                                            if doctors:
+                                                valid_doctors = [d for d in doctors if _is_plausible_korean_name(d.get("name", ""))]
+                                                if valid_doctors:
+                                                    result["doctors"] = valid_doctors
+                                                    doctor_page_found = True
+                                                    log(f"#{hospital_no} AI path DOM: {len(valid_doctors)} valid / {len(doctors)} total")
+                                                    break
+
+                                            # OCR on AI-suggested page
+                                            ts_ai = int(time.time())
+                                            ai_ss = f"/tmp/clinic_ai_{hospital_no}_{ts_ai}.jpg"
+                                            await page.evaluate("window.scrollTo(0, 0)")
+                                            await page.wait_for_timeout(300)
+                                            await page.screenshot(path=ai_ss, full_page=True, type="jpeg", quality=85)
+                                            temp_screenshots.append(ai_ss)
+
+                                            prompt_ai = ocr_prompt_tpl.replace("{path}", ai_ss)
+                                            ai_docs = _run_gemini_ocr(prompt_ai, ai_ss)
+                                            _append_ocr_doctors(ai_docs, ocr_seen_names, result["doctors"])
+
+                                            if result["doctors"]:
+                                                doctor_page_found = True
+                                                log(f"#{hospital_no} AI path OCR: {len(result['doctors'])} doctors")
+                                                break
+                                        except Exception as e:
+                                            log(f"#{hospital_no} AI path error: {str(e)[:100]}")
+                                            continue
+
+                    except subprocess.TimeoutExpired:
+                        log(f"#{hospital_no} AI navigation timeout")
+                    except Exception as e:
+                        log(f"#{hospital_no} AI navigation error: {str(e)[:100]}")
+
+                # Final: save screenshot if still no doctors
+                if not result["doctors"] and last_screenshot_path:
+                    save_dir = os.path.join(
+                        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+                        "data", "clinic-results", "screenshots",
+                    )
+                    os.makedirs(save_dir, exist_ok=True)
+                    save_path = os.path.join(save_dir, f"{hospital_no}_doctors.jpg")
+                    shutil.copy2(last_screenshot_path, save_path)
+                    log(f"#{hospital_no} All methods exhausted. Screenshot saved: {save_path}")
+                    result["errors"].append({
+                        "type": "all_methods_exhausted",
+                        "message": f"Rule-based ({len(unique_candidates)} candidates) + AI navigation all failed. Screenshot: {save_path}",
+                        "step": "doctor_extract", "retryable": True,
+                    })
+
+                log(f"#{hospital_no} Doctor extraction complete: {len(result['doctors'])} doctors")
 
             except Exception as e:
                 result["errors"].append({"type": "extraction", "message": str(e)[:200], "step": "doctor_extract", "retryable": True})
+            finally:
+                # Cleanup all temp screenshots
+                for sp in temp_screenshots:
+                    try:
+                        os.remove(sp)
+                    except OSError:
+                        pass
 
             # Determine final status
             has_social = len(result["social_channels"]) > 0

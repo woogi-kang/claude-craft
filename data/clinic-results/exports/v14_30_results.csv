@@ -1,0 +1,31 @@
+﻿NO,병원명,홈페이지,Final URL,CMS,채널수,의사수,의료진페이지존재,상태,추출된의사,실패원인,스크린샷저장
+15,톡스앤필의원,http://www.toxnfill10.com/,https://www.toxnfill10.com/,,6,5,Yes,success,조성우(specialist); 양희진(specialist); 정민지(specialist); 문지연(specialist); 우대표(원장),,No
+165,스타일미의원,http://www.stylemeclinic.co.kr/,,imweb,4,1,Yes,success,노재웅(원장),,Yes
+413,톡스앤필의원,http://www.toxnfill1.com/eventServiceInfo.php?c=2833,https://www.toxnfill1.com/eventServiceInfo.php?c=2833,,8,12,Yes,success,박대정(specialist); 김형태(specialist); 김미리(specialist); 김민영(specialist); 김민아(specialist); 김성원(specialist); 정지원(specialist); 조하빈(specialist); 김관우(specialist); 이종건(specialist); 노신영(specialist); 이혜원(specialist),,No
+418,나세르의원,http://petitnacer.com,http://petitnacer.com/,,1,1,Yes,success,조준호(원장),,Yes
+499,자연예쁨의원,http://nb-skin.com/,,,5,2,Yes,success,이은영(원장); 서봉경(원장),,No
+534,조은날의원,http://www.joeunnalclinic.com,http://www.joeunnalclinic.com/,,5,1,Yes,success,임기학(대표원장),,No
+549,시아의원,https://gangnam.sia-clinic.com/,,,5,0,No,partial,,,Yes
+631,에이원의원,https://www.aoneclinic.co.kr,,,0,0,,not_crawled,,DB에 없음 (미크롤링),No
+686,이즈의원,https://izclinic.co.kr/scar,,imweb,4,3,Yes,success,정라겸(원장); 허가영(원장); 손선경(원장),Widget detected: widget:KakaoTalk,Yes
+702,이지의원,https://www.ezyclinic.co.kr,,,0,0,,not_crawled,,DB에 없음 (미크롤링),No
+721,연세모에버의원,https://www.moever.co.kr,https://www.moever.co.kr/,,2,1,Yes,success,강세훈(원장),,No
+732,닥터크리미의원,http://drcreamy.com/,http://face.drcreamy.com/website01/,,6,1,Yes,success,이석용(대표원장),,Yes
+884,리오셀의원,https://liocellclinic.com/,,wordpress,8,1,Yes,success,서인예(대표원장),,No
+984,더블유의원,http://www.wclinic.co.kr,,,0,0,,not_crawled,,DB에 없음 (미크롤링),No
+1069,연세뷰티의원,http://www.ysbclinic.com/,https://www.ysbclinic.com/,,2,1,Yes,success,김윤애(원장),,Yes
+1249,르모아의원,http://lemoirclinic.com,https://lemoirclinic.com/,wordpress,6,0,Yes,partial,,,Yes
+1351,청담잇츠미의원,http://itsme1.kr/,,,5,1,Yes,success,김한구(대표원장),,No
+1441,클리니크후즈후의원,http://www.cliniquehushu.com/,,,7,5,Yes,success,홍경국(원장); 이규엽(원장); 오세웅(원장); 최윤진(원장); 박혜란(원장),,No
+1585,이에스의원,http://www.esbeauty.kr,http://www.esbeauty.kr/,,2,2,Yes,success,윤지은(원장); 박상혁(원장),,No
+1714,샤인빔의원,http://hongdae.shinebeam.co.kr/,https://hongdae.shinebeam.co.kr/,,1,6,Yes,success,조우현(원장); 이윤영(원장); 정현수(원장); 이혜승(원장); 이주원(원장); 김동원(원장),Widget detected: widget:KakaoTalk,Yes
+1742,바른의원,https://www.barunclinic.com,,,0,0,,not_crawled,,DB에 없음 (미크롤링),No
+1799,우미의원,https://umi-clinic.com,https://umi-clinic.com/,,6,2,Yes,success,김상우(대표원장); 허지은(원장),,Yes
+2510,차앤유의원,http://www.cnuclinic.co.kr/,https://www.cnuclinic.co.kr/,,3,20,Yes,success,이은진(원장); 조성훈(원장); 방아진(원장); 구윤모(원장); 이종건(원장); 정소정(원장); 남호수(원장); 권윤미(원장); 유종호(원장); 신종훈(원장); 이채현(원장); 박재서(원장); 육지혜(원장); 조희종(원장); 김탁영(원장); 정선진(원장); 백성준(원장); 차은지(원장); 이영섭(원장); 유민영(원장),,No
+3763,예쁨주의쁨의원,http://www.ppeum22.com,http://www.ppeum22.com/new/main/main.php?,,1,15,Yes,success,구윤경(전문의); 서지훈(전문의); 김정혁(대표원장); 김승범(대표원장); 강석훈(대표원장); 박본우(원장); 진호성(원장); 최선욱(전문의); 김태범(대표원장); 김지훈(대표원장); 심혜선(원장); 이민기(원장); 유안지(대표원장); 박동찬(원장); 원대표(원장),,Yes
+10651,더힐피부과의원,http://thehillderma.com,http://thehillderma.com/,wordpress,3,0,No,partial,,Gemini CLI timed out,No
+10777,인샤인피부과의원,http://inshineskin.com/,,,6,2,Yes,success,"윤성환(피부과 전문의, 대표원장); 윤재일(피부과 전문의, 원장)",,No
+10857,서울레전드피부과의원,http://www.legendskin.kr,http://www.legendskin.kr/main/main.html,,2,1,Yes,success,나선재(대표원장),,Yes
+11050,포레스트의원,http://www.forestclinic.co.kr,,,0,0,,not_crawled,,DB에 없음 (미크롤링),No
+11366,뷰티인의원,http://www.beautyin.co.kr,,,0,0,,not_crawled,,DB에 없음 (미크롤링),No
+11467,엘린의원,http://www.ellinclinic.co.kr,,,0,0,,not_crawled,,DB에 없음 (미크롤링),No
