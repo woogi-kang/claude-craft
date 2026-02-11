@@ -88,8 +88,10 @@ def classify_url(url: str) -> Optional[str]:
     """Classify a URL into a social platform name."""
     if not url:
         return None
-    # Exclude YouTube embed URLs (embedded videos, not owned channels)
-    if re.search(r"youtube\.com/embed/", url, re.IGNORECASE):
+    # Exclude YouTube individual video URLs (not channel-level social links)
+    if re.search(r"youtube\.com/(embed|watch|shorts)[\?/]", url, re.IGNORECASE):
+        return None
+    if re.search(r"youtu\.be/", url, re.IGNORECASE):
         return None
     for platform, patterns in PLATFORM_PATTERNS.items():
         for pat in patterns:
@@ -123,6 +125,9 @@ def normalize_url(url: str) -> str:
         parsed = urlparse(url)
         host = parsed.netloc.lower()
         path = parsed.path.rstrip("/") or "/"
+        # Strip YouTube channel suffixes for dedup (/videos, /featured, /about)
+        if "youtube.com" in host:
+            path = re.sub(r"/(videos|featured|about|playlists|community|channels)$", "", path)
         return urlunparse(parsed._replace(netloc=host, path=path))
     except Exception:
         return url
@@ -185,8 +190,9 @@ JS_SOCIAL_EXTRACT = """
         if (!url) return null;
         if (url.startsWith('tel:')) return 'Phone';
         if (url.startsWith('sms:')) return 'SMS';
-        // Exclude YouTube embed URLs (embedded videos, not channels)
-        if (/youtube\\.com\\/embed\\//i.test(url)) return null;
+        // Exclude YouTube individual video URLs (not channel-level links)
+        if (/youtube\\.com\\/(embed|watch|shorts)[\\/\\?]/i.test(url)) return null;
+        if (/youtu\\.be\\//i.test(url)) return null;
         for (const [platform, re] of Object.entries(platformPatterns)) {
             if (re.test(url)) return platform;
         }
