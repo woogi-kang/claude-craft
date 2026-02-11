@@ -39,13 +39,15 @@ PLATFORM_PATTERNS = {
         r"pf\.kakao\.com/", r"open\.kakao\.com/o/",
         r"talk\.kakao\.com/", r"kakao\.com/channel/",
     ],
-    "NaverTalk": [r"talk\.naver\.com/", r"naver\.me/"],
+    "NaverTalk": [r"talk\.naver\.com/"],
+    "NaverShortlink": [r"naver\.me/"],
     "Line": [r"line\.me/", r"lin\.ee/"],
     "WeChat": [r"u\.wechat\.com/", r"weixin\.qq\.com/"],
     "WhatsApp": [r"wa\.me/", r"api\.whatsapp\.com/"],
     "Telegram": [r"t\.me/[^/]+$"],
     "FacebookMessenger": [r"m\.me/"],
     "NaverBooking": [r"booking\.naver\.com/"],
+    "NaverMap": [r"map\.naver\.com/", r"m\.place\.naver\.com/"],
     "Instagram": [r"instagram\.com/"],
     "YouTube": [r"youtube\.com/", r"youtu\.be/"],
     "NaverBlog": [r"blog\.naver\.com/"],
@@ -164,7 +166,8 @@ JS_SOCIAL_EXTRACT = """
     // Platform detection regex map
     const platformPatterns = {
         KakaoTalk: /pf\\.kakao\\.com|open\\.kakao\\.com\\/o|talk\\.kakao\\.com|kakao\\.com\\/channel/i,
-        NaverTalk: /talk\\.naver\\.com|naver\\.me\\//i,
+        NaverTalk: /talk\\.naver\\.com\\//i,
+        NaverShortlink: /naver\\.me\\//i,
         Line: /line\\.me\\/|lin\\.ee\\//i,
         WeChat: /u\\.wechat\\.com|weixin\\.qq\\.com/i,
         WhatsApp: /wa\\.me\\/|api\\.whatsapp\\.com/i,
@@ -980,6 +983,26 @@ async def crawl_hospital(hospital_no: int, name: str, url: str, db_path: str,
                         "confidence": 1.0,
                         "status": "active",
                     })
+
+            # Pass 5: Resolve NaverShortlink (naver.me) URLs via redirect
+            for ch in result["social_channels"]:
+                if ch["platform"] != "NaverShortlink":
+                    continue
+                try:
+                    new_page = await context.new_page()
+                    resp = await new_page.goto(ch["url"], wait_until="commit", timeout=5000)
+                    resolved = new_page.url
+                    await new_page.close()
+                    new_platform = classify_url(resolved)
+                    if new_platform and new_platform != "NaverShortlink":
+                        ch["platform"] = new_platform
+                        ch["url"] = normalize_url(resolved)
+                        log(f"#{hospital_no} Resolved naver.me -> {new_platform}: {resolved[:80]}")
+                except Exception:
+                    try:
+                        await new_page.close()
+                    except Exception:
+                        pass
 
             log(f"#{hospital_no} Total social channels: {len(result['social_channels'])}")
 

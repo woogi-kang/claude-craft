@@ -24,7 +24,7 @@ from pathlib import Path
 VALID_PLATFORMS = {
     "KakaoTalk", "NaverTalk", "NaverShortlink", "Line", "WeChat", "WhatsApp",
     "Telegram", "FacebookMessenger", "Instagram", "YouTube",
-    "NaverBlog", "NaverCafe", "NaverBooking", "Facebook", "Phone", "SMS",
+    "NaverBlog", "NaverCafe", "NaverBooking", "NaverMap", "Facebook", "Phone", "SMS",
 }
 
 VALID_STATUSES = {
@@ -557,6 +557,7 @@ _PLATFORM_NORMALIZE = {
     "naver_booking": "NaverBooking", "naverbooking": "NaverBooking",
     "naver_cafe": "NaverCafe", "navercafe": "NaverCafe",
     "naver_shortlink": "NaverShortlink", "navershortlink": "NaverShortlink",
+    "naver_map": "NaverMap", "navermap": "NaverMap",
     "instagram": "Instagram",
     "youtube": "YouTube",
     "facebook": "Facebook",
