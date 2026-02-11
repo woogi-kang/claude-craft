@@ -440,19 +440,20 @@ JS_EXTRACT_DOCTORS = """
         '학회', '학교', '대학', '약국', '닥터', '학과', '피부',
         '점', '위원', '회원', '전문가', '구매', '상식', '활동',
         '협력', '총괄', '증서', '인후과', '의료', '연구',
-        '서울', '인터', '채용', '공지', '조회',
+        '서울', '인터', '채용', '공지', '조회', '철산',
         '미용', '홍보', '오늘', '강사', '소개', '마사',
     ];
     const surnames = new Set(
         '김이박최정강조윤장임한오서신권황안송류전홍유고문양손배백허남심노하곽성차주우구민진지엄채원천방공현함변추도소석선설마길연위표명기반왕금옥육인맹제모탁국여어은편빈예봉경태피감복'.split('')
     );
     const nonNameExact = new Set([
-        '대표', '멤버', '보유', '대한', '의학', '교육', '운영',
+        '대표', '멤버', '보유', '대한', '의학', '교육', '운영', '학력',
         '소개', '경력', '인사', '선생', '안내', '예약', '진료',
         '진단', '보험', '도입', '경험', '인증', '소속',
         // Common non-name words that pass surname check
         '원장', '전담', '기기', '최신', '어떤', '최애', '주요',
         '안과', '여의사', '주름', '노하우', '원소개', '이퓨어',
+        '우아성', '박훤함', '마인피', '하나이',
         // Location names (chain hospital branches)
         '강남', '천호', '하남', '구리', '강서', '송파', '구로',
         '연신내', '왕십리',
@@ -465,7 +466,7 @@ JS_EXTRACT_DOCTORS = """
         if (nonNameExact.has(name)) return false;
         if (!surnames.has(name[0])) return false;
         // Reject truncated words (e.g. "경희의" from "경희의료원", "연세대" from "연세대학교")
-        if (name.length === 3 && /[의과에적대는]$/.test(name)) return false;
+        if (name.length === 3 && /[의과에적대는여]$/.test(name)) return false;
         // Reject garbled role prefix (e.g. "원장유" from "원장 유동...")
         if (name.startsWith('원장') || name.startsWith('전문')) return false;
         return true;
@@ -486,6 +487,11 @@ JS_EXTRACT_DOCTORS = """
             const rev = name.match(/^(대표원장|부원장|원장|전문의|의사)\\s+(.+)$/);
             if (rev) { role = rev[1]; name = rev[2].trim(); }
         }
+
+        // Validate: must contain Korean chars; short Korean names must pass isPlausibleName
+        const hasKorean = /[가-힣]/.test(name);
+        if (!hasKorean) return null;
+        if (name.length <= 3 && !isPlausibleName(name)) return null;
 
         const cardText = card.textContent || '';
         if (excludeRoles.some(r => cardText.includes(r) && !cardText.includes('원장') && !cardText.includes('전문의'))) return null;
