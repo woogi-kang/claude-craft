@@ -49,6 +49,7 @@ PLATFORM_PATTERNS = {
     "Instagram": [r"instagram\.com/"],
     "YouTube": [r"youtube\.com/", r"youtu\.be/"],
     "NaverBlog": [r"blog\.naver\.com/"],
+    "NaverCafe": [r"cafe\.naver\.com/"],
     "Facebook": [r"facebook\.com/(?!.*messenger)"],
 }
 
@@ -85,6 +86,9 @@ def classify_url(url: str) -> Optional[str]:
     """Classify a URL into a social platform name."""
     if not url:
         return None
+    # Exclude YouTube embed URLs (embedded videos, not owned channels)
+    if re.search(r"youtube\.com/embed/", url, re.IGNORECASE):
+        return None
     for platform, patterns in PLATFORM_PATTERNS.items():
         for pat in patterns:
             if re.search(pat, url, re.IGNORECASE):
@@ -107,6 +111,21 @@ def strip_tracking(url: str) -> str:
         return url
 
 
+def normalize_url(url: str) -> str:
+    """Normalize URL for dedup: strip tracking, lowercase host, strip trailing slash, normalize phone."""
+    if url.startswith("tel:") or url.startswith("sms:"):
+        prefix = url[:4]
+        return prefix + re.sub(r"[-.\s()+]", "", url[4:])
+    url = strip_tracking(url)
+    try:
+        parsed = urlparse(url)
+        host = parsed.netloc.lower()
+        path = parsed.path.rstrip("/") or "/"
+        return urlunparse(parsed._replace(netloc=host, path=path))
+    except Exception:
+        return url
+
+
 def log(msg: str) -> None:
     """Log to stderr (stdout reserved for JSON output)."""
     print(f"[crawl] {msg}", file=sys.stderr, flush=True)
@@ -121,10 +140,25 @@ JS_SOCIAL_EXTRACT = """
     const results = [];
     const seen = new Set();
 
+    function normalizeUrl(u) {
+        if (u.startsWith('tel:') || u.startsWith('sms:')) {
+            return u.substring(0, 4) + u.substring(4).replace(/[-.\s()+]/g, '');
+        }
+        try {
+            const obj = new URL(u);
+            obj.hostname = obj.hostname.toLowerCase();
+            if (obj.pathname.length > 1 && obj.pathname.endsWith('/'))
+                obj.pathname = obj.pathname.slice(0, -1);
+            return obj.toString();
+        } catch { return u; }
+    }
+
     function addResult(platform, url, method) {
-        if (!url || seen.has(url)) return;
-        seen.add(url);
-        results.push({platform, url, method});
+        if (!url) return;
+        const norm = normalizeUrl(url);
+        if (seen.has(norm)) return;
+        seen.add(norm);
+        results.push({platform, url: norm, method});
     }
 
     // Platform detection regex map
@@ -140,6 +174,7 @@ JS_SOCIAL_EXTRACT = """
         Instagram: /instagram\\.com\\//i,
         YouTube: /youtube\\.com\\/|youtu\\.be\\//i,
         NaverBlog: /blog\\.naver\\.com\\//i,
+        NaverCafe: /cafe\\.naver\\.com\\//i,
         Facebook: /facebook\\.com\\//i,
     };
 
@@ -147,6 +182,8 @@ JS_SOCIAL_EXTRACT = """
         if (!url) return null;
         if (url.startsWith('tel:')) return 'Phone';
         if (url.startsWith('sms:')) return 'SMS';
+        // Exclude YouTube embed URLs (embedded videos, not channels)
+        if (/youtube\\.com\\/embed\\//i.test(url)) return null;
         for (const [platform, re] of Object.entries(platformPatterns)) {
             if (re.test(url)) return platform;
         }
@@ -241,6 +278,18 @@ JS_SOCIAL_EXTRACT = """
                 const p = classifyUrl(a.href);
                 if (p) addResult(p, a.href, 'shadow_dom');
             });
+        }
+    });
+
+    // Pass 3: WeChat QR image detection
+    document.querySelectorAll('img').forEach(img => {
+        const src = img.src || img.getAttribute('data-src') || '';
+        if (!src) return;
+        const alt = (img.alt || '').toLowerCase();
+        const cls = (img.className || '').toLowerCase();
+        const parentText = (img.parentElement?.textContent || '').toLowerCase();
+        if (/wechat|weixin|微信|위챗/.test(alt + ' ' + cls + ' ' + parentText)) {
+            addResult('WeChat', src, 'qr_image');
         }
     });
 
@@ -914,7 +963,7 @@ async def crawl_hospital(hospital_no: int, name: str, url: str, db_path: str,
             # Pass 4: URL Validation + de-duplication
             seen_urls = set()
             for ch in raw_channels:
-                url_val = strip_tracking(ch.get("url", ""))
+                url_val = normalize_url(ch.get("url", ""))
                 if not url_val or url_val in seen_urls:
                     continue
                 # Skip widget: pseudo-URLs for now (just note them in errors)

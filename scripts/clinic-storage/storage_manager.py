@@ -22,9 +22,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 VALID_PLATFORMS = {
-    "KakaoTalk", "NaverTalk", "Line", "WeChat", "WhatsApp",
+    "KakaoTalk", "NaverTalk", "NaverShortlink", "Line", "WeChat", "WhatsApp",
     "Telegram", "FacebookMessenger", "Instagram", "YouTube",
-    "NaverBlog", "NaverBooking", "Facebook", "Phone", "SMS",
+    "NaverBlog", "NaverCafe", "NaverBooking", "Facebook", "Phone", "SMS",
 }
 
 VALID_STATUSES = {
@@ -555,6 +555,8 @@ _PLATFORM_NORMALIZE = {
     "naver_blog": "NaverBlog", "naverblog": "NaverBlog",
     "naver_talk": "NaverTalk", "navertalk": "NaverTalk",
     "naver_booking": "NaverBooking", "naverbooking": "NaverBooking",
+    "naver_cafe": "NaverCafe", "navercafe": "NaverCafe",
+    "naver_shortlink": "NaverShortlink", "navershortlink": "NaverShortlink",
     "instagram": "Instagram",
     "youtube": "YouTube",
     "facebook": "Facebook",
@@ -570,8 +572,8 @@ _PLATFORM_NORMALIZE = {
 
 # Ordered social columns for unified CSV
 _SOCIAL_COLUMNS = [
-    "KakaoTalk", "NaverTalk", "Line", "WhatsApp", "WeChat",
-    "Telegram", "Instagram", "NaverBlog", "YouTube",
+    "KakaoTalk", "NaverTalk", "NaverShortlink", "Line", "WhatsApp", "WeChat",
+    "Telegram", "Instagram", "NaverBlog", "NaverCafe", "YouTube",
     "Facebook", "NaverBooking", "Phone",
 ]
 
