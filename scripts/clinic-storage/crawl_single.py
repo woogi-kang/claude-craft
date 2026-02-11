@@ -1211,6 +1211,86 @@ async def crawl_hospital(hospital_no: int, name: str, url: str, db_path: str,
                     except Exception:
                         pass
 
+            # Pass 6: Follow internal redirect links (page.asp?m=kakao, link.php?go=, etc.)
+            # When 0 social channels found, scan page for internal links whose
+            # text/alt contains social keywords and resolve them via navigation.
+            if not result["social_channels"]:
+                try:
+                    redirect_links = await page.evaluate("""
+                    () => {
+                        const keywords = /kakao|카카오|naver|네이버|blog|블로그|instagram|인스타|youtube|유튜브|facebook|페이스북|line|라인|talk|톡/i;
+                        const links = [];
+                        document.querySelectorAll('a[href], area[href]').forEach(el => {
+                            const href = el.href || el.getAttribute('href') || '';
+                            const text = (el.textContent || '').trim();
+                            const alt = el.querySelector('img')?.alt || '';
+                            const title = el.getAttribute('title') || '';
+                            const combined = text + ' ' + alt + ' ' + title;
+                            // Must be internal link (same domain or relative) with social keyword
+                            if (!href) return;
+                            const isInternal = href.startsWith('/') || href.includes(location.hostname) ||
+                                /\.(asp|php|jsp|do|html?)\?/.test(href);
+                            const hasSocialKeyword = keywords.test(combined) || keywords.test(href);
+                            // Skip already-social URLs (pf.kakao.com, instagram.com, etc.)
+                            const alreadySocial = /kakao\.com|instagram\.com|youtube\.com|naver\.com|facebook\.com|line\.me/.test(href);
+                            if (isInternal && hasSocialKeyword && !alreadySocial && href.length < 300) {
+                                links.push({href: href, text: combined.substring(0, 50)});
+                            }
+                        });
+                        // Also check iframes for redirect links
+                        document.querySelectorAll('iframe').forEach(iframe => {
+                            try {
+                                const iDoc = iframe.contentDocument;
+                                if (!iDoc) return;
+                                iDoc.querySelectorAll('a[href]').forEach(el => {
+                                    const href = el.href || el.getAttribute('href') || '';
+                                    const text = (el.textContent || '').trim();
+                                    const alt = el.querySelector('img')?.alt || '';
+                                    const combined = text + ' ' + alt;
+                                    const isInternal = href.startsWith('/') || href.includes(location.hostname) ||
+                                        /\.(asp|php|jsp|do|html?)\?/.test(href);
+                                    const hasSocialKeyword = keywords.test(combined) || keywords.test(href);
+                                    const alreadySocial = /kakao\.com|instagram\.com|youtube\.com|naver\.com|facebook\.com|line\.me/.test(href);
+                                    if (isInternal && hasSocialKeyword && !alreadySocial && href.length < 300) {
+                                        links.push({href: href, text: combined.substring(0, 50)});
+                                    }
+                                });
+                            } catch(e) {}
+                        });
+                        // Deduplicate
+                        const seen = new Set();
+                        return links.filter(l => { if (seen.has(l.href)) return false; seen.add(l.href); return true; });
+                    }
+                    """)
+                    if redirect_links:
+                        log(f"#{hospital_no} Found {len(redirect_links)} internal redirect candidates")
+                    for rl in redirect_links[:10]:  # max 10 to avoid abuse
+                        try:
+                            redir_page = await context.new_page()
+                            await redir_page.goto(rl["href"], wait_until="commit", timeout=8000)
+                            resolved_url = redir_page.url
+                            await redir_page.close()
+                            resolved_norm = normalize_url(resolved_url)
+                            if resolved_norm and resolved_norm not in seen_urls:
+                                platform = classify_url(resolved_norm)
+                                if platform:
+                                    seen_urls.add(resolved_norm)
+                                    result["social_channels"].append({
+                                        "platform": platform,
+                                        "url": resolved_norm,
+                                        "extraction_method": "redirect_follow",
+                                        "confidence": 0.9,
+                                        "status": "active",
+                                    })
+                                    log(f"#{hospital_no} Redirect resolved: {rl['text'][:20]} -> {platform}: {resolved_norm[:60]}")
+                        except Exception:
+                            try:
+                                await redir_page.close()
+                            except Exception:
+                                pass
+                except Exception as e:
+                    log(f"#{hospital_no} Redirect scan error: {str(e)[:100]}")
+
             log(f"#{hospital_no} Total social channels: {len(result['social_channels'])}")
 
             # ---------------------------------------------------------------
@@ -1725,7 +1805,13 @@ async def crawl_hospital(hospital_no: int, name: str, url: str, db_path: str,
                 if has_social and has_doctors:
                     pass  # success: both categories have data
                 elif has_social or has_doctors:
-                    result["status"] = "partial"  # only one category
+                    result["status"] = "partial"
+                    missing = "doctors" if not has_doctors else "social_channels"
+                    result["errors"].append({
+                        "type": "partial_data",
+                        "message": f"Missing {missing}: social={len(result['social_channels'])}, doctors={len(result['doctors'])}",
+                        "step": "final_status", "retryable": True,
+                    })
                 else:
                     result["status"] = "empty"  # crawl completed but no data
 
