@@ -438,6 +438,8 @@ JS_FIND_DOCTOR_MENU = """
 ([primaryLabels, secondaryLabels, submenuParents]) => {
     const allLinks = Array.from(document.querySelectorAll('nav a, header a, .menu a, .gnb a, .lnb a, [class*="nav"] a, [class*="menu"] a, a'));
     const results = [];
+    const doctorUrlRe = /\\/doctor|\\/staff|\\/team|\\/의료진|\\/원장|\\/전문의/;
+    const genericUrlRe = /^\\/(?:about|introduce|clinic|소개|병원)(?:[#?/]|$)/i;
 
     for (const a of allLinks) {
         const text = (a.textContent || '').trim();
@@ -445,31 +447,71 @@ JS_FIND_DOCTOR_MENU = """
         if (!text || text.length > 30) continue;
 
         const visible = a.offsetParent !== null && a.offsetWidth > 0;
+        let matched = false;
 
         // Check primary labels
         for (const label of primaryLabels) {
             if (text === label || text.includes(label)) {
                 results.push({text, href, priority: 1, visible, element: a.outerHTML.substring(0, 200)});
+                matched = true; break;
             }
         }
+        if (matched) continue;
         // Check secondary labels
         for (const label of secondaryLabels) {
             if (text === label || text.includes(label)) {
                 results.push({text, href, priority: 2, visible, element: a.outerHTML.substring(0, 200)});
+                matched = true; break;
             }
         }
+        if (matched) continue;
         // Check URL patterns
-        if (/\\/doctor|\\/staff|\\/team|\\/about|\\/introduce|\\/의료진|\\/원장|\\/전문의|\\/소개/.test(href)) {
+        if (doctorUrlRe.test(href)) {
             results.push({text, href, priority: 1, visible, element: a.outerHTML.substring(0, 200)});
         }
     }
 
-    // De-duplicate: prefer visible links, then sort by priority
+    // Submenu child scanning: find doctor links inside dropdown parents
+    const menuParentSels = ['nav > ul > li', '.gnb > li', '.menu > li', '[class*="nav"] > ul > li', 'header li'];
+    for (const sel of menuParentSels) {
+        document.querySelectorAll(sel).forEach(parent => {
+            const parentLink = parent.querySelector(':scope > a');
+            const parentText = (parentLink?.textContent || '').trim();
+            if (!submenuParents.some(label => parentText.includes(label))) return;
+            parent.querySelectorAll('ul a, .sub a, .submenu a, .depth2 a, .snb a').forEach(child => {
+                const childText = (child.textContent || '').trim();
+                const childHref = child.href || child.getAttribute('href') || '';
+                for (const label of primaryLabels) {
+                    if (childText === label || childText.includes(label)) {
+                        results.push({
+                            text: childText, href: childHref, priority: 0,
+                            visible: child.offsetParent !== null,
+                            element: child.outerHTML.substring(0, 200),
+                            parentMenu: parentText,
+                        });
+                        return;
+                    }
+                }
+            });
+        });
+    }
+
+    // Boost specific doctor URLs, demote generic parent URLs
+    for (const r of results) {
+        try {
+            const path = new URL(r.href).pathname;
+            if (doctorUrlRe.test(path)) r.priority = Math.min(r.priority, 0);
+            else if (genericUrlRe.test(path) && r.priority > 0) r.priority = 3;
+        } catch {}
+    }
+
+    // Sort: priority first, then visible links
     const unique = [];
     const seenHrefs = new Set();
     results.sort((a, b) => {
+        if (a.priority !== b.priority) return a.priority - b.priority;
         if (a.visible !== b.visible) return a.visible ? -1 : 1;
-        return a.priority - b.priority;
+        return 0;
     });
     for (const r of results) {
         if (!seenHrefs.has(r.href)) {
@@ -901,6 +943,43 @@ async def crawl_hospital(hospital_no: int, name: str, url: str, db_path: str,
             except Exception:
                 pass
 
+            # Step 1b: Split-entry / splash page bypass
+            # Chain clinics may show a branch selector with few links and minimal text
+            try:
+                splash_info = await page.evaluate("""
+                () => {
+                    const text = (document.body?.innerText || '').trim();
+                    const links = Array.from(document.querySelectorAll('a[href]'));
+                    const host = location.hostname.replace(/^www\\./, '');
+                    const internal = links.filter(a => {
+                        try {
+                            const h = new URL(a.href).hostname.replace(/^www\\./, '');
+                            return h === host || h.endsWith('.' + host);
+                        } catch { return false; }
+                    });
+                    return {
+                        textLen: text.length,
+                        totalLinks: links.length,
+                        firstHref: internal[0]?.href || null,
+                    };
+                }
+                """)
+                if (splash_info.get("totalLinks", 99) <= 10
+                        and splash_info.get("textLen", 9999) < 500
+                        and splash_info.get("firstHref")):
+                    first_link = splash_info["firstHref"]
+                    log(f"#{hospital_no} Splash page detected "
+                        f"({splash_info['totalLinks']} links, {splash_info['textLen']} chars), "
+                        f"navigating to {first_link}")
+                    await page.goto(first_link, wait_until="domcontentloaded", timeout=15000)
+                    try:
+                        final_url = await page.evaluate("() => window.location.href")
+                        result["final_url"] = final_url
+                    except Exception:
+                        pass
+            except Exception:
+                pass
+
             # ---------------------------------------------------------------
             # Step 2: Dismiss Popups
             # ---------------------------------------------------------------
@@ -1012,7 +1091,23 @@ async def crawl_hospital(hospital_no: int, name: str, url: str, db_path: str,
             log(f"#{hospital_no} Looking for doctor page")
             doctor_page_found = False
 
-            # Step 5a: Menu-based navigation
+            # Step 5a: Reveal hidden submenus via hover before searching
+            try:
+                await page.evaluate("""
+                () => {
+                    const parents = document.querySelectorAll(
+                        'nav > ul > li, .gnb > li, .menu > li, [class*="nav"] > ul > li, header li'
+                    );
+                    parents.forEach(li => {
+                        li.dispatchEvent(new MouseEvent('mouseenter', {bubbles: true}));
+                        li.dispatchEvent(new MouseEvent('mouseover', {bubbles: true}));
+                    });
+                }
+                """)
+                await page.wait_for_timeout(500)
+            except Exception:
+                pass
+
             try:
                 doctor_links = await page.evaluate(
                     JS_FIND_DOCTOR_MENU,
