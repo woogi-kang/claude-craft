@@ -419,44 +419,43 @@ async def step_extract_social(ctx: CrawlContext) -> None:
             except Exception:
                 pass
 
-    # Pass 6: Follow internal redirect links
-    if not ctx.result["social_channels"]:
-        try:
-            redirect_links = await ctx.page.evaluate(JS_REDIRECT_SCAN)
-            if redirect_links:
-                log(f"#{ctx.hospital_no} Found {len(redirect_links)} "
-                    f"internal redirect candidates")
-            for rl in redirect_links[:10]:
+    # Pass 6: Follow internal redirect links (always run to catch hidden social links)
+    try:
+        redirect_links = await ctx.page.evaluate(JS_REDIRECT_SCAN)
+        if redirect_links:
+            log(f"#{ctx.hospital_no} Found {len(redirect_links)} "
+                f"internal redirect candidates")
+        for rl in redirect_links[:10]:
+            try:
+                redir_page = await ctx.context.new_page()
+                await redir_page.goto(
+                    rl["href"], wait_until="commit", timeout=8000,
+                )
+                resolved_url = redir_page.url
+                await redir_page.close()
+                resolved_norm = normalize_url(resolved_url)
+                if resolved_norm and resolved_norm not in seen_urls:
+                    platform = classify_url(resolved_norm)
+                    if platform:
+                        seen_urls.add(resolved_norm)
+                        ctx.result["social_channels"].append({
+                            "platform": platform,
+                            "url": resolved_norm,
+                            "extraction_method": "redirect_follow",
+                            "confidence": 0.9,
+                            "status": "active",
+                        })
+                        log(f"#{ctx.hospital_no} Redirect resolved: "
+                            f"{rl['text'][:20]} -> {platform}: "
+                            f"{resolved_norm[:60]}")
+            except Exception:
                 try:
-                    redir_page = await ctx.context.new_page()
-                    await redir_page.goto(
-                        rl["href"], wait_until="commit", timeout=8000,
-                    )
-                    resolved_url = redir_page.url
                     await redir_page.close()
-                    resolved_norm = normalize_url(resolved_url)
-                    if resolved_norm and resolved_norm not in seen_urls:
-                        platform = classify_url(resolved_norm)
-                        if platform:
-                            seen_urls.add(resolved_norm)
-                            ctx.result["social_channels"].append({
-                                "platform": platform,
-                                "url": resolved_norm,
-                                "extraction_method": "redirect_follow",
-                                "confidence": 0.9,
-                                "status": "active",
-                            })
-                            log(f"#{ctx.hospital_no} Redirect resolved: "
-                                f"{rl['text'][:20]} -> {platform}: "
-                                f"{resolved_norm[:60]}")
                 except Exception:
-                    try:
-                        await redir_page.close()
-                    except Exception:
-                        pass
-        except Exception as e:
-            log(f"#{ctx.hospital_no} Redirect scan error: "
-                f"{str(e)[:100]}")
+                    pass
+    except Exception as e:
+        log(f"#{ctx.hospital_no} Redirect scan error: "
+            f"{str(e)[:100]}")
 
     log(f"#{ctx.hospital_no} Total social channels: "
         f"{len(ctx.result['social_channels'])}")
@@ -509,11 +508,38 @@ async def step_collect_candidates(ctx: CrawlContext) -> list:
                 log(f"#{ctx.hospital_no} Scanning intro page: "
                     f"{link['text']} -> {link['href']}")
                 try:
+                    if link["href"].startswith("javascript:"):
+                        continue
                     await ctx.page.goto(
                         link["href"],
                         wait_until="domcontentloaded", timeout=15000,
                     )
                     await ctx.page.wait_for_timeout(1500)
+
+                    # Opportunistic social extraction from sub-pages
+                    if not ctx.result["social_channels"]:
+                        try:
+                            sub_channels = await ctx.page.evaluate(
+                                JS_SOCIAL_EXTRACT,
+                            )
+                            for ch in (sub_channels or []):
+                                url_val = normalize_url(ch.get("url", ""))
+                                platform = classify_url(url_val)
+                                if platform and url_val:
+                                    ctx.result["social_channels"].append({
+                                        "platform": platform,
+                                        "url": url_val,
+                                        "extraction_method": "subpage_scan",
+                                        "confidence": 0.9,
+                                        "status": "active",
+                                    })
+                            if ctx.result["social_channels"]:
+                                log(f"#{ctx.hospital_no} Sub-page found "
+                                    f"{len(ctx.result['social_channels'])} "
+                                    f"social channels")
+                        except Exception:
+                            pass
+
                     doctor_links_2nd = await ctx.page.evaluate(
                         JS_FIND_DOCTOR_SUBLINKS,
                     )
@@ -762,6 +788,11 @@ async def step_extract_doctors(
 
             log(f"#{ctx.hospital_no} Trying candidate "
                 f"{cand_idx + 1}/{len(candidates)}: {cand_source}")
+
+            # Skip javascript: URLs (can't navigate to them)
+            if cand_url.startswith("javascript:"):
+                log(f"#{ctx.hospital_no} Skipping javascript: URL")
+                continue
 
             # Navigate to candidate
             try:
