@@ -1,0 +1,46 @@
+[project]
+name = "clinic-crawler"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "playwright>=1.40",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "pytest-cov>=5.0",
+    "ruff>=0.5",
+    "mypy>=1.10",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = [
+    "integration: requires browser (deselect with -m 'not integration')",
+    "ocr: requires gemini CLI (deselect with -m 'not ocr')",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "A", "SIM"]
+ignore = ["UP017"]  # datetime.UTC requires Python 3.11+; runtime is 3.9
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.coverage.run]
+source = ["clinic_crawler"]
+omit = ["tests/*", "clinic_crawler/steps.py", "clinic_crawler/js_snippets.py"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 70
