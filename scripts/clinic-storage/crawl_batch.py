@@ -25,18 +25,16 @@ import argparse
 import asyncio
 import csv
 import json
-import os
 import random
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from storage_manager import get_db, export_unified_csv, DB_DEFAULT
-
 # Import the crawl function directly for in-process parallel execution
 from crawl_single import crawl_hospital
+from storage_manager import DB_DEFAULT, export_unified_csv, get_db
 
 CSV_SOURCE = "data/clinic-results/skin_clinics.csv"
 CSV_UNIFIED_OUTPUT = "data/clinic-results/exports/clinic_results.csv"
@@ -187,7 +185,7 @@ async def run_batch(hospitals: list, db_path: str, parallel: int,
     log(f"Database: {db_path}")
 
     tasks = [crawl_with_semaphore(h) for h in hospitals]
-    crawl_results = await asyncio.gather(*tasks, return_exceptions=True)
+    await asyncio.gather(*tasks, return_exceptions=True)
 
     elapsed = time.time() - start_time
     avg = elapsed / max(len(hospitals), 1)

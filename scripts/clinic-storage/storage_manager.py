@@ -351,7 +351,7 @@ def show_stats(db_path: str) -> None:
     error_total = conn.execute("SELECT COUNT(*) FROM crawl_errors").fetchone()[0]
 
     print(f"\n{'='*50}")
-    print(f"  Clinic Crawl Statistics")
+    print("  Clinic Crawl Statistics")
     print(f"{'='*50}")
     print(f"\n  Hospitals: {total}")
     for row in by_status:
@@ -420,12 +420,12 @@ def show_dashboard(db_path: str, total_target: int = 4256) -> None:
     progress_pct = total / total_target * 100 if total_target else 0
 
     print(f"\n{'='*55}")
-    print(f"  Clinic Crawl Dashboard")
+    print("  Clinic Crawl Dashboard")
     print(f"{'='*55}")
     print(f"\n  Progress: {total}/{total_target} ({progress_pct:.1f}%)")
     print(f"  Success rate: {success_rate:.0f}% ({success}/{attempted} attempted)")
     print(f"  Today: {today_count} crawls")
-    print(f"\n  Status breakdown:")
+    print("\n  Status breakdown:")
     for status, cnt in sorted(by_status.items(), key=lambda x: -x[1]):
         print(f"    {status}: {cnt}")
     if success_partial:
@@ -435,7 +435,7 @@ def show_dashboard(db_path: str, total_target: int = 4256) -> None:
             print(f"    {row['platform']}: {row['cnt']} ({rate:.0f}%)")
     print(f"\n  Doctors: {doctor_total} (OCR: {ocr_count}, DOM: {doctor_total - ocr_count})")
     if recent_errors:
-        print(f"\n  Recent failure patterns (7 days):")
+        print("\n  Recent failure patterns (7 days):")
         for row in recent_errors:
             print(f"    {row['error_type']}: {row['cnt']}")
     print(f"{'='*55}\n")
