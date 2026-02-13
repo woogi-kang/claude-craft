@@ -1,0 +1,134 @@
+{
+  "country": "malaysia",
+  "last_updated": "2026-02-13",
+  "influencers": {
+    "doctors": [
+      {
+        "name": "Dr. Park Ji Youn",
+        "platform": ["Instagram", "Clinic Website"],
+        "clinic": "Ozhean Clinic (Bangsar & Bukit Jalil, KL + 5 branches in Seoul)",
+        "specialty": "Korean Board Certified Dermatologist",
+        "influence_level": "macro",
+        "relevance_to_korean_derm": "very_high",
+        "notes": "Founder of Ozhean clinics. Created trademarked FIT program. Bridge between Korean expertise and Malaysian market. Active presence in Malaysia."
+      },
+      {
+        "name": "Dr. Chong (Dr. Chong Clinic)",
+        "platform": ["Instagram"],
+        "followers": {"instagram": 72000},
+        "specialty": "Aesthetic medicine",
+        "influence_level": "macro",
+        "relevance_to_korean_derm": "medium",
+        "notes": "First aesthetic clinic listed on Bursa Malaysia. 26 outlets in Malaysia. Active Instagram presence with Korean-influenced treatment content."
+      }
+    ],
+    "beauty_influencers": [
+      {
+        "name": "Neelofa",
+        "platform": ["Instagram"],
+        "followers": {"instagram": 8700000},
+        "content_type": ["beauty", "fashion", "lifestyle"],
+        "influence_level": "mega",
+        "relevance_to_korean_derm": "low",
+        "notes": "Malaysia's top beauty influencer. Hijab-wearing. Broad beauty content, not Korean derm-specific. Massive reach potential for partnerships."
+      },
+      {
+        "name": "Mira Filzah",
+        "platform": ["Instagram"],
+        "followers": {"instagram": 7200000},
+        "content_type": ["beauty", "lifestyle"],
+        "influence_level": "mega",
+        "relevance_to_korean_derm": "low",
+        "notes": "Top Malaysian celebrity/influencer. K-drama fan. Potential for Korean beauty tourism content but not currently active in this space."
+      },
+      {
+        "name": "Hanis Zalikha",
+        "platform": ["Instagram", "YouTube", "Blog"],
+        "followers": {"multi_platform": 6800000},
+        "content_type": ["lifestyle", "beauty", "motherhood"],
+        "influence_level": "mega",
+        "relevance_to_korean_derm": "low",
+        "notes": "Multi-platform influencer. Beauty content among broader lifestyle. Not Korean derm-specific."
+      },
+      {
+        "name": "Aikah Ika",
+        "platform": ["TikTok", "Instagram"],
+        "followers": {"multi_platform": 4100000},
+        "content_type": ["beauty", "skincare"],
+        "influence_level": "macro",
+        "relevance_to_korean_derm": "medium",
+        "notes": "Strong TikTok presence. Beauty and skincare content. Potential for Korean treatment vlogs."
+      },
+      {
+        "name": "Soo Beauty",
+        "platform": ["YouTube"],
+        "location": "Petaling Jaya, Selangor",
+        "content_type": ["korean_skincare_routine", "product_review", "tutorial"],
+        "influence_level": "micro",
+        "relevance_to_korean_derm": "high",
+        "notes": "Based in PJ. Covers 10-Step Korean Skincare Routine. Audience: young adults and teenagers passionate about K-beauty."
+      },
+      {
+        "name": "Syahamimi Shahri",
+        "platform": ["TikTok", "Instagram"],
+        "followers": {"total": 768700},
+        "content_type": ["beauty", "skincare"],
+        "influence_level": "macro",
+        "relevance_to_korean_derm": "medium",
+        "notes": "Top Malaysian beauty TikToker."
+      },
+      {
+        "name": "Chloe Leong",
+        "platform": ["Instagram", "TikTok"],
+        "followers": {"total": 296500},
+        "handle": "@chloeleongg_",
+        "content_type": ["beauty", "skincare"],
+        "influence_level": "macro",
+        "relevance_to_korean_derm": "medium",
+        "notes": "Chinese Malaysian beauty influencer. Could be effective for bilingual (English/Chinese) Korean beauty content."
+      }
+    ],
+    "beauty_bloggers": [
+      {
+        "name": "My Women Stuff",
+        "platform": ["Blog"],
+        "content_type": ["product_review", "skincare_analysis"],
+        "influence_level": "micro",
+        "relevance_to_korean_derm": "medium",
+        "notes": "Established Malaysian beauty blog. Meticulous K-beauty product reviews. English language."
+      },
+      {
+        "name": "GreenStory Blog",
+        "platform": ["Blog"],
+        "content_type": ["product_review", "beauty_tips"],
+        "influence_level": "micro",
+        "relevance_to_korean_derm": "medium",
+        "notes": "Malaysian beauty and lifestyle blog with K-beauty coverage."
+      },
+      {
+        "name": "MissJasJas",
+        "platform": ["Blog"],
+        "content_type": ["beauty_review", "skincare"],
+        "influence_level": "micro",
+        "relevance_to_korean_derm": "medium",
+        "notes": "Malaysian beauty blogger providing honest assessments of K-beauty products."
+      }
+    ],
+    "korean_creators_targeting_malaysia": [
+      {
+        "name": "Korean derm clinics on Xiaohongshu",
+        "platform": ["Xiaohongshu"],
+        "content_type": ["clinic_promotion", "kol_collaboration"],
+        "language": "Mandarin Chinese",
+        "relevance_to_korean_derm": "high",
+        "notes": "Dozens of Korean clinics actively market on Xiaohongshu targeting Chinese-speaking markets including Malaysian Chinese. They run content, invest in paid promotion, and invite KOLs for experience posts."
+      }
+    ],
+    "gap_analysis": {
+      "finding": "There is NO dedicated Malaysian influencer specializing in Korean dermatology tourism",
+      "opportunity": "First-mover advantage exists for a Malaysian creator who documents Korea derm trips in English/Malay/Chinese",
+      "comparison_to_japan": "Japan has Nana (600K followers, 30 Korea trips/year), Mayu (85+ visits, certified consultant), Asuka (Seoul-based real reviews). Malaysia has zero equivalent creators.",
+      "micro_influencer_opportunity": "PONGO data shows micro-influencers (10k-50k followers) achieve 60-70% lower cost-per-click than macro-influencers in Malaysia"
+    }
+  }
+}

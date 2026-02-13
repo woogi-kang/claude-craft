@@ -1,0 +1,427 @@
+{
+  "country": "malaysia",
+  "last_updated": "2026-02-13",
+  "competitor_categories": {
+    "booking_apps": [
+      {
+        "name": "UNNI (formerly Gangnam Unni)",
+        "url": "https://unni.global/",
+        "type": "review_booking_app",
+        "global_users": 5000000,
+        "clinics": 1800,
+        "reviews": 1300000,
+        "language_support": ["en", "zh", "th", "vi", "ja", "ko"],
+        "auto_translate_languages": 13,
+        "pricing_model": "free + clinic commission",
+        "malaysia_presence": "accessible_not_localized",
+        "strengths": ["largest_global_kr_beauty_platform", "english_support", "13_language_auto_translate", "booking_integrated"],
+        "weaknesses": ["no_malay_language", "no_malaysia_specific_content", "no_myr_pricing"],
+        "source": "https://www.businesswire.com/news/home/20231205938563/en/"
+      },
+      {
+        "name": "YeoTi (Yeoshin global)",
+        "url": "https://www.yeoshin.co.kr/en",
+        "type": "review_booking_app",
+        "total_users": 4800000,
+        "reviews": 1550000,
+        "new_reviews_monthly": 30000,
+        "language_support": ["en", "ko"],
+        "pricing_model": "free + equal_pricing_foreigners",
+        "malaysia_presence": "accessible_english",
+        "funding": "$7.3M Series C (pre-IPO)",
+        "strengths": ["equal_pricing_foreigners_and_locals", "receipt_verified_reviews", "transparent_pricing", "dermatology_specialized"],
+        "weaknesses": ["no_malay_language", "limited_southeast_asia_awareness", "no_concierge_service"],
+        "source": "https://beautymatter.com/articles/yeo-ti-aesthetic-treatment-platform-secures-7-3-million"
+      },
+      {
+        "name": "Babitalk",
+        "url": "https://web.babitalk.com",
+        "type": "review_booking_app",
+        "total_users": 9000000,
+        "reviews": 900000,
+        "language_support": ["ko"],
+        "pricing_model": "free + clinic commission",
+        "malaysia_presence": "inaccessible",
+        "strengths": ["largest_kr_platform", "most_reviews", "1min_doctor_qa_video"],
+        "weaknesses": ["korean_only", "requires_korean_phone_number", "no_international_access"],
+        "source": "https://koreaproductpost.com/carelabs-babitalk/"
+      },
+      {
+        "name": "TRIBEAU",
+        "url": "https://tribeau.jp",
+        "type": "review_booking_app",
+        "downloads": 2000000,
+        "korean_clinics": 407,
+        "language_support": ["ja"],
+        "malaysia_presence": "inaccessible",
+        "strengths": ["japan_largest_beauty_app", "cashback_system", "strong_community"],
+        "weaknesses": ["japanese_only", "no_english_or_malay", "japan_market_exclusive"],
+        "source": "https://tribeau.jp"
+      }
+    ],
+    "concierge_services": [
+      {
+        "name": "Seoul Guide Medical",
+        "url": "https://seoulguidemedical.com/",
+        "type": "concierge_agency",
+        "hq": "Seoul, Gangnam-gu",
+        "language_support": ["en"],
+        "contact_methods": ["email", "whatsapp", "kakaotalk", "facebook", "phone"],
+        "phone": "+82-10-5920-5546",
+        "services": ["clinic_matching", "personal_translator", "airport_pickup", "accommodation", "aftercare"],
+        "payment_currencies": ["USD", "CAD", "EUR", "AUD", "CNY"],
+        "deposit_required": "10% of estimated total",
+        "revenue_model": "clinic_commission",
+        "strengths": ["largest_korea_medical_tourism_provider", "fiduciary_duty_to_patient", "multi_currency", "whatsapp_support"],
+        "weaknesses": ["no_myr_accepted", "no_malaysia_office", "online_consultation_only"],
+        "source": "https://seoulguidemedical.com/how-to-get-medical-treatment-korea/"
+      },
+      {
+        "name": "My Seoul Secret",
+        "url": "https://myseoulsecret.com/",
+        "type": "concierge_agency",
+        "language_support": ["en"],
+        "plans": [
+          {
+            "name": "Smart Beauty Plan",
+            "price_usd": 299,
+            "includes": ["3_clinic_recommendations", "unlimited_virtual_assistance", "priority_scheduling", "ghost_doctor_prevention", "1yr_post_surgery_support"]
+          },
+          {
+            "name": "Do It Yourself Plan",
+            "price_usd": 99,
+            "includes": ["navigation_guides", "unlimited_virtual_assistance", "20_rebate_for_reviews"]
+          }
+        ],
+        "add_ons": {
+          "airport_pickup": "$80 USD one-way",
+          "food_delivery": "$10/day",
+          "personal_translator": "30000 KRW/hour (min 2 hours)"
+        },
+        "revenue_model": "service_fee + clinic_referral_commission (10-30%)",
+        "strengths": ["transparent_pricing", "ghost_doctor_prevention", "1yr_followup", "english_focused"],
+        "weaknesses": ["usd_only", "no_southeast_asia_focus", "small_operation"],
+        "source": "https://myseoulsecret.com/service-plans/"
+      },
+      {
+        "name": "Himedi",
+        "url": "https://himedi.com/",
+        "type": "concierge_agency",
+        "license": "Korean Ministry of Health & Welfare",
+        "language_support": ["en"],
+        "services": ["clinic_matching", "interpreter", "checkup_packages", "concierge"],
+        "strengths": ["government_licensed", "no_hidden_costs", "transparent_pricing", "premium_positioning"],
+        "weaknesses": ["limited_detailed_pricing_online", "primarily_checkup_focused"],
+        "source": "https://himedi.com/"
+      },
+      {
+        "name": "Jivaka Beauty",
+        "url": "https://jivaka.kr/",
+        "type": "concierge_agency",
+        "founded": 2018,
+        "hq": "Seoul, Gangnam",
+        "language_support": ["en"],
+        "services": ["free_consultation", "clinic_matching", "airport_pickup", "translation", "aftercare_guidance"],
+        "partner_clinics": ["Chang Dermatology", "The Clim Clinic", "Bioface Clinic", "Ruby Plastic Surgery", "Thank You PS", "Cellinique", "Pang Pang Clinic", "SH Clinic"],
+        "pricing_model": "free_consultation_clinic_pays",
+        "savings_claim": "15-30% vs arranging separately",
+        "strengths": ["free_consultation", "dermatology_focused", "english_speaking_partners", "visit_korea_listed"],
+        "weaknesses": ["limited_clinic_network", "gangnam_focused"],
+        "source": "https://jivaka.kr/"
+      },
+      {
+        "name": "BeautyHopper",
+        "url": "https://www.beautyhopper.com/",
+        "type": "concierge_agency",
+        "license": "Korean Ministry of Health & Welfare",
+        "team": "all-women team",
+        "language_support": ["en"],
+        "contact_methods": ["website_form", "email", "whatsapp"],
+        "services": ["doctor_selection", "surgery_day_companion", "recovery_checkins"],
+        "strengths": ["government_licensed", "personally_vetted_clinics", "surgery_day_companion", "outcome_based_clinic_selection"],
+        "weaknesses": ["plastic_surgery_focused", "limited_dermatology"],
+        "source": "https://www.beautyhopper.com/"
+      },
+      {
+        "name": "Aneue Concierge",
+        "url": "https://www.aneueconcierge.com/",
+        "type": "luxury_concierge",
+        "language_support": ["en"],
+        "services": ["bespoke_itineraries", "non_surgical_skincare", "medical_exams", "translation", "followup_care"],
+        "strengths": ["luxury_positioning", "bespoke_itineraries", "comprehensive_packages"],
+        "weaknesses": ["premium_pricing", "limited_scale"],
+        "source": "https://www.aneueconcierge.com/"
+      },
+      {
+        "name": "Meditrip Seoul",
+        "url": "https://www.meditripseoul.com/",
+        "type": "concierge_agency",
+        "language_support": ["en"],
+        "services": ["medical_comparison", "transparent_pricing", "medical_interpretation", "airport_pickup", "clinic_scheduling"],
+        "strengths": ["price_comparison_service", "trusted_guidance", "gangnam_and_seoul_coverage"],
+        "weaknesses": ["limited_online_presence"],
+        "source": "https://www.meditripseoul.com/"
+      },
+      {
+        "name": "K-Beauty Concierge",
+        "url": "https://www.kbeautyconcierge.com/",
+        "type": "concierge_agency",
+        "language_support": ["en"],
+        "services": ["clinic_matching", "booking", "translation"],
+        "strengths": ["beauty_focused", "english_native"],
+        "weaknesses": ["limited_information_available"],
+        "source": "https://www.kbeautyconcierge.com/"
+      },
+      {
+        "name": "Seoul Beauty Concierge",
+        "url": "https://www.seoulbeautyconcierge.com/",
+        "type": "concierge_agency",
+        "language_support": ["en"],
+        "strengths": ["beauty_specialized"],
+        "source": "https://www.seoulbeautyconcierge.com/"
+      }
+    ],
+    "travel_platforms": [
+      {
+        "name": "Klook Malaysia",
+        "url": "https://www.klook.com/en-MY/experiences/list/south-korea-beauty-services/g10-cate22/",
+        "type": "activity_platform",
+        "malaysia_localized": true,
+        "currency": "MYR",
+        "korean_beauty_services": true,
+        "service_types": ["spa_treatments", "hair_services", "k_beauty_experiences", "skin_clinic_reservations"],
+        "strengths": ["myr_pricing", "instant_confirmation", "trusted_platform_in_malaysia", "mobile_app"],
+        "weaknesses": ["limited_medical_aesthetic_offerings", "mostly_spa_not_clinic", "no_dermatology_procedures"],
+        "source": "https://www.klook.com/en-MY/experiences/list/south-korea-beauty-services/g10-cate22/"
+      },
+      {
+        "name": "KKday",
+        "url": "https://www.kkday.com/en/blog/59516/5d4n-seoul-itinerary-for-the-ultimate-k-beauty-experience",
+        "type": "activity_platform",
+        "malaysia_localized": true,
+        "service_types": ["makeup_experiences", "spa_treatments", "hair_services", "head_spa"],
+        "strengths": ["curated_experiences", "english_booking", "itinerary_guides"],
+        "weaknesses": ["no_medical_procedures", "experience_based_not_clinic_based"],
+        "source": "https://www.kkday.com/en/blog/59516/"
+      },
+      {
+        "name": "Creatrip",
+        "url": "https://creatrip.com/en",
+        "type": "travel_portal_booking",
+        "language_support": ["en", "ja", "zh", "th"],
+        "services": ["clinic_booking", "exclusive_discounts", "buddy_service", "luggage_storage", "tax_refund"],
+        "partner_clinics": ["PPEUM Clinic (Gangnam, Myeongdong, Hongdae, Busan, Jeju)"],
+        "clinic_language_support": ["en", "zh", "ja", "th", "ru"],
+        "strengths": ["free_buddy_service", "foreigner_friendly", "multi_location_clinics", "transparent_pricing"],
+        "weaknesses": ["limited_clinic_selection", "not_malaysia_specific"],
+        "source": "https://creatrip.com/en/blog/14547"
+      }
+    ],
+    "medical_tourism_agencies_korea_based": [
+      {
+        "name": "VVIP Travel",
+        "url": "https://www.vviptravel.com/medical-tour",
+        "type": "medical_tourism_agency",
+        "services": ["custom_packages", "consultation", "booking", "logistics", "accommodation"],
+        "strengths": ["comprehensive_packages", "full_logistics_management"],
+        "source": "https://www.vviptravel.com/medical-tour"
+      },
+      {
+        "name": "K-Medical Tours",
+        "url": "https://www.kmedicaltours.net/",
+        "type": "medical_tourism_agency",
+        "services": ["price_comparison", "direct_booking", "flights", "hotels", "transport", "interpreter", "tour_packages"],
+        "strengths": ["price_comparison_tool", "all_inclusive_packages"],
+        "source": "https://www.kmedicaltours.net/"
+      },
+      {
+        "name": "Medical Avenue",
+        "url": "https://www.medicalavenuekorea.com/",
+        "type": "medical_tourism_facilitator",
+        "experience_years": 10,
+        "patients_served": 5000,
+        "services": ["beauty_travel_packages", "plastic_surgery_packages", "group_discounts"],
+        "partner_clinics": ["View Plastic Surgery", "Dream Medical Group"],
+        "strengths": ["10yr_experience", "group_discounts", "comprehensive_packages"],
+        "source": "https://www.medicalavenuekorea.com/en/beauty-travel-packages-to-korea/"
+      },
+      {
+        "name": "All About Seoul (AAS)",
+        "url": "https://www.allaboutseoul.com/",
+        "type": "luxury_medical_tourism",
+        "services": ["vip_plastic_surgery", "skincare", "hair_restoration", "24_7_concierge", "5star_accommodation", "cultural_tours"],
+        "target": "celebrities, executives, high-net-worth individuals",
+        "strengths": ["luxury_positioning", "24_7_support", "bespoke_packages"],
+        "weaknesses": ["premium_pricing", "not_mass_market"],
+        "source": "https://www.allaboutseoul.com/about-us"
+      },
+      {
+        "name": "Medictel",
+        "url": "https://medictelkorea.com/",
+        "type": "medical_tourism_agency",
+        "license": "Korean Government",
+        "strengths": ["government_licensed", "regulatory_compliance"],
+        "source": "https://medictelkorea.com/"
+      },
+      {
+        "name": "Seoul Cosmetic Surgery",
+        "url": "https://seoulcosmeticsurgery.com/",
+        "type": "medical_tourism_agency",
+        "license": "government_licensed",
+        "services": ["medical_concierge", "clinic_matching", "luxury_transfers"],
+        "strengths": ["government_licensed", "luxury_concierge"],
+        "source": "https://seoulcosmeticsurgery.com/"
+      },
+      {
+        "name": "Shin Medical",
+        "url": "https://www.shinmedical.com/",
+        "type": "plastic_surgery_concierge",
+        "strengths": ["premier_plastic_surgery_focus"],
+        "source": "https://www.shinmedical.com/"
+      }
+    ],
+    "info_portals": [
+      {
+        "name": "Korea Clinic Guide",
+        "url": "https://www.koreaclinicguide.com/",
+        "type": "info_portal",
+        "content": ["comprehensive_guide", "clinic_checklist", "master_guide_a_to_z"],
+        "strengths": ["comprehensive_guide_content", "foreigner_focused"],
+        "source": "https://www.koreaclinicguide.com/guide"
+      },
+      {
+        "name": "Korea Clinic Cost Guide",
+        "url": "https://www.koreacliniccost.com/",
+        "type": "price_comparison_portal",
+        "content": ["price_comparisons", "verified_clinics", "foreign_friendly_listings"],
+        "strengths": ["transparent_cost_comparison", "verified_listings"],
+        "source": "https://www.koreacliniccost.com/"
+      },
+      {
+        "name": "Seoul Beauty Global",
+        "url": "https://seoulbeautyglobal.com/",
+        "type": "beauty_service_portal",
+        "services": ["aesthetic_treatments", "facials", "hair_spa", "nail", "k_beauty_academy"],
+        "strengths": ["wide_service_range", "english_support", "reasonable_pricing"],
+        "source": "https://seoulbeautyglobal.com/"
+      },
+      {
+        "name": "Dicarat",
+        "url": "https://en.dicarat.com/",
+        "type": "clinic_booking_portal",
+        "language_support": ["en"],
+        "services": ["english_booking", "skin_assessment", "treatment_planning"],
+        "strengths": ["personalized_skin_analysis", "english_consultations"],
+        "source": "https://en.dicarat.com/blog/skin-treatments-in-korea/"
+      },
+      {
+        "name": "Visit Medical Korea (KHIDI)",
+        "url": "https://www.medicalkorea.or.kr/en/medicalvisa",
+        "type": "government_portal",
+        "operator": "Korea Health Industry Development Institute",
+        "services": ["medical_visa_info", "clinic_directory", "patient_protection"],
+        "strengths": ["official_government_source", "visa_information", "clinic_verification"],
+        "source": "https://www.medicalkorea.or.kr/en/medicalvisa"
+      }
+    ],
+    "local_malaysian_competitors": [
+      {
+        "name": "Ozhean Clinic",
+        "url": "https://ozhean.com.my/",
+        "type": "korean_branded_clinic_in_malaysia",
+        "origin": "Seoul, South Korea (2015)",
+        "branches_korea": 5,
+        "branches_malaysia": 2,
+        "malaysia_locations": ["Bangsar KL", "Bukit Jalil KL"],
+        "founder": "Dr. Park Ji Youn (Korean Board-Certified Dermatologist)",
+        "treatments": ["anti_aging", "pigmentation", "fat_freezing", "FUE_hair_transplant", "HIFU"],
+        "unique_feature": "FIT Program (trademarked Korean aesthetic program)",
+        "strengths": ["authentic_korean_clinic", "korean_founder", "proven_korean_methods", "also_in_singapore"],
+        "weaknesses": ["kl_only_in_malaysia", "premium_pricing"],
+        "source": "https://ozhean.com.my/about/"
+      },
+      {
+        "name": "BBS Clinic",
+        "url": "https://bbsclinic.com/",
+        "type": "korean_method_clinic_in_malaysia",
+        "years_operating": 12,
+        "specialization": "Korean aesthetic techniques and technology",
+        "strengths": ["12_year_track_record", "latest_korean_technology", "customized_treatments"],
+        "source": "https://bbsclinic.com/"
+      },
+      {
+        "name": "Clinic RX",
+        "url": "https://www.clinicrx.com.my/",
+        "type": "korean_method_clinic_in_malaysia",
+        "locations": ["Kuala Lumpur", "Selangor", "Penang", "Johor"],
+        "specialization": "Korean beauty equipment and aesthetic techniques",
+        "strengths": ["4_state_coverage", "korean_equipment", "accessible_locations"],
+        "source": "https://www.clinicrx.com.my/"
+      },
+      {
+        "name": "Clique Clinic",
+        "url": "https://www.cliqueclinic.com",
+        "type": "premium_aesthetic_clinic",
+        "strengths": ["evidence_based_treatments", "advanced_technology", "strong_reputation"],
+        "source": "https://www.cliqueclinic.com"
+      },
+      {
+        "name": "Dream Clinic",
+        "url": "https://www.dreamclinic.my/",
+        "type": "premium_aesthetic_clinic",
+        "founded": 2022,
+        "locations": ["Penang", "Kuala Lumpur (Bukit Jalil)"],
+        "treatments": ["anti_aging", "skin_brightening", "acne", "laser", "fillers", "body_contouring"],
+        "strengths": ["multi_location", "comprehensive_treatments", "rapidly_growing"],
+        "source": "https://www.dreamclinic.my/"
+      },
+      {
+        "name": "Aglow Clinic",
+        "url": "https://www.aglow.com.my/",
+        "type": "chain_aesthetic_clinic",
+        "branches": 17,
+        "locations": ["Klang Valley", "Johor", "Penang", "Kuching"],
+        "strengths": ["largest_chain_network", "nationwide_coverage"],
+        "source": "https://www.aglow.com.my/"
+      },
+      {
+        "name": "Ko Skin Specialist",
+        "url": "https://koskinspecialist.com/",
+        "type": "dermatology_chain",
+        "hq": "Klang, Selangor",
+        "strengths": ["largest_skin_and_laser_clinic_malaysia", "specialist_focus"],
+        "source": "https://koskinspecialist.com/"
+      },
+      {
+        "name": "O2 Klinik Aesthetic",
+        "url": "https://aesthetic.o2klinik.com/",
+        "type": "chain_aesthetic_clinic",
+        "locations": ["Penang", "Kuala Lumpur", "Ipoh", "Kedah", "Johor"],
+        "strengths": ["multi_state_coverage", "established_brand"],
+        "source": "https://aesthetic.o2klinik.com/"
+      }
+    ],
+    "government_initiatives": [
+      {
+        "name": "Korea Tourism Organization (KTO) Malaysia Office",
+        "location": "Korea Plaza, Menara Hap Seng, Kuala Lumpur",
+        "services": ["travel_consultation", "tourism_promotion", "medical_tourism_info"],
+        "source": "https://english.visitkorea.or.kr/enu/KOO/OO_ENG_5_1.jsp"
+      },
+      {
+        "name": "Visit Medical Korea (KHIDI)",
+        "url": "https://www.medicalkorea.or.kr",
+        "services": ["medical_visa_support", "clinic_verification", "patient_protection", "complaint_resolution"],
+        "source": "https://www.medicalkorea.or.kr/en/medicalvisa"
+      },
+      {
+        "name": "Malaysia Healthcare Travel Council (MHTC)",
+        "url": "https://www.mhtc.org.my/",
+        "role": "Promotes Malaysia as medical tourism destination (competitor positioning)",
+        "revenue_2023": "MYR 1.4 billion",
+        "patients_2023": 1080000,
+        "source": "https://www.mhtc.org.my/statistics/"
+      }
+    ]
+  }
+}

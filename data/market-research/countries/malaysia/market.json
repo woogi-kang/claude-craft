@@ -1,0 +1,129 @@
+{
+  "country": "malaysia",
+  "last_updated": "2026-02-13",
+  "medical_tourism": {
+    "visitors_to_korea": {
+      "2024_total_all_countries": 1170000,
+      "malaysia_specific": "Not separately reported; grouped under Southeast Asia growth trend",
+      "southeast_asia_trend": "Steadily increasing; Thailand ranked 5th overall among source countries",
+      "growth_context": "Korea medical tourism nearly doubled from 610K (2023) to 1.17M (2024)"
+    },
+    "interest_rate": "66% of Malaysian consumers prefer K-beauty products over Western brands (ASEAN market report)",
+    "popular_areas": [
+      {"name": "Gangnam", "reason": "571 dermatology clinics, highest concentration of premium skin clinics"},
+      {"name": "Myeongdong", "reason": "Tourist-friendly, multiple foreigner-oriented clinics like Lijin, Val:U"},
+      {"name": "Hongdae", "reason": "Trendy area, English-friendly clinics like Forena Clinic"},
+      {"name": "Apgujeong", "reason": "Premium aesthetic district, clinics like EU:GENES, VS Line"}
+    ],
+    "typical_trip_duration": "3-5 days (longer than Japan due to flight distance ~6hrs)",
+    "avg_spending_per_patient": "$4,600 USD (2024 average across all nationalities)",
+    "cost_advantage": "Korean treatments cost 30-70% less than Western countries; comparable to Malaysia domestic prices but with more advanced technology"
+  },
+  "demographics": {
+    "population": "35.5 million (2025)",
+    "social_media_users": "25.1 million active social media user identities (70.2% of population)",
+    "internet_penetration": "87.0% of adults 18+",
+    "ethnic_composition": {
+      "malay_bumiputera": "69.8%",
+      "chinese": "22.4%",
+      "indian": "6.6%",
+      "others": "1.2%"
+    },
+    "primary_age_groups": {
+      "18-25": {
+        "priority": "Glass skin, hydrated translucent skin (#1 skincare goal)",
+        "platforms": "TikTok, Instagram Reels, Xiaohongshu"
+      },
+      "25-35": {
+        "priority": "Anti-aging prevention, acne scar treatment, skin brightening",
+        "platforms": "Instagram, YouTube, Facebook, Xiaohongshu"
+      },
+      "35-50": {
+        "priority": "Lifting treatments, anti-aging, pigmentation removal",
+        "platforms": "Facebook, YouTube, Google Search"
+      }
+    },
+    "gender": "Predominantly female; Instagram skews 55.1% female; K-beauty interest heavily female-driven",
+    "hallyu_influence": "K-pop and K-drama attachment among Malaysian undergraduates predicts stronger attitudes toward Korean beauty brands (academic research)"
+  },
+  "popular_treatments_2026": [
+    {"name": "Glass Skin Facial / Skin Boosters", "rank": 1, "notes": "Top skincare goal for Malaysian Gen Z aged 18-25"},
+    {"name": "Lifting treatments (Ultherapy, Thermage, Titanium)", "rank": 2, "notes": "Demand exploded in 2024, continuing into 2025-2026"},
+    {"name": "PDRN / Rejuran", "rank": 3, "notes": "Market valued at $321.2M in 2025, 37% increase in usage since 2023"},
+    {"name": "Laser toning / Pigmentation removal", "rank": 4, "notes": "Climate-relevant for Malaysian skin concerns (hyperpigmentation, sun damage)"},
+    {"name": "Aqua Peel", "rank": 5, "notes": "Popular tourist treatment, minimal downtime"},
+    {"name": "Potenza", "rank": 6, "notes": "Trending globally among Korean derm tourists"}
+  ],
+  "price_comparison": {
+    "note": "Korean procedures cost 30-50% less than US/Europe; comparable to premium Malaysian clinics but with more advanced technology arriving 1-3 years earlier",
+    "examples": [
+      {"treatment": "Skin booster session", "korea_range": "$150-400 USD", "malaysia_premium_range": "$200-500 USD"},
+      {"treatment": "Full-face laser toning", "korea_range": "$100-300 USD", "malaysia_premium_range": "$150-400 USD"}
+    ]
+  },
+  "trends_2026": [
+    "Glass skin as #1 aspiration -- convergence of K-beauty ideals with Malaysian tropical skincare needs",
+    "Halal-friendly K-beauty formulations -- pork-derived collagen and alcohol removed for Muslim majority market",
+    "Inclusive marketing -- K-beauty brands spotlighting tan-to-medium skin models resonating with Malay, Chinese, Indian diversity",
+    "Climate-compatible treatments -- formulations addressing hyperpigmentation, acne, and sun protection for tropical climate",
+    "Korean clinics opening Malaysian branches -- Ozhean, BBS Clinic, Clinic RX bringing Korean expertise locally"
+  ],
+  "discovery_funnel": {
+    "awareness": [
+      "TikTok viral K-beauty content and glass skin challenges",
+      "Instagram Reels from Malaysian beauty influencers",
+      "K-drama and K-pop exposure (Hallyu Wave)",
+      "Facebook groups and community posts",
+      "Xiaohongshu (for Chinese Malaysian community)",
+      "Word of mouth from friends/family who visited Korea"
+    ],
+    "consideration": [
+      "YouTube long-form clinic reviews and treatment vlogs",
+      "Google Reviews and Google Maps for specific clinics",
+      "Xiaohongshu detailed reviews with before/after photos",
+      "Malaysian beauty blogs (My Women Stuff, GreenStory Blog, MissJasJas)",
+      "UNNI (Gangnam Unni) app for clinic comparison and reviews",
+      "Facebook community group discussions",
+      "Lowyat.net forums for general dermatology discussions",
+      "L'Officiel Malaysia, CLEO Malaysia lifestyle content"
+    ],
+    "booking": [
+      "WhatsApp direct contact with clinic or medical tourism coordinator",
+      "UNNI (Gangnam Unni) app direct booking",
+      "Creatrip reservation system with deposit confirmation",
+      "BeautyHopper government-licensed concierge service",
+      "Kosmedi app for real-time booking and price comparison",
+      "Jivaka Beauty coordinator-assisted booking",
+      "KakaoTalk direct clinic contact",
+      "Clinic website online forms"
+    ],
+    "advocacy": [
+      "Instagram before/after posts and Stories",
+      "TikTok experience vlogs and treatment reviews",
+      "Xiaohongshu detailed review posts (Chinese Malaysian)",
+      "Facebook group experience sharing",
+      "Google Reviews for clinics visited",
+      "YouTube post-treatment vlogs",
+      "WhatsApp group sharing with friends"
+    ]
+  },
+  "language_considerations": {
+    "overview": "Malaysia is multilingual with distinct platform-language patterns for Korean beauty content",
+    "platform_language_mapping": {
+      "facebook": "Malay (primary), English, Chinese -- mass market reach across all ethnicities",
+      "instagram": "English (dominant), Malay -- urban, educated, aspirational content",
+      "tiktok": "Malay, English mixed -- short-form content crosses language barriers visually",
+      "youtube": "English, Malay -- long-form reviews, tutorials, vlogs",
+      "xiaohongshu": "Mandarin Chinese -- exclusively Chinese Malaysian community, 2.5M users",
+      "twitter_x": "English (dominant) -- smaller user base, tech-savvy demographic",
+      "lowyat_net": "English -- tech-oriented forum community",
+      "google_search": "English (primary), Malay, Chinese -- SEO strategy must cover all three"
+    },
+    "content_strategy": {
+      "mass_market": "Bahasa Malaysia achieves lower costs and higher engagement for mass-market products",
+      "premium_positioning": "English performs better for professional services and premium offerings",
+      "chinese_niche": "Mandarin on Xiaohongshu captures high-spending Chinese Malaysian demographic",
+      "visual_first": "Visual content (before/after, short video) transcends language barriers across all groups"
+    }
+  }
+}

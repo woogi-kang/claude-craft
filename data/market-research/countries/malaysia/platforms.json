@@ -1,0 +1,296 @@
+{
+  "country": "malaysia",
+  "last_updated": "2026-02-13",
+  "platforms": [
+    {
+      "rank": 1,
+      "name": "TikTok",
+      "url": "https://tiktok.com",
+      "type": "short_video",
+      "score": 95,
+      "scores": {
+        "organic_reach": 5,
+        "seo_value": 2,
+        "engagement": 5,
+        "shareability": 5,
+        "target_alignment": 5,
+        "content_longevity": 2,
+        "monetization": 4
+      },
+      "user_base": "19.3M users aged 18+ (72.8% of Malaysian adults)",
+      "demographics": "50.3% female, 49.3% male; 18-24 age group makes up 50.3% of audience",
+      "korean_derm_content_volume": "high",
+      "best_content_format": ["short_tutorial", "before_after_timelapse", "glass_skin_challenge", "clinic_vlog", "treatment_demo"],
+      "key_hashtags": ["#KBeauty", "#KSkincare", "#GlassSkin", "#KoreanSkincare", "#koreanbeautymalaysia", "#cantik", "#viralmalaysia", "#koreanskincareroutine"],
+      "monetization_options": ["creator_fund", "sponsorship", "tiktok_shop", "livestream_sales"],
+      "guide_posting_potential": "very_high",
+      "notes": "Dominant platform for Gen Z Malaysian beauty content. Short, snappy skincare routine videos garner millions of views. Glass Skin Challenge and K-Beauty Routine Challenge drive massive engagement. PONGO data shows $3 return for every $1 spent on TikTok livestream campaigns for K-beauty brands."
+    },
+    {
+      "rank": 2,
+      "name": "Instagram",
+      "url": "https://instagram.com",
+      "type": "social_media",
+      "score": 93,
+      "scores": {
+        "organic_reach": 5,
+        "seo_value": 3,
+        "engagement": 5,
+        "shareability": 5,
+        "target_alignment": 5,
+        "content_longevity": 4,
+        "monetization": 4
+      },
+      "user_base": "15.5M users (43.2% of population); 65%+ in urban centers",
+      "demographics": "55.1% female, 44.9% male; skews 25-40 age range",
+      "korean_derm_content_volume": "high",
+      "best_content_format": ["carousel", "reels", "before_after", "stories", "infographic"],
+      "key_hashtags": ["#KBeauty", "#KoreanBeautyMalaysia", "#KBeautyClinic", "#KoreaSkincare", "#GlassSkin", "#koreanbeauty", "#skincareMalaysia"],
+      "monetization_options": ["sponsorship", "affiliate_link", "branded_content", "instagram_shop"],
+      "guide_posting_potential": "very_high",
+      "notes": "Best platform for before/after transformation content. Followers engage more with before/after transformation stories (PONGO data). Laneige campaign achieved 30% follower increase and 25% sales lift. Language: primarily English with some Malay."
+    },
+    {
+      "rank": 3,
+      "name": "YouTube",
+      "url": "https://youtube.com",
+      "type": "video",
+      "score": 92,
+      "scores": {
+        "organic_reach": 5,
+        "seo_value": 5,
+        "engagement": 5,
+        "shareability": 4,
+        "target_alignment": 5,
+        "content_longevity": 5,
+        "monetization": 5
+      },
+      "user_base": "25.1M users (70.2% of population) -- #1 platform by reach",
+      "demographics": "48.6% female, 51.4% male; broadest age range across all demographics",
+      "korean_derm_content_volume": "medium",
+      "best_content_format": ["vlog", "clinic_walkthrough", "treatment_review", "price_comparison", "step_by_step_tutorial"],
+      "monetization_options": ["adsense", "affiliate", "sponsorship", "memberships"],
+      "guide_posting_potential": "very_high",
+      "notes": "Largest reach platform in Malaysia. Best for comprehensive clinic review content and long-form guides. Google SEO integration means content surfaces in search results. Soo Beauty (PJ-based) covers K-beauty routines. Language: English and Malay."
+    },
+    {
+      "rank": 4,
+      "name": "Facebook",
+      "url": "https://facebook.com",
+      "type": "social_media",
+      "score": 88,
+      "scores": {
+        "organic_reach": 4,
+        "seo_value": 3,
+        "engagement": 5,
+        "shareability": 5,
+        "target_alignment": 4,
+        "content_longevity": 3,
+        "monetization": 3
+      },
+      "user_base": "23.1M users (64.4% of population)",
+      "demographics": "44.2% female, 55.8% male; strongest with 30-50 age range",
+      "korean_derm_content_volume": "medium",
+      "best_content_format": ["group_discussion", "experience_sharing", "photo_album", "live_video", "recommendation_post"],
+      "monetization_options": ["groups", "marketplace", "page_promotion"],
+      "guide_posting_potential": "high",
+      "notes": "Still very dominant in Malaysia (84%+ of internet users). Facebook Groups are critical for community discussions and recommendations. Malay-language content achieves lower costs and higher engagement. Best platform for word-of-mouth and community-driven discovery. 30-50 age demographic is harder to reach elsewhere."
+    },
+    {
+      "rank": 5,
+      "name": "Xiaohongshu (RED / Little Red Book)",
+      "url": "https://www.xiaohongshu.com",
+      "type": "social_media",
+      "score": 85,
+      "scores": {
+        "organic_reach": 4,
+        "seo_value": 2,
+        "engagement": 5,
+        "shareability": 4,
+        "target_alignment": 5,
+        "content_longevity": 4,
+        "monetization": 3
+      },
+      "user_base": "2.5M+ Malaysian users (second-largest market outside mainland China/Taiwan); 300M+ global MAU",
+      "demographics": "Primarily Chinese Malaysian women aged 18-35; represents more than 1/3 of Malaysia's ethnic Chinese population",
+      "korean_derm_content_volume": "very_high",
+      "best_content_format": ["detailed_review", "before_after_photos", "ingredient_analysis", "routine_post", "clinic_recommendation"],
+      "key_hashtags": ["#韩国皮肤科", "#韩国美容", "#马来西亚", "#K-beauty", "#护肤"],
+      "monetization_options": ["brand_partnerships", "e-commerce_integration"],
+      "guide_posting_potential": "very_high",
+      "notes": "Critical platform for reaching high-spending Chinese Malaysian demographic. Climate-appropriate product reviews with before-after photos dominate. Korean dermatology clinics actively market on Xiaohongshu with KOL collaborations. Content in Mandarin but visual-first approach transcends language barriers. WARNING: many clinic recommendations may be paid promotions."
+    },
+    {
+      "rank": 6,
+      "name": "Google (Search + Maps + Reviews)",
+      "url": "https://google.com",
+      "type": "search_engine",
+      "score": 84,
+      "scores": {
+        "organic_reach": 5,
+        "seo_value": 5,
+        "engagement": 3,
+        "shareability": 2,
+        "target_alignment": 4,
+        "content_longevity": 5,
+        "monetization": 4
+      },
+      "user_base": "Dominant search engine in Malaysia",
+      "demographics": "All demographics",
+      "korean_derm_content_volume": "medium",
+      "best_content_format": ["blog_article", "listicle", "comparison_guide", "clinic_reviews"],
+      "monetization_options": ["adsense", "affiliate", "lead_generation"],
+      "guide_posting_potential": "very_high",
+      "notes": "Primary research tool during consideration stage. Google Reviews/Maps is top platform for verifying specific clinics. SEO strategy must cover English, Malay, and Chinese queries. High-intent search traffic converts well."
+    },
+    {
+      "rank": 7,
+      "name": "UNNI (Gangnam Unni)",
+      "url": "https://www.gangnamunni.com/us",
+      "type": "app_review",
+      "score": 82,
+      "scores": {
+        "organic_reach": 3,
+        "seo_value": 3,
+        "engagement": 5,
+        "shareability": 3,
+        "target_alignment": 5,
+        "content_longevity": 5,
+        "monetization": 2
+      },
+      "user_base": "7.2M+ global users; English version available",
+      "demographics": "Women 20-40 interested in Korean aesthetic treatments",
+      "korean_derm_content_volume": "very_high",
+      "features": ["clinic_search", "booking", "verified_reviews", "before_after_photos", "auto_translate", "unni_guide_concierge"],
+      "guide_posting_potential": "high",
+      "notes": "Korea's largest plastic surgery/aesthetics platform. Launched UNNI global version with English auto-translate. UnniGuide function provides accommodation, transport, interpretation. Guarantees no tourist markups. Critical for Malaysians researching specific Korean clinics."
+    },
+    {
+      "rank": 8,
+      "name": "X (Twitter)",
+      "url": "https://x.com",
+      "type": "social_media",
+      "score": 68,
+      "scores": {
+        "organic_reach": 3,
+        "seo_value": 2,
+        "engagement": 3,
+        "shareability": 4,
+        "target_alignment": 3,
+        "content_longevity": 2,
+        "monetization": 2
+      },
+      "user_base": "5.10M users (14.2% of population) -- declining -10.7% YoY",
+      "demographics": "42.3% female, 57.7% male; tech-savvy, younger demographic",
+      "korean_derm_content_volume": "low",
+      "best_content_format": ["thread", "quick_tip", "realtime_update"],
+      "guide_posting_potential": "medium",
+      "notes": "Declining user base in Malaysia. Mainly English-language content. Less visual than Instagram/TikTok, limiting beauty content effectiveness. Lower priority for Korean derm content strategy."
+    },
+    {
+      "rank": 9,
+      "name": "Lowyat.net Forums",
+      "url": "https://forum.lowyat.net",
+      "type": "qa_forum",
+      "score": 65,
+      "scores": {
+        "organic_reach": 3,
+        "seo_value": 4,
+        "engagement": 4,
+        "shareability": 2,
+        "target_alignment": 3,
+        "content_longevity": 5,
+        "monetization": 1
+      },
+      "user_base": "Malaysia's largest English-language forum",
+      "demographics": "Predominantly male, tech-oriented; some beauty/lifestyle threads",
+      "korean_derm_content_volume": "very_low",
+      "best_content_format": ["detailed_review", "question_answer", "recommendation_thread"],
+      "guide_posting_potential": "medium",
+      "notes": "Active dermatologist recommendation threads exist but focused on local Malaysian clinics, not Korean clinics. Good SEO value for long-tail searches. English-language content. Limited Korean derm-specific content currently -- represents an untapped opportunity."
+    },
+    {
+      "rank": 10,
+      "name": "Erufu Care",
+      "url": "https://www.erufucare.com",
+      "type": "app_review",
+      "score": 62,
+      "scores": {
+        "organic_reach": 3,
+        "seo_value": 4,
+        "engagement": 4,
+        "shareability": 2,
+        "target_alignment": 3,
+        "content_longevity": 5,
+        "monetization": 1
+      },
+      "user_base": "3,000+ verified reviews for KL clinics alone",
+      "demographics": "Malaysian adults seeking aesthetic treatments",
+      "korean_derm_content_volume": "low",
+      "best_content_format": ["clinic_review", "price_comparison"],
+      "guide_posting_potential": "medium",
+      "notes": "Malaysia's dedicated aesthetic clinic review platform. All clinics verified by Ministry of Health. Currently focused on local Malaysian clinics, not Korean medical tourism. Rated 4.8/5 from 3000+ reviews."
+    }
+  ],
+  "additional_platforms": [
+    {
+      "name": "Creatrip",
+      "url": "https://creatrip.com/en",
+      "type": "travel_portal",
+      "notes": "Korea travel platform with clinic booking. 830% increase in dermatology reservation rates. Available in English, Japanese, Chinese. Exclusive foreigner pricing. Official Seoul Medical Tourism partner."
+    },
+    {
+      "name": "Kosmedi",
+      "url": "https://kosmedi.co.kr",
+      "type": "app_review",
+      "features": ["real_time_booking", "price_comparison", "multilingual_support", "whatsapp_contact", "kakaotalk_contact"],
+      "notes": "Global healthcare platform for international patients in Korea. Real-time access to clinic listings, reviews, pricing. Multilingual coordinators via WhatsApp and KakaoTalk."
+    },
+    {
+      "name": "Jivaka Beauty",
+      "url": "https://jivaka.kr",
+      "type": "portal",
+      "features": ["clinic_matching", "coordinator_service", "accommodation_support", "travel_logistics"],
+      "notes": "English-language medical tourism platform. Strict clinic vetting criteria. Dedicated coordinators for end-to-end support."
+    },
+    {
+      "name": "BeautyHopper",
+      "url": "https://www.beautyhopper.com",
+      "type": "concierge_service",
+      "features": ["government_licensed", "multilingual_translators", "medication_coverage", "vetted_clinics", "whatsapp_contact"],
+      "notes": "Korean Ministry of Health and Welfare accredited. All-women team. Covers primary medication costs. WhatsApp contact available for Malaysian patients."
+    },
+    {
+      "name": "TripAdvisor",
+      "url": "https://www.tripadvisor.com",
+      "type": "travel_portal",
+      "korean_derm_content_volume": "low",
+      "notes": "Some Korean clinics listed (Individuel Geneve, Laurel Clinic). Reviews from international visitors. Not a primary platform for clinic discovery but used for validation."
+    },
+    {
+      "name": "L'Officiel Malaysia",
+      "url": "https://www.lofficielmalaysia.com",
+      "type": "media",
+      "notes": "Fashion/lifestyle magazine covering viral K-beauty products. Features curated TikTok viral product lists."
+    },
+    {
+      "name": "Says.com",
+      "url": "https://says.com",
+      "type": "media",
+      "notes": "Malaysian news/lifestyle platform. Covers skincare product recommendations and beauty clinic news. Some Korean beauty content appears sporadically."
+    },
+    {
+      "name": "Malaysian Beauty Blogs",
+      "type": "blog_platform",
+      "examples": ["My Women Stuff", "GreenStory Blog", "MissJasJas"],
+      "notes": "Local beauty bloggers provide meticulous reviews and honest assessments of K-beauty products. Important for consideration stage but limited Korean clinic-specific content."
+    },
+    {
+      "name": "WhatsApp",
+      "url": "https://whatsapp.com",
+      "type": "messaging_community",
+      "user_base": "90.7% of Malaysians aged 16-64 use monthly -- most used messaging app",
+      "notes": "Critical booking and communication channel. Korean medical tourism agencies offer WhatsApp contact. Friend-to-friend recommendation sharing happens here. Not indexable or searchable but drives conversion."
+    }
+  ]
+}

@@ -1,0 +1,157 @@
+{
+  "country": "malaysia",
+  "last_updated": "2026-02-13",
+  "pain_points": [
+    {
+      "id": "PP-MY-01",
+      "category": "information",
+      "title": "Fragmented information across multiple languages and platforms",
+      "title_ko": "다국어/다플랫폼 정보 분산",
+      "severity": 5,
+      "frequency": 5,
+      "resolution_difficulty": 4,
+      "sub_issues": [
+        "Information scattered across English, Malay, and Chinese platforms with no unified source",
+        "Xiaohongshu content (Chinese) inaccessible to Malay and Indian Malaysian demographics",
+        "English-language Korean clinic guides mostly target Western audiences, not Southeast Asian context",
+        "No Malaysia-specific Korean dermatology guide exists in any language",
+        "Lowyat.net and Malaysian forums discuss local dermatology only, not Korean medical tourism"
+      ],
+      "data_sources": [
+        "https://hashmeta.com/blog/xiaohongshu-malaysia-guide-how-malaysians-use-rednote-little-red-book-to-find-products-places/",
+        "https://forum.lowyat.net/topic/5159097"
+      ]
+    },
+    {
+      "id": "PP-MY-02",
+      "category": "trust",
+      "title": "Difficulty verifying clinic quality and review authenticity",
+      "title_ko": "클리닉 품질 및 리뷰 진위 확인 어려움",
+      "severity": 5,
+      "frequency": 5,
+      "resolution_difficulty": 3,
+      "sub_issues": [
+        "Xiaohongshu clinic recommendations often are paid promotions with planted comments",
+        "Korean clinics aggressively target foreigners through advertising but may be less popular among Korean locals",
+        "No Malaysian-specific review aggregator for Korean clinics",
+        "Foreigner clinics may charge 2-4x more than prices listed on Naver for Korean patients",
+        "Google Reviews provide English feedback but limited to international tourists, not comprehensive"
+      ],
+      "data_sources": [
+        "https://www.tiktok.com/@jinnyannn/video/7341852401277603114",
+        "https://seoulcosmeticsurgery.com/finding-the-best-skin-clinic-in-seoul-a-2026-guide-for-foreigners/"
+      ]
+    },
+    {
+      "id": "PP-MY-03",
+      "category": "communication",
+      "title": "Language barrier during consultation and treatment",
+      "title_ko": "상담/시술 시 언어 장벽",
+      "severity": 4,
+      "frequency": 4,
+      "resolution_difficulty": 3,
+      "sub_issues": [
+        "Most Korean clinics lack Malay-language support",
+        "English support available at some clinics (AMOA, Theme Dermatology, Forena) but not universal",
+        "Chinese Malaysian patients can sometimes use Mandarin but Korean clinics primarily offer Chinese staff for mainland Chinese patients",
+        "Nuance communication about aesthetic preferences difficult through interpreters",
+        "Risk explanation and consent forms may not be fully understood"
+      ],
+      "data_sources": [
+        "https://10mag.com/10-english-speaking-dermatologists-in-south-korea/",
+        "https://www.forenaclinic.com/"
+      ]
+    },
+    {
+      "id": "PP-MY-04",
+      "category": "booking",
+      "title": "Complex booking process without local infrastructure",
+      "title_ko": "현지 인프라 없는 복잡한 예약 과정",
+      "severity": 4,
+      "frequency": 4,
+      "resolution_difficulty": 2,
+      "sub_issues": [
+        "No Malaysia-based Korean medical tourism agency or travel package equivalent to Japan's HIS/JTB",
+        "Booking requires navigating multiple apps (UNNI, Kosmedi, Creatrip) designed primarily for other markets",
+        "WhatsApp is Malaysia's primary communication tool but not all Korean clinics support it (KakaoTalk preferred)",
+        "Coordinating 3-5 day trip logistics (visa, accommodation, clinic schedule) without a local coordinator",
+        "Online consultation before travel is not standardized"
+      ],
+      "data_sources": [
+        "https://www.beautyhopper.com/",
+        "https://kosmedi.co.kr/"
+      ]
+    },
+    {
+      "id": "PP-MY-05",
+      "category": "aftercare",
+      "title": "No aftercare continuity between Korea and Malaysia",
+      "title_ko": "한국-말레이시아 간 사후관리 연속성 부재",
+      "severity": 4,
+      "frequency": 3,
+      "resolution_difficulty": 5,
+      "sub_issues": [
+        "Malaysian dermatologists may refuse follow-up for procedures done in Korea",
+        "6-hour flight distance makes return trips for complications costly and impractical",
+        "Korean clinics in Malaysia (Ozhean, BBS Clinic) not formally connected to Seoul clinic aftercare networks",
+        "Post-treatment skincare guidance may not account for Malaysia's tropical climate differences"
+      ],
+      "data_sources": []
+    },
+    {
+      "id": "PP-MY-06",
+      "category": "pricing",
+      "title": "Unclear cost advantage over local premium Malaysian clinics",
+      "title_ko": "로컬 프리미엄 클리닉 대비 불분명한 가격 메리트",
+      "severity": 3,
+      "frequency": 4,
+      "resolution_difficulty": 3,
+      "sub_issues": [
+        "Korean clinics opening in Malaysia (Ozhean, Clinic RX) offer similar treatments locally",
+        "When travel, accommodation, and treatment costs are combined, total Korea trip cost may exceed local premium options",
+        "Foreigner pricing at Korean clinics can be 2-4x higher than Korean-local prices",
+        "Hidden costs: anesthesia, medication, aftercare products billed separately",
+        "Currency fluctuation between MYR and KRW adds uncertainty"
+      ],
+      "data_sources": [
+        "https://ozhean.com.my/",
+        "https://clinicrx.com.my/"
+      ]
+    },
+    {
+      "id": "PP-MY-07",
+      "category": "cultural",
+      "title": "Halal and cultural compatibility concerns",
+      "title_ko": "할랄 및 문화적 호환성 우려",
+      "severity": 3,
+      "frequency": 3,
+      "resolution_difficulty": 3,
+      "sub_issues": [
+        "Muslim Malay patients need halal-certified skincare products and treatments (no pork-derived ingredients)",
+        "Dietary restrictions during post-treatment recovery in Korea",
+        "Prayer facilities and halal food availability near Korean clinics",
+        "Modest dress requirements during certain procedures",
+        "K-beauty brands increasingly offer halal-friendly formulations but not all clinics are aware"
+      ],
+      "data_sources": [
+        "https://www.millenniumclinickl.com/2025/07/12/why-malaysians-are-loving-korean-glass-skin-treatments/"
+      ]
+    },
+    {
+      "id": "PP-MY-08",
+      "category": "onboarding",
+      "title": "No beginner-friendly entry point for Korean medical tourism",
+      "title_ko": "한국 의료관광 초보자용 진입점 부재",
+      "severity": 3,
+      "frequency": 3,
+      "resolution_difficulty": 2,
+      "sub_issues": [
+        "No 'Korean Derm 101' guide targeting Malaysian consumers",
+        "Treatment terminology unfamiliar (Potenza, Rejuran, PDRN not mainstream knowledge in Malaysia)",
+        "Unclear what can be done locally vs what requires a Korea trip",
+        "Lack of cost comparison between Malaysian clinics, Korean clinics in Malaysia, and Korean clinics in Korea"
+      ],
+      "data_sources": []
+    }
+  ]
+}
