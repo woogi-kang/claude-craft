@@ -1,0 +1,149 @@
+{
+  "country": "japan",
+  "last_updated": "2026-02-13",
+  "pain_points": [
+    {
+      "id": "PP-JP-01",
+      "category": "communication",
+      "title": "言語障壁",
+      "title_ko": "언어 장벽",
+      "severity": 5,
+      "frequency": 5,
+      "resolution_difficulty": 3,
+      "mention_count_across_agents": 8,
+      "sub_issues": [
+        "微妙なニュアンス伝達不可 — 「ナチュラルにして」が韓国では「はっきりした変化」として解釈される",
+        "通訳者の中立性問題 — クリニック所属通訳はトラブル時にクリニック側につく",
+        "個人通訳リスク — 持ち逃げ、音信不通、施術中の盗難事例",
+        "リスク説明不足 — 韓国語不明で副作用説明が十分に伝わらない"
+      ],
+      "data_sources": [
+        "https://nero-drbeauty.com/dermatology/risksofk-beautytravel/",
+        "https://highspec-princess.com/beauty/cosmetic-surgery/korea-treatment-guide-2026/",
+        "https://www.takasu.co.jp/topics/column/beauty/07.html"
+      ]
+    },
+    {
+      "id": "PP-JP-02",
+      "category": "aftercare",
+      "title": "アフターケアの構造的不在",
+      "title_ko": "아프터케어 구조적 부재",
+      "severity": 5,
+      "frequency": 4,
+      "resolution_difficulty": 5,
+      "mention_count_across_agents": 7,
+      "sub_issues": [
+        "帰国後の日本クリニック診療拒否 — 「施術元が責任を持つべき」原則",
+        "再渡韓費用負担者不明確",
+        "外国人患者の医療事故発生率が韓国人の約2.3倍（大韓医師協会統計）",
+        "高須医師証言 — 韓国注入物が塊状に固まり修正困難な患者多数"
+      ],
+      "data_sources": [
+        "https://highspec-princess.com/beauty/cosmetic-surgery/korea-treatment-guide-2026/",
+        "https://www.takasu.co.jp/topics/column/beauty/07.html"
+      ]
+    },
+    {
+      "id": "PP-JP-03",
+      "category": "trust",
+      "title": "情報信頼性の判断困難",
+      "title_ko": "정보 신뢰성 판단 불가",
+      "severity": 4,
+      "frequency": 5,
+      "resolution_difficulty": 3,
+      "mention_count_across_agents": 7,
+      "sub_issues": [
+        "X(Twitter)ステルスマーケティング — 2026年透明性機能で韓国発信偽装アカウント大量摘発",
+        "ポイント報酬型レビュー — ポジティブ偏向の懸念",
+        "「日本人向け広告積極クリニック」罠 — 韓国国内では人気がないケースが多い",
+        "インフルエンサーPRと実際の差異"
+      ],
+      "data_sources": [
+        "https://xenospectrum.com/x-account-location-feature-exposes-fake-japanese-influence/"
+      ]
+    },
+    {
+      "id": "PP-JP-04",
+      "category": "information",
+      "title": "クリニック選択の情報過負荷",
+      "title_ko": "클리닉 선택 정보 과부하",
+      "severity": 4,
+      "frequency": 4,
+      "resolution_difficulty": 3,
+      "mention_count_across_agents": 6,
+      "sub_issues": [
+        "カンナムオンニ、トリビュー、ブログ、X、Instagram等に情報散在",
+        "施術担当医師の経歴・専門分野確認が困難",
+        "美的感覚の文化差異認識不足（韓国＝確実な変化 vs 日本＝自然な仕上がり）"
+      ]
+    },
+    {
+      "id": "PP-JP-05",
+      "category": "booking",
+      "title": "予約プロセスの複雑さ",
+      "title_ko": "예약 프로세스 복잡",
+      "severity": 3,
+      "frequency": 4,
+      "resolution_difficulty": 2,
+      "mention_count_across_agents": 6,
+      "sub_issues": [
+        "LINE予約の応答遅延 — 人気クリニックは数日間返信なし",
+        "1ヶ月前予約が鉄則 — 旅行日程との調整困難",
+        "オンライン予約システム未整備 — LINE/電話のみ対応多数",
+        "カウンセリング予約 vs 施術予約の混同"
+      ],
+      "data_sources": [
+        "https://jennie-log.com/korea-beauty-clinic-reserve"
+      ]
+    },
+    {
+      "id": "PP-JP-06",
+      "category": "pricing",
+      "title": "費用の不透明性",
+      "title_ko": "비용 불투명/업셀",
+      "severity": 3,
+      "frequency": 4,
+      "resolution_difficulty": 3,
+      "mention_count_across_agents": 5,
+      "sub_issues": [
+        "アップセル — カウンセリングで予定外の追加施術勧誘",
+        "隠れた費用 — 麻酔代、薬代、アフターケア費用が別途",
+        "明洞大型クリニック10万円施術の失望事例"
+      ],
+      "data_sources": [
+        "https://storyweb.jp/beauty/452063/"
+      ]
+    },
+    {
+      "id": "PP-JP-07",
+      "category": "cultural",
+      "title": "美的感覚の差異",
+      "title_ko": "미적 감각 차이",
+      "severity": 3,
+      "frequency": 3,
+      "resolution_difficulty": 4,
+      "mention_count_across_agents": 4,
+      "sub_issues": [
+        "韓国 — 整形が露出してもOK、劇的な変化追求",
+        "日本 — 自然な結果、「バレない」仕上がり重視",
+        "流行の顔スタイルの日韓差異"
+      ]
+    },
+    {
+      "id": "PP-JP-08",
+      "category": "onboarding",
+      "title": "初心者の参入障壁",
+      "title_ko": "초보자 진입 장벽",
+      "severity": 3,
+      "frequency": 3,
+      "resolution_difficulty": 2,
+      "mention_count_across_agents": 4,
+      "sub_issues": [
+        "「何から始めればいいかわからない」",
+        "肌管理メニュー自体が馴染みない",
+        "韓国/日本の施術名が異なり混乱",
+        "情報ソースが体験ブログに偏重 — 客観的比較情報不足"
+      ]
+    }
+  ]
+}

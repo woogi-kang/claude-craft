@@ -1,0 +1,90 @@
+{
+  "_template": true,
+  "_instructions": "Copy this file for each data type: platforms.json, pain-points.json, influencers.json, market.json, competitors.json. Fill in the relevant structure.",
+  "files": {
+    "platforms.json": {
+      "country": "{country_id}",
+      "last_updated": "YYYY-MM-DD",
+      "platforms": [
+        {
+          "rank": 1,
+          "name": "",
+          "url": "",
+          "type": "video|short_video|social_media|blog_platform|app_review|qa_forum|travel_portal|messaging_community|visual_search|anonymous_forum",
+          "score": 0,
+          "scores": {
+            "organic_reach": 0,
+            "seo_value": 0,
+            "engagement": 0,
+            "shareability": 0,
+            "target_alignment": 0,
+            "content_longevity": 0,
+            "monetization": 0
+          },
+          "user_base": "",
+          "demographics": "",
+          "korean_derm_content_volume": "very_high|high|medium|low|very_low",
+          "best_content_format": [],
+          "guide_posting_potential": "very_high|high|medium|low",
+          "notes": ""
+        }
+      ]
+    },
+    "pain-points.json": {
+      "country": "{country_id}",
+      "last_updated": "YYYY-MM-DD",
+      "pain_points": [
+        {
+          "id": "PP-{CC}-01",
+          "category": "communication|aftercare|trust|information|booking|pricing|cultural|onboarding",
+          "title": "",
+          "title_ko": "",
+          "severity": 0,
+          "frequency": 0,
+          "resolution_difficulty": 0,
+          "sub_issues": [],
+          "data_sources": []
+        }
+      ]
+    },
+    "influencers.json": {
+      "country": "{country_id}",
+      "last_updated": "YYYY-MM-DD",
+      "influencers": {
+        "doctors": [],
+        "beauty_influencers": [],
+        "korean_creators_targeting_{country}": []
+      }
+    },
+    "market.json": {
+      "country": "{country_id}",
+      "last_updated": "YYYY-MM-DD",
+      "medical_tourism": {
+        "visitors_to_korea": {},
+        "interest_rate": "",
+        "popular_areas": [],
+        "typical_trip_duration": ""
+      },
+      "demographics": {},
+      "popular_treatments": [],
+      "price_comparison": {},
+      "trends": [],
+      "discovery_funnel": {
+        "awareness": [],
+        "consideration": [],
+        "booking": [],
+        "advocacy": []
+      }
+    },
+    "competitors.json": {
+      "country": "{country_id}",
+      "last_updated": "YYYY-MM-DD",
+      "competitor_categories": {
+        "booking_apps": [],
+        "concierge_services": [],
+        "travel_agencies": [],
+        "info_portals": []
+      }
+    }
+  }
+}

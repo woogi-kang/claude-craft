@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Market Research Platform Data",
+  "description": "Schema for country-level platform analysis in Korean dermatology market research",
+  "type": "object",
+  "required": ["country", "last_updated", "platforms"],
+  "properties": {
+    "country": {
+      "type": "string",
+      "description": "Country identifier (lowercase English)",
+      "enum": ["japan", "taiwan", "malaysia"]
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date of last data update"
+    },
+    "platforms": {
+      "type": "array",
+      "description": "Ranked list of platforms for guide content posting",
+      "items": {
+        "$ref": "#/$defs/platform"
+      }
+    },
+    "additional_platforms": {
+      "type": "array",
+      "description": "Notable platforms not in the main ranking",
+      "items": {
+        "$ref": "#/$defs/additionalPlatform"
+      }
+    }
+  },
+  "$defs": {
+    "platform": {
+      "type": "object",
+      "required": ["rank", "name", "url", "type", "score", "scores"],
+      "properties": {
+        "rank": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Overall ranking position"
+        },
+        "name": {
+          "type": "string",
+          "description": "Platform name (local name in parentheses if applicable)"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Platform URL"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "video", "short_video", "social_media", "blog_platform",
+            "app_review", "qa_forum", "travel_portal", "messaging_community",
+            "visual_search", "anonymous_forum"
+          ],
+          "description": "Platform category"
+        },
+        "score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Composite score out of 100"
+        },
+        "scores": {
+          "$ref": "#/$defs/scoreBreakdown"
+        },
+        "user_base": {
+          "type": "string",
+          "description": "User base size description"
+        },
+        "demographics": {
+          "type": "string",
+          "description": "Primary user demographics"
+        },
+        "korean_derm_content_volume": {
+          "type": "string",
+          "enum": ["very_high", "high", "medium", "low", "very_low"],
+          "description": "Volume of existing Korean dermatology content"
+        },
+        "best_content_format": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Optimal content formats for this platform"
+        },
+        "monetization_options": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Available monetization methods"
+        },
+        "guide_posting_potential": {
+          "type": "string",
+          "enum": ["very_high", "high", "medium", "low"],
+          "description": "Potential for posting Korean dermatology guide content"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Additional notes and observations"
+        }
+      }
+    },
+    "additionalPlatform": {
+      "type": "object",
+      "required": ["name", "url", "type"],
+      "properties": {
+        "name": { "type": "string" },
+        "url": { "type": "string", "format": "uri" },
+        "type": { "type": "string" },
+        "user_base": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+    "scoreBreakdown": {
+      "type": "object",
+      "required": [
+        "organic_reach", "seo_value", "engagement",
+        "shareability", "target_alignment", "content_longevity", "monetization"
+      ],
+      "properties": {
+        "organic_reach": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "seo_value": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "engagement": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "shareability": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "target_alignment": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "content_longevity": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "monetization": { "type": "integer", "minimum": 0, "maximum": 5 }
+      },
+      "description": "7-dimension scoring (each 0-5)"
+    }
+  }
+}

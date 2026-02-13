@@ -1,0 +1,95 @@
+{
+  "country": "japan",
+  "last_updated": "2026-02-13",
+  "influencers": {
+    "doctors": [
+      {
+        "name": "友利新 (Tomori Arata)",
+        "platform": ["YouTube", "Instagram"],
+        "followers": {"youtube": 1650000, "instagram": 180000},
+        "specialty": "内科・皮膚科医",
+        "content_type": ["skincare_analysis", "product_review", "ingredient_breakdown"],
+        "influence_level": "mega",
+        "relevance_to_korean_derm": "medium",
+        "notes": "日本No.1医師YouTuber。年間100以上の化粧品発表会出席。"
+      },
+      {
+        "name": "上原恵理 (Uehara Eri)",
+        "platform": ["Instagram"],
+        "followers": {"instagram": 10000},
+        "specialty": "THE SKIN CLINIC神楽坂 院長",
+        "influence_level": "micro",
+        "relevance_to_korean_derm": "low"
+      }
+    ],
+    "beauty_influencers": [
+      {
+        "name": "Nana",
+        "platform": ["Instagram", "TikTok"],
+        "followers": {"total": 600000},
+        "content_type": ["monthly_korea_trip", "clinic_review", "treatment_experience"],
+        "influence_level": "macro",
+        "relevance_to_korean_derm": "very_high",
+        "notes": "月1渡韓コンセプト。2024年年間30回渡韓。30代女性に絶大支持。CRAZE所属。"
+      },
+      {
+        "name": "まゆ (Mayu)",
+        "platform": ["Ameba Blog"],
+        "followers": {"ameba": null},
+        "content_type": ["clinic_review", "detailed_experience", "consultation"],
+        "influence_level": "macro",
+        "relevance_to_korean_derm": "very_high",
+        "certifications": ["韓国美容認定コンサルタント"],
+        "korea_visits": 85,
+        "experience_years": 10,
+        "notes": "アメブロ公式トップブロガー。渡韓85回以上。"
+      },
+      {
+        "name": "あすか (Asuka)",
+        "platform": ["Instagram"],
+        "followers": {"instagram": 20000},
+        "handle": "@asuka_imo",
+        "location": "Seoul",
+        "content_type": ["real_reviews", "side_effects", "post_treatment_progress"],
+        "influence_level": "micro",
+        "relevance_to_korean_derm": "very_high",
+        "notes": "ソウル在住。副作用や施術経過等のリアル情報提供。"
+      },
+      {
+        "name": "にゅん (Nyun)",
+        "platform": ["X (Twitter)"],
+        "followers": {"twitter": 118100},
+        "handle": "@cu_xli",
+        "content_type": ["beauty", "cosmetics"],
+        "influence_level": "macro",
+        "relevance_to_korean_derm": "medium"
+      },
+      {
+        "name": "ひかる (Hikaru)",
+        "platform": ["Instagram", "YouTube"],
+        "content_type": ["korean_cosmetics", "ingredient_analysis"],
+        "certifications": ["化粧品成分検定1級", "日本化粧品検定1級"],
+        "influence_level": "micro",
+        "relevance_to_korean_derm": "high",
+        "notes": "韓国コスメ＆成分マニア。資格保有で信頼度高い。"
+      }
+    ],
+    "korean_creators_targeting_japan": [
+      {
+        "name": "PONY",
+        "platform": ["YouTube"],
+        "followers": {"youtube": 5860000},
+        "content_type": ["makeup", "beauty"],
+        "language": "Korean with JP subtitles",
+        "relevance_to_korean_derm": "low"
+      },
+      {
+        "name": "会社員A/J",
+        "platform": ["YouTube"],
+        "followers": {"youtube": 2000000},
+        "content_type": ["beauty", "lifestyle"],
+        "relevance_to_korean_derm": "medium"
+      }
+    ]
+  }
+}
