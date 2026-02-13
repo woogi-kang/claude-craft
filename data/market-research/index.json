@@ -1,0 +1,57 @@
+{
+  "project": "korean-dermatology-market-research",
+  "description": "Cross-country analysis of Korean dermatology/beauty clinic discovery and booking behavior",
+  "version": "1.0.0",
+  "created": "2026-02-13",
+  "countries": {
+    "japan": {
+      "status": "complete",
+      "language": "ja",
+      "local_name": "日本",
+      "report_language": "ko",
+      "last_updated": "2026-02-13",
+      "sub_agents_used": 8,
+      "sources_count": 80
+    },
+    "taiwan": {
+      "status": "complete",
+      "language": "zh-TW",
+      "local_name": "台灣",
+      "report_language": "ko",
+      "last_updated": "2026-02-13",
+      "sub_agents_used": 8,
+      "sources_count": 345
+    },
+    "malaysia": {
+      "status": "complete",
+      "language": "ms",
+      "local_name": "Malaysia",
+      "report_language": "ko",
+      "last_updated": "2026-02-13",
+      "sub_agents_used": 8,
+      "sources_count": 356
+    }
+  },
+  "comparison_axes": [
+    "platforms",
+    "pain_points",
+    "influencers",
+    "market",
+    "competitors"
+  ],
+  "data_files_per_country": [
+    "platforms.json",
+    "pain-points.json",
+    "influencers.json",
+    "market.json",
+    "competitors.json",
+    "report.md"
+  ],
+  "schema": {
+    "platforms": "schema/platforms.schema.json",
+    "templates": {
+      "report": "schema/templates/country-report.md",
+      "data": "schema/templates/country-data.json"
+    }
+  }
+}

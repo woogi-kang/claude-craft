@@ -1,0 +1,241 @@
+{
+  "country": "taiwan",
+  "last_updated": "2026-02-13",
+  "research_notes": "Taiwan's beauty influencer market is mature with many creators covering K-beauty products, but almost no dedicated Korean dermatology/clinic tourism influencer exists. The gap between product content and clinic content is significant compared to Japan's ecosystem.",
+  "market_context": {
+    "taiwan_visitors_to_korea_2024": 1500000,
+    "korea_medical_tourism_growth_from_taiwan": "867% increase in 2023 vs pre-COVID",
+    "taiwan_medical_aesthetics_penetration_rate": "8%",
+    "korea_medical_aesthetics_penetration_rate": "22.05%",
+    "key_platforms": ["YouTube", "Instagram", "Dcard", "PTT", "Xiaohongshu", "Pixnet", "Threads"],
+    "korea_medical_tourism_tax_refund_ending": "2026-01-01"
+  },
+  "influencers": {
+    "doctors": [
+      {
+        "name": "Kevin (Kevin老師/周俊辰)",
+        "platform": ["YouTube", "Instagram", "Facebook"],
+        "followers": {"youtube": 300000, "instagram": 50000},
+        "specialty": "celebrity_makeup_artist_and_beauty_educator",
+        "content_type": ["makeup_tutorial", "product_review", "korean_beauty_techniques"],
+        "influence_level": "macro",
+        "relevance_to_korean_derm": "medium",
+        "notes": "First Taiwanese to appear on Korea's Get it Beauty show. Known for his 'infinite magnifying blush' technique that impressed Korean beauty industry. Owns cosmetics brand BeautyMaker. Strong cross-border credibility between Taiwan and Korean beauty industries."
+      },
+      {
+        "name": "邱品齊 (Dr. Chiu Pin-Chi)",
+        "platform": ["Facebook", "Pixnet", "Vocus"],
+        "followers": {"facebook": 150000},
+        "specialty": "dermatologist",
+        "content_type": ["skincare_education", "ingredient_analysis", "product_review"],
+        "influence_level": "macro",
+        "relevance_to_korean_derm": "low",
+        "notes": "Most well-known skincare-education dermatologist in Taiwan. 150K+ Facebook followers. Active on Pixnet blog since 2003. Promotes evidence-based 'minimal skincare' philosophy. Does not focus on Korean treatments but has strong credibility in skincare science. Unlikely to partner due to conservative approach."
+      },
+      {
+        "name": "李俊豪 (Mark醫師)",
+        "platform": ["YouTube", "Instagram", "TikTok"],
+        "followers": {"instagram": 73000, "tiktok": 340000},
+        "specialty": "pediatrics_and_medical_aesthetics",
+        "content_type": ["medical_aesthetics", "travel", "lifestyle"],
+        "influence_level": "macro",
+        "relevance_to_korean_derm": "low",
+        "notes": "Pediatrician turned aesthetic doctor. YouTube channel 'Travel with Dr. Mark'. Strong TikTok presence (340K). Focuses on Taiwan-based treatments rather than Korean clinics."
+      },
+      {
+        "name": "王彥文 (Dr. Wang Yan-Wen)",
+        "platform": ["Facebook", "Instagram"],
+        "followers": {"facebook": 130000},
+        "specialty": "medical_aesthetics",
+        "content_type": ["medical_aesthetics_education", "treatment_sharing"],
+        "influence_level": "macro",
+        "relevance_to_korean_derm": "low",
+        "notes": "Known as 'Asia's most beautiful female doctor'. Famous from PTT Beauty board. Shares aesthetic medicine videos on Facebook. Taiwan-focused practice, not covering Korean clinics."
+      }
+    ],
+    "beauty_influencers": [
+      {
+        "name": "Hello Catie (凱蒂)",
+        "platform": ["YouTube", "Instagram"],
+        "followers": {"youtube": 1090000, "instagram": 300000},
+        "content_type": ["product_review", "makeup_tutorial", "korean_product_haul"],
+        "influence_level": "mega",
+        "relevance_to_korean_derm": "medium",
+        "notes": "First Taiwanese beauty YouTuber to reach 1M subscribers. Known as 'ceiling of Taiwan beauty YouTube'. Brutally honest product reviews covering both luxury and drugstore products. Covers Korean beauty products extensively but does NOT cover Korean clinic visits or medical tourism. Currently based in Canada."
+      },
+      {
+        "name": "愛莉莎莎 (Alisasa)",
+        "platform": ["YouTube", "Instagram"],
+        "followers": {"youtube": 1200000, "instagram": 580000},
+        "content_type": ["korean_culture", "korean_travel", "lifestyle", "beauty_haul"],
+        "influence_level": "mega",
+        "relevance_to_korean_derm": "high",
+        "notes": "Studied in Korea for 8 months. Returns to Korea monthly to update on latest Korean trends. 1.2M YouTube subscribers. Known as 'queen of product sales' with each group buy exceeding 1M NTD. Covers Korean culture, food, beauty products, and travel. Strong Korean connections but focuses on lifestyle/travel rather than medical tourism specifically. HIGH POTENTIAL for Korean derm partnership."
+      },
+      {
+        "name": "Mindy (Mindy美妝)",
+        "platform": ["YouTube", "Instagram"],
+        "followers": {"youtube": 400000, "instagram": 200000},
+        "content_type": ["korean_makeup_tutorial", "korean_salon_visit", "product_review"],
+        "influence_level": "macro",
+        "relevance_to_korean_derm": "high",
+        "notes": "Specializes in Korean-style makeup. Regularly visits Korean makeup studios for professional Korean makeup sessions. Popular 'Korean Makeup Studio Unboxing' series (ALUU studio, ouioui studio). Strong Korean beauty industry connections. Covers Korean hair salons and celebrity makeup artists. Closest to Korean beauty tourism content among Taiwanese beauty YouTubers but still focused on makeup/salon, not dermatology."
+      },
+      {
+        "name": "GINA HELLO (Gina)",
+        "platform": ["YouTube", "Instagram"],
+        "followers": {"youtube": 450000, "instagram": 526000},
+        "content_type": ["product_review", "base_makeup_test", "skincare"],
+        "influence_level": "macro",
+        "relevance_to_korean_derm": "medium",
+        "notes": "Transitioned from Pixnet blogger to YouTuber in 2016. Has filmed skincare routine videos during Korea trips. Easily allergic and dry skin type. Known for long-duration base makeup tests. Covers Korean products but not Korean clinic visits."
+      },
+      {
+        "name": "我是查理 (Charlene/Charlie)",
+        "platform": ["YouTube", "Instagram"],
+        "followers": {"youtube": 400000, "instagram": 343000},
+        "content_type": ["product_review", "skincare_for_rosacea", "lifestyle"],
+        "influence_level": "macro",
+        "relevance_to_korean_derm": "low",
+        "notes": "Known for honest product reviews. Covers lifestyle, travel, books, savings tips. Has rosacea and shares skincare experiences. Lives in Sweden with Swedish husband. Content is lifestyle-oriented, minimal Korean focus."
+      },
+      {
+        "name": "CindyH (心蒂)",
+        "platform": ["YouTube", "Instagram"],
+        "followers": {"youtube": 300000, "instagram": 150000},
+        "content_type": ["beginner_makeup", "korean_idol_dupe_makeup", "rosacea_skincare"],
+        "influence_level": "macro",
+        "relevance_to_korean_derm": "medium",
+        "notes": "Former makeup artist assistant. Known for beginner-friendly tutorials. Creates K-POP idol makeup dupe videos. Shares rosacea skincare experiences. Covers Korean beauty products but not clinic visits."
+      },
+      {
+        "name": "Astor (heyheyastor)",
+        "platform": ["YouTube", "Instagram"],
+        "followers": {"youtube": 250000, "instagram": 139000},
+        "content_type": ["korean_style_makeup", "fashion", "product_review"],
+        "influence_level": "macro",
+        "relevance_to_korean_derm": "medium",
+        "notes": "Former model. Known for edgy, Korean-inspired makeup looks. Shares fashion styling tips alongside beauty content. Covers Korean makeup products but not clinic visits."
+      },
+      {
+        "name": "黃小米 (Mii/Huang Xiao Mi)",
+        "platform": ["YouTube", "Instagram"],
+        "followers": {"youtube": 265000, "instagram": 100000},
+        "content_type": ["drugstore_product_review", "korean_product_roundup", "beauty_ranking"],
+        "influence_level": "macro",
+        "relevance_to_korean_derm": "medium",
+        "notes": "10+ year veteran beauty creator. Specializes in affordable/drugstore product reviews. 'Simple European-American' makeup style. Known for ranking and roundup content about popular Korean and drugstore products."
+      },
+      {
+        "name": "Andy老師 (Andy/王崇睿)",
+        "platform": ["YouTube", "Instagram"],
+        "followers": {"youtube": 2390000, "instagram": 1223000},
+        "content_type": ["entertainment", "beauty", "lifestyle"],
+        "influence_level": "mega",
+        "relevance_to_korean_derm": "low",
+        "notes": "Fastest Taiwanese YouTuber to reach 1M subscribers (189 days). Over 2.39M subscribers. Massive following but content is entertainment/drama-oriented rather than focused beauty education. Minimal Korean beauty content. Not relevant for Korean derm partnerships."
+      },
+      {
+        "name": "丹妮婊姐 (Danny Beeech/施勻婷)",
+        "platform": ["YouTube", "Instagram", "Podcast"],
+        "followers": {"facebook": 470000, "youtube": 300000},
+        "content_type": ["beauty_unboxing", "lifestyle", "values_sharing"],
+        "influence_level": "macro",
+        "relevance_to_korean_derm": "low",
+        "notes": "YouTuber since 2013. Also hosts podcast 'Biao Jie Bi Qing'. Content includes beauty unboxing and lifestyle but minimal Korean beauty focus. More of a lifestyle/personality-driven channel."
+      }
+    ],
+    "beauty_bloggers": [
+      {
+        "name": "Fion (Fion焢韓集)",
+        "platform": ["Podcast", "YouTube", "Instagram"],
+        "followers": {"instagram": 30000, "podcast_listeners": "unknown"},
+        "content_type": ["korean_culture", "korean_medical_aesthetics", "korean_lifestyle"],
+        "influence_level": "micro",
+        "relevance_to_korean_derm": "very_high",
+        "notes": "Taiwanese woman married to Korean, lived in Korea 8+ years. Former writer for Korean Broadcasting tbs eFM. Published 4 books about Korean culture. Has a specific podcast episode about 'Why Korean medical aesthetics are cheaper' and 'What is Korean skin management'. One of the VERY FEW Taiwanese creators who directly discusses Korean medical aesthetics industry. HIGH VALUE for partnership despite smaller following."
+      },
+      {
+        "name": "Creatrip Taiwan Community",
+        "platform": ["Instagram", "Threads", "Website"],
+        "followers": {"instagram": 200000},
+        "content_type": ["korean_travel", "korean_medical_aesthetics", "clinic_booking"],
+        "influence_level": "macro",
+        "relevance_to_korean_derm": "very_high",
+        "notes": "Not an individual but a platform. Creatrip actively recruits Instagram creators for Korean medical aesthetics content, offering compensation based on follower count (200K-1M KRW). Provides clinic booking service with 10% cashback. Already running influencer programs for Korean medical beauty targeting Taiwanese audience. Key intermediary in this space."
+      },
+      {
+        "name": "KKday Korea Medical Beauty",
+        "platform": ["Website", "Instagram"],
+        "followers": {"instagram": 500000},
+        "content_type": ["korean_medical_aesthetics_booking", "clinic_guide", "treatment_guide"],
+        "influence_level": "macro",
+        "relevance_to_korean_derm": "very_high",
+        "notes": "Major Taiwanese travel platform that has launched comprehensive Korean medical aesthetics guide and booking service. Provides complete guides from clinic selection to post-treatment care. Works with vetted clinics offering Chinese language support. Platform-level rather than individual influencer."
+      },
+      {
+        "name": "Anonymous Dcard/PTT Korean Medical Aesthetics Contributors",
+        "platform": ["Dcard", "PTT"],
+        "followers": {"dcard_engagement": "high", "ptt_engagement": "moderate"},
+        "content_type": ["personal_experience", "clinic_review", "price_comparison"],
+        "influence_level": "micro",
+        "relevance_to_korean_derm": "very_high",
+        "notes": "Multiple anonymous users share detailed Korean medical aesthetics experiences on Dcard (Korea Travel board, Medical Aesthetics board) and PTT (facelift board). One notable Dcard user shared 2 Korean medical trips and referred 10+ friends to the same clinic. These anonymous posters are driving significant word-of-mouth but are not identifiable individual influencers. Key insight: peer-to-peer sharing on forums is currently MORE influential than any single KOL for Korean derm in Taiwan."
+      }
+    ],
+    "korean_creators_targeting_taiwan": [
+      {
+        "name": "PONY (Park Hye-Min/朴惠敏)",
+        "platform": ["YouTube", "Instagram", "Weibo"],
+        "followers": {"youtube": 5900000, "weibo": 12000000},
+        "content_type": ["makeup_tutorial", "celebrity_dupe_makeup", "product_review"],
+        "influence_level": "mega",
+        "relevance_to_korean_derm": "medium",
+        "notes": "Korea's #1 beauty YouTuber with 5.9M subscribers. Has English subtitles on all videos. 12M Weibo followers indicate massive Chinese-speaking audience including Taiwan. Founded cosmetics brand PONY EFFECT. Not focused on dermatology but has significant brand influence on Taiwanese beauty consumers."
+      },
+      {
+        "name": "Risabae (이사배)",
+        "platform": ["YouTube", "Instagram"],
+        "followers": {"youtube": 2300000, "instagram": 1500000},
+        "content_type": ["transformation_makeup", "celebrity_dupe", "skincare"],
+        "influence_level": "mega",
+        "relevance_to_korean_derm": "medium",
+        "notes": "2.3M YouTube subscribers. Known for dramatic transformation makeup tutorials. Popular in Taiwan through articles in Taiwanese media (ELLE Taiwan, Marie Claire Taiwan). Not specifically targeting Taiwan or covering dermatology content."
+      },
+      {
+        "name": "lamuqe (라뮤끄)",
+        "platform": ["YouTube", "Instagram"],
+        "followers": {"youtube": 1150000},
+        "content_type": ["makeup_tutorial", "skincare", "fashion"],
+        "influence_level": "mega",
+        "relevance_to_korean_derm": "low",
+        "notes": "1.15M YouTube subscribers. Videos include English, Japanese, Chinese, and Vietnamese subtitles making her accessible to Taiwanese viewers. Covers makeup and skincare but not clinic treatments."
+      },
+      {
+        "name": "K-BEAUTY Expert Association Taiwan Branch",
+        "platform": ["Instagram"],
+        "followers": {"instagram": 5000},
+        "content_type": ["certification_program", "professional_education", "korean_beauty_techniques"],
+        "influence_level": "nano",
+        "relevance_to_korean_derm": "high",
+        "notes": "Official Taiwan branch of Korea's largest beauty association. Offers membership and international certification programs. Professional/B2B focus rather than consumer-facing. Could be a credibility partner for dermatology marketing."
+      }
+    ],
+    "gap_analysis": {
+      "finding": "There is NO dedicated Taiwanese influencer for Korean dermatology/clinic tourism. Taiwan has a mature beauty influencer ecosystem (Hello Catie 1.09M, Alisasa 1.2M, etc.) that extensively covers Korean beauty PRODUCTS, but virtually none cover Korean CLINIC visits, dermatology treatments, or medical tourism. The closest is Fion (podcast host living in Korea) who has one episode about Korean medical aesthetics, and anonymous Dcard/PTT users who share personal experiences.",
+      "opportunity": "Taiwan sent 1.5 million visitors to Korea in 2024. Korean medical tourism from Taiwan grew 867% post-COVID. Yet no single Taiwanese creator has claimed the 'Korean dermatology tourism' niche. The demand exists (active Dcard threads, PTT discussions, Creatrip actively recruiting micro-influencers) but no supply-side creator has emerged. Platforms like Creatrip and KKday are filling the gap institutionally but lack the personal trust that an individual influencer provides.",
+      "comparison_to_japan": "Japan has Nana (600K followers, 30 Korea trips/year), Mayu (85+ Korea visits, certified Korean beauty consultant), and multiple dedicated micro-influencers reviewing Korean clinics. Taiwan has ZERO equivalent. Alisasa (1.2M) visits Korea monthly but focuses on culture/lifestyle, not clinics. Mindy visits Korean makeup studios but not dermatology clinics. The gap is stark: Japan has at least 5-10 dedicated Korean derm tourism influencers; Taiwan has zero.",
+      "micro_influencer_opportunity": "Creatrip is already recruiting Instagram creators with as few as 5,000 followers for Korean medical aesthetics content (offering 200K-1M KRW compensation). This signals the market recognizes the gap. A Taiwanese creator who speaks Korean, visits Korean dermatology clinics regularly, and documents treatments with before/after content could capture an unoccupied niche with 1.5M potential Taiwanese Korea visitors as the addressable audience. The ideal profile would be similar to Japan's Nana: monthly Korea trips, dermatology focus, real treatment documentation.",
+      "platform_strategy": "Given Taiwan's social media landscape, the ideal approach would be multi-platform: YouTube for detailed clinic vlogs and treatment documentation (largest reach in Taiwan), Instagram/Threads for quick updates and clinic recommendations (visual storytelling), Dcard for community engagement and Q&A (where active Korean medical aesthetics discussion already happens), and Xiaohongshu for cross-border reach to mainland Chinese beauty tourists.",
+      "barriers_to_entry": "Reasons this niche remains empty: (1) Korean medical aesthetics content requires actually undergoing treatments, creating higher cost barrier than product reviews; (2) Medical content carries regulatory sensitivity in Taiwan; (3) Language barrier - few Taiwanese creators speak Korean fluently enough for clinic consultations; (4) Existing beauty KOLs earn well from product partnerships and have little incentive to shift to clinic content; (5) Korea's medical tourism tax refund ending in 2026 may reduce demand momentum.",
+      "key_statistics": {
+        "taiwan_korea_visitors_2024": "1.5 million",
+        "korean_medical_tourism_growth_from_taiwan_2023": "+867%",
+        "taiwan_beauty_influencer_market": "mature, 10+ creators with 200K+ YouTube subscribers",
+        "dedicated_korean_derm_influencers_in_taiwan": 0,
+        "dedicated_korean_derm_influencers_in_japan": "5-10+",
+        "k_culture_influence_on_medical_travel": "49.7% of foreign patients said K-Culture influenced their decision"
+      }
+    }
+  }
+}

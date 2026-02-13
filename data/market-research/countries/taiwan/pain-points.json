@@ -1,0 +1,278 @@
+{
+  "country": "taiwan",
+  "last_updated": "2026-02-13",
+  "pain_points": [
+    {
+      "id": "PP-TW-01",
+      "category": "communication",
+      "title": "語言溝通障礙與翻譯品質參差",
+      "title_ko": "언어 소통 장벽 및 통역 품질 편차",
+      "severity": 5,
+      "frequency": 5,
+      "resolution_difficulty": 3,
+      "mention_count_across_agents": 8,
+      "sub_issues": [
+        "醫美翻譯無相關證照或資格認證，留學生攬客對醫美專業詞彙不夠了解，導致理解錯誤",
+        "韓國、台灣、中國醫美翻譯用語皆不同（繁體中文 vs 簡體中文 vs 韓文），療程名稱與品牌名常產生溝通落差",
+        "診所翻譯人員服務大量客人，通常僅在諮詢時提供協助，施作過程若有不適需自行溝通",
+        "微妙需求難以傳達 — 台灣人偏好自然審美，但韓語表達的「自然」可能被理解為不同程度的調整",
+        "術後照護指示因語言不通而理解不完整，增加併發症風險"
+      ],
+      "data_sources": [
+        "https://www.kimbeauty.com.tw/beauty-articles/kimbeauty/4875/",
+        "https://www.newstardr.com/knowledge/news-04/",
+        "https://www.kkday.com/zh-hk/blog/114131/korea-medibeauty-beginner-guide",
+        "https://www.gvm.com.tw/article/118048"
+      ]
+    },
+    {
+      "id": "PP-TW-02",
+      "category": "aftercare",
+      "title": "術後回台照護困難與併發症處理",
+      "title_ko": "귀국 후 사후관리 및 합병증 대응 곤란",
+      "severity": 5,
+      "frequency": 4,
+      "resolution_difficulty": 5,
+      "mention_count_across_agents": 7,
+      "sub_issues": [
+        "返台後出現紅腫、感染或併發症，無法及時回診原醫師追蹤，對恢復不利",
+        "台灣醫師因缺乏產品成分、手法、注射位置等資訊而不敢輕易補救，避免二次傷害",
+        "韓國施打針劑時可能混合不同成分（雞尾酒療法），台灣醫師更難判斷問題來源",
+        "常見副作用如玻尿酸位移、肉毒桿菌導致臉部不對稱、膠原蛋白增生劑造成硬塊等，多在返台後才出現",
+        "再飛韓國回診的機票、住宿費用負擔不明確，診所是否承擔尚無定論",
+        "2025年3月女子赴韓注射JUVELOOK導致左眼永久性失明案例"
+      ],
+      "data_sources": [
+        "https://brightclinic.com.tw/bright-space-news-info/%E9%9F%93%E5%9C%8B%E9%86%AB%E7%BE%8E%E5%A5%BD%E4%BE%BF%E5%AE%9C%EF%BC%9F%E4%B8%8D%E5%BE%97%E4%B8%8D%E6%B3%A8%E6%84%8F%E7%9A%84%E5%9C%8B%E5%A4%96%E9%86%AB%E7%BE%8E%E5%95%8F%E9%A1%8C/",
+        "https://www.newstardr.com/knowledge/news-04/",
+        "https://www.commonhealth.com.tw/article/91094",
+        "https://www.dcard.tw/f/facelift/p/254573728"
+      ]
+    },
+    {
+      "id": "PP-TW-03",
+      "category": "trust",
+      "title": "資訊可信度判斷困難與業配滲透",
+      "title_ko": "정보 신뢰도 판단 곤란 및 협찬 침투",
+      "severity": 4,
+      "frequency": 5,
+      "resolution_difficulty": 3,
+      "mention_count_across_agents": 7,
+      "sub_issues": [
+        "診所要求患者術後發佈正面評價以換取手術折扣，三名受訪者證實此慣例（遠見雜誌報導）",
+        "KOL/網紅合約中要求在最終效果出現前即產出正面內容，評論預設為正面",
+        "PTT、Dcard醫美版充斥疑似業配文，真實負面經驗易被淹沒",
+        "小紅書上韓國醫美資訊以簡體中文為主，台灣人需額外轉換理解，且難以辨別是否為診所行銷",
+        "大型診所宣稱「零事故紀錄」，但韓國嚴格的誹謗法使負面評論者面臨法律風險",
+        "非法仲介投訴案件從2021年11件暴增至2023年59件"
+      ],
+      "data_sources": [
+        "https://www.gvm.com.tw/article/118048",
+        "https://www.dcard.tw/f/facelift/p/256492885",
+        "https://www.newstardr.com/knowledge/news-04/"
+      ]
+    },
+    {
+      "id": "PP-TW-04",
+      "category": "information",
+      "title": "資訊碎片化與跨平台研究負擔",
+      "title_ko": "정보 파편화 및 크로스플랫폼 리서치 부담",
+      "severity": 4,
+      "frequency": 5,
+      "resolution_difficulty": 3,
+      "mention_count_across_agents": 6,
+      "sub_issues": [
+        "台灣人需跨PTT、Dcard、小紅書、Instagram、YouTube多平台交叉比對資訊",
+        "小紅書以簡體中文為主且流量遠大於繁體，台灣用戶須適應簡體中文閱讀與搜尋",
+        "各平台資訊不一致且缺乏真實性驗證機制，消費者難以做出判斷",
+        "施術擔當醫師的經歷、專門領域確認困難，韓國醫師資格系統與台灣不同",
+        "韓國診所數量龐大（僅江南區就有數百間），品質參差不齊，篩選耗時費力",
+        "台灣人習慣深度研究再消費的特性，使資訊蒐集階段特別漫長"
+      ],
+      "data_sources": [
+        "https://www.dcard.tw/topics/%E9%9F%93%E5%9C%8B%E6%95%B4%E5%BD%A2",
+        "https://www.gvm.com.tw/article/118048",
+        "https://www.koreaclinicguide.com/blog/medical-tourism-korea-best-clinic-checklist-foreign-patients"
+      ]
+    },
+    {
+      "id": "PP-TW-05",
+      "category": "safety",
+      "title": "幽靈手術與流水線診所安全隱患",
+      "title_ko": "유령수술 및 공장식 진료소 안전 우려",
+      "severity": 5,
+      "frequency": 3,
+      "resolution_difficulty": 5,
+      "mention_count_across_agents": 6,
+      "sub_issues": [
+        "幽靈手術為韓國整形外科「公開的秘密」— 主治醫師在多場手術間奔波，擅自讓他人代刀",
+        "韓國醫療法允許任何持有醫師執照者進行整形手術，骨科醫師亦可合法執行抽脂（2020年港女致死案）",
+        "流水線診所採固定流程和標準方案提高效率，忽略個人需求和面部差異",
+        "每次面診醫生可能不同，缺乏從頭到尾的深入跟進",
+        "患者全身麻醉時難以確認施作者是否為諮詢時的醫師",
+        "2024年中國女子在江南區抽脂手術中死亡案例"
+      ],
+      "data_sources": [
+        "https://www.facharming.com/news/5947",
+        "https://today.line.me/tw/v3/article/peP9eDp",
+        "https://www.gvm.com.tw/article/118048",
+        "https://docfinderkorea.com/news/ghost-surgery-in-south-korea"
+      ]
+    },
+    {
+      "id": "PP-TW-06",
+      "category": "pricing",
+      "title": "費用不透明與隱藏成本",
+      "title_ko": "비용 불투명 및 숨겨진 비용",
+      "severity": 3,
+      "frequency": 4,
+      "resolution_difficulty": 3,
+      "mention_count_across_agents": 5,
+      "sub_issues": [
+        "2026年起韓國取消外國旅客醫美10%增值稅退稅政策，整體費用增加約10%",
+        "首次諮詢費、麻醉費、術後藥品費、術後護理費、翻譯費等未包含在療程報價中",
+        "諮詢時被推銷預定外的追加項目（upselling），外國人因語言弱勢更易被說服",
+        "機票、住宿、交通等附加成本可能抵消初始價格優勢（台北飛首爾往返約NT$8,000-15,000）",
+        "最終費用因個人情況（所需劑量、療程範圍）而調整，與初始報價有出入",
+        "仲介抽成使實際療程費用高於診所直接報價"
+      ],
+      "data_sources": [
+        "https://travel.yam.com/article/138389",
+        "https://brightclinic.com.tw/bright-space-news-info/%E9%9F%93%E5%9C%8B%E9%86%AB%E7%BE%8E2026%E4%B8%8D%E9%80%80%E7%A8%85%E4%BA%86%EF%BC%81%E5%8F%B0%E7%81%A3%E9%86%AB%E7%BE%8E%E6%9C%89%E6%AF%94%E8%BC%83%E5%B7%AE%E5%97%8E%EF%BC%9F/",
+        "https://www.koreaherald.com/article/10633779",
+        "https://www.storm.mg/lifestyle/5173811"
+      ]
+    },
+    {
+      "id": "PP-TW-07",
+      "category": "regulatory",
+      "title": "跨國醫療糾紛求償與法律救濟困難",
+      "title_ko": "해외 의료분쟁 보상 및 법적 구제 곤란",
+      "severity": 4,
+      "frequency": 3,
+      "resolution_difficulty": 5,
+      "mention_count_across_agents": 5,
+      "sub_issues": [
+        "跨國醫療糾紛處理耗時耗力，小案件需2-3年，跨國官司更為複雜",
+        "維權成功需證明嚴重副作用由醫療行為造成，舉證門檻高且跨國蒐證困難",
+        "多數人礙於時間、金錢成本過高而不了了之",
+        "可用管道包括韓國保健福祉部、K-Medi醫療糾紛調解仲裁院（約90-120天），但均需韓語溝通",
+        "駐韓國台北代表部可提供有限法律援助，但無直接大使館層級介入權限",
+        "台灣健保不涵蓋海外美容手術，旅遊保險亦不理賠非緊急醫療之醫美手術"
+      ],
+      "data_sources": [
+        "https://www.commonhealth.com.tw/article/91094",
+        "https://www.koreaclinicguide.com/blog/patient-rights-raise-dispute-international-patients",
+        "https://www.gvm.com.tw/article/118048"
+      ]
+    },
+    {
+      "id": "PP-TW-08",
+      "category": "cultural",
+      "title": "台韓審美觀差異導致期望落差",
+      "title_ko": "한-대만 미적 감각 차이로 인한 기대 불일치",
+      "severity": 3,
+      "frequency": 3,
+      "resolution_difficulty": 4,
+      "mention_count_across_agents": 4,
+      "sub_issues": [
+        "韓國偏好「小V臉」、精緻輪廓、明顯變化，台灣偏好自然、不誇張、「看不出來有做」的微調",
+        "韓國「外貌至上」文化下大膽創新快速變美的消費動機，與台灣謹慎保守的態度不同",
+        "流行的臉型風格存在台韓差異，在韓國做的效果回到台灣可能顯得不自然",
+        "台灣醫美強調客製化與充分溝通，韓國流水線模式難以滿足台灣人對個人化服務的期待"
+      ],
+      "data_sources": [
+        "https://blog.alleypin.com/comparison-of-taiwan-japan-korean-medical-beauty/",
+        "https://brightclinic.com.tw/bright-space-news-info/%E9%9F%93%E5%9C%8B%E9%86%AB%E7%BE%8E2026%E4%B8%8D%E9%80%80%E7%A8%85%E4%BA%86%EF%BC%81%E5%8F%B0%E7%81%A3%E9%86%AB%E7%BE%8E%E6%9C%89%E6%AF%94%E8%BC%83%E5%B7%AE%E5%97%8E%EF%BC%9F/"
+      ]
+    },
+    {
+      "id": "PP-TW-09",
+      "category": "booking",
+      "title": "預約流程複雜與仲介風險",
+      "title_ko": "예약 절차 복잡성 및 중개인 리스크",
+      "severity": 3,
+      "frequency": 4,
+      "resolution_difficulty": 2,
+      "mention_count_across_agents": 5,
+      "sub_issues": [
+        "熱門診所需提前2-4週預約，臨時預約幾乎不可能排到指定醫生",
+        "直接聯繫診所面臨語言障礙，需透過KakaoTalk或電子郵件以韓文溝通",
+        "非法仲介無政府核准登記、無韓國辦公室、無適當保險，卻透過抽成賺取利潤",
+        "第三方平台（如KKday、Creatrip）雖簡化流程但選擇受限且資訊可能過度正面",
+        "諮詢預約與施術預約混淆 — 部分診所需先做諮詢再另約施術日期",
+        "時差雖僅1小時（台灣UTC+8 vs 韓國UTC+9）但線上客服回應緩慢"
+      ],
+      "data_sources": [
+        "https://www.kkday.com/zh-hk/blog/114131/korea-medibeauty-beginner-guide",
+        "https://www.kkday.com/zh-hk/blog/115922/korea-medibeauty-faq-newbie-answers",
+        "https://www.gvm.com.tw/article/118048"
+      ]
+    },
+    {
+      "id": "PP-TW-10",
+      "category": "onboarding",
+      "title": "台灣醫美產業成熟反而提高赴韓門檻",
+      "title_ko": "대만 자체 의료미용 산업 성숙으로 인한 도한 장벽",
+      "severity": 3,
+      "frequency": 3,
+      "resolution_difficulty": 2,
+      "mention_count_across_agents": 4,
+      "sub_issues": [
+        "台灣醫美產業成熟且價格合理，消費者需被說服韓國確實「值得特地飛去」",
+        "台灣微整形發展時間比各國都早，醫師技術水準不遜於韓國，削弱赴韓動機",
+        "台灣醫美術後照護更完善、溝通無障礙，赴韓需犧牲這些優勢",
+        "台灣人偏好先在國內嘗試低風險項目再考慮海外，但缺乏「什麼項目值得去韓國做」的客觀比較資訊",
+        "台灣Z世代受韓流文化影響追求「韓系美感」，但實際赴韓後才發現審美差異"
+      ],
+      "data_sources": [
+        "https://blog.alleypin.com/comparison-of-taiwan-japan-korean-medical-beauty/",
+        "https://www.chiefrhine.com/tw/guide/detail/%E5%8F%B0%E7%81%A3%E9%86%AB%E7%BE%8E%E6%9C%89%E6%AF%94%E5%85%B6%E4%BB%96%E5%9C%8B%E5%AE%B6%E5%BC%B7%E5%97%8E%E8%81%BD%E8%AA%AA%E6%9C%89%E6%98%8E%E6%98%9F%E7%89%B9%E5%9C%B0%E8%B7%91%E5%8E%BB%E9%9F%93%E5%9C%8B%E5%81%9A%E8%80%B6",
+        "https://woman.udn.com/woman/story/123165/9083920"
+      ]
+    },
+    {
+      "id": "PP-TW-11",
+      "category": "regulatory",
+      "title": "台灣身份認定模糊與政治敏感性",
+      "title_ko": "대만 신분 인정 모호성 및 정치적 민감성",
+      "severity": 2,
+      "frequency": 2,
+      "resolution_difficulty": 5,
+      "mention_count_across_agents": 2,
+      "sub_issues": [
+        "韓國官方系統將台灣列為「CHINA (TAIWAN)」，電子入境卡歸類引發台灣旅客不滿",
+        "部分診所中文服務同時面向中國大陸和台灣客戶，行銷素材未區分繁簡體受眾需求",
+        "台灣消費者在小紅書研究韓國醫美時，需與中國大陸用戶共享同一資訊生態，但消費習慣與法律保障不同",
+        "跨國醫療糾紛時，台灣無正式大使館僅有代表部，外交保護層級受限"
+      ],
+      "data_sources": [
+        "https://news.ltn.com.tw/news/politics/breakingnews/5274238",
+        "https://joelin.cc/?p=1786"
+      ]
+    },
+    {
+      "id": "PP-TW-12",
+      "category": "pricing",
+      "title": "2026退稅取消衝擊與成本重新計算",
+      "title_ko": "2026 면세 폐지 충격 및 비용 재산정",
+      "severity": 4,
+      "frequency": 4,
+      "resolution_difficulty": 4,
+      "mention_count_across_agents": 5,
+      "sub_issues": [
+        "2026年1月1日起韓國正式終止外國旅客醫美10%增值稅退稅，過去平均每人退15萬韓元（約NT$3,600）",
+        "中國遊客平均退稅29.3萬韓元（約NT$7,000），退稅取消對高消費者衝擊更大",
+        "韓國醫美相對台灣的價格優勢因退稅取消而縮小，部分項目在台灣可能更划算",
+        "台灣競爭對手診所已開始以「2026韓國不退稅」為行銷切入點吸引客戶回流",
+        "產業界擔憂定價透明度下降，退稅機制過去某程度上有助於價格標準化"
+      ],
+      "data_sources": [
+        "https://travel.yam.com/article/138389",
+        "https://www.koreaherald.com/article/10633779",
+        "https://www.koreabiomed.com/news/articleView.html?idxno=28501",
+        "https://www.scmp.com/week-asia/health-environment/article/3336035/south-korea-end-cosmetic-surgery-tax-break-fuelled-medical-tourism-boom"
+      ]
+    }
+  ]
+}

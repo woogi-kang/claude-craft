@@ -1,0 +1,326 @@
+{
+  "country": "taiwan",
+  "last_updated": "2026-02-13",
+  "medical_tourism": {
+    "visitors_to_korea": {
+      "2023": 12800,
+      "2024": 83000,
+      "growth_rate": "550.6% (2023->2024)",
+      "dermatology_visits_2024": 67000,
+      "dermatology_growth": "1017% increase from 2023",
+      "ranking": "4th largest source country (after Japan, China, US)"
+    },
+    "spending": {
+      "total_2024_krw": "579 billion won",
+      "total_2024_usd": "~$420 million",
+      "growth_from_2019": "3.6B KRW (2019) -> 81.5B KRW medical spending (2024)",
+      "medical_share_of_total": "46.5% of total spending is medical (remainder is shopping, dining, tourism)"
+    },
+    "interest_rate": "Very high and rapidly accelerating; Taiwan is Korea's fastest-growing medical tourism source market by percentage growth",
+    "popular_areas": [
+      {"name": "Gangnam (강남)", "reason": "Premium clinics, latest equipment, multilingual staff (EN/JP/ZH), medical tourism hub"},
+      {"name": "Sinsa-dong / Apgujeong (신사동/압구정)", "reason": "High-end dermatology and plastic surgery clinics, Cheongdam luxury area"},
+      {"name": "Myeongdong (명동)", "reason": "Tourist-friendly location, Chinese-speaking staff, convenient subway access, shopping integration"},
+      {"name": "Hongdae (홍대)", "reason": "Trendy area popular with younger tourists, affordable clinics, vibrant atmosphere"},
+      {"name": "Busan (부산)", "reason": "Emerging destination for Taiwanese medical tourists; direct flights from Kaohsiung"}
+    ],
+    "typical_trip_duration": "3-5 days (2-4 nights); some combine with general tourism for 5-7 day trips",
+    "avg_spending_per_patient": "~6.98 million KRW (~$5,070 USD) per patient (calculated: 579B KRW / 83,000 patients)",
+    "cost_advantage": "Korea is 30-50% cheaper than Taiwan for most dermatology procedures; 40-70% cheaper than Western countries",
+    "flight_info": {
+      "routes": "Taipei (TPE) <-> Seoul (ICN/GMP); also Kaohsiung <-> Busan, Kaohsiung <-> Jeju",
+      "duration": "2h55m - 3h10m",
+      "frequency": "91+ flights/week (Taipei-Seoul alone)",
+      "airlines": "EVA Air (22/week), China Airlines (17/week), Asiana (14/week), Korean Air, Jin Air, Jeju Air, Tigerair Taiwan, Eastar Jet, Scoot",
+      "distance": "1,463 km (914 miles)"
+    },
+    "travel_patterns": {
+      "peak_seasons": ["Lunar New Year (Jan-Feb)", "Summer vacation (Jul-Aug)", "National Day / Double Ten (Oct)", "Year-end holidays (Dec)"],
+      "total_taiwan_visitors_to_korea_2024": "1.47 million (record high)",
+      "growth_vs_2019": "40.4% above pre-pandemic levels"
+    }
+  },
+  "demographics": {
+    "population": "23.2 million (Jan 2025)",
+    "gdp_per_capita_2025": "$37,827 USD",
+    "disposable_income_per_capita_2025": "$14,170 USD",
+    "social_media_users": "18.4 million (79.4% of population)",
+    "internet_penetration": "95.3%",
+    "urbanization_rate": "80.6%",
+    "primary_age_groups": {
+      "18-24": {"priority": "K-beauty products, basic skin treatments, acne care", "platform": "Instagram, Dcard, TikTok, Xiaohongshu (RED)"},
+      "25-34": {"priority": "Preventive anti-aging, skin brightening, pore care, Rejuran", "platform": "Instagram, YouTube, Xiaohongshu (RED), LINE"},
+      "35-44": {"priority": "Anti-aging, lifting (Thermage/Ultherapy), skin rejuvenation", "platform": "Facebook, YouTube, LINE, PTT"},
+      "45+": {"priority": "Advanced anti-aging, lifting, skin tightening, stem cell therapies", "platform": "Facebook, LINE, YouTube"}
+    },
+    "gender": "Predominantly female (estimated 75-80%); male aesthetic treatments growing, especially among younger demographics",
+    "hallyu_influence": "Very strong. Taiwan represents 9.2% of overseas attendees at major K-Pop events. K-dramas drive direct tourism (e.g., Netflix drama success reopened Kaohsiung-Jeju direct flights). 82% of core Hallyu fans shop for K-Beauty items during Korea visits. K-beauty imports have surged with Olive Young Global Mall actively targeting Taiwanese consumers."
+  },
+  "popular_treatments_2026": [
+    {
+      "name": "Rejuran Healer (嬰兒針/鮭魚針)",
+      "rank": 1,
+      "price_kr": "480,000 KRW (~$350 USD) per 2mL",
+      "description": "Salmon DNA-based skin rejuvenation; top trending treatment for Taiwanese and Japanese tourists",
+      "category": "skin_booster"
+    },
+    {
+      "name": "Pico Laser Toning (皮秒雷射)",
+      "rank": 2,
+      "price_kr": "100,000-350,000 KRW per session",
+      "description": "Pigmentation removal, skin brightening, pore reduction; PicoSure/Picoway technology",
+      "category": "laser"
+    },
+    {
+      "name": "Skin Botox (皮膚肉毒桿菌)",
+      "rank": 3,
+      "price_kr": "40,000-220,000 KRW per area (brand dependent)",
+      "description": "Micro-botox for pore tightening, skin glow, and subtle wrinkle reduction",
+      "category": "injectable"
+    },
+    {
+      "name": "Thermage FLX (電波拉皮)",
+      "rank": 4,
+      "price_kr": "2,990,000-5,990,000 KRW (300-900 shots)",
+      "description": "Non-surgical skin tightening and lifting; very popular for anti-aging",
+      "category": "lifting"
+    },
+    {
+      "name": "Dermal Fillers - Juvederm/Restylane (玻尿酸填充)",
+      "rank": 5,
+      "price_kr": "200,000-770,000 KRW per 1mL",
+      "description": "Facial volume restoration, lip enhancement, nasolabial fold treatment",
+      "category": "injectable"
+    },
+    {
+      "name": "Aqua Peeling / Hydrafacial (水飛梭)",
+      "rank": 6,
+      "price_kr": "100,000-200,000 KRW",
+      "description": "Deep cleansing, hydration, sebum removal; quick lunchtime procedure",
+      "category": "skin_care"
+    },
+    {
+      "name": "Ultherapy (音波拉皮)",
+      "rank": 7,
+      "price_kr": "950,000-5,240,000 KRW (100-900 shots)",
+      "description": "Ultrasound-based non-surgical lifting; targets SMAS layer",
+      "category": "lifting"
+    },
+    {
+      "name": "Exosome Therapy (外泌體療法)",
+      "rank": 8,
+      "price_kr": "300,000-800,000 KRW per session",
+      "description": "Cutting-edge stem cell-derived skin regeneration; 2025-2026 breakthrough trend",
+      "category": "regenerative"
+    },
+    {
+      "name": "Potenza (波特薩微針電波)",
+      "rank": 9,
+      "price_kr": "200,000-400,000 KRW",
+      "description": "RF microneedling for acne scars, pores, skin tightening",
+      "category": "laser"
+    },
+    {
+      "name": "LaseMD / Fractional Laser (飛梭雷射)",
+      "rank": 10,
+      "price_kr": "200,000-600,000 KRW per session",
+      "description": "Acne scar treatment, skin resurfacing, combined with ampoule infusion",
+      "category": "laser"
+    }
+  ],
+  "price_comparison": {
+    "note": "Korea is generally 30-50% cheaper than Taiwan for dermatology procedures, and 40-70% cheaper than Western countries. Taiwan itself is already 30-70% cheaper than the US.",
+    "currency_note": "1 USD ~ 32 NTD ~ 1,380 KRW (approximate Feb 2026)",
+    "examples": [
+      {
+        "treatment": "Botox (1 area, wrinkle)",
+        "korea": "40,000-220,000 KRW ($29-$160)",
+        "taiwan": "~$140-200 USD per unit (NTD 4,500-6,500)",
+        "savings": "Korea 30-50% cheaper (especially with Korean brands like Wondertox/Nabota)"
+      },
+      {
+        "treatment": "Dermal Filler (1mL, Juvederm)",
+        "korea": "560,000-720,000 KRW ($400-$520)",
+        "taiwan": "~$500-800 USD (NTD 16,000-26,000)",
+        "savings": "Korea 15-35% cheaper"
+      },
+      {
+        "treatment": "Pico Laser Toning (full face, 1 session)",
+        "korea": "100,000-350,000 KRW ($72-$250)",
+        "taiwan": "~$150-400 USD (NTD 5,000-13,000)",
+        "savings": "Korea 20-40% cheaper"
+      },
+      {
+        "treatment": "Thermage FLX (300 shots)",
+        "korea": "2,990,000 KRW (~$2,170)",
+        "taiwan": "~$2,500-4,000 USD (NTD 80,000-130,000)",
+        "savings": "Korea 15-45% cheaper"
+      },
+      {
+        "treatment": "Rejuran Healer (2mL)",
+        "korea": "480,000 KRW (~$350)",
+        "taiwan": "Not widely available domestically; Korean clinics have a technology/availability advantage",
+        "savings": "Treatment availability advantage in Korea"
+      },
+      {
+        "treatment": "Ultherapy (full face, 300 lines)",
+        "korea": "950,000-2,500,000 KRW ($690-$1,810)",
+        "taiwan": "~$1,000-3,000 USD (NTD 32,000-96,000)",
+        "savings": "Korea 10-40% cheaper"
+      }
+    ],
+    "additional_cost_factors": {
+      "consultation_fee_korea": "$50-150 USD (some clinics waive if treatment booked)",
+      "flight_cost_roundtrip": "$200-500 USD (LCC) / $400-800 USD (full-service carrier)",
+      "accommodation_per_night": "$50-150 USD (budget to mid-range near Gangnam/Myeongdong)"
+    }
+  },
+  "trends_2026": [
+    "Cellular regeneration focus: stem cell and exosome-based treatments gaining mainstream adoption",
+    "Combination protocols: Thermage FLX + Rejuran Healer or LaseMD + Exosome Therapy in single visits",
+    "Natural aesthetic (自然美): preference for subtle enhancements over dramatic changes",
+    "Short-stay medical tourism: 3-day trip optimized for treatment + recovery + shopping",
+    "Korean-brand injectables: growing acceptance of Korean-manufactured Botox alternatives (Nabota, Wondertox) at 50-80% lower cost",
+    "Technology-first approach: Taiwanese consumers value cutting-edge devices (PicoSure, Thermage FLX) over traditional methods",
+    "Glass skin trend (水光肌): continued demand for hydration-focused treatments (water-glow injection, Aqua Peeling)",
+    "Male aesthetics growth: increasing number of Taiwanese men seeking dermatology treatments in Korea",
+    "Busan emerging: direct Kaohsiung-Busan flights making southern Korea accessible for Taiwanese tourists",
+    "Post-Xiaohongshu shift: with Xiaohongshu blocked in Taiwan (Dec 2025), discovery shifting to Instagram Reels, YouTube Shorts, and Dcard"
+  ],
+  "discovery_funnel": {
+    "awareness": [
+      "Instagram (11.3M users in Taiwan; beauty/skincare influencers, Reels content)",
+      "YouTube (beauty vloggers, clinic review channels, before/after content)",
+      "Facebook (22.4M users; community groups like '韓國醫美交流社團')",
+      "Dcard (popular forum for younger demographics; medical aesthetics boards)",
+      "PTT Beauty board (台灣最大論壇; anonymous reviews and recommendations)",
+      "K-drama / K-pop exposure (Hallyu drives initial beauty standard awareness)",
+      "Xiaohongshu/RED (previously 2nd largest overseas user base; now blocked since Dec 2025)",
+      "TikTok / Douyin (short-form video discovery, before/after content)"
+    ],
+    "consideration": [
+      "Creatrip (government-certified Korean medical tourism platform; Chinese language support, reviews, clinic introductions)",
+      "LINE groups / OpenChat (Korean beauty communities, peer recommendations)",
+      "YouTube clinic review videos (Taiwanese YouTubers documenting their Korea clinic visits)",
+      "Instagram hashtags (#韓國醫美 #韓國皮膚科 #首爾醫美)",
+      "Facebook community groups (medical tourism advice, clinic recommendations)",
+      "Dcard medical aesthetics board (anonymous peer reviews and pricing discussions)",
+      "Google Maps reviews (Chinese language reviews of Korean clinics)",
+      "Medical Korea official site (government medical tourism portal)"
+    ],
+    "booking": [
+      "LINE official accounts (clinics' LINE accounts for Chinese-language consultation and booking)",
+      "Creatrip platform (online booking with free Creatrip Buddy concierge service)",
+      "KakaoTalk (direct clinic communication)",
+      "Medical tourism agencies (K-MedicalTours, Seoul Guide Medical, Medictel, HiMedi)",
+      "Clinic websites (Chinese-language booking forms)",
+      "Travel package deals (medical tourism + hotel + flight bundles)",
+      "WhatsApp / WeChat (some clinics support these for international patients)"
+    ],
+    "advocacy": [
+      "Instagram posts/Stories (before/after photos, clinic tagging)",
+      "YouTube vlogs (detailed treatment review videos in Mandarin Chinese)",
+      "Dcard reviews (detailed anonymous reviews with pricing)",
+      "Facebook group posts (community sharing with photos and cost breakdown)",
+      "PTT experience sharing (detailed text reviews)",
+      "Google Maps reviews (in Traditional Chinese for Korean clinics)",
+      "LINE group word-of-mouth (peer-to-peer recommendations)"
+    ]
+  },
+  "language_considerations": {
+    "primary_language": "Traditional Chinese (繁體中文/正體中文)",
+    "writing_system": "Traditional Chinese characters (NOT Simplified)",
+    "platform_language_mapping": {
+      "instagram": "Traditional Chinese captions; hashtags in both Chinese and Korean",
+      "youtube": "Traditional Chinese titles, descriptions, and subtitles; Mandarin Chinese voiceover",
+      "facebook": "Traditional Chinese; community group discussions",
+      "line": "Traditional Chinese; primary communication channel (22M monthly active users, 94% penetration)",
+      "dcard": "Traditional Chinese only; Taiwan-native platform",
+      "ptt": "Traditional Chinese only; Taiwan's largest forum",
+      "google": "Traditional Chinese search queries; often searching '韓國皮膚科' '韓國醫美推薦'",
+      "clinic_materials": "Must be in Traditional Chinese; some clinics mistakenly use Simplified Chinese which alienates Taiwanese consumers"
+    },
+    "content_strategy_notes": {
+      "critical_distinction": "Always use Traditional Chinese (繁體中文), never Simplified Chinese (简体中文). Taiwanese consumers are sensitive to this distinction.",
+      "korean_terms": "Include romanized Korean alongside Chinese translations (e.g., 'Rejuran嬰兒針', '皮秒雷射Pico Laser')",
+      "tone": "Professional but approachable; avoid overly clinical language. Taiwanese consumers prefer detailed, informative content with real pricing.",
+      "seo_keywords": ["韓國醫美", "韓國皮膚科", "首爾醫美推薦", "韓國雷射", "韓國肉毒", "韓國玻尿酸", "韓國皮膚管理"],
+      "line_strategy": "LINE is the #1 communication platform in Taiwan. All clinics must have LINE official accounts with Traditional Chinese support for consultation and booking."
+    }
+  },
+  "taiwan_domestic_market": {
+    "beauty_market_size_2024": "$8.33 billion USD",
+    "beauty_market_projected_2033": "$12.12 billion USD",
+    "beauty_market_cagr": "4.26% (2025-2033)",
+    "aesthetic_devices_market_2023": "$0.07 billion USD",
+    "aesthetic_devices_projected_2035": "$0.26 billion USD",
+    "aesthetic_devices_cagr": "10.9% (2024-2035)",
+    "medical_aesthetics_projected_2033": "$1.58 billion USD (fastest-growing in Asia Pacific)",
+    "domestic_market_characteristics": [
+      "Advanced and mature aesthetic medicine market with FDA-approved technologies",
+      "Strong domestic clinic infrastructure (PicoSure, Thermage FLX, Ultherapy, Emsculpt Neo available)",
+      "Prices already lower than US/Europe but higher than Korea for most procedures",
+      "Non-surgical segment growing fastest",
+      "Social media influence driving younger consumer adoption",
+      "Medical spas and beauty clinics segment expanding rapidly"
+    ],
+    "why_still_go_to_korea": [
+      "Korea offers 30-50% lower prices for equivalent treatments",
+      "Access to Korea-exclusive treatments (Rejuran, Korean-brand injectables) not widely available in Taiwan",
+      "Perceived higher expertise in dermatology due to Korea's global reputation",
+      "Can combine with K-beauty shopping, K-pop/drama tourism",
+      "Volume and competition in Korean clinics drives innovation and service quality",
+      "Social currency: visiting Korean clinics is a status/trend marker"
+    ]
+  },
+  "payment_methods": {
+    "primary_methods": [
+      "International credit cards (Visa, Mastercard, JCB widely accepted at Korean clinics)",
+      "Cash (Korean Won; recommended to carry some for smaller clinics)",
+      "LINE Pay (Taiwanese LINE Pay accepted at Shilla Duty Free and select merchants since July 2024)",
+      "TWQR (BC Card QR system enabling Taiwanese mobile payments at Korean merchants since Jan 2024)"
+    ],
+    "recommended_strategy": "Credit card + small cash combination is most reliable for short-term medical tourism",
+    "notes": [
+      "Most major Korean dermatology clinics accept international credit cards",
+      "JCB cards have especially good acceptance in Korean tourist areas",
+      "LINE Pay cross-border payment expanding but still limited to select merchants",
+      "Some smaller clinics may prefer cash payment",
+      "Currency exchange available at Incheon Airport and Myeongdong money changers"
+    ]
+  },
+  "competitive_landscape": {
+    "korea_vs_alternatives": {
+      "japan": "More expensive than Korea; Taiwanese prefer Korea for dermatology, Japan for general healthcare",
+      "thailand": "Cheaper but perceived as lower quality for dermatology; Korea has stronger brand cachet",
+      "taiwan_domestic": "Convenient but more expensive; lacks Korea-exclusive treatments and K-beauty ecosystem",
+      "china": "Not considered for medical aesthetics by Taiwanese consumers due to political/trust factors"
+    },
+    "korea_strengths_for_taiwan_market": [
+      "Geographic proximity (2.5-3 hour flight)",
+      "Strong cultural affinity via Hallyu",
+      "Price advantage over Taiwan domestic market",
+      "Technology and innovation leadership in dermatology",
+      "91+ weekly flights providing scheduling flexibility",
+      "Growing Chinese-language support infrastructure at clinics",
+      "Visa-free entry for Taiwanese citizens (90 days)"
+    ]
+  },
+  "data_sources": [
+    "Korea Ministry of Health and Welfare - 2024 Foreign Patient Statistics",
+    "Korea.net - Official Government Press Releases",
+    "Korea Biomed - Medical Tourism Data 2024",
+    "Korea Times - Medical Tourism Economic Impact Report",
+    "DataReportal - Digital 2025: Taiwan Report",
+    "Allied Market Research - Taiwan Medical Aesthetic Devices Market",
+    "Yanolja Research - Korea Medical Tourism Vol.33",
+    "KED Global - South Korea Foreigners Skincare Destination",
+    "Kpopmap - 2025 Hallyu Tourism Deep Dive",
+    "Lienjang Clinic Korea - Treatment Price List",
+    "Creatrip - Korean Skin Clinic Guide 2025",
+    "Statista - Taiwan Social Media, K-beauty, K-drama Statistics",
+    "FlightsFrom.com - Taipei-Seoul Route Data",
+    "Worldometers / FocusEconomics - Taiwan GDP Data",
+    "NapoleonCat - Taiwan Social Media Users 2025"
+  ]
+}

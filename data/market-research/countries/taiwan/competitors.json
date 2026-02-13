@@ -1,0 +1,804 @@
+{
+  "country": "taiwan",
+  "last_updated": "2026-02-13",
+  "market_context": {
+    "taiwan_visitors_to_korea_beauty_growth_2023": "867% YoY",
+    "korea_medical_tourism_market_2024": "$2B USD (1M+ foreign patients)",
+    "taiwan_domestic_aesthetic_market_2023": "60B+ TWD",
+    "taiwan_domestic_growth_rate": "11.8% annually",
+    "dominant_messaging_app": "LINE",
+    "language_preference": "Traditional Chinese (繁體中文)",
+    "key_discussion_platforms": ["Dcard", "PTT", "Threads", "Xiaohongshu"],
+    "tax_refund_policy_change": "10% VAT refund for foreign medical aesthetic patients cancelled from 2026-01-01"
+  },
+  "competitor_categories": {
+    "booking_apps": [
+      {
+        "name": "UNNI (강남언니/Gangnam Unni)",
+        "url": "https://unni.global/",
+        "app_url_ios": "https://apps.apple.com/us/app/gangnamunni/id1035105027",
+        "app_url_android": "https://play.google.com/store/apps/details?id=com.gangnam.sister",
+        "type": "review_booking_app",
+        "total_users": 7200000,
+        "affiliated_clinics": 1500,
+        "taiwan_launch": "2025-10-15",
+        "language_support": ["zh-TW", "zh-CN", "ko", "en", "ja", "th"],
+        "pricing_model": "free + clinic commission",
+        "features": ["real_reviews", "clinic_search", "chat_consultation", "booking", "price_comparison"],
+        "localization_quality": "high - medical terms reviewed by beauty medical experts, not machine translated",
+        "partnerships": ["Klook (10,000 KRW Olive Young gift card for users)"],
+        "strengths": [
+          "largest_kr_beauty_platform_globally",
+          "dedicated_traditional_chinese_version",
+          "expert_reviewed_medical_term_translations",
+          "1500_affiliated_hospitals",
+          "proven_japan_market_success_1.6M_users"
+        ],
+        "weaknesses": [
+          "taiwan_market_very_new_launched_oct_2025",
+          "no_published_taiwan_user_metrics_yet",
+          "fake_review_concerns",
+          "information_overload_for_new_users"
+        ]
+      },
+      {
+        "name": "Babitalk (바비톡)",
+        "url": "https://web.babitalk.com/",
+        "type": "review_booking_app",
+        "total_users": 9000000,
+        "reviews": 1000000,
+        "language_support": ["ko", "zh-CN"],
+        "taiwan_status": "no_confirmed_traditional_chinese_support",
+        "strengths": [
+          "largest_kr_domestic_platform_9M_users",
+          "1M_real_reviews",
+          "1min_doctor_qa_videos"
+        ],
+        "weaknesses": [
+          "no_confirmed_zh-TW_support",
+          "primarily_korean_focused",
+          "no_dedicated_taiwan_marketing"
+        ]
+      },
+      {
+        "name": "YeoTi (여신티켓/Yeoshin Ticket)",
+        "url": "https://www.yeoshin.co.kr/en",
+        "app_url_ios": "https://apps.apple.com/us/app/yeoti-korean-skin-clinic-app/id1228558605",
+        "type": "review_booking_app",
+        "total_users": 3400000,
+        "reviews": 900000,
+        "language_support": ["ko", "en", "ja"],
+        "taiwan_status": "no_chinese_language_support",
+        "unique_feature": "receipt_verified_reviews",
+        "pricing_model": "equal_pricing_for_foreigners",
+        "pre_ipo_status": "KOSDAQ listing planned H1 2027, Series C $7.3M secured",
+        "strengths": [
+          "dermatology_specialized",
+          "equal_pricing_for_foreigners_vs_locals",
+          "receipt_verified_reviews_high_trust",
+          "900K_verified_reviews"
+        ],
+        "weaknesses": [
+          "no_chinese_language_support",
+          "no_taiwan_market_entry",
+          "english_and_japanese_only_for_intl"
+        ]
+      }
+    ],
+    "concierge_services": [
+      {
+        "name": "K-Beauty Concierge",
+        "url": "https://www.kbeautyconcierge.com/",
+        "instagram": "https://www.instagram.com/k__beauty__concierge/",
+        "type": "concierge",
+        "founder": "Erin An",
+        "language_support": ["en", "ko"],
+        "booking_lead_time": "2-4 weeks recommended",
+        "pricing_model": "free_to_patient_clinic_commission",
+        "services": ["personalized_consultation", "clinic_matching", "booking", "treatment_planning"],
+        "strengths": [
+          "curated_high_quality_clinic_partnerships",
+          "zero_cost_to_patient",
+          "personalized_treatment_plans"
+        ],
+        "weaknesses": [
+          "primarily_english_focused",
+          "no_confirmed_chinese_support",
+          "founded_to_fill_english_gap_not_chinese"
+        ]
+      },
+      {
+        "name": "Seoul Beauty Concierge",
+        "url": "https://www.seoulbeautyconcierge.com/",
+        "type": "concierge",
+        "founded_by": "mother-daughter duo",
+        "language_support": ["en", "ko"],
+        "services": ["clinic_recommendations", "booking", "treatment_guidance"],
+        "strengths": [
+          "personal_touch",
+          "years_of_clinic_experience",
+          "trustworthy_recommendations"
+        ],
+        "weaknesses": [
+          "english_focused",
+          "no_chinese_language_service",
+          "small_scale_operation"
+        ]
+      },
+      {
+        "name": "Aneue Concierge",
+        "url": "https://www.aneueconcierge.com/",
+        "type": "concierge",
+        "founder": "Jennifer Seo",
+        "language_support": ["en", "ko"],
+        "services": ["bespoke_itinerary", "skin_treatments", "medical_exams", "wellness", "beauty_services"],
+        "package_categories": ["non_surgical_skincare", "comprehensive_medical_exams", "beauty_services"],
+        "strengths": [
+          "bespoke_health_and_beauty_travel",
+          "comprehensive_packages_beyond_beauty",
+          "customized_itineraries"
+        ],
+        "weaknesses": [
+          "english_focused",
+          "no_confirmed_chinese_support",
+          "premium_positioning"
+        ]
+      },
+      {
+        "name": "Seoul Cosmetic Surgery",
+        "url": "https://seoulcosmeticsurgery.com/",
+        "instagram": "https://www.instagram.com/seoulcosmeticsurgery/",
+        "type": "concierge_agency",
+        "license": "Korean Ministry of Health & Welfare licensed",
+        "clients": "1000+",
+        "language_support": ["en", "ko"],
+        "services": ["clinic_matching", "translation", "transportation", "airport_transfer", "24_7_case_manager", "tourism_tours"],
+        "pricing_model": "free_to_patient_hospital_pays",
+        "strengths": [
+          "government_licensed",
+          "1000_plus_satisfied_clients",
+          "complimentary_full_service",
+          "24_7_personal_case_manager"
+        ],
+        "weaknesses": [
+          "english_focused_no_chinese",
+          "surgery_focused_not_dermatology"
+        ]
+      },
+      {
+        "name": "Himedi",
+        "url": "https://himedi.com/",
+        "type": "medical_tourism_concierge",
+        "license": "Korean Ministry of Health & Welfare licensed",
+        "language_support": ["en", "ko", "zh", "ru", "ar"],
+        "services": ["hospital_booking", "translation", "scheduling", "transportation", "lodging", "health_checkups", "aesthetics", "dentistry", "vision"],
+        "strengths": [
+          "government_licensed",
+          "comprehensive_medical_services_beyond_beauty",
+          "multi_language_including_chinese",
+          "dedicated_coordinator"
+        ],
+        "weaknesses": [
+          "not_taiwan_market_specialized",
+          "unclear_traditional_vs_simplified_chinese",
+          "broad_focus_not_dermatology_specific"
+        ]
+      },
+      {
+        "name": "BeautyHopper",
+        "url": "https://www.beautyhopper.com/",
+        "instagram": "https://www.instagram.com/beautyhopper/",
+        "type": "concierge_agency",
+        "license": "Korean Ministry of Health & Welfare accredited",
+        "language_support": ["en", "ko", "multi"],
+        "services": ["clinic_matching", "translation", "medication_cost_coverage", "booking"],
+        "unique_feature": "covers_primary_medication_costs_for_foreign_patients",
+        "strengths": [
+          "government_accredited",
+          "medication_cost_coverage",
+          "multilingual_staff"
+        ],
+        "weaknesses": [
+          "no_confirmed_chinese_specific_service",
+          "primarily_english_marketing"
+        ]
+      },
+      {
+        "name": "Gangnam Medical Concierge",
+        "url": "https://gangnammedicalconcierge.com/",
+        "type": "concierge_agency",
+        "language_support": ["en", "ko"],
+        "focus": "plastic_surgery",
+        "strengths": [
+          "gangnam_district_specialized",
+          "plastic_surgery_expertise"
+        ],
+        "weaknesses": [
+          "english_focused",
+          "plastic_surgery_not_dermatology",
+          "no_chinese_service"
+        ]
+      }
+    ],
+    "travel_agencies": [
+      {
+        "name": "Green Travel (青旅行)",
+        "url": "https://greenmaster.tw/travelin.php?tID=109",
+        "type": "taiwan_travel_agency",
+        "package_name": "韓國醫美3日周五出發",
+        "duration": "3 days",
+        "price_from": "19900 TWD",
+        "group_size": "1-6 per vehicle",
+        "availability": "year_round_friday_departure",
+        "language_support": ["zh-TW"],
+        "includes": ["round_trip_flights", "airport_taxes", "airport_transfers", "korean_driver_guide", "hotel", "travel_insurance"],
+        "partner_clinics": ["ID Hospital", "GU Clinic", "TU Dental", "NANA Hospital"],
+        "treatments_offered": ["ultrasound_therapy", "dermal_fillers", "exosome", "stem_cell", "teeth_whitening", "breast_augmentation", "facial_contouring"],
+        "services": ["full_chinese_accompaniment", "privacy_protection", "no_sharing_vehicle_with_strangers"],
+        "strengths": [
+          "one_person_can_book",
+          "full_traditional_chinese_support",
+          "all_inclusive_package",
+          "privacy_focused",
+          "year_round_availability"
+        ],
+        "weaknesses": [
+          "limited_clinic_selection",
+          "group_tour_format",
+          "only_3_day_trips",
+          "limited_customization"
+        ]
+      },
+      {
+        "name": "KKday",
+        "url": "https://www.kkday.com/zh-tw",
+        "type": "travel_experience_platform",
+        "hq": "Taipei, Taiwan",
+        "language_support": ["zh-TW", "en", "ja", "ko", "zh-CN", "th", "vi"],
+        "beauty_offerings": "korean_beauty_clinic_packages_via_UNNI_partnership",
+        "content_marketing": "extensive_korean_beauty_guides_in_traditional_chinese",
+        "guide_urls": [
+          "https://www.kkday.com/zh-hk/blog/114165/korea-aesthetic-clinic-top-9",
+          "https://www.kkday.com/zh-hk/blog/114131/korea-medibeauty-beginner-guide"
+        ],
+        "strengths": [
+          "dominant_taiwan_travel_platform",
+          "native_traditional_chinese",
+          "comprehensive_korean_beauty_content",
+          "trusted_payment_processing",
+          "UNNI_app_partnership"
+        ],
+        "weaknesses": [
+          "beauty_clinic_selection_limited",
+          "no_direct_medical_booking",
+          "content_hub_not_booking_platform_for_clinics"
+        ]
+      },
+      {
+        "name": "Klook",
+        "url": "https://www.klook.com/zh-TW/",
+        "type": "travel_experience_platform",
+        "hq": "Hong Kong",
+        "language_support": ["zh-TW", "en", "ja", "ko", "zh-CN", "th"],
+        "beauty_clinic_page": "https://www.klook.com/activity/122334-korean-beauty-and-skin-care-clinic-reservation/",
+        "partnership": "UNNI app integration for clinic reservations",
+        "promotion": "10,000 KRW Olive Young gift card for UNNI app download",
+        "strengths": [
+          "major_asia_travel_platform",
+          "traditional_chinese_native",
+          "direct_korean_beauty_clinic_reservation",
+          "UNNI_integration",
+          "trusted_brand_in_taiwan"
+        ],
+        "weaknesses": [
+          "clinic_selection_through_UNNI_not_direct",
+          "beauty_is_small_category_vs_tours",
+          "no_specialized_dermatology_focus"
+        ]
+      },
+      {
+        "name": "Trazy",
+        "url": "https://www.trazy.com/",
+        "type": "korea_activity_platform",
+        "beauty_concierge_page": "https://www.trazy.com/experience/detail/korea-beauty-concierge-hair-nail-waxing-salon-reservation",
+        "language_support": ["en", "ko"],
+        "services": ["beauty_shop_booking_concierge", "clinic_booking", "hair_nail_skincare"],
+        "booking_process": "submit_request_then_trazy_contacts_shop",
+        "strengths": [
+          "korea_no1_travel_shop_brand",
+          "book_any_beauty_shop_flexible",
+          "korean_speaking_team_handles_communication"
+        ],
+        "weaknesses": [
+          "english_only_no_chinese",
+          "not_taiwan_market_focused",
+          "indirect_booking_process"
+        ]
+      }
+    ],
+    "info_portals": [
+      {
+        "name": "Creatrip",
+        "url": "https://creatrip.com/zh-TW",
+        "type": "korea_travel_lifestyle_portal",
+        "language_support": ["zh-TW", "zh-CN", "en", "ja", "ko", "th", "vi", "fr", "es", "de", "it", "mn", "ru", "id"],
+        "beauty_content": "clinic_listings_with_booking_and_discounts",
+        "partner_clinics": ["PPEUM", "PlanS Clinic", "Shireuben Dermatology"],
+        "beauty_cashback": "10% cashback to replace cancelled government tax refund",
+        "features": ["clinic_booking", "pre_booking_discounts", "24_7_chinese_support", "beauty_cashback_program"],
+        "strengths": [
+          "native_traditional_chinese_support",
+          "government_certified_platform",
+          "comprehensive_korea_travel_content",
+          "24_7_chinese_customer_support",
+          "beauty_cashback_replacing_tax_refund",
+          "extensive_clinic_partnerships"
+        ],
+        "weaknesses": [
+          "travel_portal_not_dedicated_beauty_app",
+          "clinic_selection_curated_not_comprehensive",
+          "content_quality_varies"
+        ]
+      },
+      {
+        "name": "Dcard (韓國醫美版)",
+        "url": "https://www.dcard.tw/topics/韓國醫美",
+        "type": "community_forum",
+        "language_support": ["zh-TW"],
+        "content_type": "user_generated_reviews_discussions",
+        "popular_topics": ["clinic_recommendations", "price_comparisons", "treatment_experiences", "risk_warnings"],
+        "strengths": [
+          "largest_taiwan_young_adult_forum",
+          "authentic_user_reviews",
+          "price_comparison_tables",
+          "negative_experience_warnings",
+          "high_engagement_community"
+        ],
+        "weaknesses": [
+          "no_booking_capability",
+          "unverified_information",
+          "potential_for_astroturfing",
+          "no_structured_clinic_database"
+        ]
+      },
+      {
+        "name": "MYFEEL (品感覺)",
+        "url": "https://www.myfeel-tw.com/media/koreabeauty",
+        "type": "content_platform",
+        "language_support": ["zh-TW"],
+        "content_type": "comprehensive_korean_beauty_guides",
+        "topics_covered": ["assembly_line_vs_one_stop_clinics", "booking_process", "popular_treatments", "foreigner_considerations"],
+        "strengths": [
+          "detailed_educational_content",
+          "trusted_taiwan_platform",
+          "crowdfunding_background_100M_TWD"
+        ],
+        "weaknesses": [
+          "content_only_no_booking",
+          "not_beauty_specialized"
+        ]
+      },
+      {
+        "name": "Ruby Blog (Ruby嚕比)",
+        "url": "https://www.rubybabytw.com/koreabeauty/",
+        "type": "blogger_kol",
+        "language_support": ["zh-TW"],
+        "content_type": "personal_experience_travel_guide",
+        "topics_covered": ["korea_beauty_trip_preparation", "must_have_apps", "transportation", "accommodation", "clinic_reviews"],
+        "strengths": [
+          "authentic_personal_experience",
+          "practical_travel_tips",
+          "trusted_voice_for_taiwan_readers"
+        ],
+        "weaknesses": [
+          "single_person_perspective",
+          "no_booking_capability",
+          "update_frequency_varies"
+        ]
+      },
+      {
+        "name": "Korea Clinic Guide",
+        "url": "https://www.koreaclinicguide.com/",
+        "instagram": "https://www.instagram.com/koreaclinicguide/",
+        "type": "clinic_directory_portal",
+        "language_support": ["en", "ko", "zh"],
+        "features": ["clinic_search", "reviews", "before_after_photos", "procedure_guides", "booking"],
+        "strengths": [
+          "comprehensive_clinic_directory",
+          "before_after_photos",
+          "medical_tourism_guides",
+          "multi_language_including_chinese"
+        ],
+        "weaknesses": [
+          "unclear_zh-TW_vs_zh-CN",
+          "not_taiwan_market_specialized",
+          "english_primary"
+        ]
+      },
+      {
+        "name": "K-Beauty Expert Association Taiwan (K-BEAUTY 專家協會 臺灣分會)",
+        "url": "https://www.instagram.com/k_beauty.taiwan/",
+        "type": "industry_association",
+        "language_support": ["zh-TW", "ko"],
+        "platform": "Instagram",
+        "strengths": [
+          "professional_industry_body",
+          "taiwan_specific",
+          "korean_beauty_expertise"
+        ],
+        "weaknesses": [
+          "instagram_only_presence",
+          "limited_consumer_services",
+          "niche_audience"
+        ]
+      }
+    ],
+    "korean_clinics_targeting_taiwan": [
+      {
+        "name": "PPEUM Global (麗芬聚國際皮膚科)",
+        "url": "https://global.ppeum.com/?lan=global_ch",
+        "instagram": "https://www.instagram.com/ppeum_cn/",
+        "threads": "https://www.threads.com/@ppeum_cn",
+        "type": "korean_clinic_chain",
+        "locations": ["Gangnam", "Myeongdong", "Hongdae", "Busan", "Jeju", "Tokyo"],
+        "language_support": ["ko", "zh", "en", "ja"],
+        "contact_methods": {
+          "wechat": "PPEUM丽芬聚",
+          "line": "@ppeum_cn",
+          "whatsapp": "+82 10-9506-3483"
+        },
+        "taiwan_marketing": "active_traditional_chinese_social_media_threads_instagram",
+        "promotion_2026": "5% discount replacing cancelled tax refund for all visitors",
+        "strengths": [
+          "korea_no1_dermatology_brand",
+          "dedicated_chinese_social_media",
+          "LINE_support_for_taiwanese",
+          "multiple_locations",
+          "foreigner_friendly_atmosphere",
+          "active_threads_marketing_in_traditional_chinese"
+        ],
+        "weaknesses": [
+          "assembly_line_service_model",
+          "high_volume_may_reduce_personalization",
+          "chinese_content_may_mix_simplified_and_traditional"
+        ]
+      },
+      {
+        "name": "LIENJANG (麗妍常)",
+        "url_tw": "https://twlienjang.com/home/",
+        "url_cn": "https://cnlienjang.com/",
+        "url_en": "https://enlienjang.com/",
+        "type": "korean_clinic_chain",
+        "established": 2003,
+        "branches": "nearly 12 in Asia",
+        "locations_korea": ["Gangnam", "Hongdae", "Myeongdong", "Samshin"],
+        "language_support": ["ko", "zh-TW", "zh-CN", "en", "ja", "th", "vi"],
+        "contact_methods": {
+          "line": "available",
+          "whatsapp": "available"
+        },
+        "has_dedicated_taiwan_website": true,
+        "services": ["plastic_surgery", "dermatology", "anti_aging", "skin_restoration", "peels"],
+        "strengths": [
+          "dedicated_traditional_chinese_website_twlienjang.com",
+          "20_plus_years_operation",
+          "largest_network_in_asia",
+          "LINE_and_whatsapp_booking",
+          "comprehensive_interpretation_services"
+        ],
+        "weaknesses": [
+          "many_branches_quality_may_vary",
+          "broad_focus_not_dermatology_only"
+        ]
+      },
+      {
+        "name": "Link Plastic Surgery (林克整形醫院)",
+        "url": "https://www.linkpskorea.tw/",
+        "instagram": "https://www.instagram.com/linkpstw/",
+        "type": "korean_clinic_with_taiwan_office",
+        "instagram_followers": 7400,
+        "location": "Seoul Gangnam",
+        "language_support": ["zh-TW", "ko"],
+        "contact_methods": {
+          "line": "available",
+          "phone": "+82-2-577-8388",
+          "video_consultation": true
+        },
+        "has_dedicated_taiwan_website": true,
+        "services": ["eye_surgery", "rhinoplasty", "breast_augmentation", "liposuction", "botox", "fillers", "laser", "thread_lifting"],
+        "strengths": [
+          "dedicated_traditional_chinese_website",
+          "LINE_booking_for_taiwanese",
+          "video_consultation_available",
+          "active_instagram_in_traditional_chinese"
+        ],
+        "weaknesses": [
+          "plastic_surgery_focused_not_dermatology",
+          "single_location_in_seoul"
+        ]
+      },
+      {
+        "name": "VIEW Plastic Surgery (必嫵整形醫院)",
+        "url_instagram": "https://www.instagram.com/viewps_china/",
+        "type": "korean_clinic",
+        "instagram_followers": 25000,
+        "language_support": ["zh", "ko", "en"],
+        "strengths": [
+          "large_chinese_language_instagram_following",
+          "active_social_media_marketing"
+        ],
+        "weaknesses": [
+          "unclear_zh-TW_vs_zh-CN_targeting",
+          "plastic_surgery_focused"
+        ]
+      },
+      {
+        "name": "Lijin Skin Clinic (麗眞皮膚科)",
+        "url": "https://www.myeongdong.skin/",
+        "type": "korean_dermatology_clinic",
+        "location": "Myeongdong",
+        "language_support": ["ko", "en", "zh", "ja"],
+        "pricing": "fixed_price_for_foreigners_transparent",
+        "strengths": [
+          "dermatology_specialized",
+          "transparent_fixed_pricing_for_foreigners",
+          "myeongdong_convenient_location",
+          "chinese_staff_available"
+        ],
+        "weaknesses": [
+          "single_location",
+          "unclear_traditional_vs_simplified_chinese"
+        ]
+      },
+      {
+        "name": "BLS Clinic",
+        "url": "https://eng.blsclinic1.com/",
+        "type": "korean_dermatology_clinic",
+        "language_support": ["ko", "en", "zh", "ja", "vi", "th", "id"],
+        "strengths": [
+          "extensive_multilingual_support_7_languages",
+          "includes_chinese"
+        ],
+        "weaknesses": [
+          "unclear_zh-TW_vs_zh-CN",
+          "not_specifically_taiwan_focused"
+        ]
+      }
+    ],
+    "korean_clinics_with_taiwan_branches": [
+      {
+        "name": "Korea Beauty Dream (韓佳人診所)",
+        "url": "https://www.koreabeautydream.com/",
+        "type": "korean_clinic_in_taiwan",
+        "location": "Taipei, Zhongshan District, No. 122-1, Section 4, Zhongxiao East Road, 2F",
+        "phone": "+886-2-8772-8992",
+        "hours": "Mon-Fri 12:00-20:30, Sat 10:30-19:00",
+        "language_support": ["zh-TW", "ko"],
+        "doctors": "female Korean doctors led by Dr. Fendi Chen",
+        "services": ["radiofrequency", "ultrasound", "laser", "fillers", "thread_lifts", "botox", "weight_loss", "rhinoplasty", "eyelid_surgery", "breast_augmentation", "hair_restoration", "exosomes"],
+        "business_model": "transparent_pricing_no_forced_sales",
+        "strengths": [
+          "physical_presence_in_taipei",
+          "korean_doctors_in_taiwan",
+          "native_traditional_chinese",
+          "no_travel_to_korea_required",
+          "transparent_pricing_policy",
+          "comprehensive_services"
+        ],
+        "weaknesses": [
+          "single_taipei_location",
+          "may_not_have_latest_korean_equipment",
+          "limited_brand_recognition_vs_established_tw_chains"
+        ]
+      },
+      {
+        "name": "Seoul Clinic Taiwan (首爾醫美診所)",
+        "url": "https://www.seoulclinic.com.tw/",
+        "type": "korean_brand_clinic_in_taiwan",
+        "location": "Taipei, Xinyi Road Section 4, No. 382, 5F",
+        "phone": "0800-696-800",
+        "language_support": ["zh-TW"],
+        "certifications": ["ISO 9001", "teaching_hospital_level_surgical_rooms"],
+        "services": ["eyelid_surgery", "eye_bag_removal", "rhinoplasty", "facelift", "liposuction", "breast_augmentation", "botox", "fillers", "thread_lifts", "ultrasound", "radiofrequency"],
+        "marketing_position": "korean_advanced_plastic_surgery_technology_in_taiwan",
+        "strengths": [
+          "korean_brand_credibility_in_taiwan",
+          "physical_taipei_location",
+          "ISO_certified",
+          "teaching_hospital_level_facilities",
+          "overseas_consultation_available"
+        ],
+        "weaknesses": [
+          "single_location",
+          "premium_positioning",
+          "competes_with_established_tw_chains"
+        ]
+      }
+    ],
+    "local_competitors": [
+      {
+        "name": "Airlee Clinic (愛爾麗診所)",
+        "url": "https://airlee.com.tw/",
+        "type": "taiwan_aesthetic_chain",
+        "established": 1999,
+        "branches": 20,
+        "coverage": "nationwide_direct_operated",
+        "online_buzz_score": 4086,
+        "services": ["ultrasound_lifting", "picosecond_laser", "thermage", "coolsculpting", "laser_lipolysis", "body_sculpting"],
+        "strengths": [
+          "largest_chain_20_branches_nationwide",
+          "26_years_operation",
+          "strong_brand_recognition",
+          "direct_operated_quality_control",
+          "high_online_buzz"
+        ],
+        "weaknesses": [
+          "taiwan_only_no_korean_expertise_claim",
+          "generic_aesthetic_not_korean_specialized",
+          "potential_low_price_trap_concerns"
+        ]
+      },
+      {
+        "name": "Star Clinic Group (星和醫美/星醫美學集團)",
+        "url": "https://www.starclinic.com.tw/",
+        "type": "taiwan_aesthetic_chain",
+        "brands": 3,
+        "branches": "40+",
+        "coverage": "nationwide",
+        "services": ["botox", "fillers", "laser", "micro_procedures", "anti_aging"],
+        "strengths": [
+          "40_plus_locations_largest_network",
+          "3_beauty_brands",
+          "professional_aesthetic_expertise",
+          "strong_brand_portfolio"
+        ],
+        "weaknesses": [
+          "domestic_focused",
+          "no_korean_beauty_differentiation",
+          "may_lose_price_sensitive_customers_to_korea"
+        ]
+      },
+      {
+        "name": "Lamer Clinic (晶華美醫/晶心美醫)",
+        "url": "https://www.lamerclinic.com.tw/",
+        "type": "taiwan_aesthetic_clinic",
+        "location": "Taipei Zhongshan District",
+        "strengths": [
+          "established_taipei_brand",
+          "premium_positioning"
+        ],
+        "weaknesses": [
+          "limited_locations",
+          "domestic_only"
+        ]
+      },
+      {
+        "name": "Kim Beauty Clinic (金芝妍醫美診所)",
+        "url": "https://www.kimbeauty.com.tw/",
+        "type": "taiwan_clinic_with_korean_positioning",
+        "language_support": ["zh-TW"],
+        "content_marketing": "educational_content_about_korean_beauty_procedures",
+        "strengths": [
+          "korean_brand_name_positioning",
+          "educational_korean_beauty_content",
+          "local_accessibility"
+        ],
+        "weaknesses": [
+          "not_actually_korean_operated",
+          "limited_brand_recognition"
+        ]
+      },
+      {
+        "name": "NAISS Clinic",
+        "url": "https://naissclinic.com/en/overseas.html",
+        "type": "taiwan_aesthetic_clinic",
+        "international_services": true,
+        "language_support": ["zh-TW", "en", "ja"],
+        "strengths": [
+          "international_patient_services",
+          "multi_language_support",
+          "positions_as_alternative_to_korea_travel"
+        ],
+        "weaknesses": [
+          "competing_against_korean_brand_cachet",
+          "local_only"
+        ]
+      },
+      {
+        "name": "New Dawn Health",
+        "url": "https://www.newdawn.health/",
+        "type": "taiwan_medical_tourism_platform",
+        "services": ["health_screening", "beauty", "dental", "vision", "fertility"],
+        "beauty_page": "https://www.newdawn.health/services/beauty",
+        "language_support": ["en"],
+        "target": "international_visitors_to_taiwan",
+        "price_from": "$349 USD",
+        "strengths": [
+          "positions_taiwan_as_beauty_destination",
+          "comprehensive_medical_services",
+          "transparent_pricing"
+        ],
+        "weaknesses": [
+          "english_only",
+          "reverse_direction_bringing_foreigners_to_taiwan",
+          "not_taiwan_to_korea_service"
+        ],
+        "note": "indirect_competitor_positions_taiwan_beauty_as_alternative_to_korea"
+      }
+    ],
+    "social_media_channels": [
+      {
+        "platform": "Xiaohongshu (小紅書)",
+        "relevance": "high",
+        "description": "Chinese-language platform where Korean clinics actively promote to Chinese-speaking users including Taiwanese",
+        "key_clinics_present": ["PPEUM", "LIENJANG", "various_gangnam_clinics"],
+        "taiwan_user_base": "growing_significant_among_younger_taiwanese",
+        "strengths": [
+          "visual_before_after_content",
+          "authentic_user_reviews",
+          "algorithm_driven_discovery"
+        ],
+        "weaknesses": [
+          "simplified_chinese_dominated",
+          "content_verification_difficult",
+          "potential_paid_promotions_disguised_as_reviews"
+        ]
+      },
+      {
+        "platform": "LINE",
+        "relevance": "critical_for_taiwan_market",
+        "description": "Dominant messaging app in Taiwan used by Korean clinics for consultation and booking",
+        "clinics_with_line": ["PPEUM (@ppeum_cn)", "Link PS", "LIENJANG", "multiple_others"],
+        "usage_pattern": "consultation_booking_followup",
+        "strengths": [
+          "dominant_messaging_platform_in_taiwan",
+          "direct_1on1_consultation",
+          "familiar_to_all_taiwanese_users"
+        ],
+        "weaknesses": [
+          "no_discovery_mechanism",
+          "requires_knowing_clinic_line_id_first",
+          "no_review_or_comparison_features"
+        ]
+      },
+      {
+        "platform": "Instagram",
+        "relevance": "high",
+        "description": "Korean clinics with Traditional Chinese accounts targeting Taiwanese consumers",
+        "notable_accounts": [
+          {"handle": "@linkpstw", "followers": 7400, "clinic": "Link PS"},
+          {"handle": "@viewps_china", "followers": 25000, "clinic": "VIEW PS"},
+          {"handle": "@ppeum_cn", "clinic": "PPEUM Global"},
+          {"handle": "@ppeum_global_official", "clinic": "PPEUM Global"},
+          {"handle": "@k_beauty.taiwan", "type": "K-Beauty Expert Association Taiwan"}
+        ],
+        "strengths": [
+          "visual_content_ideal_for_beauty",
+          "before_after_photos",
+          "direct_dm_consultation"
+        ],
+        "weaknesses": [
+          "no_booking_system",
+          "algorithm_dependent_reach",
+          "hard_to_verify_authenticity"
+        ]
+      },
+      {
+        "platform": "Threads",
+        "relevance": "emerging",
+        "description": "Growing platform in Taiwan where Korean clinics post promotional content in Traditional Chinese",
+        "notable_accounts": [
+          {"handle": "@ppeum_cn", "clinic": "PPEUM Global", "content": "promotions_and_discounts_in_traditional_chinese"}
+        ],
+        "strengths": [
+          "growing_taiwan_user_base",
+          "text_based_good_for_promotions"
+        ],
+        "weaknesses": [
+          "new_platform_small_audience",
+          "limited_visual_capabilities_vs_instagram"
+        ]
+      }
+    ]
+  }
+}
