@@ -1,175 +1,175 @@
-# @ask.nandemo X (Twitter) Launch Strategy
+# @ask.nandemo X (Twitter) 런칭 전략
 
-**Account**: @ask.nandemo
-**Platform**: X (Twitter)
-**Language**: Japanese only
-**Target**: Japanese people interested in Korean dermatology / skin clinics
-**Launch Date**: Week of 2026-02-17 (Monday)
+**계정**: @ask.nandemo
+**플랫폼**: X (Twitter)
+**언어**: 일본어 전용
+**타겟**: 한국 피부과/피부 클리닉에 관심 있는 일본인
+**런칭일**: 2026년 2월 17일(월) 주간
 
 ---
 
-## 1. Profile Setup
+## 1. 프로필 설정
 
-### Display Name
+### 표시 이름
 
 ```
 なんでも聞いて｜韓国皮膚科データベース
 ```
 
-**Rationale**: The display name combines the brand identity ("Ask me anything") with a clear value proposition ("Korean dermatology database"). The vertical bar (｜) is a standard X Japan formatting convention. No emoji in the display name keeps it professional and searchable, while the account personality comes through in the bio and tweets.
+**근거**: 브랜드 아이덴티티("뭐든 물어봐")와 명확한 가치 제안("한국 피부과 데이터베이스")을 결합. 세로 바(｜)는 일본 X 표준 포맷. 이모지 없이 깔끔하고 검색 가능하게 유지하되, 개성은 바이오와 트윗에서 드러냄.
 
-### Bio (160 characters max)
+### 바이오 (160자 제한)
 
 ```
 韓国の皮膚科クリニック、全部調べてまとめてます。江南・弘大・明洞エリアの料金比較・施術データを公開予定。渡韓美容のリアルな情報はここで。質問はリプかDMで気軽にどうぞ
 ```
 
-Character count: 71 characters (Japanese)
+글자 수: 일본어 71자
 
-**Key elements packed into the bio:**
-- What we do: Researched and compiled Korean skin clinic data
-- Coverage area: Gangnam, Hongdae, Myeongdong (the 3 key areas)
-- Value: Price comparison and treatment data
-- Status: "Coming soon" signals active development
-- CTA: Invites questions via replies or DMs
+**바이오 핵심 요소:**
+- 하는 일: 한국 피부 클리닉 데이터 조사 및 정리
+- 커버 지역: 강남, 홍대, 명동 (핵심 3개 지역)
+- 가치: 가격 비교 및 시술 데이터
+- 상태: "공개 예정"으로 활발한 개발 시그널
+- CTA: 리플/DM으로 질문 유도
 
-### Alternative Bio (shorter, punchier)
+### 대안 바이오 (짧고 임팩트 있는 버전)
 
 ```
 韓国の皮膚科クリニック、ぜんぶ調べた人。江南・弘大・明洞の料金比較サイト作ってます。気になることなんでも聞いて
 ```
 
-### Location Field
+### 위치 필드
 
 ```
 ソウル / 東京
 ```
 
-### Website Field
+### 웹사이트 필드
 
-Leave blank until comparison site is ready, then add the URL.
+비교 사이트 완성 전까지 공란. 완성 후 URL 추가.
 
-### Pinned Tweet Concept
+### 고정 트윗 컨셉
 
-The pinned tweet should serve as a "landing page" for the account. It should answer three questions: Who are you? What value do you provide? What is coming?
+고정 트윗은 계정의 "랜딩 페이지" 역할. 세 가지 질문에 답해야 함: 누구인가? 어떤 가치를 제공하는가? 앞으로 뭐가 오는가?
 
-See Post 1 below for the pinned tweet content.
-
----
-
-## 2. Hashtag Strategy
-
-### Tier 1: Core Hashtags (Always use, pick 2-3 per post)
-
-These are high-traffic, established hashtags in the Japanese beauty community on X.
-
-| Hashtag | Usage Context |
-|---------|--------------|
-| `#渡韓美容` | The umbrella term for Korean beauty tourism. High volume, core community tag. |
-| `#韓国皮膚科` | Direct topic match. Used by people sharing clinic experiences. |
-| `#韓国美容` | Broader Korean beauty tag. Catches cosmetics + treatment audience. |
-| `#韓国肌管理` | "Korean skin management" - trending term for dermatology treatments. |
-
-**Rule**: Every post uses 2-3 from this tier. Never skip `#渡韓美容` as it is the community anchor tag.
-
-### Tier 2: Rotating Hashtags (Topic-specific, pick 1-2 per post)
-
-| Hashtag | When to Use |
-|---------|------------|
-| `#韓国美容医療` | Posts about medical-grade treatments |
-| `#韓国ボトックス` | Botox-specific content |
-| `#韓国フィラー` | Filler-specific content |
-| `#ピコレーザー` | Pico laser content |
-| `#ポテンツァ` | Potenza treatment content |
-| `#シュリンク` | Shrink/HIFU content |
-| `#韓国シミ取り` | Spot removal content |
-| `#ダーマペン` | Dermapen content |
-| `#リジュラン` | Rejuran content |
-| `#水光注射` | Water glow injection content |
-| `#韓国クリニック` | General clinic recommendation posts |
-| `#江南美容` | Gangnam area specific content |
-| `#明洞美容` | Myeongdong area specific content |
-| `#韓国美容旅行` | Travel planning content |
-
-### Tier 3: Engagement / Discovery Hashtags (pick 0-1 per post)
-
-These connect the account to the broader beauty community on X Japan.
-
-| Hashtag | Purpose |
-|---------|---------|
-| `#美容垢さんと繋がりたい` | Community building. Use in early growth phase to find followers. |
-| `#美容好きさんと繋がりたい` | Broader version of the above. |
-| `#美容垢` | Identity tag for beauty accounts. |
-| `#スキンケア好きな人と繋がりたい` | Skincare-specific community tag. |
-| `#美容医療` | General aesthetic medicine community. |
-| `#コスメ好きさんと繋がりたい` | Overlapping audience with K-beauty interest. |
-| `#肌管理` | Skin management enthusiasts. |
-
-**Rule**: Use Tier 3 tags sparingly (1-2 times per week max) to avoid looking spammy. These are for discovery, not branding.
-
-### Hashtag Placement Rule
-
-Place hashtags at the end of the tweet, separated by a line break. Never embed hashtags mid-sentence as it breaks reading flow in Japanese.
+아래 Post 1 내용 참고.
 
 ---
 
-## 3. Content Pillars
+## 2. 해시태그 전략
 
-Five recurring content types, each with a Japanese series name.
+### 1단계: 코어 해시태그 (항상 사용, 포스트당 2-3개 선택)
 
-### Pillar 1: データで見る韓国皮膚科 (Data-Driven Korean Dermatology)
+일본 뷰티 커뮤니티에서 트래픽 높은 확립된 해시태그들.
 
-- **Format**: Comparison data, price charts, statistics
-- **Frequency**: 2x per week
-- **Goal**: Establish authority through data nobody else has
-- **Example topics**: Botox price comparison across 50 clinics, average treatment costs by area, most popular procedures by age group
-- **Series tag**: Can use 【料金比較】or 【データ】as prefix
+| 해시태그 | 사용 맥락 |
+|---------|----------|
+| `#渡韓美容` | 한국 뷰티 투어리즘 통칭. 커뮤니티 핵심 태그 |
+| `#韓国皮膚科` | 주제 직접 매칭. 클리닉 경험 공유자들이 사용 |
+| `#韓国美容` | 더 넓은 한국 뷰티 태그. 화장품 + 시술 오디언스 포착 |
+| `#韓国肌管理` | "한국 피부 관리" - 피부과 시술 트렌딩 용어 |
 
-### Pillar 2: はじめての渡韓美容 (First-Timer's Guide to Korean Beauty Travel)
+**규칙**: 모든 포스트에 이 단계에서 2-3개 사용. `#渡韓美容`는 커뮤니티 앵커 태그이므로 절대 빠뜨리지 않기.
 
-- **Format**: Educational, step-by-step, FAQ-style
-- **Frequency**: 2x per week
-- **Goal**: Lower the barrier for beginners, become the "go-to" resource
-- **Example topics**: How to book a Korean clinic from Japan, what to expect at your first visit, downtime guide, language barrier solutions
-- **Series tag**: Can use 【初心者ガイド】as prefix
+### 2단계: 로테이션 해시태그 (주제별, 포스트당 1-2개 선택)
 
-### Pillar 3: 施術なるほどメモ (Treatment Know-How Notes)
+| 해시태그 | 사용 시점 |
+|---------|----------|
+| `#韓国美容医療` | 의료급 시술 포스트 |
+| `#韓国ボトックス` | 보톡스 관련 콘텐츠 |
+| `#韓国フィラー` | 필러 관련 콘텐츠 |
+| `#ピコレーザー` | 피코 레이저 콘텐츠 |
+| `#ポテンツァ` | 포텐자 시술 콘텐츠 |
+| `#シュリンク` | 슈링크/HIFU 콘텐츠 |
+| `#韓国シミ取り` | 기미 제거 콘텐츠 |
+| `#ダーマペン` | 더마펜 콘텐츠 |
+| `#リジュラン` | 리쥬란 콘텐츠 |
+| `#水光注射` | 물광 주사 콘텐츠 |
+| `#韓国クリニック` | 일반 클리닉 추천 포스트 |
+| `#江南美容` | 강남 지역 특정 콘텐츠 |
+| `#明洞美容` | 명동 지역 특정 콘텐츠 |
+| `#韓国美容旅行` | 여행 계획 콘텐츠 |
 
-- **Format**: Simple explanations of procedures, myth-busting, comparisons between similar treatments
-- **Frequency**: 1-2x per week
-- **Goal**: Educate and build trust through expertise
-- **Example topics**: Botox vs. fillers explained simply, what Potenza actually does, dermapen frequency guide
-- **Series tag**: Can use 【施術メモ】as prefix
+### 3단계: 인게이지먼트/디스커버리 해시태그 (포스트당 0-1개)
 
-### Pillar 4: みんなに聞いてみた (Ask the Community)
+일본 X의 더 넓은 뷰티 커뮤니티에 계정을 연결하는 태그들.
 
-- **Format**: Polls, questions, "which would you choose?" engagement posts
-- **Frequency**: 1-2x per week
-- **Goal**: Drive replies, build community, learn what the audience wants
-- **Example topics**: "Which area do you prefer: Gangnam or Myeongdong?", "What treatment are you most curious about?", "Biggest worry about going to a Korean clinic?"
-- **Series tag**: Can use 【アンケート】or 【質問】as prefix
+| 해시태그 | 목적 |
+|---------|------|
+| `#美容垢さんと繋がりたい` | 커뮤니티 빌딩. 초기 성장 단계에서 팔로워 찾기용 |
+| `#美容好きさんと繋がりたい` | 위의 넓은 버전 |
+| `#美容垢` | 뷰티 계정 아이덴티티 태그 |
+| `#スキンケア好きな人と繋がりたい` | 스킨케어 특화 커뮤니티 태그 |
+| `#美容医療` | 일반 미용의료 커뮤니티 |
+| `#コスメ好きさんと繋がりたい` | K-뷰티 관심층과 겹치는 오디언스 |
+| `#肌管理` | 피부 관리 열정 유저 |
 
-### Pillar 5: 渡韓美容のリアル (Real Talk: Korean Beauty Travel)
+**규칙**: 3단계 태그는 주 1-2회만 사용. 스패밍처럼 보이지 않도록. 브랜딩이 아닌 발견용.
 
-- **Format**: Behind-the-scenes, honest takes, risk awareness, things nobody talks about
-- **Frequency**: 1x per week
-- **Goal**: Build trust through transparency and honesty
-- **Example topics**: Hidden costs people forget, aftercare reality, what to do if something goes wrong, stealth marketing red flags
-- **Series tag**: Can use 【リアル話】as prefix
+### 해시태그 배치 규칙
+
+해시태그는 트윗 끝에 줄바꿈으로 분리해서 배치. 문장 중간에 해시태그를 넣으면 일본어 가독성이 떨어지므로 절대 금지.
 
 ---
 
-## 4. First 5 Posts (Ready to Copy-Paste)
+## 3. 콘텐츠 필라
+
+5가지 반복 콘텐츠 유형, 각각 일본어 시리즈명 부여.
+
+### 필라 1: データで見る韓国皮膚科 (데이터로 보는 한국 피부과)
+
+- **포맷**: 비교 데이터, 가격 차트, 통계
+- **빈도**: 주 2회
+- **목표**: 아무도 갖고 있지 않은 데이터로 권위 확립
+- **주제 예시**: 50개 클리닉 보톡스 가격 비교, 지역별 평균 시술비, 연령대별 인기 시술
+- **시리즈 태그**: 【料金比較】또는 【データ】접두사 사용 가능
+
+### 필라 2: はじめての渡韓美容 (처음 가는 한국 뷰티 여행)
+
+- **포맷**: 교육적, 단계별, FAQ 스타일
+- **빈도**: 주 2회
+- **목표**: 초보자 진입장벽 낮추기, "찾으면 여기" 리소스 되기
+- **주제 예시**: 일본에서 한국 클리닉 예약하는 법, 첫 방문 시 기대할 점, 다운타임 가이드, 언어 장벽 해결법
+- **시리즈 태그**: 【初心者ガイド】접두사 사용 가능
+
+### 필라 3: 施術なるほどメモ (시술 이해 메모)
+
+- **포맷**: 시술 쉬운 설명, 미신 깨기, 유사 시술 비교
+- **빈도**: 주 1-2회
+- **목표**: 교육하고 전문성 신뢰 구축
+- **주제 예시**: 보톡스 vs 필러 쉽게 설명, 포텐자가 실제로 하는 일, 더마펜 주기 가이드
+- **시리즈 태그**: 【施術メモ】접두사 사용 가능
+
+### 필라 4: みんなに聞いてみた (모두에게 물어봤다)
+
+- **포맷**: 투표, 질문, "어떤 걸 선택?" 인게이지먼트 포스트
+- **빈도**: 주 1-2회
+- **목표**: 리플 유도, 커뮤니티 빌딩, 오디언스 니즈 파악
+- **주제 예시**: "강남 vs 명동 어디가 좋아?", "가장 궁금한 시술은?", "한국 클리닉 가는 게 가장 걱정되는 점?"
+- **시리즈 태그**: 【アンケート】또는 【質問】접두사 사용 가능
+
+### 필라 5: 渡韓美容のリアル (한국 뷰티 여행의 리얼)
+
+- **포맷**: 비하인드, 솔직한 의견, 리스크 인식, 아무도 안 하는 이야기
+- **빈도**: 주 1회
+- **목표**: 투명성과 정직함으로 신뢰 구축
+- **주제 예시**: 사람들이 잊는 숨은 비용, 애프터케어 현실, 문제 생겼을 때 대처법, 스텔스 마케팅 적신호
+- **시리즈 태그**: 【リアル話】접두사 사용 가능
 
 ---
 
-### Post 1: Self-Introduction (Pinned Tweet)
+## 4. 첫 5개 포스트 (복붙 가능)
 
-**Purpose**: Introduce the account, explain what we are building, invite follows.
-**Pillar**: N/A (Launch post)
-**Best posting time**: Monday 20:00 JST (evening prime time, high engagement window)
+---
 
-**Tweet text**:
+### 포스트 1: 자기소개 (고정 트윗)
+
+**목적**: 계정 소개, 만들고 있는 것 설명, 팔로우 유도
+**필라**: N/A (런칭 포스트)
+**게시 시간**: 월요일 20:00 JST (저녁 프라임타임, 높은 인게이지먼트 시간대)
+
+**원문 (풀버전)**:
 
 ```
 はじめまして。韓国の皮膚科クリニックをひたすら調べてデータベース化してる人です。
@@ -183,18 +183,29 @@ Five recurring content types, each with a Japanese series name.
 #渡韓美容 #韓国皮膚科 #韓国美容
 ```
 
-**Character count**: ~200 characters (within limit)
-**Action**: Pin this tweet immediately after posting.
+**무료 계정용 (122/280자)**:
+
+```
+韓国美容クリニックの価格DB作ってます！
+江南・弘大・明洞の施術料金を比較中💪
+
+リプかDMで気軽に聞いてね
+
+#韓国美容 #韓国整形
+```
+
+글자 수: ~200자 (풀버전) / 122자 (무료 계정용)
+**액션**: 포스팅 후 즉시 고정 트윗 설정.
 
 ---
 
-### Post 2: Data Post (Attention Grabber)
+### 포스트 2: 데이터 포스트 (관심 끌기)
 
-**Purpose**: Shock with surprising data. Make people think "I need to follow this account."
-**Pillar**: データで見る韓国皮膚科
-**Best posting time**: Wednesday 12:00 JST (lunch break scrolling peak)
+**목적**: 놀라운 데이터로 충격 주기. "이 계정 팔로우해야겠다" 생각하게 만들기.
+**필라**: データで見る韓国皮膚科
+**게시 시간**: 수요일 12:00 JST (점심 스크롤 피크)
 
-**Tweet text**:
+**원문 (풀버전)**:
 
 ```
 韓国でボトックス打つとき、クリニックによって料金がどれくらい違うか知ってる？
@@ -211,18 +222,29 @@ Five recurring content types, each with a Japanese series name.
 #渡韓美容 #韓国ボトックス #韓国皮膚科
 ```
 
-**Character count**: ~190 characters
-**Note**: The specific numbers should be verified against actual crawl data before posting. Adjust the numbers to match real data from the clinic database.
+**무료 계정용 (137/280자)**:
+
+```
+江南のボトックス、クリニックで最大8倍の価格差あるって知ってた？
+
+「韓国＝安い」は思い込みかも。
+比較データ見てから決めよう
+
+#韓国ボトックス
+```
+
+글자 수: ~190자 (풀버전) / 137자 (무료 계정용)
+**참고**: 구체적 숫자는 실제 크롤링 데이터와 대조 후 게시. 실제 데이터에 맞춰 조정.
 
 ---
 
-### Post 3: Educational Post (Procedure Explainer)
+### 포스트 3: 교육 포스트 (시술 해설)
 
-**Purpose**: Explain a popular procedure simply. Demonstrate expertise casually.
-**Pillar**: 施術なるほどメモ
-**Best posting time**: Thursday 20:00 JST (Thursday evening = peak engagement +150%)
+**목적**: 인기 시술을 쉽게 설명. 전문성을 캐주얼하게 보여주기.
+**필라**: 施術なるほどメモ
+**게시 시간**: 목요일 20:00 JST (목요일 저녁 = 인게이지먼트 피크 +150%)
 
-**Tweet text**:
+**원문 (풀버전)**:
 
 ```
 【施術メモ】ボトックスとフィラー、よく混同されるけど全然違うもの。
@@ -237,17 +259,30 @@ Five recurring content types, each with a Japanese series name.
 #渡韓美容 #韓国ボトックス #韓国フィラー #韓国美容医療
 ```
 
-**Character count**: ~220 characters
+**무료 계정용 (152/280자)**:
+
+```
+ボトックスとフィラーの違い知ってる？
+
+ボトックス→筋肉を抑える（エラ・シワ）
+フィラー→ボリューム追加（涙袋・唇）
+
+目的が全然違うから要注意！
+
+#韓国美容
+```
+
+글자 수: ~220자 (풀버전) / 152자 (무료 계정용)
 
 ---
 
-### Post 4: Engagement Post (Drive Replies)
+### 포스트 4: 인게이지먼트 포스트 (리플 유도)
 
-**Purpose**: Ask a question to drive replies and learn about the audience.
-**Pillar**: みんなに聞いてみた
-**Best posting time**: Friday 21:00 JST (Friday night relaxation mode, high engagement)
+**목적**: 질문으로 리플 유도, 오디언스 파악.
+**필라**: みんなに聞いてみた
+**게시 시간**: 금요일 21:00 JST (금요일 밤 릴렉스 모드, 높은 인게이지먼트)
 
-**Tweet text**:
+**원문 (풀버전)**:
 
 ```
 渡韓美容に興味あるけどまだ行ったことない人に聞きたいんだけど、
@@ -264,18 +299,33 @@ Five recurring content types, each with a Japanese series name.
 #渡韓美容 #韓国皮膚科 #韓国美容
 ```
 
-**Character count**: ~190 characters
-**Note**: If X poll feature is used, the numbered list can be converted into a poll. Both formats work.
+**무료 계정용 (156/280자)**:
+
+```
+韓国で美容施術するとき一番不安なのは？
+
+1. 言葉の壁
+2. 料金の不透明さ
+3. クリニック選び
+4. アフターケア
+
+リプで教えて！参考にしてデータまとめるよ
+
+#韓国美容
+```
+
+글자 수: ~190자 (풀버전) / 156자 (무료 계정용)
+**참고**: X 투표 기능 사용 시 번호 리스트를 투표로 전환 가능. 둘 다 작동.
 
 ---
 
-### Post 5: Value Post (Practical Tip)
+### 포스트 5: 가치 포스트 (실용 팁)
 
-**Purpose**: Give immediate, actionable value. Something people can screenshot and save.
-**Pillar**: はじめての渡韓美容
-**Best posting time**: Sunday 13:00 JST (Sunday afternoon = stable +100-130% engagement)
+**목적**: 즉시 활용 가능한 가치 제공. 스크린샷 저장할 만한 콘텐츠.
+**필라**: はじめての渡韓美容
+**게시 시간**: 일요일 13:00 JST (일요일 오후 = 안정적 +100-130% 인게이지먼트)
 
-**Tweet text**:
+**원문 (풀버전)**:
 
 ```
 韓国の皮膚科に行くなら知っておいてほしいこと。
@@ -289,194 +339,206 @@ Five recurring content types, each with a Japanese series name.
 #渡韓美容 #韓国皮膚科 #韓国美容医療
 ```
 
-**Character count**: ~230 characters
+**무료 계정용 (173/280자)**:
+
+```
+韓国のクリニック選びで大事なこと
+
+「外国人患者誘致医療機関」に登録されてるか確認しよう。トラブル時に対応義務があるから安心度が全然違う
+
+調べ方わからなければDMしてね
+
+#韓国美容
+```
+
+글자 수: ~230자 (풀버전) / 173자 (무료 계정용)
 
 ---
 
-## 5. First Week Posting Calendar
+## 5. 첫 주 포스팅 캘린더
 
-| Day | Time (JST) | Post | Pillar | Hashtags |
-|-----|-----------|------|--------|----------|
-| Mon 2/17 | 20:00 | Post 1: Self-introduction (PIN) | Launch | #渡韓美容 #韓国皮膚科 #韓国美容 |
-| Tue 2/18 | - | No post. Engage with others. Like/reply to 渡韓美容 posts. | - | - |
-| Wed 2/19 | 12:00 | Post 2: Botox price data | データ | #渡韓美容 #韓国ボトックス #韓国皮膚科 |
-| Thu 2/20 | 20:00 | Post 3: Botox vs Filler explainer | 施術メモ | #渡韓美容 #韓国ボトックス #韓国フィラー #韓国美容医療 |
-| Fri 2/21 | 21:00 | Post 4: Engagement question | アンケート | #渡韓美容 #韓国皮膚科 #韓国美容 |
-| Sat 2/22 | - | No post. Engage with replies from Post 4. Reply to every response. | - | - |
-| Sun 2/23 | 13:00 | Post 5: Practical tip (registration check) | 初心者ガイド | #渡韓美容 #韓国皮膚科 #韓国美容医療 |
+| 요일 | 시간 (JST) | 포스트 | 필라 | 해시태그 |
+|------|-----------|--------|------|---------|
+| 월 2/17 | 20:00 | 포스트 1: 자기소개 (고정) | 런칭 | #渡韓美容 #韓国皮膚科 #韓国美容 |
+| 화 2/18 | - | 포스트 없음. 다른 계정에 인게이지먼트. 渡韓美容 포스트에 좋아요/리플. | - | - |
+| 수 2/19 | 12:00 | 포스트 2: 보톡스 가격 데이터 | データ | #渡韓美容 #韓国ボトックス #韓国皮膚科 |
+| 목 2/20 | 20:00 | 포스트 3: 보톡스 vs 필러 해설 | 施術メモ | #渡韓美容 #韓国ボトックス #韓国フィラー #韓国美容医療 |
+| 금 2/21 | 21:00 | 포스트 4: 인게이지먼트 질문 | アンケート | #渡韓美容 #韓国皮膚科 #韓国美容 |
+| 토 2/22 | - | 포스트 없음. 포스트 4의 리플에 대응. 모든 응답에 리플. | - | - |
+| 일 2/23 | 13:00 | 포스트 5: 실용 팁 (등록 확인) | 初心者ガイド | #渡韓美容 #韓国皮膚科 #韓国美容医療 |
 
-**Posting cadence**: 5 posts in Week 1 (every other day roughly), ramping up to daily 1-2 posts from Week 2.
-
----
-
-## 6. Growth Tactics for First Month
-
-### 6.1 Follow and Engage Strategy
-
-**Priority accounts to follow and interact with** (based on influencer research):
-
-| Account Type | Who | Action |
-|-------------|-----|--------|
-| High-relevance influencer | Nana (月1渡韓, 600K followers) | Follow, like posts, reply thoughtfully to her clinic content |
-| High-relevance influencer | Asuka (@asuka_imo, Seoul-based) | Follow, engage. She reports real side effects - align with our transparency angle |
-| K-beauty YouTuber | みそ (@misochan_garigari) | Follow her X account, engage with K-beauty posts |
-| Doctor influencer | 友利新 (Tomori Arata, 1.65M) | Follow, engage with dermatology content |
-| Beauty community | Search #渡韓美容 daily | Like and reply to 10-15 posts per day |
-| Beauty community | Search #韓国肌管理 daily | Like and reply to 5-10 posts per day |
-| Service accounts | 강남언니 Japan, minfor, aroom | Follow, monitor their content |
-
-**Engagement rules**:
-- Reply to others FIRST, before expecting replies on your own posts
-- Never reply with just "nice!" -- add value, share a data point, answer a question
-- When someone posts about a Korean clinic experience, reply with a relevant comparison or additional info
-- Spend 30 minutes daily on engagement in the first month (this matters more than posting)
-
-### 6.2 Content Engagement Tactics
-
-**Quote Retweet Strategy**:
-- When influencers post about Korean clinic visits, quote retweet with added data or context
-- Example: If someone posts their Botox price, QRT with "For reference, the average in Gangnam is around X yen -- looks like you got a good deal"
-- This positions the account as the data authority
-
-**Thread Strategy (from Week 2)**:
-- Once per week, post a detailed thread (5-10 tweets)
-- Thread topics: "Complete Gangnam Botox price map", "Top 5 things I learned from analyzing 100 Korean clinics"
-- Threads get saved/bookmarked, which signals quality to the algorithm
-
-**Reply-to-self Strategy**:
-- After posting, reply to your own tweet with additional context or a follow-up question
-- This creates conversation depth that the algorithm rewards
-
-### 6.3 Weekly Growth Framework
-
-**Week 1 (Launch)**:
-- Post 5 tweets (as scheduled above)
-- Follow 50 relevant accounts
-- Engage (like/reply) 15 posts per day
-- Goal: 50-100 followers
-
-**Week 2 (Consistency)**:
-- Post daily (1 post per day)
-- First thread post (Botox price comparison across areas)
-- Engage 15 posts per day
-- Start using #美容垢さんと繋がりたい once
-- Goal: 100-200 followers
-
-**Week 3 (Value Stacking)**:
-- Post 1-2 per day
-- Second thread (beginner's complete guide)
-- Create a shareable infographic-style tweet (text-based comparison chart)
-- Goal: 200-400 followers
-
-**Week 4 (Community Building)**:
-- Post 1-2 per day
-- Reply to every DM and question
-- Start teasing the comparison site with screenshots
-- Run first poll
-- Goal: 400-700 followers
-
-### 6.4 Content Calendar Framework (Month 1)
-
-| Week | Mon | Tue | Wed | Thu | Fri | Sat | Sun |
-|------|-----|-----|-----|-----|-----|-----|-----|
-| 1 | Intro (pin) | Engage only | Data post | Explainer | Engagement Q | Engage only | Value tip |
-| 2 | Data post | Engage only | Thread | Explainer | Engagement Q | Engage only | Value tip |
-| 3 | Data post | Real talk | Thread | Explainer | Engagement Q | Value tip | Engage only |
-| 4 | Data post | Real talk | Thread | Explainer | Poll | Value tip | Site teaser |
-
-**Pillar distribution per week**:
-- Data: 1-2 posts
-- Beginner guide: 1 post
-- Treatment explainer: 1-2 posts
-- Engagement/community: 1-2 posts
-- Real talk: 1 post (from week 3)
-
-### 6.5 Do Not Do List
-
-- Do NOT follow/unfollow spam. It destroys trust.
-- Do NOT use automated engagement tools. The beauty community on X Japan is tight-knit and notices bots.
-- Do NOT post in any language other than Japanese. Ever.
-- Do NOT shill or promote specific clinics. The value is in unbiased data.
-- Do NOT use formal business Japanese (ございます, 弊社). This account is a friend, not a corporation.
-- Do NOT post more than 3 hashtags per tweet. Japanese X users find excessive hashtags spammy.
-- Do NOT engage with obvious stealth marketing accounts (Korean-operated fake Japanese accounts). The 2026 X transparency feature exposed many of these, and the community is sensitive about it.
+**포스팅 빈도**: 1주차 5개 (대략 격일), 2주차부터 매일 1-2개로 증가.
 
 ---
 
-## 7. Success Metrics
+## 6. 첫 달 성장 전술
 
-### Month 1 Targets
+### 6.1 팔로우 및 인게이지먼트 전략
 
-| Metric | Target | Why |
-|--------|--------|-----|
-| Followers | 500+ | Baseline for community building |
-| Avg. impressions per post | 1,000+ | Indicates content is reaching beyond followers |
-| Replies per engagement post | 5+ | Shows audience is active, not passive |
-| Profile visits per week | 200+ | Bio is converting visitors |
-| DMs received | 10+ | People trust us enough to ask questions |
+**우선 팔로우 및 소통할 계정** (인플루언서 리서치 기반):
 
-### Month 3 Targets
+| 계정 유형 | 대상 | 액션 |
+|----------|------|------|
+| 고관련 인플루언서 | Nana (월1 방한, 60만 팔로워) | 팔로우, 좋아요, 클리닉 콘텐츠에 성의 있는 리플 |
+| 고관련 인플루언서 | Asuka (@asuka_imo, 서울 거주) | 팔로우, 소통. 실제 부작용 리포팅 = 우리 투명성 방향과 일치 |
+| K-뷰티 유튜버 | みそ (@misochan_garigari) | X 계정 팔로우, K-뷰티 포스트에 소통 |
+| 의사 인플루언서 | 友利新 (토모리 아라타, 165만) | 팔로우, 피부과 콘텐츠에 소통 |
+| 뷰티 커뮤니티 | #渡韓美容 매일 검색 | 매일 10-15개 포스트에 좋아요 및 리플 |
+| 뷰티 커뮤니티 | #韓国肌管理 매일 검색 | 매일 5-10개 포스트에 좋아요 및 리플 |
+| 서비스 계정 | 강남언니 Japan, minfor, aroom | 팔로우, 콘텐츠 모니터링 |
 
-| Metric | Target |
-|--------|--------|
-| Followers | 2,000-3,000 |
-| Avg. impressions per post | 5,000+ |
-| Bookmarks per data post | 20+ |
-| Comparison site waitlist signups | 200+ |
+**인게이지먼트 규칙**:
+- 내 포스트에 리플 기대하기 전에 먼저 다른 사람에게 리플하기
+- "좋아요!"만 달지 않기 -- 가치를 더하기, 데이터 포인트 공유, 질문에 답변
+- 누군가 한국 클리닉 경험을 포스팅하면 관련 비교 데이터나 추가 정보로 리플
+- 첫 달에 매일 30분 인게이지먼트에 투자 (포스팅보다 이게 더 중요)
+
+### 6.2 콘텐츠 인게이지먼트 전술
+
+**인용 리트윗 전략**:
+- 인플루언서가 한국 클리닉 방문 포스팅 시, 데이터나 맥락을 추가해서 인용 리트윗
+- 예시: 누군가 보톡스 가격을 포스팅하면, "참고로 강남 평균은 약 X엔 -- 좋은 가격에 받으셨네요" 로 인용 RT
+- 데이터 권위로 포지셔닝
+
+**스레드 전략 (2주차부터)**:
+- 주 1회 상세 스레드 (5-10개 트윗) 포스팅
+- 스레드 주제: "강남 보톡스 가격 완전 정리", "한국 클리닉 100개 분석해서 알게 된 것 TOP 5"
+- 스레드는 저장/북마크되어 알고리즘에 품질 시그널 전달
+
+**셀프 리플 전략**:
+- 포스팅 후 자신의 트윗에 추가 맥락이나 후속 질문으로 리플
+- 대화 깊이를 만들어 알고리즘이 보상
+
+### 6.3 주별 성장 프레임워크
+
+**1주차 (런칭)**:
+- 5개 트윗 포스팅 (위 스케줄대로)
+- 관련 계정 50개 팔로우
+- 매일 15개 포스트에 소통 (좋아요/리플)
+- 목표: 50-100 팔로워
+
+**2주차 (일관성)**:
+- 매일 포스팅 (하루 1개)
+- 첫 스레드 포스트 (지역별 보톡스 가격 비교)
+- 매일 15개 포스트에 소통
+- #美容垢さんと繋がりたい 1회 사용 시작
+- 목표: 100-200 팔로워
+
+**3주차 (가치 쌓기)**:
+- 하루 1-2개 포스팅
+- 두 번째 스레드 (초보자 완전 가이드)
+- 공유 가능한 인포그래픽 스타일 트윗 (텍스트 기반 비교 차트) 작성
+- 목표: 200-400 팔로워
+
+**4주차 (커뮤니티 빌딩)**:
+- 하루 1-2개 포스팅
+- 모든 DM과 질문에 답변
+- 비교 사이트 스크린샷으로 티징 시작
+- 첫 투표 실행
+- 목표: 400-700 팔로워
+
+### 6.4 콘텐츠 캘린더 프레임워크 (1달)
+
+| 주차 | 월 | 화 | 수 | 목 | 금 | 토 | 일 |
+|------|----|----|----|----|----|----|-----|
+| 1 | 자기소개 (고정) | 소통만 | 데이터 포스트 | 시술 해설 | 인게이지먼트 Q | 소통만 | 실용 팁 |
+| 2 | 데이터 포스트 | 소통만 | 스레드 | 시술 해설 | 인게이지먼트 Q | 소통만 | 실용 팁 |
+| 3 | 데이터 포스트 | 리얼 토크 | 스레드 | 시술 해설 | 인게이지먼트 Q | 실용 팁 | 소통만 |
+| 4 | 데이터 포스트 | 리얼 토크 | 스레드 | 시술 해설 | 투표 | 실용 팁 | 사이트 티저 |
+
+**주별 필라 배분**:
+- 데이터: 1-2개
+- 초보자 가이드: 1개
+- 시술 해설: 1-2개
+- 인게이지먼트/커뮤니티: 1-2개
+- 리얼 토크: 1개 (3주차부터)
+
+### 6.5 하지 말아야 할 것 목록
+
+- 팔로우/언팔 스팸 금지. 신뢰를 파괴함.
+- 자동 인게이지먼트 도구 사용 금지. 일본 X 뷰티 커뮤니티는 밀접하게 연결되어 있어 봇을 바로 알아챔.
+- 일본어 이외 언어로 포스팅 금지. 절대.
+- 특정 클리닉 홍보/추천 금지. 가치는 편향 없는 데이터에 있음.
+- 격식체 비즈니스 일본어 사용 금지 (ございます, 弊社). 이 계정은 친구이지 기업이 아님.
+- 트윗당 해시태그 3개 초과 금지. 일본 X 유저들은 과도한 해시태그를 스팸으로 인식.
+- 뻔한 스텔스 마케팅 계정 (한국에서 운영하는 가짜 일본 계정)과 소통 금지. 2026 X 투명성 기능이 이런 계정을 많이 노출시켜서 커뮤니티가 민감함.
 
 ---
 
-## 8. Voice and Tone Guide
+## 7. 성과 지표
 
-### Do Sound Like
+### 1달 목표
 
-- A knowledgeable friend who happens to have all the data
-- Someone who lives in Korea and genuinely wants to help
-- Casual but accurate. Warm but not fake.
-- "I looked into this and here is what I found"
+| 지표 | 목표 | 이유 |
+|------|------|------|
+| 팔로워 | 500+ | 커뮤니티 빌딩 기준선 |
+| 포스트당 평균 노출 | 1,000+ | 콘텐츠가 팔로워 너머까지 도달 |
+| 인게이지먼트 포스트당 리플 | 5+ | 오디언스가 능동적임을 보여줌 |
+| 주간 프로필 방문 | 200+ | 바이오가 방문자를 전환 |
+| 받은 DM | 10+ | 질문할 만큼 신뢰함 |
 
-### Do Not Sound Like
+### 3달 목표
 
-- A company press release
-- A clinic advertisement
-- An overly enthusiastic influencer
-- Overly formal customer service
+| 지표 | 목표 |
+|------|------|
+| 팔로워 | 2,000-3,000 |
+| 포스트당 평균 노출 | 5,000+ |
+| 데이터 포스트당 북마크 | 20+ |
+| 비교 사이트 대기자 명단 가입 | 200+ |
 
-### Language Style Reference
+---
 
-| Use | Avoid |
-|-----|-------|
+## 8. 보이스 & 톤 가이드
+
+### 이렇게 들려야 함
+
+- 모든 데이터를 갖고 있는 지식 많은 친구
+- 한국에 살면서 진심으로 돕고 싶어하는 사람
+- 캐주얼하지만 정확. 따뜻하지만 가짜가 아닌.
+- "이거 조사해봤는데 결과가 이렇더라"
+
+### 이렇게 들리면 안 됨
+
+- 기업 보도자료
+- 클리닉 광고
+- 과하게 흥분한 인플루언서
+- 과도하게 격식 있는 고객 서비스
+
+### 언어 스타일 참고
+
+| 사용 | 피하기 |
+|------|--------|
 | 調べてみたんだけど | 調査いたしましたところ |
 | 知ってる？ | ご存知でしょうか？ |
 | まとめます | まとめさせていただきます |
 | 気軽に聞いて | お気軽にお問い合わせください |
 | めっちゃ大事 | 非常に重要です |
-| ~だよね | ~ですよね（sometimes OK for slight politeness） |
+| ~だよね | ~ですよね（가벼운 정중함으로 때때로 OK） |
 | ぶっちゃけ | 率直に申し上げますと |
 
-The tone is "knowledgeable casual" -- think of a beauty-savvy friend texting you with data they found. Use です/ます as a base but freely mix in casual expressions. The key is: never sound like a corporation.
+톤은 "지식 있는 캐주얼" -- 데이터를 찾아서 문자로 보내주는 뷰티에 밝은 친구를 생각하기. です/ます를 베이스로 쓰되 캐주얼 표현을 자유롭게 섞기. 핵심: 절대 기업처럼 들리지 않기.
 
 ---
 
-## Appendix: Future Content Ideas (Week 2+)
+## 부록: 향후 콘텐츠 아이디어 (2주차+)
 
-### Thread Ideas
+### 스레드 아이디어
 
-1. 「韓国の皮膚科を50院調べてわかったこと」 (What I learned from researching 50 Korean clinics)
-2. 「江南 vs 明洞 vs 弘大：エリア別の特徴まとめ」 (Area comparison breakdown)
-3. 「韓国でボトックス打つ前に知っておくべき5つのこと」 (5 things to know before getting Botox in Korea)
-4. 「渡韓美容の隠れコスト全部出します」 (All the hidden costs of Korean beauty travel)
-5. 「日本語対応クリニック、本当に日本語通じるのか問題」 (Do "Japanese-supported" clinics really speak Japanese?)
+1. 「韓国の皮膚科を50院調べてわかったこと」 (한국 클리닉 50개 조사해서 알게 된 것)
+2. 「江南 vs 明洞 vs 弘大：エリア別の特徴まとめ」 (지역별 특징 비교 정리)
+3. 「韓国でボトックス打つ前に知っておくべき5つのこと」 (한국에서 보톡스 맞기 전 알아야 할 5가지)
+4. 「渡韓美容の隠れコスト全部出します」 (한국 뷰티 여행 숨은 비용 전부 공개)
+5. 「日本語対応クリニック、本当に日本語通じるのか問題」 ("일본어 대응" 클리닉, 진짜 일본어 통하나 문제)
 
-### Recurring Series Ideas
+### 반복 시리즈 아이디어
 
-- 「今週の韓国美容ニュース」 (Weekly Korean beauty news roundup)
-- 「施術クイズ」 (Treatment quiz: guess the price / guess the procedure)
-- 「フォロワーさんの質問に答えます」 (Answering follower questions)
-- 「クリニック調査ノート」 (Clinic research notes: behind-the-scenes of our data collection)
+- 「今週の韓国美容ニュース」 (이번 주 한국 뷰티 뉴스 라운드업)
+- 「施術クイズ」 (시술 퀴즈: 가격 맞추기 / 시술 맞추기)
+- 「フォロワーさんの質問に答えます」 (팔로워 질문에 답합니다)
+- 「クリニック調査ノート」 (클리닉 조사 노트: 데이터 수집 비하인드)
 
 ---
 
-*Strategy created: 2026-02-13*
-*First post target: 2026-02-17 (Monday) 20:00 JST*
-*Review and adjust after Week 1 based on engagement data*
+*전략 작성일: 2026-02-13*
+*첫 포스트 목표: 2026-02-17 (월) 20:00 JST*
+*1주차 후 인게이지먼트 데이터 기반으로 리뷰 및 조정*

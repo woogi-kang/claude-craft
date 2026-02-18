@@ -1,260 +1,260 @@
-# @ask.nandemo DM Outreach Strategy for User Research
+# @ask.nandemo DM 아웃리치 전략 (유저 리서치용)
 
-**Account**: @ask.nandemo
-**Platform**: X (Twitter)
-**Language**: Japanese
-**Purpose**: User research via DM outreach to people who have experienced Korean dermatology
-**Created**: 2026-02-13
-
----
-
-## 1. SPAM PREVENTION STRATEGY
-
-### 1.1 The Reality: 20+ DMs/Day Is High Risk
-
-X actively monitors for mass unsolicited DMs. Sending 20 identical or near-identical messages per day to strangers will get the account flagged, DM-locked, or permanently suspended. This section is the most critical part of the entire strategy.
-
-**X's enforcement mechanisms:**
-- Pattern detection on identical/similar message text
-- Rate-based triggers on rapid-fire DM sending
-- Report-based triggers (even 2-3 spam reports from recipients can flag the account)
-- Link detection in mass DMs (triggers faster than text-only messages)
-- New account penalty: fresh accounts get scrutinized more heavily
-
-### 1.2 Account Warm-Up Schedule (MANDATORY)
-
-Do NOT send a single outreach DM until the account has been active for at least 2 weeks with organic engagement.
-
-**Week 1-2 (Feb 17 - Mar 2): Zero DMs. Engagement only.**
-- Post content per the launch strategy (5 posts week 1, daily week 2)
-- Like 15-20 posts daily in the #toukan_biyou community
-- Reply to 5-10 posts daily with valuable comments
-- Follow 10-15 relevant accounts daily
-- Build a visible, legitimate presence
-
-**Week 3 (Mar 3-9): Soft start. 3-5 DMs per day MAX.**
-- Only DM people you have ALREADY engaged with (liked/replied to their posts)
-- Space DMs at least 30-60 minutes apart
-- Use different templates each time
-- Zero links in messages
-- Monitor for any DM restriction warnings
-
-**Week 4 (Mar 10-16): Gradual increase. 5-10 DMs per day.**
-- Continue the pre-engagement pattern (like/reply BEFORE DMing)
-- Vary message structure significantly
-- Maintain 20-30 minute gaps between DMs
-- If any restriction occurs, immediately drop back to 3/day for a week
-
-**Week 5+ (Mar 17 onward): Target pace. 10-15 DMs per day.**
-- This is the realistic sustainable ceiling, not 20+
-- 15 high-quality personalized DMs will outperform 20+ templated ones
-- Continue varying messages and maintaining gaps
-- Never send more than 4-5 DMs in a single hour
-
-**Absolute maximum safe ceiling: 15 DMs per day to non-followers.**
-
-Going above 15 unsolicited DMs daily carries significant suspension risk. Prioritize quality over quantity.
-
-### 1.3 Message Variation Strategy
-
-X's spam filter detects near-identical messages. NEVER copy-paste the same text to multiple people.
-
-**Variation rules:**
-- Rotate between all 5 templates (A-E) -- never use the same one twice in a row
-- Change the opening line for every single DM
-- Reference something SPECIFIC from their actual post (this is the #1 anti-spam technique)
-- Vary sentence endings (mix casual forms: ~だよね, ~なんだけど, ~かなって, ~で)
-- Vary the closing question
-- Never include links in outreach DMs (add links only in follow-up conversations)
-- Avoid identical character sequences longer than 30 characters across messages
-
-**Template rotation schedule (example day with 10 DMs):**
-- DM 1: Template A (customized) -- 10:00
-- DM 2: Template C (customized) -- 10:40
-- DM 3: Template E (customized) -- 11:30
-- DM 4: Template B (customized) -- 13:00
-- DM 5: Template D (customized) -- 14:00
-- DM 6: Template A (customized differently) -- 15:30
-- DM 7: Template C (customized differently) -- 17:00
-- DM 8: Template E (customized differently) -- 18:30
-- DM 9: Template B (customized differently) -- 20:00
-- DM 10: Template D (customized differently) -- 21:00
-
-### 1.4 Pre-DM Engagement Tactics (Non-Negotiable)
-
-NEVER DM someone cold. Always warm them up first.
-
-**Minimum engagement before DMing:**
-1. Like 2-3 of their recent posts (spread across 1-2 days)
-2. Reply to at least 1 of their posts with a genuine, value-adding comment
-3. Wait at least 24 hours after your first reply before DMing
-4. If they like or reply to your comment, DM the same day (warm lead)
-
-**Why this matters:**
-- When they receive your DM, they may recognize your display name from the reply
-- They are less likely to report you as spam
-- X's algorithm sees an existing interaction pattern, reducing spam flags
-- Response rates increase dramatically (cold DM: ~5%, warm DM: ~15-25%)
-
-### 1.5 Account Requirements Before Mass DMing
-
-Before starting any DM outreach, the account must meet ALL of these criteria:
-
-- Account age: minimum 14 days old
-- Posts published: minimum 15 posts
-- Followers: minimum 50 (organic, not purchased)
-- Profile: fully completed (display name, bio, profile picture, header)
-- Engagement history: at least 50 likes and 20 replies given to others
-- X Premium subscription: strongly recommended (higher DM limits, lower spam flagging)
-- Phone number verified on the account
-
-### 1.6 Emergency Protocols
-
-**If a DM restriction warning appears:**
-- Stop all DMs immediately
-- Do not attempt to send any DMs for 24 hours minimum
-- Resume at 50% of previous volume
-- If it happens again, reduce to 3 DMs/day for 2 weeks
-
-**If the account gets temporarily locked:**
-- Complete the verification process
-- Wait the full suspension period
-- Resume with 2-3 DMs/day maximum for 2 weeks
-- Gradually ramp back up
-
-**If someone replies negatively or reports:**
-- Do NOT reply defensively
-- Do NOT DM them again
-- Note their handle to avoid future contact
-- One negative report is normal; 3+ reports in a day is dangerous
+**계정**: @ask.nandemo
+**플랫폼**: X (Twitter)
+**언어**: 일본어
+**목적**: 한국 피부과 시술 경험자 대상 DM 아웃리치를 통한 유저 리서치
+**작성일**: 2026-02-13
 
 ---
 
-## 2. PRE-DM ENGAGEMENT FLOW
+## 1. 스팸 방지 전략
 
-### 2.1 Finding Targets
+### 1.1 현실: 하루 20+ DM은 고위험
 
-**Daily search routine (15-20 minutes):**
+X는 대량 비요청 DM을 적극 모니터링함. 낯선 사람에게 하루 20개의 동일/유사 메시지를 보내면 계정이 플래깅, DM 잠금, 또는 영구 정지될 수 있음. 이 섹션이 전체 전략에서 가장 중요함.
 
-Search queries to run on X every day:
+**X의 제재 메커니즘:**
+- 동일/유사 메시지 텍스트 패턴 감지
+- 빠른 연속 DM 발송 기반 트리거
+- 신고 기반 트리거 (수신자 2-3명의 스팸 신고만으로도 플래깅)
+- 대량 DM 내 링크 감지 (텍스트만 있는 것보다 빨리 트리거)
+- 신규 계정 페널티: 새 계정은 더 엄격하게 감시
+
+### 1.2 계정 워밍업 스케줄 (필수)
+
+최소 2주간 유기적 인게이지먼트 활동 후에야 아웃리치 DM 발송 시작. 단 1건이라도 워밍업 전에 보내면 안 됨.
+
+**1-2주차 (2월 17일 ~ 3월 2일): DM 0건. 인게이지먼트만.**
+- 런칭 전략에 따라 콘텐츠 포스팅 (1주차 5개, 2주차 매일)
+- #渡韓美容 커뮤니티에서 매일 15-20개 포스트 좋아요
+- 매일 5-10개 포스트에 가치 있는 댓글
+- 매일 10-15개 관련 계정 팔로우
+- 가시적이고 합법적인 존재감 구축
+
+**3주차 (3월 3-9일): 소프트 스타트. 하루 최대 3-5건 DM.**
+- 이미 소통한 사람에게만 DM (좋아요/리플한 적 있는 사람)
+- DM 간 최소 30-60분 간격
+- 매번 다른 템플릿 사용
+- 메시지에 링크 넣지 않기
+- DM 제한 경고 모니터링
+
+**4주차 (3월 10-16일): 점진적 증가. 하루 5-10건 DM.**
+- 사전 소통 패턴 유지 (DM 전 좋아요/리플)
+- 메시지 구조를 크게 변형
+- DM 간 20-30분 간격 유지
+- 제한 발생 시 즉시 3건/일로 1주간 감소
+
+**5주차+ (3월 17일 이후): 목표 페이스. 하루 10-15건 DM.**
+- 현실적으로 지속 가능한 상한선 (20+가 아님)
+- 잘 개인화된 15건이 템플릿 20+건보다 성과 좋음
+- 메시지 변형과 간격 계속 유지
+- 1시간 내 4-5건 초과 금지
+
+**안전한 절대 최대치: 비팔로워 대상 하루 15건 DM.**
+
+15건 초과 비요청 DM은 정지 위험이 상당함. 양보다 질 우선.
+
+### 1.3 메시지 변형 전략
+
+X 스팸 필터는 거의 동일한 메시지를 감지함. 같은 텍스트를 여러 사람에게 절대 복붙하지 않기.
+
+**변형 규칙:**
+- 5개 템플릿 (A-E) 로테이션 -- 같은 것을 연속 두 번 사용하지 않기
+- 모든 DM의 첫 문장을 변경
+- 상대방의 실제 포스트에서 구체적인 것을 언급 (스팸 방지 #1 기법)
+- 문장 어미 변형 (캐주얼 형태 섞기: ~だよね, ~なんだけど, ~かなって, ~で)
+- 마무리 질문 변형
+- 아웃리치 DM에 절대 링크 포함하지 않기 (팔로업 대화에서만 링크 추가)
+- 메시지 간 30자 이상 동일한 문자열 피하기
+
+**템플릿 로테이션 스케줄 (하루 10건 DM 예시):**
+- DM 1: 템플릿 A (커스텀) -- 10:00
+- DM 2: 템플릿 C (커스텀) -- 10:40
+- DM 3: 템플릿 E (커스텀) -- 11:30
+- DM 4: 템플릿 B (커스텀) -- 13:00
+- DM 5: 템플릿 D (커스텀) -- 14:00
+- DM 6: 템플릿 A (다르게 커스텀) -- 15:30
+- DM 7: 템플릿 C (다르게 커스텀) -- 17:00
+- DM 8: 템플릿 E (다르게 커스텀) -- 18:30
+- DM 9: 템플릿 B (다르게 커스텀) -- 20:00
+- DM 10: 템플릿 D (다르게 커스텀) -- 21:00
+
+### 1.4 DM 전 인게이지먼트 전술 (비협상 사항)
+
+절대 콜드 DM 보내지 않기. 항상 먼저 워밍업.
+
+**DM 전 최소 인게이지먼트:**
+1. 최근 포스트 2-3개 좋아요 (1-2일에 걸쳐 분산)
+2. 포스트 최소 1개에 진심 어린 가치 있는 댓글
+3. 첫 리플 후 최소 24시간 대기 후 DM
+4. 상대가 내 댓글에 좋아요나 리플을 달면 당일 DM (웜 리드)
+
+**이것이 중요한 이유:**
+- DM 받았을 때 리플에서 내 표시 이름을 인식할 수 있음
+- 스팸으로 신고할 확률 낮아짐
+- X 알고리즘이 기존 상호작용 패턴을 감지해 스팸 플래그 감소
+- 응답률 극적 증가 (콜드 DM: ~5%, 웜 DM: ~15-25%)
+
+### 1.5 대량 DM 시작 전 계정 요건
+
+DM 아웃리치 시작 전 아래 기준 모두 충족 필수:
+
+- 계정 나이: 최소 14일
+- 게시한 포스트: 최소 15개
+- 팔로워: 최소 50명 (유기적, 구매 아님)
+- 프로필: 완전 작성 (표시 이름, 바이오, 프로필 사진, 헤더)
+- 인게이지먼트 이력: 다른 사람에게 최소 좋아요 50개, 리플 20개 제공
+- X Premium 구독: 강력 권장 (DM 한도 증가, 스팸 플래깅 감소)
+- 전화번호 인증 완료
+
+### 1.6 비상 프로토콜
+
+**DM 제한 경고 표시 시:**
+- 모든 DM 즉시 중단
+- 최소 24시간 DM 시도하지 않기
+- 이전 볼륨의 50%로 재개
+- 재발 시 2주간 하루 3건으로 감소
+
+**계정 일시 잠금 시:**
+- 인증 프로세스 완료
+- 정지 기간 전부 대기
+- 2주간 최대 하루 2-3건으로 재개
+- 점진적으로 다시 증가
+
+**부정적 리플이나 신고 시:**
+- 방어적으로 리플하지 않기
+- 다시 DM하지 않기
+- 향후 접촉 피하기 위해 핸들 기록
+- 부정적 신고 1건은 정상; 하루 3건+ 신고는 위험
+
+---
+
+## 2. DM 전 인게이지먼트 플로우
+
+### 2.1 타겟 찾기
+
+**매일 검색 루틴 (15-20분):**
+
+매일 X에서 실행할 검색 쿼리:
 
 ```
-Primary hashtag searches:
-#渡韓美容 (Korean beauty travel - highest volume)
-#韓国皮膚科 (Korean dermatology)
-#韓国美容 (Korean beauty)
-#韓国ボトックス (Korean Botox)
-#韓国フィラー (Korean filler)
-#韓国肌管理 (Korean skin management)
-#ピコレーザー (Pico laser)
-#ポテンツァ (Potenza)
+주요 해시태그 검색:
+#渡韓美容 (한국 뷰티 여행 - 최고 볼륨)
+#韓国皮膚科 (한국 피부과)
+#韓国美容 (한국 뷰티)
+#韓国ボトックス (한국 보톡스)
+#韓国フィラー (한국 필러)
+#韓国肌管理 (한국 피부 관리)
+#ピコレーザー (피코 레이저)
+#ポテンツァ (포텐자)
 
-Keyword searches (no hashtag):
-韓国 皮膚科 行ってきた (went to Korean dermatology)
-韓国 美容皮膚科 体験 (Korean beauty dermatology experience)
-渡韓 クリニック (Korean trip clinic)
-韓国 ボトックス 打ってきた (got Botox in Korea)
-韓国 レーザー やってきた (got laser in Korea)
-江南 皮膚科 (Gangnam dermatology)
-明洞 皮膚科 (Myeongdong dermatology)
-弘大 クリニック (Hongdae clinic)
+키워드 검색 (해시태그 없이):
+韓国 皮膚科 行ってきた (한국 피부과 다녀왔다)
+韓国 美容皮膚科 体験 (한국 미용피부과 체험)
+渡韓 クリニック (방한 클리닉)
+韓国 ボトックス 打ってきた (한국 보톡스 맞고 왔다)
+韓国 レーザー やってきた (한국 레이저 하고 왔다)
+江南 皮膚科 (강남 피부과)
+明洞 皮膚科 (명동 피부과)
+弘大 クリニック (홍대 클리닉)
 ```
 
-**Filter for ideal targets:**
-- Posted within the last 7 days (recent experience = more willing to talk)
-- Has a real profile photo and bio (not a bot or throwaway)
-- Has engagement on their posts (not a dead account)
-- Posts in Japanese (our target audience)
-- Shared a personal experience, not just reposted news
-- DMs are open (check before engaging -- if closed, engage via replies only)
+**이상적 타겟 필터:**
+- 최근 7일 내 포스팅 (최근 경험 = 대화 의향 높음)
+- 실제 프로필 사진과 바이오 있음 (봇이나 일회성 계정 아님)
+- 포스트에 인게이지먼트 있음 (죽은 계정 아님)
+- 일본어로 포스팅 (우리 타겟 오디언스)
+- 개인 경험 공유 (뉴스 리포스팅만 한 게 아님)
+- DM이 열려 있음 (닫혀 있으면 리플로만 소통)
 
-**Avoid these targets:**
-- Accounts with thousands of followers (influencers -- they get too many DMs)
-- Accounts that appear to be clinic marketing accounts
-- Accounts that post only promotional content
-- Accounts with no followers or posts (potential bots)
+**피해야 할 타겟:**
+- 수천 명 팔로워 계정 (인플루언서 -- DM이 너무 많이 옴)
+- 클리닉 마케팅 계정으로 보이는 곳
+- 프로모션 콘텐츠만 올리는 계정
+- 팔로워나 포스트 없는 계정 (잠재적 봇)
 
-### 2.2 The Warm-Up Sequence
+### 2.2 워밍업 시퀀스
 
-For each target, follow this exact sequence:
+각 타겟에 대해 정확히 이 순서를 따르기:
 
-**Day 1: Passive engagement**
-- Like their Korean dermatology post
-- Like 1-2 of their other recent posts
-- Purpose: Your account name appears in their notifications
+**1일차: 패시브 인게이지먼트**
+- 한국 피부과 포스트에 좋아요
+- 최근 다른 포스트 1-2개에 좋아요
+- 목적: 알림에 내 계정 이름 노출
 
-**Day 1 or 2: Active engagement**
-- Reply to their post with a genuine comment (see reply templates below)
-- The reply must add value -- a follow-up question, related info, or empathy
-- Do NOT mention your service or what you are building
+**1일 또는 2일차: 액티브 인게이지먼트**
+- 포스트에 진심 어린 댓글 (아래 리플 템플릿 참고)
+- 리플은 반드시 가치를 더해야 함 -- 후속 질문, 관련 정보, 또는 공감
+- 우리 서비스나 만들고 있는 것 절대 언급하지 않기
 
-**Day 2 or 3: DM (if warm signal exists)**
-- If they liked your reply, replied back, or followed you: DM that day
-- If no response to your reply: wait one more day, then DM
-- If still no interaction after 3 days: move on to next target
+**2일 또는 3일차: DM (웜 시그널 존재 시)**
+- 내 리플에 좋아요, 리플백, 또는 팔로우했으면: 당일 DM
+- 내 리플에 반응 없으면: 하루 더 기다린 후 DM
+- 3일 후에도 상호작용 없으면: 다음 타겟으로 이동
 
-### 2.3 Public Reply Templates (Pre-DM Warm-Up)
+### 2.3 공개 리플 템플릿 (DM 전 워밍업용)
 
-These are replies to post on their public tweets BEFORE sending a DM. Keep them short and genuine.
+DM 보내기 전에 상대의 공개 트윗에 다는 리플들. 짧고 진심 어리게.
 
-**For experience posts:**
+**시술 경험 포스트에:**
 ```
 いいなあ！[施術名]気になってたから参考になる。仕上がりどのくらいで落ち着いた？
 ```
-(Translation: Nice! I was curious about [treatment], this is helpful. How long did it take for the results to settle?)
+(번역: 좋겠다! [시술명] 궁금했는데 참고 된다. 결과 안정되는 데 얼마나 걸렸어?)
 
-**For price-related posts:**
+**가격 관련 포스트에:**
 ```
 この価格帯ってやっぱりエリアで結構変わるのかな。江南と明洞で全然違うって聞くけど実際どうだった？
 ```
-(Translation: I wonder if prices vary a lot by area. I hear Gangnam and Myeongdong are totally different -- how was it actually?)
+(번역: 이 가격대가 역시 지역에 따라 꽤 달라지는 건지. 강남이랑 명동이 완전 다르다고 하는데 실제로 어땠어?)
 
-**For before/after posts:**
+**비포/애프터 포스트에:**
 ```
 めっちゃ自然な仕上がりだね。ダウンタイムどのくらいだった？
 ```
-(Translation: Super natural result. How long was the downtime?)
+(번역: 엄청 자연스러운 결과네. 다운타임 얼마나 됐어?)
 
-**For clinic selection posts:**
+**클리닉 선택 포스트에:**
 ```
 クリニック選び本当に悩むよね。何が決め手になった？
 ```
-(Translation: Choosing a clinic is really tough. What was the deciding factor for you?)
+(번역: 클리닉 고르기 진짜 고민되지. 뭐가 결정적이었어?)
 
-**For first-timer posts:**
+**첫 방문 포스트에:**
 ```
 初渡韓美容お疲れさま！次もう行きたくなってるでしょ笑
 ```
-(Translation: Congrats on your first Korean beauty trip! You already want to go back, right? lol)
+(번역: 첫 한국 뷰티 여행 수고했어! 벌써 다음에 또 가고 싶지 ㅋ)
 
-### 2.4 Timing Between Engagement and DM
+### 2.4 인게이지먼트와 DM 사이 타이밍
 
-| Signal | Wait Time Before DM |
-|--------|---------------------|
-| They replied to your comment enthusiastically | Same day (2-3 hours later) |
-| They liked your comment | Next day |
-| They followed you | Within a few hours |
-| No interaction with your comment | 2 days, then DM anyway |
-| No interaction after 3 days | Skip this person |
-
----
-
-## 3. DM TEMPLATES (5 Variations)
-
-### Important Notes on Using These Templates
-
-- [brackets] contain placeholders that MUST be customized for each person
-- Never send any template without filling in ALL placeholders
-- Aim for 150-200 Japanese characters per initial DM
-- Zero links in initial DMs
-- Maximum 1 emoji per message (or zero)
-- Read their post carefully before choosing which template to use
+| 시그널 | DM까지 대기 시간 |
+|--------|-----------------|
+| 내 댓글에 열정적으로 리플 | 당일 (2-3시간 후) |
+| 내 댓글에 좋아요 | 다음 날 |
+| 나를 팔로우 | 수시간 이내 |
+| 내 댓글에 반응 없음 | 2일 후 DM |
+| 3일 후에도 상호작용 없음 | 이 사람은 패스 |
 
 ---
 
-### Template A: For Someone Who Posted About Botox/Filler Experience
+## 3. DM 템플릿 (5가지 변형)
 
-**Target**: Posts containing #韓国ボトックス, #韓国フィラー, mentions of specific Botox/filler brands or experiences
+### 템플릿 사용 시 중요 참고사항
+
+- [대괄호] 안은 각 사람별로 반드시 커스터마이징할 플레이스홀더
+- 모든 플레이스홀더를 채우지 않고 절대 발송하지 않기
+- 초기 DM은 일본어 150-200자 목표
+- 초기 DM에 링크 넣지 않기
+- 이모지 메시지당 최대 1개 (또는 0개)
+- 어떤 템플릿 쓸지 정하기 전에 상대 포스트를 주의 깊게 읽기
+
+---
+
+### 템플릿 A: 보톡스/필러 경험 포스트에
+
+**타겟**: #韓国ボトックス, #韓国フィラー 포함 포스트, 특정 보톡스/필러 브랜드나 경험 언급
 
 ```
 [施術名]の投稿見て気になってDMしちゃった！[具体的な感想/結果への言及]ってあったけど、実際受けてみてクリニック探すの大変だった？
@@ -264,9 +264,9 @@ These are replies to post on their public tweets BEFORE sending a DM. Keep them 
 よかったらクリニックどうやって見つけたか教えてほしいな
 ```
 
-**Character count**: ~170
+**글자 수**: ~170자
 
-**Example filled in:**
+**실제 작성 예시:**
 ```
 ボトックスの投稿見て気になってDMしちゃった！「思ったより自然だった」ってあったけど、実際受けてみてクリニック探すの大変だった？
 
@@ -277,9 +277,9 @@ These are replies to post on their public tweets BEFORE sending a DM. Keep them 
 
 ---
 
-### Template B: For Someone Who Posted a Before/After Photo
+### 템플릿 B: 비포/애프터 사진 포스트에
 
-**Target**: Posts with visible before/after comparison, treatment result photos
+**타겟**: 비포/애프터 비교, 시술 결과 사진이 보이는 포스트
 
 ```
 ビフォーアフターすごい！[具体的な変化への言及]。
@@ -289,9 +289,9 @@ These are replies to post on their public tweets BEFORE sending a DM. Keep them 
 いま韓国の皮膚科の料金比較データまとめてて、探し方のリアルが知りたくて。迷惑じゃなければ教えてほしい
 ```
 
-**Character count**: ~140
+**글자 수**: ~140자
 
-**Example filled in:**
+**실제 작성 예시:**
 ```
 ビフォーアフターすごい！トーンアップがめっちゃ自然。
 
@@ -302,21 +302,21 @@ These are replies to post on their public tweets BEFORE sending a DM. Keep them 
 
 ---
 
-### Template C: For Someone Who Posted About Clinic Selection Struggles
+### 템플릿 C: 클리닉 선택 고민 포스트에
 
-**Target**: Posts mentioning difficulty choosing clinics, comparing options, asking for recommendations
+**타겟**: 클리닉 선택 어려움, 옵션 비교, 추천 요청 포스트
 
 ```
 クリニック選びの投稿めっちゃわかる！[相手の悩みへの具体的共感]
 
-じつは自分も韓国の皮膚科データずっと調べてて、クリニック選びって本当に情報少ないなって感じてる。いま料金比較とかまとめてるんだけど、[相手の名前/さん]は結局どうやって決めた？
+じつは自分も韓国の皮膚科データずっと調べてて、クリニック選びって本当に情報少ないなって感じてる。いま料金比較とかまとめてるんだけど、結局どうやって決めた？
 
 いちばん困ったこととか教えてもらえたらめちゃ助かる
 ```
 
-**Character count**: ~170
+**글자 수**: ~170자
 
-**Example filled in:**
+**실제 작성 예시:**
 ```
 クリニック選びの投稿めっちゃわかる！口コミ少なすぎて不安になるよね
 
@@ -327,21 +327,21 @@ These are replies to post on their public tweets BEFORE sending a DM. Keep them 
 
 ---
 
-### Template D: For Someone Who Posted About Price Comparison
+### 템플릿 D: 가격 비교 관련 포스트에
 
-**Target**: Posts mentioning prices, cost comparisons, "expensive/cheap" comments, budget talk
+**타겟**: 가격, 비용 비교, "비싸다/싸다" 언급, 예산 이야기 포스트
 
 ```
 料金の話すごく気になった！[相手の投稿内容への言及]
 
-韓国の皮膚科って「安い」って言われてるけど、実際クリニックによってかなり差あるんだよね。いまそのデータ集めてて比較サイト作ろうとしてるんだけど、[相手の名前/さん]は料金って事前にどうやって調べた？
+韓国の皮膚科って「安い」って言われてるけど、実際クリニックによってかなり差あるんだよね。いまそのデータ集めてて比較サイト作ろうとしてるんだけど、料金って事前にどうやって調べた？
 
 比較する方法あったのか気になって
 ```
 
-**Character count**: ~180
+**글자 수**: ~180자
 
-**Example filled in:**
+**실제 작성 예시:**
 ```
 料金の話すごく気になった！ボトックスで3万って書いてたけど、それ江南エリア？
 
@@ -352,9 +352,9 @@ These are replies to post on their public tweets BEFORE sending a DM. Keep them 
 
 ---
 
-### Template E: For Someone Who Posted About Their First Korean Clinic Visit
+### 템플릿 E: 한국 클리닉 첫 방문 후기에
 
-**Target**: Posts with "初めて" (first time), first trip, debut experience vibes
+**타겟**: "初めて" (처음), 첫 여행, 데뷔 경험 느낌의 포스트
 
 ```
 初の渡韓美容おつかれさま！[投稿の具体的な感想への反応]
@@ -364,9 +364,9 @@ These are replies to post on their public tweets BEFORE sending a DM. Keep them 
 今後行く人の参考にできたらいいなと思って
 ```
 
-**Character count**: ~180
+**글자 수**: ~180자
 
-**Example filled in:**
+**실제 작성 예시:**
 ```
 初の渡韓美容おつかれさま！「想像以上によかった」っていうの伝わってくる笑
 
@@ -377,11 +377,11 @@ These are replies to post on their public tweets BEFORE sending a DM. Keep them 
 
 ---
 
-## 4. FOLLOW-UP DM TEMPLATES (3 Variations)
+## 4. 팔로업 DM 템플릿 (3가지 변형)
 
-### 4A: When They Share Their Experience Positively
+### 4A: 경험을 긍정적으로 공유했을 때
 
-**Trigger**: They reply with positive details about their experience, clinic name, or satisfaction
+**트리거**: 긍정적 세부사항, 클리닉명, 만족감과 함께 리플
 
 ```
 教えてくれてありがとう！[相手が共有してくれた内容への具体的反応]
@@ -391,13 +391,13 @@ These are replies to post on their public tweets BEFORE sending a DM. Keep them 
 他の人にも同じクリニックすすめたいって思う？
 ```
 
-**Character count**: ~130
+**글자 수**: ~130자
 
 ---
 
-### 4B: When They Mention Difficulties or Problems
+### 4B: 어려움이나 문제를 언급했을 때
 
-**Trigger**: They reply mentioning struggles with finding info, language barrier, pricing confusion, bad experiences
+**트리거**: 정보 찾기 어려움, 언어 장벽, 가격 혼란, 안 좋은 경험 언급
 
 ```
 それ大変だったね…。[具体的な困りごとへの共感]
@@ -407,13 +407,13 @@ These are replies to post on their public tweets BEFORE sending a DM. Keep them 
 もし「こういう情報があったら助かった」ってのがあったら教えてほしい。作るなら本当に役立つものにしたいから
 ```
 
-**Character count**: ~170
+**글자 수**: ~170자
 
 ---
 
-### 4C: When They Ask What the Service Is About
+### 4C: 서비스에 대해 물어봤을 때
 
-**Trigger**: They reply asking "What are you making?" / "What's the comparison site?" / curiosity about the project
+**트리거**: "뭐 만들고 있어?" / "비교 사이트가 뭐야?" / 프로젝트에 대한 호기심
 
 ```
 ありがとう、興味持ってくれて嬉しい！
@@ -423,44 +423,44 @@ These are replies to post on their public tweets BEFORE sending a DM. Keep them 
 完成したら見てもらいたいなと思ってるんだけど、[相手の名前/さん]的に「これが比較できたら嬉しい」ってある？
 ```
 
-**Character count**: ~200
+**글자 수**: ~200자
 
 ---
 
-## 5. INFORMATION EXTRACTION QUESTIONS
+## 5. 정보 추출 질문
 
-### Conversation Flow Design
+### 대화 흐름 설계
 
-The goal is to extract 5 key insights through natural conversation, NOT by asking them all at once. Spread these across 3-5 messages in a conversation.
+목표는 자연스러운 대화를 통해 5가지 핵심 인사이트를 추출하는 것. 한 번에 다 물어보는 게 아니라 3-5개 메시지에 걸쳐 분산.
 
-### Insight 1: How Did They Find Their Clinic?
+### 인사이트 1: 클리닉을 어떻게 찾았는가?
 
-**Natural entry points:**
-- In initial DM (Templates A, B, C already include this)
-- "クリニックどうやって見つけた？" (How did you find the clinic?)
+**자연스러운 진입점:**
+- 초기 DM에 포함 (템플릿 A, B, C에 이미 들어있음)
+- "クリニックどうやって見つけた？" (클리닉 어떻게 찾았어?)
 
-**Deeper follow-ups based on their answer:**
+**답변에 따른 심화 팔로업:**
 
-If they say "Instagram / SNS":
+"인스타/SNS"라고 답하면:
 ```
 やっぱりSNSか！ちなみにどういうアカウントの情報が参考になった？インフルエンサー？それともクリニックの公式？
 ```
 
-If they say "Gangnam Unni app":
+"강남언니 앱"이라고 답하면:
 ```
 強南言己使ったんだ！アプリの情報だけで決めた？それとも他にも調べた？
 ```
 
-If they say "friend's recommendation":
+"친구 추천"이라고 답하면:
 ```
 紹介って安心感あるよね。友達が行ってなかったらどうやって探してたと思う？
 ```
 
-### Insight 2: How Did They Compare Prices?
+### 인사이트 2: 가격을 어떻게 비교했는가?
 
-**Timing**: Ask after they answer the clinic selection question. Never ask pricing first (feels intrusive).
+**타이밍**: 클리닉 선택 질문에 답한 후. 가격을 먼저 물으면 안 됨 (침습적으로 느껴짐).
 
-**Natural transitions:**
+**자연스러운 전환:**
 ```
 ちなみに料金の比較ってした？何件くらい見比べた？
 ```
@@ -473,11 +473,11 @@ If they say "friend's recommendation":
 「韓国は安い」ってよく聞くけど、実際比較してみてどうだった？
 ```
 
-### Insight 3: What Was the Hardest Part?
+### 인사이트 3: 가장 힘들었던 부분은?
 
-**Timing**: After 2-3 exchanges when rapport is built. This is the most valuable question.
+**타이밍**: 2-3회 대화 교환 후 라포가 형성되었을 때. 가장 가치 있는 질문.
 
-**Natural ways to ask:**
+**자연스럽게 묻는 방법:**
 ```
 全体的に振り返って、いちばん大変だったのってどの部分？
 ```
@@ -490,11 +490,11 @@ If they say "friend's recommendation":
 渡韓美容で「これは予想外だった」ってことある？
 ```
 
-### Insight 4: Would a Comparison Tool Have Helped?
+### 인사이트 4: 비교 도구가 도움이 됐을까?
 
-**Timing**: Only after they have mentioned a pain point. NEVER ask this out of the blue -- it sounds like a sales pitch.
+**타이밍**: 상대가 페인 포인트를 언급한 후에만. 뜬금없이 물으면 세일즈 피치처럼 들림.
 
-**Natural ways to introduce:**
+**자연스럽게 소개하는 방법:**
 ```
 もし行く前に、クリニックの料金とか施術内容が一覧で比較できるサイトがあったら使ってた？
 ```
@@ -503,16 +503,16 @@ If they say "friend's recommendation":
 「ここの情報がまとまってたら楽だったのに」ってのある？
 ```
 
-**If they already mentioned pricing difficulty:**
+**가격 비교 어려움을 이미 언급했다면:**
 ```
 料金比較が大変だったって話、めちゃくちゃ聞く。同じエリアでも数倍違うことあるし。その辺がパッと比較できたら助かってた？
 ```
 
-### Insight 5: What Information Was Missing?
+### 인사이트 5: 어떤 정보가 빠져 있었는가?
 
-**Timing**: Near the end of the conversation. This is the capstone question.
+**타이밍**: 대화 마무리 근처. 캡스톤 질문.
 
-**Natural ways to ask:**
+**자연스럽게 묻는 방법:**
 ```
 最後にひとつだけ聞きたいんだけど、行く前に「これ知りたかったのに見つからなかった」って情報ある？
 ```
@@ -525,99 +525,99 @@ If they say "friend's recommendation":
 「ここにまとまってたら最高なのに」って情報って何だろう？
 ```
 
-### Conversation Flow Map
+### 대화 흐름 맵
 
 ```
-Message 1 (Initial DM):
-  Ask about clinic discovery method
+메시지 1 (초기 DM):
+  클리닉 발견 방법 질문
   ↓
-Message 2 (Their reply + your follow-up):
-  Dig deeper on their answer
-  Transition to pricing topic
+메시지 2 (상대 리플 + 내 팔로업):
+  답변 심화 탐구
+  가격 주제로 전환
   ↓
-Message 3 (Their reply + your follow-up):
-  Ask about the hardest part
-  Show empathy
+메시지 3 (상대 리플 + 내 팔로업):
+  가장 힘들었던 부분 질문
+  공감 표현
   ↓
-Message 4 (Their reply + your follow-up):
-  Naturally introduce the comparison tool concept
-  Ask if it would have helped
+메시지 4 (상대 리플 + 내 팔로업):
+  비교 도구 컨셉 자연스럽게 소개
+  도움이 됐을지 질문
   ↓
-Message 5 (Their reply + your follow-up):
-  Ask what info was missing
-  Thank them sincerely
-  Mention you will share the site when ready (if they are interested)
+메시지 5 (상대 리플 + 내 팔로업):
+  빠진 정보 질문
+  진심으로 감사
+  준비되면 사이트 공유하겠다고 언급 (관심 있으면)
 ```
 
-**Key rules for the conversation:**
-- Never ask more than 1 question per message
-- Always acknowledge/react to their answer before asking the next question
-- If they give short answers, do not push -- thank them and wrap up
-- If they are enthusiastic and talkative, let the conversation flow naturally
-- End every conversation with sincere thanks and an offer to share the site when ready
-- Keep a record of every insight gained (spreadsheet recommended)
+**대화의 핵심 규칙:**
+- 메시지당 질문 1개만
+- 다음 질문 전에 항상 상대 답변에 반응/인정
+- 짧은 답변이면 밀어붙이지 않기 -- 감사하고 마무리
+- 열정적이고 말이 많으면 자연스럽게 대화 흐르게 두기
+- 모든 대화를 진심 어린 감사와 사이트 완성 시 공유 제안으로 마무리
+- 얻은 모든 인사이트 기록 (스프레드시트 권장)
 
 ---
 
-## 6. TRACKING AND MEASUREMENT
+## 6. 트래킹 및 측정
 
-### Daily Log Template
+### 일일 로그 템플릿
 
-| Date | Target Handle | Pre-Engagement (Like/Reply) | DM Sent (Template #) | Response Y/N | Key Insight | Follow-Up Status |
-|------|---------------|---------------------------|----------------------|--------------|-------------|------------------|
+| 날짜 | 타겟 핸들 | 사전 소통 (좋아요/리플) | DM 발송 (템플릿 #) | 응답 Y/N | 핵심 인사이트 | 팔로업 상태 |
+|------|----------|----------------------|-------------------|---------|-------------|-----------|
 | | | | | | | |
 
-### Weekly Review Metrics
+### 주간 리뷰 지표
 
-- DMs sent: target 50-75/week (10-15/day x 5 days)
-- Response rate: target 15-25%
-- Conversations completed (3+ exchanges): target 5-10/week
-- Key insights extracted: track per insight category
-- Spam warnings received: target 0
+- 발송 DM: 주 50-75건 목표 (10-15/일 x 5일)
+- 응답률: 15-25% 목표
+- 완료된 대화 (3+ 교환): 주 5-10건 목표
+- 추출된 핵심 인사이트: 인사이트 카테고리별 추적
+- 받은 스팸 경고: 0건 목표
 
-### Insight Aggregation Categories
+### 인사이트 집계 카테고리
 
-Track responses in these buckets:
+아래 버킷으로 응답 추적:
 
-**Clinic Discovery Method:**
-- SNS (Instagram, X, TikTok)
-- Apps (Gangnam Unni, minfor, etc.)
-- Friend referral
-- Blog/article
-- YouTube
-- Other
+**클리닉 발견 방법:**
+- SNS (인스타그램, X, 틱톡)
+- 앱 (강남언니, minfor 등)
+- 친구 추천
+- 블로그/기사
+- 유튜브
+- 기타
 
-**Price Comparison Method:**
-- Gangnam Unni app
-- Asked clinics directly
-- Instagram/X posts
-- Did not compare (went with first option)
-- Blog articles
-- Other
+**가격 비교 방법:**
+- 강남언니 앱
+- 클리닉에 직접 문의
+- 인스타/X 포스트
+- 비교하지 않음 (첫 번째 옵션으로 감)
+- 블로그 기사
+- 기타
 
-**Biggest Pain Points:**
-- Language barrier
-- Price transparency
-- Clinic selection difficulty
-- Aftercare concerns
-- Booking process
-- Information scattered across platforms
-- Other
+**가장 큰 페인 포인트:**
+- 언어 장벽
+- 가격 투명성
+- 클리닉 선택 어려움
+- 애프터케어 걱정
+- 예약 프로세스
+- 정보가 여러 플랫폼에 흩어져 있음
+- 기타
 
-**Desired Features for Comparison Tool:**
-- Price comparison by treatment
-- Clinic reviews in Japanese
-- Japanese language support info
-- Before/after photos
-- Downtime information
-- Location/area comparison
-- Other
+**비교 도구에 원하는 기능:**
+- 시술별 가격 비교
+- 일본어 클리닉 리뷰
+- 일본어 지원 정보
+- 비포/애프터 사진
+- 다운타임 정보
+- 위치/지역 비교
+- 기타
 
 ---
 
-## 7. CLOSING MESSAGES
+## 7. 대화 마무리 메시지
 
-### When Ending a Productive Conversation
+### 생산적인 대화 종료 시
 
 ```
 いろいろ教えてくれて本当にありがとう！めちゃくちゃ参考になった。比較サイト完成したら真っ先にシェアするね。
@@ -625,64 +625,64 @@ Track responses in these buckets:
 何かあったらいつでもDMしてきて！韓国の皮膚科のことならなんでも調べるから
 ```
 
-### When Someone Is Not Interested / Short Replies
+### 관심 없음 / 짧은 답변일 때
 
 ```
 忙しいのに返信ありがとう！また何か気になることあったらいつでも聞いてね
 ```
 
-### When Someone Declines to Answer
+### 답변 거부 시
 
-Do NOT follow up. Simply:
+팔로업하지 않기. 간단히:
 ```
 全然大丈夫！ありがとう
 ```
 
 ---
 
-## 8. DO NOT DO LIST
+## 8. 하지 말아야 할 것 목록
 
-- Do NOT send DMs to people with closed DMs (obvious but worth stating)
-- Do NOT DM the same person twice if they did not reply to the first DM
-- Do NOT include any links in initial DMs
-- Do NOT mention "survey" "research" or "questionnaire" (feels corporate)
-- Do NOT use keigo/formal Japanese (sounds like a company)
-- Do NOT send DMs between 23:00-8:00 JST
-- Do NOT DM more than 3 people from the same conversation thread
-- Do NOT copy-paste without customizing [placeholder] sections
-- Do NOT get discouraged by low response rates (10-15% is normal and good)
-- Do NOT argue with or re-contact anyone who expresses disinterest
-- Do NOT use the word "service" or "product" in initial DMs (say "site I'm building" instead)
-- Do NOT send DMs on the same day the account was created or reactivated
-- Do NOT DM influencers with 10,000+ followers (different outreach strategy needed)
-
----
-
-## 9. X PREMIUM RECOMMENDATION
-
-Strongly consider subscribing to X Premium (Blue) before starting DM outreach.
-
-**Benefits for this strategy:**
-- Higher DM sending limits
-- Lower spam detection sensitivity for verified accounts
-- DMs more likely to land in primary inbox (not filtered)
-- Edit tweet functionality for public engagement replies
-- Better visibility in search results
-- Longer tweet capability for public engagement
-
-**Cost**: ~980 yen/month (Japan pricing)
-
-This is a worthwhile investment for the outreach campaign.
+- DM이 닫힌 사람에게 DM 보내지 않기 (당연하지만 명시)
+- 첫 DM에 답이 없으면 같은 사람에게 두 번째 DM 보내지 않기
+- 초기 DM에 절대 링크 포함하지 않기
+- "설문조사" "리서치" "앙케이트" 같은 단어 사용하지 않기 (기업스러움)
+- 경어/격식체 일본어 사용하지 않기 (회사처럼 들림)
+- JST 23:00-8:00 사이에 DM 보내지 않기
+- 같은 대화 스레드에서 3명 이상에게 DM하지 않기
+- [플레이스홀더] 커스터마이징 없이 복붙하지 않기
+- 낮은 응답률에 실망하지 않기 (10-15%가 정상이고 좋은 수치)
+- 관심 없다고 표현한 사람에게 논쟁하거나 재접촉하지 않기
+- 초기 DM에 "서비스"나 "제품"이라는 단어 사용하지 않기 ("만들고 있는 사이트"로 표현)
+- 계정 생성 또는 재활성화 당일에 DM 보내지 않기
+- 팔로워 10,000+ 인플루언서에게 DM하지 않기 (별도 아웃리치 전략 필요)
 
 ---
 
-*Strategy created: 2026-02-13*
-*DM outreach start target: Week 3 (Mar 3, 2026) -- after 2-week account warm-up*
-*Review and adjust after first 50 DMs based on response rate and insights gained*
+## 9. X Premium 추천
+
+DM 아웃리치 시작 전 X Premium (Blue) 구독을 강력 권장.
+
+**이 전략에서의 혜택:**
+- 높은 DM 발송 한도
+- 인증 계정에 대한 낮은 스팸 감지 민감도
+- DM이 기본 수신함에 도달할 확률 높음 (필터링되지 않음)
+- 공개 인게이지먼트 리플용 트윗 수정 기능
+- 검색 결과에서 더 높은 가시성
+- 공개 인게이지먼트를 위한 긴 트윗 기능
+
+**비용**: 월 ~980엔 (일본 가격)
+
+아웃리치 캠페인을 위한 가치 있는 투자.
 
 ---
 
-## Sources
+*전략 작성일: 2026-02-13*
+*DM 아웃리치 시작 목표: 3주차 (2026년 3월 3일) -- 2주 계정 워밍업 후*
+*첫 50건 DM 후 응답률과 인사이트 기반으로 리뷰 및 조정*
+
+---
+
+## 출처
 
 - [Twitter DM Limit 2025: Daily Cap, Rules & Safe Tips](https://businessho.com/twitter-dm-limit/)
 - [X Platform Manipulation Policy](https://help.twitter.com/en/rules-and-policies/platform-manipulation)
