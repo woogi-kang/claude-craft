@@ -17,7 +17,9 @@ work-social/
 ├── README.md                          # This file
 ├── strategy/
 │   ├── ask-nandemo-x-launch-strategy.md    # Full X launch strategy
-│   └── ask-nandemo-dm-outreach-strategy.md # DM user research strategy
+│   ├── ask-nandemo-dm-outreach-strategy.md # DM user research strategy
+│   ├── ask-nandemo-reply-strategy.md       # Reply/comment response strategy
+│   └── ask-nandemo-100day-plan.md          # 100-day content roadmap (data-driven)
 ├── drafts/
 │   └── x/
 │       └── week1-posts-free-tier.md   # 5 posts (X free tier, <280 chars)
