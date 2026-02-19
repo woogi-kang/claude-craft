@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from unittest.mock import MagicMock
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
@@ -55,6 +55,7 @@ def _make_classifier(
     )
 
     mock_client = MagicMock()
+    mock_client.messages.create = AsyncMock()
     if side_effect is not None:
         mock_client.messages.create.side_effect = side_effect
     elif json_text is not None:

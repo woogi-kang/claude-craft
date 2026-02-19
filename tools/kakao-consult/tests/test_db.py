@@ -204,3 +204,21 @@ class TestBlockedUsers:
 
     def test_is_user_blocked_false(self, tmp_db: Repository) -> None:
         assert tmp_db.is_user_blocked("normal_user") is False
+
+
+class TestColumnValidation:
+    """Test that invalid column names are rejected."""
+
+    def test_update_conversation_rejects_invalid_column(self, tmp_db: Repository) -> None:
+        tmp_db.upsert_conversation(chatroom_id="room_001")
+        with pytest.raises(ValueError, match="Invalid column names"):
+            tmp_db.update_conversation("room_001", evil_column="hack")
+
+    def test_insert_message_rejects_invalid_column(self, tmp_db: Repository) -> None:
+        tmp_db.upsert_conversation(chatroom_id="room_001")
+        with pytest.raises(ValueError, match="Invalid column names"):
+            tmp_db.insert_message("room_001", "incoming", "Hello", evil="hack")
+
+    def test_update_daily_stats_rejects_invalid_column(self, tmp_db: Repository) -> None:
+        with pytest.raises(ValueError, match="Invalid column names"):
+            tmp_db.update_daily_stats("2026-02-19", evil_column=1)
