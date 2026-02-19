@@ -1,28 +1,45 @@
-<!-- launchd plist stub for Milestone 3.
-     Will configure automatic pipeline execution on macOS. -->
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
     <key>Label</key>
     <string>com.asknandemo.xoutreach</string>
-    <key>Disabled</key>
-    <true/>
+
     <key>ProgramArguments</key>
     <array>
-        <string>/usr/bin/env</string>
-        <string>python3</string>
+        <string>/Users/woogi/.local/bin/uv</string>
+        <string>run</string>
+        <string>python</string>
         <string>-m</string>
-        <string>src.main</string>
-        <string>--once</string>
+        <string>src</string>
+        <string>daemon</string>
     </array>
+
     <key>WorkingDirectory</key>
     <string>/Users/woogi/Development/claude-craft/tools/x-outreach</string>
-    <key>StartInterval</key>
-    <integer>7200</integer>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <dict>
+        <key>SuccessfulExit</key>
+        <false/>
+    </dict>
+
     <key>StandardOutPath</key>
     <string>/Users/woogi/Development/claude-craft/tools/x-outreach/logs/launchd-stdout.log</string>
+
     <key>StandardErrorPath</key>
     <string>/Users/woogi/Development/claude-craft/tools/x-outreach/logs/launchd-stderr.log</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/Users/woogi/.local/bin:/usr/local/bin:/usr/bin:/bin</string>
+    </dict>
+
+    <key>ThrottleInterval</key>
+    <integer>60</integer>
 </dict>
 </plist>

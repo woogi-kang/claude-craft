@@ -2,7 +2,7 @@
 
 Provides ``PipelineRunner`` which executes the full
 Search -> Collect -> Analyze -> Reply -> DM cycle, and a CLI entry
-point for single runs and dry-run simulations.
+point with subcommands: run, daemon, status, setup, halt.
 """
 
 from __future__ import annotations
@@ -277,8 +277,8 @@ def _verify_startup(settings: Settings) -> list[str]:
     return errors
 
 
-async def _async_main(args: argparse.Namespace) -> int:
-    """Async entry point."""
+async def _async_run(args: argparse.Namespace) -> int:
+    """Async entry point for the ``run`` subcommand."""
     settings = load_settings()
 
     # Setup logging
@@ -286,10 +286,11 @@ async def _async_main(args: argparse.Namespace) -> int:
         level=settings.logging.level,
         log_dir=settings.logging.log_dir,
     )
-    logger.info("pipeline_starting", mode="dry_run" if args.dry_run else "live")
+    dry_run = getattr(args, "dry_run", False)
+    logger.info("pipeline_starting", mode="dry_run" if dry_run else "live")
 
     # Startup verification
-    if not args.dry_run:
+    if not dry_run:
         errors = _verify_startup(settings)
         if errors:
             for err in errors:
@@ -307,7 +308,7 @@ async def _async_main(args: argparse.Namespace) -> int:
 
     # Run pipeline
     runner = PipelineRunner(settings, repo, kb)
-    result = await runner.run_once(dry_run=args.dry_run)
+    result = await runner.run_once(dry_run=dry_run)
 
     if result.success:
         logger.info(
@@ -324,16 +325,114 @@ async def _async_main(args: argparse.Namespace) -> int:
     return 1
 
 
-def main() -> None:
-    """CLI entry point."""
+async def _async_daemon(args: argparse.Namespace) -> int:
+    """Async entry point for the ``daemon`` subcommand."""
+    from src.pipeline.halt import HaltManager
+    from src.scheduler import PipelineScheduler
+
+    settings = load_settings()
+
+    setup_logging(
+        level=settings.logging.level,
+        log_dir=settings.logging.log_dir,
+    )
+    logger.info("daemon_starting")
+
+    errors = _verify_startup(settings)
+    if errors:
+        for err in errors:
+            logger.error("startup_check_failed", error=err)
+        return 1
+
+    repo = Repository(settings.database.path)
+    repo.init_db()
+
+    kb = TreatmentKnowledgeBase()
+    kb.load()
+
+    runner = PipelineRunner(settings, repo, kb)
+    halt_mgr = HaltManager()
+    scheduler = PipelineScheduler(runner, settings, halt_manager=halt_mgr)
+
+    await scheduler.run_forever()
+    return 0
+
+
+def _cmd_run(args: argparse.Namespace) -> int:
+    """Handle the ``run`` subcommand."""
+    return asyncio.run(_async_run(args))
+
+
+def _cmd_daemon(args: argparse.Namespace) -> int:
+    """Handle the ``daemon`` subcommand."""
+    return asyncio.run(_async_daemon(args))
+
+
+def _cmd_status(args: argparse.Namespace) -> int:
+    """Handle the ``status`` subcommand."""
+    from src.cli.status import run_status
+
+    settings = load_settings()
+    output = run_status(settings)
+    print(output)
+    return 0
+
+
+def _cmd_setup(args: argparse.Namespace) -> int:
+    """Handle the ``setup`` subcommand."""
+    from src.cli.setup import run_setup
+
+    output, all_passed = run_setup()
+    print(output)
+    return 0 if all_passed else 1
+
+
+def _cmd_halt(args: argparse.Namespace) -> int:
+    """Handle the ``halt`` subcommand."""
+    from src.pipeline.halt import HaltManager, mark_resumed
+
+    halt_mgr = HaltManager()
+    action = getattr(args, "halt_action", "status")
+
+    if action == "resume":
+        if halt_mgr.resume():
+            mark_resumed(halt_mgr)
+            print("Halt cleared. Next run will execute at 50% volume.")
+        else:
+            print("Pipeline is not halted.")
+        return 0
+
+    # Default: show halt status
+    if halt_mgr.is_halted():
+        info = halt_mgr.get_halt_info()
+        print("HALTED")
+        if info:
+            print(f"  Reason:    {info.get('reason', 'unknown')}")
+            print(f"  Source:    {info.get('source', 'unknown')}")
+            print(f"  Timestamp: {info.get('timestamp', 'unknown')}")
+        print("\nRun 'x-outreach halt resume' to clear.")
+        return 1
+    print("Pipeline is running normally (not halted).")
+    return 0
+
+
+def _build_parser() -> argparse.ArgumentParser:
+    """Build the argument parser with subcommands.
+
+    Backward compatible: bare ``--once`` and ``--dry-run`` flags still
+    work without specifying a subcommand.
+    """
     parser = argparse.ArgumentParser(
+        prog="x-outreach",
         description="X Outreach Pipeline for @ask.nandemo",
     )
+
+    # Top-level flags for backward compatibility
     parser.add_argument(
         "--once",
         action="store_true",
-        default=True,
-        help="Run the pipeline once (default behaviour)",
+        default=False,
+        help="Run the pipeline once (backward-compat shortcut for 'run')",
     )
     parser.add_argument(
         "--dry-run",
@@ -341,9 +440,64 @@ def main() -> None:
         default=False,
         help="Skip browser search; only analyze already-collected tweets",
     )
+
+    subparsers = parser.add_subparsers(dest="command", help="Available commands")
+
+    # --- run ---
+    run_parser = subparsers.add_parser("run", help="Run the pipeline once")
+    run_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        default=False,
+        help="Skip browser search; only analyze already-collected tweets",
+    )
+
+    # --- daemon ---
+    subparsers.add_parser("daemon", help="Start the scheduler daemon")
+
+    # --- status ---
+    subparsers.add_parser("status", help="Show pipeline status and stats")
+
+    # --- setup ---
+    subparsers.add_parser("setup", help="Run first-time setup checks")
+
+    # --- halt ---
+    halt_parser = subparsers.add_parser("halt", help="Emergency halt management")
+    halt_parser.add_argument(
+        "halt_action",
+        nargs="?",
+        default="status",
+        choices=["status", "resume"],
+        help="Halt action: 'status' (default) or 'resume'",
+    )
+
+    return parser
+
+
+def main() -> None:
+    """CLI entry point with subcommand routing."""
+    parser = _build_parser()
     args = parser.parse_args()
 
-    exit_code = asyncio.run(_async_main(args))
+    # Backward compatibility: --once or no command defaults to 'run'
+    command = args.command
+    if command is None:
+        command = "run"
+
+    dispatch = {
+        "run": _cmd_run,
+        "daemon": _cmd_daemon,
+        "status": _cmd_status,
+        "setup": _cmd_setup,
+        "halt": _cmd_halt,
+    }
+
+    handler = dispatch.get(command)
+    if handler is None:
+        parser.print_help()
+        sys.exit(1)
+
+    exit_code = handler(args)
     sys.exit(exit_code)
 
 
