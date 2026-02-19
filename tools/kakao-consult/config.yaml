@@ -1,0 +1,65 @@
+emulator:
+  ldplayer_path: "C:/LDPlayer/LDPlayer9"
+  instance_name: "LDPlayer"
+  serial: "127.0.0.1:5555"
+  kakao_package: "com.kakao.talk"
+
+monitor:
+  poll_interval_seconds: 5
+  max_messages_per_poll: 10
+  ignored_chatrooms:
+    - "카카오톡 팀"
+    - "카카오페이"
+
+classifier:
+  model: "claude-sonnet-4-20250514"
+  confidence_threshold: 0.7
+  use_local_first: true
+
+llm:
+  default_provider: "claude"
+  claude_model: "claude-sonnet-4-20250514"
+  openai_model: "gpt-4o"
+  ollama_model: "llama3.2"
+  ollama_base_url: "http://localhost:11434"
+  max_tokens: 500
+  temperature: 0.7
+
+template:
+  templates_dir: "templates"
+  fuzzy_threshold: 0.75
+
+response:
+  max_response_length: 500
+  typing_delay_per_char_ms: 80
+  min_response_delay_seconds: 2.0
+  max_response_delay_seconds: 8.0
+  split_long_messages: true
+
+rate_limit:
+  max_responses_per_hour: 30
+  max_responses_per_day: 200
+  min_interval_seconds: 10
+  cooldown_after_errors: 60
+
+delays:
+  read_min_seconds: 1.0
+  read_max_seconds: 3.0
+  type_min_delay_ms: 50
+  type_max_delay_ms: 200
+  between_messages_min: 2.0
+  between_messages_max: 8.0
+
+scheduling:
+  active_start_hour: 9   # KST
+  active_end_hour: 22     # KST
+  weekend_enabled: false
+
+logging:
+  level: "INFO"
+  log_dir: "logs"
+  max_bytes: 10485760  # 10MB
+  backup_count: 5
+
+database:
+  path: "data/consult.db"
