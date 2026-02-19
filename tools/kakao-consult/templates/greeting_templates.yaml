@@ -1,0 +1,43 @@
+greetings:
+  hello:
+    patterns:
+      - "안녕"
+      - "안녕하세요"
+      - "하이"
+      - "ㅎㅇ"
+      - "반갑"
+      - "처음"
+    responses:
+      - id: "hello_01"
+        text: "안녕하세요! 무엇을 도와드릴까요?"
+      - id: "hello_02"
+        text: "반갑습니다! 어떤 도움이 필요하신가요?"
+
+  thanks:
+    patterns:
+      - "감사"
+      - "고마워"
+      - "ㄱㅅ"
+      - "ㄳ"
+      - "땡큐"
+      - "감사합니다"
+    responses:
+      - id: "thanks_01"
+        text: "감사합니다! 추가 문의사항이 있으시면 편하게 말씀해주세요."
+
+  goodbye:
+    patterns:
+      - "수고"
+      - "안녕히"
+      - "바이"
+      - "끊을게"
+      - "나중에"
+    responses:
+      - id: "bye_01"
+        text: "감사합니다! 좋은 하루 보내세요. 언제든 문의해주세요."
+
+  off_topic:
+    patterns: []
+    responses:
+      - id: "redirect_01"
+        text: "죄송합니다, 해당 내용은 제가 안내드리기 어려운 부분입니다. 시술이나 예약 관련 문의를 도와드릴 수 있어요!"
