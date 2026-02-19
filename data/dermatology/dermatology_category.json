@@ -1,0 +1,306 @@
+{
+  "version": "1.0",
+  "updated_at": "2026-01-10",
+  "categories": [
+    {
+      "id": 1,
+      "level": 1,
+      "parent_id": null,
+      "name": "안티에이징",
+      "name_en": "Anti-aging",
+      "description": "주름, 탄력, 노화 관련 시술",
+      "icon": "sparkles",
+      "display_order": 1
+    },
+    {
+      "id": 101,
+      "level": 2,
+      "parent_id": 1,
+      "name": "리프팅",
+      "name_en": "Lifting",
+      "description": "피부 탄력 및 처짐 개선",
+      "icon": null,
+      "display_order": 1
+    },
+    {
+      "id": 102,
+      "level": 2,
+      "parent_id": 1,
+      "name": "스킨부스터",
+      "name_en": "Skin Booster",
+      "description": "피부 재생 및 수분 공급",
+      "icon": null,
+      "display_order": 2
+    },
+    {
+      "id": 103,
+      "level": 2,
+      "parent_id": 1,
+      "name": "주름보톡스",
+      "name_en": "Wrinkle Botox",
+      "description": "보톡스를 활용한 주름 개선",
+      "icon": null,
+      "display_order": 3
+    },
+    {
+      "id": 2,
+      "level": 1,
+      "parent_id": null,
+      "name": "윤곽/볼륨",
+      "name_en": "Contouring/Volume",
+      "description": "볼륨 채움, 윤곽 개선",
+      "icon": "face",
+      "display_order": 2
+    },
+    {
+      "id": 201,
+      "level": 2,
+      "parent_id": 2,
+      "name": "필러",
+      "name_en": "Filler",
+      "description": "볼륨 채움 및 윤곽 보정",
+      "icon": null,
+      "display_order": 1
+    },
+    {
+      "id": 202,
+      "level": 2,
+      "parent_id": 2,
+      "name": "지방이식",
+      "name_en": "Fat Transfer",
+      "description": "자가 지방을 이용한 볼륨 채움",
+      "icon": null,
+      "display_order": 2
+    },
+    {
+      "id": 203,
+      "level": 2,
+      "parent_id": 2,
+      "name": "윤곽시술",
+      "name_en": "Contouring",
+      "description": "윤곽주사, 사각턱/광대 보톡스 등",
+      "icon": null,
+      "display_order": 3
+    },
+    {
+      "id": 3,
+      "level": 1,
+      "parent_id": null,
+      "name": "피부톤/색소",
+      "name_en": "Skin Tone/Pigmentation",
+      "description": "기미, 잡티, 미백 관련 시술",
+      "icon": "sun",
+      "display_order": 3
+    },
+    {
+      "id": 301,
+      "level": 2,
+      "parent_id": 3,
+      "name": "토닝/미백",
+      "name_en": "Toning/Whitening",
+      "description": "레이저 토닝, 색소 개선",
+      "icon": null,
+      "display_order": 1
+    },
+    {
+      "id": 302,
+      "level": 2,
+      "parent_id": 3,
+      "name": "미백주사",
+      "name_en": "Whitening Injection",
+      "description": "백옥주사, 기미주사 등",
+      "icon": null,
+      "display_order": 2
+    },
+    {
+      "id": 4,
+      "level": 1,
+      "parent_id": null,
+      "name": "피부결/트러블",
+      "name_en": "Skin Texture/Trouble",
+      "description": "여드름, 모공, 흉터, 재생 관련 시술",
+      "icon": "leaf",
+      "display_order": 4
+    },
+    {
+      "id": 401,
+      "level": 2,
+      "parent_id": 4,
+      "name": "여드름",
+      "name_en": "Acne",
+      "description": "여드름 치료 및 관리",
+      "icon": null,
+      "display_order": 1
+    },
+    {
+      "id": 402,
+      "level": 2,
+      "parent_id": 4,
+      "name": "모공/피부결",
+      "name_en": "Pore/Skin Texture",
+      "description": "모공 축소, 피부결 개선",
+      "icon": null,
+      "display_order": 2
+    },
+    {
+      "id": 403,
+      "level": 2,
+      "parent_id": 4,
+      "name": "흉터/재생",
+      "name_en": "Scar/Regeneration",
+      "description": "흉터 개선, 피부 재생",
+      "icon": null,
+      "display_order": 3
+    },
+    {
+      "id": 5,
+      "level": 1,
+      "parent_id": null,
+      "name": "제모",
+      "name_en": "Hair Removal",
+      "description": "레이저 제모",
+      "icon": "scissors",
+      "display_order": 5
+    },
+    {
+      "id": 501,
+      "level": 2,
+      "parent_id": 5,
+      "name": "제모",
+      "name_en": "Hair Removal",
+      "description": "부위별 레이저 제모",
+      "icon": null,
+      "display_order": 1
+    },
+    {
+      "id": 6,
+      "level": 1,
+      "parent_id": null,
+      "name": "바디",
+      "name_en": "Body",
+      "description": "지방분해, 바디리프팅, 다한증 관련 시술",
+      "icon": "body",
+      "display_order": 6
+    },
+    {
+      "id": 601,
+      "level": 2,
+      "parent_id": 6,
+      "name": "지방분해",
+      "name_en": "Fat Dissolution",
+      "description": "냉각/고주파/주사 지방분해",
+      "icon": null,
+      "display_order": 1
+    },
+    {
+      "id": 602,
+      "level": 2,
+      "parent_id": 6,
+      "name": "바디리프팅",
+      "name_en": "Body Lifting",
+      "description": "바디 토닝 및 리프팅",
+      "icon": null,
+      "display_order": 2
+    },
+    {
+      "id": 603,
+      "level": 2,
+      "parent_id": 6,
+      "name": "다이어트주사",
+      "name_en": "Diet Injection",
+      "description": "삭센다, 빅토자 등",
+      "icon": null,
+      "display_order": 3
+    },
+    {
+      "id": 604,
+      "level": 2,
+      "parent_id": 6,
+      "name": "다한증/액취증",
+      "name_en": "Hyperhidrosis/Bromhidrosis",
+      "description": "다한증, 액취증 치료",
+      "icon": null,
+      "display_order": 4
+    },
+    {
+      "id": 7,
+      "level": 1,
+      "parent_id": null,
+      "name": "피부관리",
+      "name_en": "Skin Care",
+      "description": "필링, 스케일링, 영양주사",
+      "icon": "care",
+      "display_order": 7
+    },
+    {
+      "id": 701,
+      "level": 2,
+      "parent_id": 7,
+      "name": "필링",
+      "name_en": "Peeling",
+      "description": "각종 필링 및 피부 관리",
+      "icon": null,
+      "display_order": 1
+    },
+    {
+      "id": 702,
+      "level": 2,
+      "parent_id": 7,
+      "name": "스케일링",
+      "name_en": "Scaling",
+      "description": "스케일링, 스킨스케일링",
+      "icon": null,
+      "display_order": 2
+    },
+    {
+      "id": 703,
+      "level": 2,
+      "parent_id": 7,
+      "name": "영양주사",
+      "name_en": "Nutrition Injection",
+      "description": "비타민, 마늘, 태반주사 등",
+      "icon": null,
+      "display_order": 3
+    },
+    {
+      "id": 8,
+      "level": 1,
+      "parent_id": null,
+      "name": "기타",
+      "name_en": "Others",
+      "description": "혈관, 사마귀, 문신제거 등",
+      "icon": "more",
+      "display_order": 8
+    },
+    {
+      "id": 801,
+      "level": 2,
+      "parent_id": 8,
+      "name": "혈관/홍조",
+      "name_en": "Vascular/Redness",
+      "description": "혈관 치료, 홍조 개선",
+      "icon": null,
+      "display_order": 1
+    },
+    {
+      "id": 802,
+      "level": 2,
+      "parent_id": 8,
+      "name": "제거시술",
+      "name_en": "Removal",
+      "description": "사마귀, 비립종, 한관종, 쥐젖 제거",
+      "icon": null,
+      "display_order": 2
+    },
+    {
+      "id": 803,
+      "level": 2,
+      "parent_id": 8,
+      "name": "기타시술",
+      "name_en": "Other Procedures",
+      "description": "기타 분류되지 않은 시술",
+      "icon": null,
+      "display_order": 3
+    }
+  ]
+}

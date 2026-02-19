@@ -1,0 +1,7900 @@
+{
+  "version": "2.0",
+  "updated_at": "2026-02-02",
+  "total_count": 518,
+  "procedures": [
+    {
+      "id": 1,
+      "name": "135부스터",
+      "grade": 1,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 2,
+      "name": "CO2레이저",
+      "grade": 3,
+      "primary_category_id": 402,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        3,
+        103,
+        109,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 3,
+      "name": "ECMV",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 4,
+      "name": "GA필",
+      "grade": 2,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 5,
+      "name": "HIFU",
+      "grade": 2,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        302
+      ],
+      "is_leaf": false,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 6,
+      "name": "HPL",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 7,
+      "name": "HP비타란",
+      "grade": 3,
+      "primary_category_id": 703,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 8,
+      "name": "ICL렌즈삽입술",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        217
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": false
+    },
+    {
+      "id": 9,
+      "name": "IPL",
+      "grade": 2,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        301,
+        312
+      ],
+      "is_leaf": false,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 10,
+      "name": "LDM",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 11,
+      "name": "LED다이어트",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 12,
+      "name": "NDA플러스",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 13,
+      "name": "NMN수액",
+      "grade": 3,
+      "primary_category_id": 703,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 14,
+      "name": "PDT레이저",
+      "grade": 2,
+      "primary_category_id": 401,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        7,
+        11,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 15,
+      "name": "PHA필링",
+      "grade": 3,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": 486,
+      "is_active": true
+    },
+    {
+      "id": 16,
+      "name": "PRP자가지방이식",
+      "grade": 3,
+      "primary_category_id": 202,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        107
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 17,
+      "name": "PRP피부재생술",
+      "grade": 3,
+      "primary_category_id": 403,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        8,
+        103,
+        110
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 18,
+      "name": "PRX-T33필링",
+      "grade": 3,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": 486,
+      "is_active": true
+    },
+    {
+      "id": 19,
+      "name": "PSM",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 20,
+      "name": "PTT레이저",
+      "grade": 2,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        301,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 21,
+      "name": "SMAS focus V",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 22,
+      "name": "SUNEKOS",
+      "grade": 3,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 23,
+      "name": "TCA필링",
+      "grade": 3,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": 486,
+      "is_active": true
+    },
+    {
+      "id": 24,
+      "name": "V레이저",
+      "grade": 3,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 25,
+      "name": "가슴제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        209,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 1003,
+      "is_active": true
+    },
+    {
+      "id": 26,
+      "name": "가슴필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        209,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 27,
+      "name": "감초주사",
+      "grade": 2,
+      "primary_category_id": 703,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 28,
+      "name": "겨드랑이보톡스",
+      "grade": 2,
+      "primary_category_id": 604,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        20,
+        218,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 29,
+      "name": "겨드랑이제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        218,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 1003,
+      "is_active": true
+    },
+    {
+      "id": 30,
+      "name": "고압산소케어",
+      "grade": 2,
+      "primary_category_id": 703,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 31,
+      "name": "고우리",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 32,
+      "name": "고주파관리",
+      "grade": 2,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        303,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 33,
+      "name": "골드PTT",
+      "grade": 3,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 34,
+      "name": "골반지방이식",
+      "grade": 2,
+      "primary_category_id": 202,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        107,
+        213
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 35,
+      "name": "골반필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        213,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 36,
+      "name": "관자놀이보톡스",
+      "grade": 2,
+      "primary_category_id": 203,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        205,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 37,
+      "name": "관자놀이지방이식",
+      "grade": 2,
+      "primary_category_id": 202,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        107,
+        205
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 38,
+      "name": "관자놀이필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        205,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 39,
+      "name": "광대보톡스",
+      "grade": 2,
+      "primary_category_id": 203,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        205,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 40,
+      "name": "광대지방이식",
+      "grade": 2,
+      "primary_category_id": 202,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        107,
+        205
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 41,
+      "name": "교근신경차단술",
+      "grade": 2,
+      "primary_category_id": 203,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 42,
+      "name": "귀필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 43,
+      "name": "글로브리프팅",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 44,
+      "name": "글리에보",
+      "grade": 3,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 45,
+      "name": "글리쥬라보떼",
+      "grade": 3,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 46,
+      "name": "기미주사",
+      "grade": 2,
+      "primary_category_id": 302,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        102,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 47,
+      "name": "꽃가루알러지보톡스",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 48,
+      "name": "네오빔",
+      "grade": 2,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 49,
+      "name": "노블린레이저",
+      "grade": 2,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 50,
+      "name": "노블쉐이프",
+      "grade": 3,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 51,
+      "name": "눈가주름보톡스",
+      "grade": 2,
+      "primary_category_id": 103,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        202,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 52,
+      "name": "눈꺼풀지방이식",
+      "grade": 2,
+      "primary_category_id": 202,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        107,
+        202
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 53,
+      "name": "눈꺼풀필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        202,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 54,
+      "name": "눈꼬리내림(보톡스)",
+      "grade": 2,
+      "primary_category_id": 103,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        202,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 55,
+      "name": "눈두덩필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        202,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 56,
+      "name": "눈물고랑지방이식",
+      "grade": 2,
+      "primary_category_id": 202,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        107,
+        202
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 57,
+      "name": "눈밑스컬트라",
+      "grade": 2,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        202,
+        304,
+        419
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 58,
+      "name": "눈밑지방이식",
+      "grade": 2,
+      "primary_category_id": 202,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        107,
+        202
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 59,
+      "name": "눈밑필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        202,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 60,
+      "name": "눈썹제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        202,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 1002,
+      "is_active": true
+    },
+    {
+      "id": 61,
+      "name": "뉴스무스빔",
+      "grade": 2,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 62,
+      "name": "뉴테라",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 63,
+      "name": "늑골리모델링",
+      "grade": 2,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 64,
+      "name": "다리제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        211,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 1004,
+      "is_active": true
+    },
+    {
+      "id": 65,
+      "name": "다리필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        211,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 66,
+      "name": "다이어트수액/주사",
+      "grade": 2,
+      "primary_category_id": 603,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 67,
+      "name": "다크서클주사",
+      "grade": 2,
+      "primary_category_id": 302,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        102,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 68,
+      "name": "다크서클필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 69,
+      "name": "다한증레이저",
+      "grade": 2,
+      "primary_category_id": 604,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        20,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 70,
+      "name": "다한증보톡스",
+      "grade": 2,
+      "primary_category_id": 604,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        20,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 71,
+      "name": "더마딜라이트",
+      "grade": 3,
+      "primary_category_id": 402,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        3,
+        103,
+        109
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 72,
+      "name": "더마슈링크",
+      "grade": 1,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        302,
+        404
+      ],
+      "is_leaf": true,
+      "parent_id": 5,
+      "is_active": true
+    },
+    {
+      "id": 73,
+      "name": "더마스마트",
+      "grade": 3,
+      "primary_category_id": 402,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        3,
+        103,
+        109
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 74,
+      "name": "더마아크네",
+      "grade": 3,
+      "primary_category_id": 401,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        7,
+        11
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 75,
+      "name": "더마젠",
+      "grade": 3,
+      "primary_category_id": 402,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        3,
+        103,
+        109
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 76,
+      "name": "더블로리프팅",
+      "grade": 2,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        302,
+        413
+      ],
+      "is_leaf": true,
+      "parent_id": 5,
+      "is_active": true
+    },
+    {
+      "id": 77,
+      "name": "덴서티리프팅",
+      "grade": 1,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 78,
+      "name": "두상필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        201,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 79,
+      "name": "두피케어",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        201
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 80,
+      "name": "뒷목제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        207,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 81,
+      "name": "듀얼토닝",
+      "grade": 2,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 94,
+      "is_active": true
+    },
+    {
+      "id": 82,
+      "name": "등냉각지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        219,
+        307
+      ],
+      "is_leaf": true,
+      "parent_id": 1005,
+      "is_active": true
+    },
+    {
+      "id": 83,
+      "name": "등제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        219,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 1003,
+      "is_active": true
+    },
+    {
+      "id": 84,
+      "name": "등지방분해레이저",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        219,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 1008,
+      "is_active": true
+    },
+    {
+      "id": 85,
+      "name": "등지방분해주사",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        219,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": 1007,
+      "is_active": true
+    },
+    {
+      "id": 86,
+      "name": "디오레듀얼",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 87,
+      "name": "라라필",
+      "grade": 1,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 88,
+      "name": "라비앙",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 89,
+      "name": "라임라이트",
+      "grade": 3,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 90,
+      "name": "라페라프로",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 91,
+      "name": "레가토레이저",
+      "grade": 3,
+      "primary_category_id": 402,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        3,
+        103,
+        109,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 92,
+      "name": "레디어스",
+      "grade": 3,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 93,
+      "name": "레블라이트",
+      "grade": 2,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 94,
+      "name": "레이저토닝",
+      "grade": 2,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        301
+      ],
+      "is_leaf": false,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 95,
+      "name": "레이저페이셜",
+      "grade": 2,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 96,
+      "name": "레진",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": false
+    },
+    {
+      "id": 97,
+      "name": "레티젠",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 98,
+      "name": "로리앙엘레멘트",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 99,
+      "name": "루메카",
+      "grade": 3,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 100,
+      "name": "리노바리프팅",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 101,
+      "name": "리니어지",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": 5,
+      "is_active": true
+    },
+    {
+      "id": 102,
+      "name": "리니어펌",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 103,
+      "name": "리들부스터",
+      "grade": 3,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 104,
+      "name": "리올핏",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 105,
+      "name": "리제닌",
+      "grade": 3,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 106,
+      "name": "리제반힐러",
+      "grade": 3,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 107,
+      "name": "리쥬란HBPLUS",
+      "grade": 1,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304,
+        411
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 108,
+      "name": "리쥬란시너지스킨부스터",
+      "grade": 1,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304,
+        411
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 109,
+      "name": "리쥬란시너지톤업부스터",
+      "grade": 1,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304,
+        411
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 110,
+      "name": "리쥬란아이",
+      "grade": 1,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        202,
+        304,
+        411
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 111,
+      "name": "리쥬란에스",
+      "grade": 1,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304,
+        411
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 112,
+      "name": "리쥬란힐러",
+      "grade": 1,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304,
+        411
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 113,
+      "name": "리쥬에이드",
+      "grade": 3,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 114,
+      "name": "리즈네",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 115,
+      "name": "리팟레이저",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 116,
+      "name": "리포덤",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 117,
+      "name": "리포손",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        208
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 118,
+      "name": "리프테라",
+      "grade": 2,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        302
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 119,
+      "name": "릴리이드",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 120,
+      "name": "마누카필",
+      "grade": 3,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 121,
+      "name": "마늘주사",
+      "grade": 2,
+      "primary_category_id": 703,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 122,
+      "name": "매선리프팅",
+      "grade": 2,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        305
+      ],
+      "is_leaf": false,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 123,
+      "name": "매쿰7",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 124,
+      "name": "맥쿰",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 125,
+      "name": "메소나J",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 126,
+      "name": "모반제거",
+      "grade": 2,
+      "primary_category_id": 802,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 127,
+      "name": "모자이크",
+      "grade": 3,
+      "primary_category_id": 402,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        3,
+        103,
+        109
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 128,
+      "name": "목제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        207,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 129,
+      "name": "목주름보톡스",
+      "grade": 2,
+      "primary_category_id": 103,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        207,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 130,
+      "name": "목주름스컬트라",
+      "grade": 2,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        207,
+        304,
+        419
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 131,
+      "name": "목주름필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        207,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 132,
+      "name": "무릎제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        211,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 133,
+      "name": "문신제거",
+      "grade": 2,
+      "primary_category_id": 802,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 134,
+      "name": "물광주사",
+      "grade": 2,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": false,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 135,
+      "name": "물블광",
+      "grade": 2,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 136,
+      "name": "미간보톡스",
+      "grade": 2,
+      "primary_category_id": 103,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        203,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 137,
+      "name": "미간신경차단술",
+      "grade": 2,
+      "primary_category_id": 203,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        203,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 138,
+      "name": "미간제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        203,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 139,
+      "name": "미간주름필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        203,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 140,
+      "name": "미니쉬",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 141,
+      "name": "미라드라이",
+      "grade": 3,
+      "primary_category_id": 604,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        20
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 142,
+      "name": "미라젯",
+      "grade": 3,
+      "primary_category_id": 402,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        3,
+        103,
+        109
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 143,
+      "name": "미스코",
+      "grade": 3,
+      "primary_category_id": 403,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        8,
+        103,
+        110,
+        216
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 144,
+      "name": "믹스필",
+      "grade": 3,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 145,
+      "name": "밀라노주사(잘루프로)",
+      "grade": 2,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 146,
+      "name": "밀크필",
+      "grade": 2,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 147,
+      "name": "바본주사",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 148,
+      "name": "바이리즌",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 149,
+      "name": "발가락제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        212,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 150,
+      "name": "발등제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        212,
+        219,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 151,
+      "name": "발목보톡스",
+      "grade": 2,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108,
+        207,
+        212,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 152,
+      "name": "발목지방분해주사",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        207,
+        212,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": 1007,
+      "is_active": true
+    },
+    {
+      "id": 153,
+      "name": "발제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        212,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 154,
+      "name": "배렛나루제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        209,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 1003,
+      "is_active": true
+    },
+    {
+      "id": 155,
+      "name": "배제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        209,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 1003,
+      "is_active": true
+    },
+    {
+      "id": 156,
+      "name": "백옥주사",
+      "grade": 2,
+      "primary_category_id": 302,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        102,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 157,
+      "name": "버츄RF",
+      "grade": 2,
+      "primary_category_id": 402,
+      "secondary_category_ids": [
+        101
+      ],
+      "tag_ids": [
+        3,
+        103,
+        109,
+        303
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 158,
+      "name": "베이비필",
+      "grade": 3,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 159,
+      "name": "벨로디리프팅",
+      "grade": 2,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 160,
+      "name": "벨로테로리바이브",
+      "grade": 3,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 161,
+      "name": "벨르업리프팅",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 162,
+      "name": "벨벳스킨",
+      "grade": 3,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 163,
+      "name": "복부고주파지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        209,
+        303
+      ],
+      "is_leaf": true,
+      "parent_id": 1006,
+      "is_active": true
+    },
+    {
+      "id": 164,
+      "name": "복부냉각지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        209,
+        307
+      ],
+      "is_leaf": true,
+      "parent_id": 1005,
+      "is_active": true
+    },
+    {
+      "id": 165,
+      "name": "복부지방분해레이저",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        209,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 1008,
+      "is_active": true
+    },
+    {
+      "id": 166,
+      "name": "복부지방분해주사",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        209,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": 1007,
+      "is_active": true
+    },
+    {
+      "id": 167,
+      "name": "복부체외충격파지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        209,
+        308
+      ],
+      "is_leaf": true,
+      "parent_id": 1010,
+      "is_active": true
+    },
+    {
+      "id": 168,
+      "name": "복부초음파지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        209,
+        302
+      ],
+      "is_leaf": true,
+      "parent_id": 1009,
+      "is_active": true
+    },
+    {
+      "id": 169,
+      "name": "복부피부지방절제술",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        209
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 170,
+      "name": "볼뉴머리프팅",
+      "grade": 2,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        205,
+        302
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 171,
+      "name": "볼보톡스",
+      "grade": 2,
+      "primary_category_id": 203,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        205,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 172,
+      "name": "볼스컬트라",
+      "grade": 2,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        205,
+        304,
+        419
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 173,
+      "name": "볼제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        205,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 1002,
+      "is_active": true
+    },
+    {
+      "id": 174,
+      "name": "볼지방이식",
+      "grade": 2,
+      "primary_category_id": 202,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        107,
+        205
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 175,
+      "name": "볼필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [
+        101
+      ],
+      "tag_ids": [
+        107,
+        205,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 176,
+      "name": "부유방지방분해주사",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": 1007,
+      "is_active": true
+    },
+    {
+      "id": 177,
+      "name": "부유방흡입",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 178,
+      "name": "브라질리언제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 179,
+      "name": "브이로리프팅",
+      "grade": 2,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 180,
+      "name": "브이빔퍼펙타",
+      "grade": 1,
+      "primary_category_id": 801,
+      "secondary_category_ids": [
+        301
+      ],
+      "tag_ids": [
+        10,
+        301,
+        409
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 181,
+      "name": "브이슈링크",
+      "grade": 1,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        302,
+        404
+      ],
+      "is_leaf": true,
+      "parent_id": 5,
+      "is_active": true
+    },
+    {
+      "id": 182,
+      "name": "브이올렛주사",
+      "grade": 2,
+      "primary_category_id": 302,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        102,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 183,
+      "name": "블랙필",
+      "grade": 2,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 184,
+      "name": "블레싱",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 185,
+      "name": "비너스레이저",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 186,
+      "name": "비립종제거",
+      "grade": 2,
+      "primary_category_id": 802,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 187,
+      "name": "비비브레이저",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 188,
+      "name": "비오라V30",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 189,
+      "name": "비키니라인제모",
+      "grade": 1,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 1004,
+      "is_active": true
+    },
+    {
+      "id": 190,
+      "name": "비타민주사",
+      "grade": 2,
+      "primary_category_id": 703,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 191,
+      "name": "빅토자",
+      "grade": 3,
+      "primary_category_id": 603,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 192,
+      "name": "사각턱보톡스",
+      "grade": 2,
+      "primary_category_id": 203,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        206,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 193,
+      "name": "사마귀제거",
+      "grade": 2,
+      "primary_category_id": 802,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 194,
+      "name": "사이저레이저",
+      "grade": 2,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 195,
+      "name": "삭센다",
+      "grade": 1,
+      "primary_category_id": 603,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        420
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 196,
+      "name": "산소테라피",
+      "grade": 2,
+      "primary_category_id": 703,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 197,
+      "name": "산소필",
+      "grade": 2,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 198,
+      "name": "새살침",
+      "grade": 2,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 199,
+      "name": "서브시전",
+      "grade": 2,
+      "primary_category_id": 403,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        8,
+        103,
+        110
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 200,
+      "name": "섬유아세포치료",
+      "grade": 2,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 201,
+      "name": "세르프리프팅",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 202,
+      "name": "셀르디엠",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 203,
+      "name": "셀리뉴",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 204,
+      "name": "소노퀸",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        302
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 205,
+      "name": "소프웨이브",
+      "grade": 1,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        302,
+        415
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 206,
+      "name": "손가락제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        208,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 207,
+      "name": "손등제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        208,
+        219,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 1003,
+      "is_active": true
+    },
+    {
+      "id": 208,
+      "name": "손등지방이식",
+      "grade": 2,
+      "primary_category_id": 202,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        107,
+        208,
+        219
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 209,
+      "name": "손등필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        208,
+        219,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 210,
+      "name": "손보톡스",
+      "grade": 2,
+      "primary_category_id": 604,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        20,
+        208,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 211,
+      "name": "손제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        208,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 212,
+      "name": "손혈관치료",
+      "grade": 2,
+      "primary_category_id": 801,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        10,
+        208,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 213,
+      "name": "쇄골필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 214,
+      "name": "쇼핑리프팅(짧은실)",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        305
+      ],
+      "is_leaf": true,
+      "parent_id": 234,
+      "is_active": true
+    },
+    {
+      "id": 215,
+      "name": "수염제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 216,
+      "name": "슈링크리프팅",
+      "grade": 1,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        302,
+        404
+      ],
+      "is_leaf": true,
+      "parent_id": 5,
+      "is_active": true
+    },
+    {
+      "id": 217,
+      "name": "슈링크유니버스",
+      "grade": 1,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        302,
+        404
+      ],
+      "is_leaf": true,
+      "parent_id": 5,
+      "is_active": true
+    },
+    {
+      "id": 218,
+      "name": "스네코스셀",
+      "grade": 3,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        216,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 219,
+      "name": "스마일프로",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": false
+    },
+    {
+      "id": 220,
+      "name": "스마트소닉",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 221,
+      "name": "스케일링",
+      "grade": 2,
+      "primary_category_id": 702,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": false,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 222,
+      "name": "스킨바이브",
+      "grade": 3,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 223,
+      "name": "스킨보톡스",
+      "grade": 2,
+      "primary_category_id": 103,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 224,
+      "name": "스킨스케일링",
+      "grade": 2,
+      "primary_category_id": 702,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": 221,
+      "is_active": true
+    },
+    {
+      "id": 225,
+      "name": "스킨아우라",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 226,
+      "name": "스피큘링",
+      "grade": 2,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": false,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 227,
+      "name": "슬리머레이저",
+      "grade": 3,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 228,
+      "name": "승모근보톡스",
+      "grade": 2,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108,
+        207,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 229,
+      "name": "승모근지방분해주사",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        207,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": 1007,
+      "is_active": true
+    },
+    {
+      "id": 230,
+      "name": "시너지MPX",
+      "grade": 2,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 231,
+      "name": "시카레이저",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 232,
+      "name": "시크릿레이저",
+      "grade": 2,
+      "primary_category_id": 402,
+      "secondary_category_ids": [
+        101
+      ],
+      "tag_ids": [
+        3,
+        103,
+        109,
+        301,
+        303
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 233,
+      "name": "신데렐라주사",
+      "grade": 2,
+      "primary_category_id": 302,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        102,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 234,
+      "name": "실리프팅",
+      "grade": 2,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        305
+      ],
+      "is_leaf": false,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 235,
+      "name": "실펌레이저",
+      "grade": 2,
+      "primary_category_id": 402,
+      "secondary_category_ids": [
+        101
+      ],
+      "tag_ids": [
+        3,
+        103,
+        109,
+        301,
+        305,
+        417
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 236,
+      "name": "써니",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 237,
+      "name": "써마지리프팅",
+      "grade": 1,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        303,
+        402
+      ],
+      "is_leaf": true,
+      "parent_id": 1001,
+      "is_active": true
+    },
+    {
+      "id": 238,
+      "name": "써펙트리프팅",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 239,
+      "name": "쎄라필",
+      "grade": 3,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 240,
+      "name": "아그네스레이저",
+      "grade": 2,
+      "primary_category_id": 401,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        7,
+        11,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 241,
+      "name": "아기주사",
+      "grade": 2,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": false,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 242,
+      "name": "아꼴레이드",
+      "grade": 3,
+      "primary_category_id": 402,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        3,
+        103,
+        109
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 243,
+      "name": "아르기닌수액",
+      "grade": 2,
+      "primary_category_id": 703,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 244,
+      "name": "아이링",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        202
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 245,
+      "name": "아이슈링크",
+      "grade": 1,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        202,
+        302,
+        404
+      ],
+      "is_leaf": true,
+      "parent_id": 5,
+      "is_active": true
+    },
+    {
+      "id": 246,
+      "name": "아이써마지",
+      "grade": 1,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        202,
+        303,
+        402
+      ],
+      "is_leaf": true,
+      "parent_id": 1001,
+      "is_active": true
+    },
+    {
+      "id": 247,
+      "name": "아쿠아퓨어2",
+      "grade": 3,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 248,
+      "name": "아쿠아필링",
+      "grade": 2,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": 486,
+      "is_active": true
+    },
+    {
+      "id": 249,
+      "name": "아큐스컬프",
+      "grade": 3,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 250,
+      "name": "아큐커브",
+      "grade": 3,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 251,
+      "name": "아큐토닝",
+      "grade": 2,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 252,
+      "name": "아포지레이저",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 253,
+      "name": "아피니트",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 254,
+      "name": "악센토레이저",
+      "grade": 3,
+      "primary_category_id": 402,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        3,
+        103,
+        109,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 255,
+      "name": "악센튜에이트",
+      "grade": 3,
+      "primary_category_id": 402,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        3,
+        103,
+        109
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 256,
+      "name": "악센트XL",
+      "grade": 3,
+      "primary_category_id": 402,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        3,
+        103,
+        109,
+        303
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 257,
+      "name": "안구건조증",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 258,
+      "name": "알라딘필링",
+      "grade": 2,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": 486,
+      "is_active": true
+    },
+    {
+      "id": 259,
+      "name": "알렉스토닝",
+      "grade": 2,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 94,
+      "is_active": true
+    },
+    {
+      "id": 260,
+      "name": "앞광대필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        205,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 261,
+      "name": "애교살지방이식",
+      "grade": 2,
+      "primary_category_id": 202,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        107,
+        202
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 262,
+      "name": "애교필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [
+        101
+      ],
+      "tag_ids": [
+        107,
+        202,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 263,
+      "name": "애플레이저",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 264,
+      "name": "액취증(레이저)",
+      "grade": 2,
+      "primary_category_id": 604,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        20,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 265,
+      "name": "액취증보톡스",
+      "grade": 2,
+      "primary_category_id": 604,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        20,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 266,
+      "name": "앰스컬프",
+      "grade": 3,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 267,
+      "name": "어깨냉각지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        307
+      ],
+      "is_leaf": true,
+      "parent_id": 1005,
+      "is_active": true
+    },
+    {
+      "id": 268,
+      "name": "어깨제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 269,
+      "name": "어깨지방분해주사",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": 1007,
+      "is_active": true
+    },
+    {
+      "id": 270,
+      "name": "어깨필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 271,
+      "name": "어븀프락셀",
+      "grade": 2,
+      "primary_category_id": 402,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        3,
+        103,
+        109,
+        418
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 272,
+      "name": "얼굴제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        215,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 273,
+      "name": "얼굴지방분해(레이저)",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        215,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 1008,
+      "is_active": true
+    },
+    {
+      "id": 274,
+      "name": "얼굴지방분해주사",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        215,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": 1007,
+      "is_active": true
+    },
+    {
+      "id": 275,
+      "name": "얼굴지방이식",
+      "grade": 2,
+      "primary_category_id": 202,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        107,
+        215
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 276,
+      "name": "얼굴체외충격파",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        215,
+        308
+      ],
+      "is_leaf": true,
+      "parent_id": 1010,
+      "is_active": true
+    },
+    {
+      "id": 277,
+      "name": "얼굴초음파지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        215,
+        302
+      ],
+      "is_leaf": true,
+      "parent_id": 1009,
+      "is_active": true
+    },
+    {
+      "id": 278,
+      "name": "엉덩이고주파지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        213,
+        303
+      ],
+      "is_leaf": true,
+      "parent_id": 1006,
+      "is_active": true
+    },
+    {
+      "id": 279,
+      "name": "엉덩이냉각지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        213,
+        307
+      ],
+      "is_leaf": true,
+      "parent_id": 1005,
+      "is_active": true
+    },
+    {
+      "id": 280,
+      "name": "엉덩이제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        213,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 1004,
+      "is_active": true
+    },
+    {
+      "id": 281,
+      "name": "엉덩이지방분해주사",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        213,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": 1007,
+      "is_active": true
+    },
+    {
+      "id": 282,
+      "name": "엉덩이지방이식",
+      "grade": 2,
+      "primary_category_id": 202,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        107,
+        213
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 283,
+      "name": "엉덩이체외충격파지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        213,
+        308
+      ],
+      "is_leaf": true,
+      "parent_id": 1010,
+      "is_active": true
+    },
+    {
+      "id": 284,
+      "name": "엉덩이초음파지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        213,
+        302
+      ],
+      "is_leaf": true,
+      "parent_id": 1009,
+      "is_active": true
+    },
+    {
+      "id": 285,
+      "name": "엉덩이필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        213,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 286,
+      "name": "에나멜쉐이핑",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": false
+    },
+    {
+      "id": 287,
+      "name": "에뜨레벨주사",
+      "grade": 3,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 288,
+      "name": "에스슈링크",
+      "grade": 1,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        302,
+        404
+      ],
+      "is_leaf": true,
+      "parent_id": 5,
+      "is_active": true
+    },
+    {
+      "id": 289,
+      "name": "에스테필",
+      "grade": 2,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 290,
+      "name": "에어젯리프팅",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 291,
+      "name": "에토좀PTT",
+      "grade": 2,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 292,
+      "name": "에포렉스",
+      "grade": 3,
+      "primary_category_id": 402,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        3,
+        103,
+        109
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 293,
+      "name": "엑셀V",
+      "grade": 2,
+      "primary_category_id": 801,
+      "secondary_category_ids": [
+        301
+      ],
+      "tag_ids": [
+        10,
+        301,
+        410
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 294,
+      "name": "엑소좀",
+      "grade": 2,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 295,
+      "name": "엑실리스리프팅",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        305
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 296,
+      "name": "엔더몰로지",
+      "grade": 2,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 297,
+      "name": "엔코어리프팅",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        216
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 298,
+      "name": "엘라비에리투오",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 299,
+      "name": "엘라스티꿈",
+      "grade": 3,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 300,
+      "name": "엘리시스센스",
+      "grade": 2,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 301,
+      "name": "엘싸",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 302,
+      "name": "엠브레이스RF",
+      "grade": 3,
+      "primary_category_id": 402,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        3,
+        103,
+        109,
+        303
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 303,
+      "name": "엠셀라",
+      "grade": 3,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 304,
+      "name": "엠졸레이저",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 305,
+      "name": "엠페이스",
+      "grade": 3,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 306,
+      "name": "여드름압출",
+      "grade": 2,
+      "primary_category_id": 401,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        7,
+        11
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 307,
+      "name": "여드름주사",
+      "grade": 2,
+      "primary_category_id": 401,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        7,
+        11,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 308,
+      "name": "여드름침",
+      "grade": 2,
+      "primary_category_id": 401,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        7,
+        11
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 309,
+      "name": "연어주사",
+      "grade": 2,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 310,
+      "name": "옆구리고주파지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        220,
+        303
+      ],
+      "is_leaf": true,
+      "parent_id": 1006,
+      "is_active": true
+    },
+    {
+      "id": 311,
+      "name": "옆구리냉각지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        220,
+        307
+      ],
+      "is_leaf": true,
+      "parent_id": 1005,
+      "is_active": true
+    },
+    {
+      "id": 312,
+      "name": "옆구리지방분해주사",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        220,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": 1007,
+      "is_active": true
+    },
+    {
+      "id": 313,
+      "name": "옆구리초음파지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        220,
+        302
+      ],
+      "is_leaf": true,
+      "parent_id": 1009,
+      "is_active": true
+    },
+    {
+      "id": 314,
+      "name": "옆볼필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        205,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 315,
+      "name": "예스필",
+      "grade": 3,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 316,
+      "name": "오비소트",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 317,
+      "name": "오푸스리프팅",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 318,
+      "name": "온다리프팅",
+      "grade": 1,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        211,
+        308,
+        416
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 319,
+      "name": "올리지오리프팅",
+      "grade": 1,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        303,
+        414
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 320,
+      "name": "올타이트리프팅",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 321,
+      "name": "울세라믹",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 322,
+      "name": "울세라믹크라운",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 323,
+      "name": "울쎄라리프팅",
+      "grade": 1,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        302,
+        401
+      ],
+      "is_leaf": true,
+      "parent_id": 5,
+      "is_active": true
+    },
+    {
+      "id": 324,
+      "name": "울쎄라피프라임",
+      "grade": 1,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        302,
+        401
+      ],
+      "is_leaf": true,
+      "parent_id": 5,
+      "is_active": true
+    },
+    {
+      "id": 325,
+      "name": "울트라셀",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        302
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 326,
+      "name": "울트라셀Q+",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        302
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 327,
+      "name": "울트라스킨",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        302
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 328,
+      "name": "울트라인",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        302
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 329,
+      "name": "울트라젯",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        302
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 330,
+      "name": "울트라콜",
+      "grade": 1,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        302,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 331,
+      "name": "울트라클리어",
+      "grade": 3,
+      "primary_category_id": 403,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        8,
+        103,
+        110,
+        302
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 332,
+      "name": "울핏",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 333,
+      "name": "유리본NMN",
+      "grade": 3,
+      "primary_category_id": 703,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 334,
+      "name": "유산균필",
+      "grade": 2,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 335,
+      "name": "윤곽주사",
+      "grade": 2,
+      "primary_category_id": 203,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        304,
+        311
+      ],
+      "is_leaf": false,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 336,
+      "name": "윤곽톡스",
+      "grade": 2,
+      "primary_category_id": 203,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 337,
+      "name": "음경제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 338,
+      "name": "음경필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 339,
+      "name": "이데바에",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 340,
+      "name": "이래비티",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 341,
+      "name": "이마제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        201,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 1002,
+      "is_active": true
+    },
+    {
+      "id": 342,
+      "name": "이마주름보톡스",
+      "grade": 2,
+      "primary_category_id": 103,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        201,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 343,
+      "name": "이마지방이식",
+      "grade": 2,
+      "primary_category_id": 202,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        107,
+        201
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 344,
+      "name": "이마필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        201,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 345,
+      "name": "이브타이탄",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 346,
+      "name": "이슈타르트리니티",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 347,
+      "name": "이온도입법",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 348,
+      "name": "인디언주름필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 349,
+      "name": "인모드리프팅",
+      "grade": 1,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        303,
+        403
+      ],
+      "is_leaf": true,
+      "parent_id": 1001,
+      "is_active": true
+    },
+    {
+      "id": 350,
+      "name": "인모드바디",
+      "grade": 1,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108,
+        303,
+        403
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 351,
+      "name": "인중제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        217,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 1002,
+      "is_active": true
+    },
+    {
+      "id": 352,
+      "name": "인중축소레이저",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        217,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 353,
+      "name": "인중축소보톡스",
+      "grade": 2,
+      "primary_category_id": 103,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        217,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 354,
+      "name": "인텐스울트라",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        302
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 355,
+      "name": "인트라셀레이저",
+      "grade": 3,
+      "primary_category_id": 402,
+      "secondary_category_ids": [
+        101
+      ],
+      "tag_ids": [
+        3,
+        103,
+        109,
+        301,
+        303
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 356,
+      "name": "인피니하이브리드",
+      "grade": 3,
+      "primary_category_id": 402,
+      "secondary_category_ids": [
+        101
+      ],
+      "tag_ids": [
+        3,
+        103,
+        109,
+        303
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 357,
+      "name": "입가주름보톡스",
+      "grade": 2,
+      "primary_category_id": 103,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        217,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 358,
+      "name": "입꼬리보톡스",
+      "grade": 2,
+      "primary_category_id": 103,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        217,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 359,
+      "name": "입꼬리필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        217,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 360,
+      "name": "입술필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        217,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 361,
+      "name": "잇몸보톡스",
+      "grade": 2,
+      "primary_category_id": 103,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        217,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 362,
+      "name": "자궁경부암예방주사",
+      "grade": 2,
+      "primary_category_id": 703,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 363,
+      "name": "잔주름보톡스",
+      "grade": 2,
+      "primary_category_id": 103,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 364,
+      "name": "잘루프로",
+      "grade": 2,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 365,
+      "name": "전신제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        214,
+        301
+      ],
+      "is_leaf": false,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 366,
+      "name": "제네시스",
+      "grade": 2,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 367,
+      "name": "젠틀맥스프로",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [
+        301
+      ],
+      "tag_ids": [
+        18,
+        111,
+        301,
+        407
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 368,
+      "name": "종아리고주파지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        212,
+        303
+      ],
+      "is_leaf": true,
+      "parent_id": 1006,
+      "is_active": true
+    },
+    {
+      "id": 369,
+      "name": "종아리냉각지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        212,
+        307
+      ],
+      "is_leaf": true,
+      "parent_id": 1005,
+      "is_active": true
+    },
+    {
+      "id": 370,
+      "name": "종아리보톡스",
+      "grade": 2,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108,
+        212,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 371,
+      "name": "종아리신경차단술",
+      "grade": 2,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108,
+        212
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 372,
+      "name": "종아리제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        212,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 1004,
+      "is_active": true
+    },
+    {
+      "id": 373,
+      "name": "종아리지방분해주사",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        212,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": 1007,
+      "is_active": true
+    },
+    {
+      "id": 374,
+      "name": "종아리체외충격파지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        212,
+        308
+      ],
+      "is_leaf": true,
+      "parent_id": 1010,
+      "is_active": true
+    },
+    {
+      "id": 375,
+      "name": "종아리초음파지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        212,
+        302
+      ],
+      "is_leaf": true,
+      "parent_id": 1009,
+      "is_active": true
+    },
+    {
+      "id": 376,
+      "name": "줄기세포배양상청액",
+      "grade": 2,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        209,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 377,
+      "name": "줄기세포주사",
+      "grade": 3,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 378,
+      "name": "쥐젖제거",
+      "grade": 2,
+      "primary_category_id": 802,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 379,
+      "name": "쥬베룩",
+      "grade": 1,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304,
+        412
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 380,
+      "name": "쥬브겔파인",
+      "grade": 3,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 381,
+      "name": "쥬브젠",
+      "grade": 3,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 382,
+      "name": "쥬비덤볼라이트",
+      "grade": 3,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        205,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 383,
+      "name": "지니어스",
+      "grade": 3,
+      "primary_category_id": 402,
+      "secondary_category_ids": [
+        101
+      ],
+      "tag_ids": [
+        3,
+        103,
+        109,
+        303
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 384,
+      "name": "지르코니아크라운",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        216
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": false
+    },
+    {
+      "id": 385,
+      "name": "지방분해약침",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 386,
+      "name": "지방추출주사",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": 1007,
+      "is_active": true
+    },
+    {
+      "id": 387,
+      "name": "질쎄라",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 388,
+      "name": "질필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 389,
+      "name": "착색토닝",
+      "grade": 2,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 390,
+      "name": "초음파스케일링",
+      "grade": 2,
+      "primary_category_id": 702,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        302
+      ],
+      "is_leaf": true,
+      "parent_id": 221,
+      "is_active": true
+    },
+    {
+      "id": 391,
+      "name": "침샘보톡스",
+      "grade": 2,
+      "primary_category_id": 203,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 392,
+      "name": "침술",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 393,
+      "name": "카복시",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112
+      ],
+      "is_leaf": false,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 394,
+      "name": "카이저레이저",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 395,
+      "name": "카프리레이저",
+      "grade": 2,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 396,
+      "name": "케이부스터",
+      "grade": 3,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 397,
+      "name": "켈로이드주사",
+      "grade": 2,
+      "primary_category_id": 403,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        8,
+        103,
+        110,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 398,
+      "name": "코(귀연골)",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        216
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": false
+    },
+    {
+      "id": 399,
+      "name": "코(늑연골)",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        216
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": false
+    },
+    {
+      "id": 400,
+      "name": "코(자가진피)",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        216
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": false
+    },
+    {
+      "id": 401,
+      "name": "코길이연장술",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        216
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": false
+    },
+    {
+      "id": 402,
+      "name": "코레지셀핏",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        216
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": false
+    },
+    {
+      "id": 403,
+      "name": "코실리프팅",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        216,
+        305
+      ],
+      "is_leaf": true,
+      "parent_id": 234,
+      "is_active": true
+    },
+    {
+      "id": 404,
+      "name": "코어스컬프",
+      "grade": 3,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108,
+        216
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 405,
+      "name": "코조각주사",
+      "grade": 2,
+      "primary_category_id": 203,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        216,
+        304,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 406,
+      "name": "코프팅",
+      "grade": 3,
+      "primary_category_id": 403,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        8,
+        103,
+        110,
+        216
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 407,
+      "name": "코필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        216,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 408,
+      "name": "콜라겐주사",
+      "grade": 2,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 409,
+      "name": "콧등보톡스",
+      "grade": 2,
+      "primary_category_id": 103,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        216,
+        219,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 410,
+      "name": "콧볼보톡스",
+      "grade": 2,
+      "primary_category_id": 103,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        205,
+        216,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 411,
+      "name": "콧볼축소",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        205,
+        216
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": false
+    },
+    {
+      "id": 412,
+      "name": "콧볼필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        205,
+        216,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 413,
+      "name": "쿨소닉",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 414,
+      "name": "쿨페이즈",
+      "grade": 3,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 415,
+      "name": "퀵광대",
+      "grade": 2,
+      "primary_category_id": 203,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        205,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 416,
+      "name": "큐라스하이브리드",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 417,
+      "name": "큐스위치엔디야그레이저",
+      "grade": 3,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 418,
+      "name": "큐어젯",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 419,
+      "name": "큐오필",
+      "grade": 3,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 420,
+      "name": "크라이오셀",
+      "grade": 2,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 421,
+      "name": "클라디에주사",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 422,
+      "name": "클라리티",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [
+        301
+      ],
+      "tag_ids": [
+        18,
+        111,
+        301,
+        408
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 423,
+      "name": "클리어리프팅",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 424,
+      "name": "키오머3",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 425,
+      "name": "타겟쿨",
+      "grade": 3,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 426,
+      "name": "태반주사",
+      "grade": 2,
+      "primary_category_id": 703,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 427,
+      "name": "턱끝보톡스",
+      "grade": 2,
+      "primary_category_id": 203,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        206,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 428,
+      "name": "턱끝지방이식",
+      "grade": 2,
+      "primary_category_id": 202,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        107,
+        206
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 429,
+      "name": "턱끝필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        206,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 430,
+      "name": "턱제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        206,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 1002,
+      "is_active": true
+    },
+    {
+      "id": 431,
+      "name": "턱지방이식",
+      "grade": 2,
+      "primary_category_id": 202,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        107,
+        206
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 432,
+      "name": "턱필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        206,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 433,
+      "name": "텐써마",
+      "grade": 1,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        303
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 434,
+      "name": "텐쎄라",
+      "grade": 2,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 435,
+      "name": "토너브레이저",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 436,
+      "name": "토르리프팅",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 437,
+      "name": "튠라이너",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 438,
+      "name": "튠바디리프팅",
+      "grade": 2,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 439,
+      "name": "튠아이",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        202
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 440,
+      "name": "튠페이스리프팅",
+      "grade": 2,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 441,
+      "name": "트루스컬프",
+      "grade": 2,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 442,
+      "name": "트리니티리프팅",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 443,
+      "name": "트리플바디",
+      "grade": 3,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 444,
+      "name": "튼살제거",
+      "grade": 2,
+      "primary_category_id": 403,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        8,
+        17,
+        103,
+        110
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 445,
+      "name": "티타늄리프팅",
+      "grade": 1,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        302
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 446,
+      "name": "틱셀레이저",
+      "grade": 3,
+      "primary_category_id": 402,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        3,
+        103,
+        109,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 447,
+      "name": "팔고주파지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        210,
+        303
+      ],
+      "is_leaf": true,
+      "parent_id": 1006,
+      "is_active": true
+    },
+    {
+      "id": 448,
+      "name": "팔냉각지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        210,
+        307
+      ],
+      "is_leaf": true,
+      "parent_id": 1005,
+      "is_active": true
+    },
+    {
+      "id": 449,
+      "name": "팔뚝보톡스",
+      "grade": 2,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108,
+        210,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 450,
+      "name": "팔자주름박리",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        204,
+        210
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 451,
+      "name": "팔자주름보톡스",
+      "grade": 2,
+      "primary_category_id": 103,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        204,
+        210,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 452,
+      "name": "팔자주름스컬트라",
+      "grade": 2,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        204,
+        210,
+        304,
+        419
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 453,
+      "name": "팔자주름지방이식",
+      "grade": 2,
+      "primary_category_id": 202,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        107,
+        204,
+        210
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 454,
+      "name": "팔자주름필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        204,
+        210,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 455,
+      "name": "팔제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        210,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 1003,
+      "is_active": true
+    },
+    {
+      "id": 456,
+      "name": "팔지방분해레이저",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        210,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 1008,
+      "is_active": true
+    },
+    {
+      "id": 457,
+      "name": "팔지방분해주사",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        210,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": 1007,
+      "is_active": true
+    },
+    {
+      "id": 458,
+      "name": "팔체외충격파지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        210,
+        308
+      ],
+      "is_leaf": true,
+      "parent_id": 1010,
+      "is_active": true
+    },
+    {
+      "id": 459,
+      "name": "팔초음파지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        210,
+        302
+      ],
+      "is_leaf": true,
+      "parent_id": 1009,
+      "is_active": true
+    },
+    {
+      "id": 460,
+      "name": "팡시스",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 461,
+      "name": "포텐자",
+      "grade": 2,
+      "primary_category_id": 402,
+      "secondary_category_ids": [
+        101
+      ],
+      "tag_ids": [
+        3,
+        103,
+        109,
+        303,
+        406
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 462,
+      "name": "포토나리프팅",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 463,
+      "name": "포트라리프팅",
+      "grade": 3,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 464,
+      "name": "풀페이스리프팅",
+      "grade": 2,
+      "primary_category_id": 101,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        1,
+        2,
+        13,
+        101,
+        106,
+        108,
+        215
+      ],
+      "is_leaf": false,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 465,
+      "name": "풀페이스지방이식",
+      "grade": 2,
+      "primary_category_id": 202,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        107,
+        215
+      ],
+      "is_leaf": false,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 466,
+      "name": "풀페이스필러",
+      "grade": 2,
+      "primary_category_id": 201,
+      "secondary_category_ids": [
+        101
+      ],
+      "tag_ids": [
+        107,
+        215,
+        304,
+        306
+      ],
+      "is_leaf": false,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 467,
+      "name": "프라임레이즈",
+      "grade": 3,
+      "primary_category_id": 402,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        3,
+        103,
+        109
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 468,
+      "name": "프락셀레이저",
+      "grade": 2,
+      "primary_category_id": 402,
+      "secondary_category_ids": [
+        101
+      ],
+      "tag_ids": [
+        3,
+        103,
+        109,
+        301,
+        418
+      ],
+      "is_leaf": false,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 469,
+      "name": "프로파운드",
+      "grade": 3,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 470,
+      "name": "프로필로",
+      "grade": 3,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 471,
+      "name": "플라듀오",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 472,
+      "name": "플라즈마",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 473,
+      "name": "플라필",
+      "grade": 3,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 474,
+      "name": "플래티넘PTT",
+      "grade": 3,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 475,
+      "name": "플루리알",
+      "grade": 3,
+      "primary_category_id": 102,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        104,
+        114,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 476,
+      "name": "피아모",
+      "grade": 3,
+      "primary_category_id": 403,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        8,
+        103,
+        110
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 477,
+      "name": "피어싱",
+      "grade": 2,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 478,
+      "name": "피코MLA",
+      "grade": 1,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        216,
+        301,
+        405
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 479,
+      "name": "피코슈어",
+      "grade": 1,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        216,
+        301,
+        405
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 480,
+      "name": "피코스팟",
+      "grade": 1,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        216,
+        301,
+        405
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 481,
+      "name": "피코토닝",
+      "grade": 2,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        216,
+        301,
+        405
+      ],
+      "is_leaf": true,
+      "parent_id": 94,
+      "is_active": true
+    },
+    {
+      "id": 482,
+      "name": "피코프락셀",
+      "grade": 1,
+      "primary_category_id": 301,
+      "secondary_category_ids": [
+        402
+      ],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        216,
+        301,
+        405,
+        418
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 483,
+      "name": "피팅",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 484,
+      "name": "필러제거주사",
+      "grade": 2,
+      "primary_category_id": 703,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        107,
+        304,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 485,
+      "name": "필로드",
+      "grade": 3,
+      "primary_category_id": 803,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 486,
+      "name": "필링",
+      "grade": 2,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": false,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 487,
+      "name": "핑크주사",
+      "grade": 3,
+      "primary_category_id": 302,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        102,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 488,
+      "name": "하이드라바디",
+      "grade": 3,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 489,
+      "name": "하이드라젠틀",
+      "grade": 3,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 490,
+      "name": "하이드라페이셜",
+      "grade": 2,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 491,
+      "name": "하이드로임팩트",
+      "grade": 3,
+      "primary_category_id": 701,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        103,
+        306
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 492,
+      "name": "하이코",
+      "grade": 3,
+      "primary_category_id": 403,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        8,
+        103,
+        110,
+        216
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 493,
+      "name": "하이푸샤워",
+      "grade": 3,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108,
+        302
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 494,
+      "name": "한관종제거",
+      "grade": 2,
+      "primary_category_id": 802,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 495,
+      "name": "허리제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        209,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 496,
+      "name": "허벅지고주파지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        211,
+        303
+      ],
+      "is_leaf": true,
+      "parent_id": 1006,
+      "is_active": true
+    },
+    {
+      "id": 497,
+      "name": "허벅지냉각지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        211,
+        307
+      ],
+      "is_leaf": true,
+      "parent_id": 1005,
+      "is_active": true
+    },
+    {
+      "id": 498,
+      "name": "허벅지보톡스",
+      "grade": 2,
+      "primary_category_id": 602,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        106,
+        108,
+        211,
+        311
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 499,
+      "name": "허벅지제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        211,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 1004,
+      "is_active": true
+    },
+    {
+      "id": 500,
+      "name": "허벅지지방분해레이저",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        211,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": 1008,
+      "is_active": true
+    },
+    {
+      "id": 501,
+      "name": "허벅지지방분해주사",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        211,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": 1007,
+      "is_active": true
+    },
+    {
+      "id": 502,
+      "name": "허벅지체외충격파지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        211,
+        308
+      ],
+      "is_leaf": true,
+      "parent_id": 1010,
+      "is_active": true
+    },
+    {
+      "id": 503,
+      "name": "허벅지초음파지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        19,
+        112,
+        211,
+        302
+      ],
+      "is_leaf": true,
+      "parent_id": 1009,
+      "is_active": true
+    },
+    {
+      "id": 504,
+      "name": "헤어라인제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        18,
+        111,
+        201,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 505,
+      "name": "흉터제거레이저",
+      "grade": 2,
+      "primary_category_id": 403,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        8,
+        103,
+        110,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 506,
+      "name": "흉터제거주사",
+      "grade": 2,
+      "primary_category_id": 403,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        8,
+        103,
+        110,
+        304
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 507,
+      "name": "힐라이트",
+      "grade": 3,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 508,
+      "name": "힐로웨이브",
+      "grade": 3,
+      "primary_category_id": 301,
+      "secondary_category_ids": [],
+      "tag_ids": [
+        4,
+        5,
+        6,
+        102,
+        301
+      ],
+      "is_leaf": true,
+      "parent_id": null,
+      "is_active": true
+    },
+    {
+      "id": 1001,
+      "name": "RF리프팅",
+      "grade": 2,
+      "primary_category_id": 101,
+      "parent_id": null,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": false,
+      "is_active": true
+    },
+    {
+      "id": 1002,
+      "name": "얼굴제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "parent_id": null,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": false,
+      "is_active": true
+    },
+    {
+      "id": 1003,
+      "name": "상체제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "parent_id": null,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": false,
+      "is_active": true
+    },
+    {
+      "id": 1004,
+      "name": "하체제모",
+      "grade": 2,
+      "primary_category_id": 501,
+      "parent_id": null,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": false,
+      "is_active": true
+    },
+    {
+      "id": 1005,
+      "name": "냉각지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "parent_id": null,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": false,
+      "is_active": true
+    },
+    {
+      "id": 1006,
+      "name": "고주파지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "parent_id": null,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": false,
+      "is_active": true
+    },
+    {
+      "id": 1007,
+      "name": "지방분해주사",
+      "grade": 2,
+      "primary_category_id": 601,
+      "parent_id": null,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": false,
+      "is_active": true
+    },
+    {
+      "id": 1008,
+      "name": "지방분해레이저",
+      "grade": 2,
+      "primary_category_id": 601,
+      "parent_id": null,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": false,
+      "is_active": true
+    },
+    {
+      "id": 1009,
+      "name": "초음파지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "parent_id": null,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": false,
+      "is_active": true
+    },
+    {
+      "id": 1010,
+      "name": "체외충격파지방분해",
+      "grade": 2,
+      "primary_category_id": 601,
+      "parent_id": null,
+      "secondary_category_ids": [],
+      "tag_ids": [],
+      "is_leaf": false,
+      "is_active": true
+    }
+  ]
+}

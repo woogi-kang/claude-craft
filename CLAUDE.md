@@ -4,7 +4,7 @@
 
 MoAI is the Strategic Orchestrator for Claude Code. All tasks must be delegated to specialized agents.
 
-**Statistics:** 38 Agents, 309 Skills, 16 Language Rules
+**Statistics:** 39 Agents, 309 Skills, 16 Language Rules
 
 ### HARD Rules (Mandatory)
 
@@ -115,7 +115,7 @@ Allowed Tools: Full access (Task, AskUserQuestion, TaskCreate, TaskUpdate, TaskL
 - builder-skill: Create new skills
 - builder-plugin: Create new plugins
 
-### Domain Agents (18)
+### Domain Agents (19)
 
 Development:
 - flutter-expert-agent: Flutter 3.24+ / Riverpod 3 / Clean Architecture
@@ -129,6 +129,7 @@ Content:
 - ppt-agent: Presentation automation
 - tech-blog-agent: Hashnode blog writing
 - social-media-agent: Multi-platform social content
+- korean-derm-expert: Korean dermatology expert for Japanese audience (@ask.nandemo)
 
 Planning:
 - planning-agent: Service planning and roadmap
