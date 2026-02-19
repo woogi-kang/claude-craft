@@ -3,12 +3,23 @@
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass
+
+import httpx
 
 from src.ai.prompts import CLASSIFIER_SYSTEM_PROMPT
 from src.utils.logger import get_logger
 
 logger = get_logger("classifier")
+
+_CONTROL_CHARS = re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]')
+
+
+def _sanitize_input(text: str, max_length: int = 2000) -> str:
+    """Strip control characters and truncate."""
+    cleaned = _CONTROL_CHARS.sub('', text)
+    return cleaned[:max_length]
 
 
 @dataclass
@@ -47,9 +58,12 @@ class MessageClassifier:
 
     def _ensure_client(self):
         if self._client is None:
-            from anthropic import Anthropic
+            from anthropic import AsyncAnthropic
 
-            self._client = Anthropic(api_key=self._api_key)
+            self._client = AsyncAnthropic(
+                api_key=self._api_key,
+                timeout=httpx.Timeout(30.0, connect=10.0),
+            )
 
     async def classify(self, message: str) -> ClassificationResult:
         """Classify a message's intent.
@@ -69,12 +83,14 @@ class MessageClassifier:
         try:
             self._ensure_client()
 
-            response = self._client.messages.create(
+            sanitized = _sanitize_input(message)
+
+            response = await self._client.messages.create(
                 model=self._model,
                 max_tokens=200,
                 temperature=0.0,
                 system=CLASSIFIER_SYSTEM_PROMPT,
-                messages=[{"role": "user", "content": message}],
+                messages=[{"role": "user", "content": sanitized}],
             )
 
             text = response.content[0].text if response.content else ""

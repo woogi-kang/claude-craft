@@ -37,9 +37,12 @@ class OpenAIProvider:
     def _ensure_client(self):
         if self._client is None:
             try:
-                from openai import OpenAI
+                from openai import AsyncOpenAI
 
-                self._client = OpenAI(api_key=self._api_key)
+                self._client = AsyncOpenAI(
+                    api_key=self._api_key,
+                    timeout=30.0,
+                )
             except ImportError:
                 logger.error("openai_not_installed")
                 raise
@@ -77,7 +80,7 @@ class OpenAIProvider:
             messages.append({"role": entry["role"], "content": entry["content"]})
         messages.append({"role": "user", "content": message})
 
-        response = self._client.chat.completions.create(
+        response = await self._client.chat.completions.create(
             model=self._model,
             max_tokens=self._max_tokens,
             temperature=self._temperature,

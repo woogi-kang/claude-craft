@@ -36,12 +36,8 @@ class OllamaProvider:
 
     @property
     def is_available(self) -> bool:
-        """Check if the Ollama server is reachable."""
-        try:
-            resp = httpx.get(f"{self._base_url}/api/tags", timeout=3.0)
-            return resp.status_code == 200
-        except (httpx.ConnectError, httpx.TimeoutException, httpx.HTTPError):
-            return False
+        """Assume available; actual failures handled in generate()."""
+        return True
 
     async def generate(
         self,

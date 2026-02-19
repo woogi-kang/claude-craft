@@ -14,6 +14,23 @@ from typing import Any
 
 from src.db.models import ALL_TABLES, INDEXES
 
+# Allowed column names for dynamic updates (prevents SQL injection via column names)
+_CONVERSATION_COLUMNS = frozenset({
+    "chatroom_name", "sender_name", "status", "message_count",
+    "last_message_at", "updated_at",
+})
+
+_MESSAGE_COLUMNS = frozenset({
+    "chatroom_id", "direction", "content", "classification",
+    "confidence", "llm_provider", "template_id", "response_time_ms",
+})
+
+_DAILY_STATS_COLUMNS = frozenset({
+    "messages_received", "messages_responded", "faq_matches",
+    "llm_responses", "claude_calls", "gpt4_calls", "ollama_calls",
+    "template_responses", "errors", "avg_response_time_ms",
+})
+
 
 class Repository:
     """Thin wrapper around an SQLite connection.
@@ -125,6 +142,9 @@ class Repository:
         """
         if not kwargs:
             return False
+        invalid = set(kwargs.keys()) - _CONVERSATION_COLUMNS - {"updated_at"}
+        if invalid:
+            raise ValueError(f"Invalid column names: {invalid}")
         conn = self._get_conn()
         kwargs["updated_at"] = datetime.now(timezone.utc).isoformat()
         set_clause = ", ".join(f"{k} = ?" for k in kwargs)
@@ -161,6 +181,9 @@ class Repository:
             Optional columns: classification, confidence, llm_provider,
             template_id, response_time_ms.
         """
+        invalid = set(kwargs.keys()) - _MESSAGE_COLUMNS
+        if invalid:
+            raise ValueError(f"Invalid column names: {invalid}")
         conn = self._get_conn()
         fields = {
             "chatroom_id": chatroom_id,
@@ -244,6 +267,9 @@ class Repository:
         key must match a column name and its value is *added* to the
         current value.
         """
+        invalid = set(increments.keys()) - _DAILY_STATS_COLUMNS
+        if invalid:
+            raise ValueError(f"Invalid column names: {invalid}")
         conn = self._get_conn()
 
         # Ensure row exists

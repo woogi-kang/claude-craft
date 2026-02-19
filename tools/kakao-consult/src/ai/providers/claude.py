@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import time
 
+import httpx
+
 from src.ai.providers.base import LLMResponse
 from src.utils.logger import get_logger
 
@@ -37,9 +39,12 @@ class ClaudeProvider:
     def _ensure_client(self):
         if self._client is None:
             try:
-                from anthropic import Anthropic
+                from anthropic import AsyncAnthropic
 
-                self._client = Anthropic(api_key=self._api_key)
+                self._client = AsyncAnthropic(
+                    api_key=self._api_key,
+                    timeout=httpx.Timeout(30.0, connect=10.0),
+                )
             except ImportError:
                 logger.error("anthropic_not_installed")
                 raise
@@ -75,7 +80,7 @@ class ClaudeProvider:
             messages.append({"role": entry["role"], "content": entry["content"]})
         messages.append({"role": "user", "content": message})
 
-        response = self._client.messages.create(
+        response = await self._client.messages.create(
             model=self._model,
             max_tokens=self._max_tokens,
             temperature=self._temperature,
