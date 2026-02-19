@@ -150,3 +150,36 @@ class MonthlyBudgetTracker:
         """Number of tweets used in the current month."""
         self._maybe_reset()
         return self._used
+
+    @property
+    def usage_ratio(self) -> float:
+        """Return the fraction of the monthly budget consumed (0.0--1.0)."""
+        self._maybe_reset()
+        if self.monthly_limit == 0:
+            return 1.0
+        return self._used / self.monthly_limit
+
+    def is_conservation_mode(self, threshold: float = 0.8) -> bool:
+        """Return ``True`` when monthly usage has reached *threshold*.
+
+        Parameters
+        ----------
+        threshold:
+            Fraction of the monthly limit at which conservation mode
+            activates.  Defaults to 0.80 (80%).
+        """
+        return self.usage_ratio >= threshold
+
+    def is_critical_mode(self, threshold: float = 0.95) -> bool:
+        """Return ``True`` when monthly usage has reached *threshold*.
+
+        At this level, API-based replies should be stopped entirely
+        while Playwright-based DMs can continue.
+
+        Parameters
+        ----------
+        threshold:
+            Fraction of the monthly limit at which critical mode
+            activates.  Defaults to 0.95 (95%).
+        """
+        return self.usage_ratio >= threshold

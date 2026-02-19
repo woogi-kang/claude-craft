@@ -16,7 +16,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.triggers.interval import IntervalTrigger
 
-from src.config import Settings
+from src.config import PROJECT_ROOT, Settings, load_settings
 from src.pipeline.halt import HaltManager, get_volume_multiplier
 from src.utils.logger import get_logger
 from src.utils.time_utils import is_active_hours
@@ -67,10 +67,50 @@ class PipelineScheduler:
             )
         self._db_path = Path(db_path)
 
+        # Config hot-reload: track config.yaml modification time
+        self._config_path = PROJECT_ROOT / "config.yaml"
+        self._config_mtime: float = self._get_config_mtime()
+
     @property
     def is_running(self) -> bool:
         """Return ``True`` if the scheduler is actively running."""
         return self._running
+
+    # ------------------------------------------------------------------
+    # Config hot-reload
+    # ------------------------------------------------------------------
+
+    def _get_config_mtime(self) -> float:
+        """Return the modification time of ``config.yaml``, or ``0.0``."""
+        try:
+            return self._config_path.stat().st_mtime
+        except OSError:
+            return 0.0
+
+    def _check_config_reload(self) -> bool:
+        """Reload settings if ``config.yaml`` has been modified.
+
+        Returns
+        -------
+        bool
+            ``True`` if the configuration was reloaded.
+        """
+        current_mtime = self._get_config_mtime()
+        if current_mtime != self._config_mtime and current_mtime > 0:
+            self._config_mtime = current_mtime
+            try:
+                self._settings = load_settings(self._config_path)
+                logger.info(
+                    "config_hot_reloaded",
+                    config_path=str(self._config_path),
+                )
+                return True
+            except Exception as exc:
+                logger.error(
+                    "config_reload_failed",
+                    error=str(exc),
+                )
+        return False
 
     # ------------------------------------------------------------------
     # Core scheduling
@@ -100,6 +140,9 @@ class PipelineScheduler:
 
         This is the function invoked by APScheduler on each interval.
         """
+        # Check for config.yaml changes before each run
+        self._check_config_reload()
+
         sched_cfg = self._settings.scheduling
 
         # Check emergency halt

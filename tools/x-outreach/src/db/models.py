@@ -45,18 +45,20 @@ CREATE TABLE IF NOT EXISTS tweets (
 
 USERS_TABLE = """\
 CREATE TABLE IF NOT EXISTS users (
-    id               INTEGER PRIMARY KEY AUTOINCREMENT,
-    username         TEXT    UNIQUE NOT NULL,
-    display_name     TEXT,
-    follower_count   INTEGER,
-    following_count  INTEGER,
-    bio              TEXT,
-    is_blocked       INTEGER DEFAULT 0,
-    first_seen       DATETIME DEFAULT CURRENT_TIMESTAMP,
-    last_contacted   DATETIME,
-    contact_count    INTEGER DEFAULT 0,
-    dm_open          INTEGER DEFAULT 1,
-    created_at       DATETIME DEFAULT CURRENT_TIMESTAMP
+    id                    INTEGER PRIMARY KEY AUTOINCREMENT,
+    username              TEXT    UNIQUE NOT NULL,
+    display_name          TEXT,
+    follower_count        INTEGER,
+    following_count       INTEGER,
+    bio                   TEXT,
+    is_blocked            INTEGER DEFAULT 0,
+    first_seen            DATETIME DEFAULT CURRENT_TIMESTAMP,
+    last_contacted        DATETIME,
+    contact_count         INTEGER DEFAULT 0,
+    dm_open               INTEGER DEFAULT 1,
+    dm_response_received  INTEGER DEFAULT 0,
+    dm_response_at        DATETIME,
+    created_at            DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 """
 
@@ -86,6 +88,7 @@ CREATE TABLE IF NOT EXISTS daily_stats (
     replies_sent        INTEGER DEFAULT 0,
     dms_sent            INTEGER DEFAULT 0,
     dms_skipped         INTEGER DEFAULT 0,
+    dm_responses        INTEGER DEFAULT 0,
     errors              INTEGER DEFAULT 0,
     api_tweets_used     INTEGER DEFAULT 0,
     created_at          DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -106,6 +109,22 @@ ALL_TABLES: list[str] = [
     ACTIONS_TABLE,
     DAILY_STATS_TABLE,
     CONFIG_TABLE,
+]
+
+# ---------------------------------------------------------------------------
+# Indexes for common query patterns
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# Migrations for existing databases (ALTER TABLE with error handling)
+# ---------------------------------------------------------------------------
+
+MIGRATIONS: list[str] = [
+    # M4: Add dm_responses column to daily_stats
+    "ALTER TABLE daily_stats ADD COLUMN dm_responses INTEGER DEFAULT 0;",
+    # M4: Add dm_response_received and dm_response_at columns to users
+    "ALTER TABLE users ADD COLUMN dm_response_received INTEGER DEFAULT 0;",
+    "ALTER TABLE users ADD COLUMN dm_response_at DATETIME;",
 ]
 
 # ---------------------------------------------------------------------------

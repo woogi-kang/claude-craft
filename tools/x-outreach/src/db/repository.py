@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from src.db.models import ALL_TABLES, INDEXES
+from src.db.models import ALL_TABLES, INDEXES, MIGRATIONS
 
 
 class Repository:
@@ -56,12 +56,22 @@ class Repository:
     # ------------------------------------------------------------------
 
     def init_db(self) -> None:
-        """Create all tables and indexes if they do not exist."""
+        """Create all tables and indexes if they do not exist.
+
+        Also runs schema migrations for existing databases (ALTER TABLE
+        statements that may already have been applied are silently ignored).
+        """
         conn = self._get_conn()
         for ddl in ALL_TABLES:
             conn.execute(ddl)
         for idx in INDEXES:
             conn.execute(idx)
+        # Run migrations for existing databases
+        for migration in MIGRATIONS:
+            try:
+                conn.execute(migration)
+            except sqlite3.OperationalError:
+                pass  # Column already exists
         conn.commit()
 
     # ------------------------------------------------------------------
@@ -212,6 +222,30 @@ class Repository:
         row = cursor.fetchone()
         return dict(row) if row else None
 
+    def get_daily_stats_range(
+        self, start_date: str, end_date: str
+    ) -> list[dict[str, Any]]:
+        """Return all daily_stats rows within a date range (inclusive).
+
+        Parameters
+        ----------
+        start_date:
+            Start date as ``YYYY-MM-DD`` (inclusive).
+        end_date:
+            End date as ``YYYY-MM-DD`` (inclusive).
+
+        Returns
+        -------
+        list[dict[str, Any]]
+            List of stats rows ordered by date ascending.
+        """
+        conn = self._get_conn()
+        cursor = conn.execute(
+            "SELECT * FROM daily_stats WHERE date >= ? AND date <= ? ORDER BY date ASC",
+            (start_date, end_date),
+        )
+        return [dict(row) for row in cursor.fetchall()]
+
     def update_daily_stats(self, date: str, **increments: int) -> None:
         """Upsert daily stats, incrementing the given counters.
 
@@ -236,4 +270,41 @@ class Repository:
                 values,
             )
 
+        conn.commit()
+
+    # ------------------------------------------------------------------
+    # Config (key-value store)
+    # ------------------------------------------------------------------
+
+    def get_config(self, key: str) -> str | None:
+        """Retrieve a configuration value by key.
+
+        Returns
+        -------
+        str | None
+            The stored value, or ``None`` if the key does not exist.
+        """
+        conn = self._get_conn()
+        cursor = conn.execute(
+            "SELECT value FROM config WHERE key = ?", (key,)
+        )
+        row = cursor.fetchone()
+        return row["value"] if row else None
+
+    def set_config(self, key: str, value: str) -> None:
+        """Insert or update a configuration value.
+
+        Parameters
+        ----------
+        key:
+            Configuration key.
+        value:
+            Configuration value (stored as text).
+        """
+        conn = self._get_conn()
+        conn.execute(
+            "INSERT INTO config (key, value, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP) "
+            "ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = CURRENT_TIMESTAMP",
+            (key, value),
+        )
         conn.commit()

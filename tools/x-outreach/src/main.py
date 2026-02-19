@@ -416,6 +416,49 @@ def _cmd_halt(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_blocklist(args: argparse.Namespace) -> int:
+    """Handle the ``blocklist`` subcommand."""
+    from src.cli.blocklist import (
+        run_blocklist_add,
+        run_blocklist_list,
+        run_blocklist_remove,
+    )
+
+    settings = load_settings()
+    db_path = settings.database.path
+    action = getattr(args, "blocklist_action", "list")
+
+    if action == "add":
+        username = getattr(args, "username", None)
+        if not username:
+            print("Error: username is required for 'blocklist add'.")
+            return 1
+        print(run_blocklist_add(username, db_path=db_path))
+        return 0
+
+    if action == "remove":
+        username = getattr(args, "username", None)
+        if not username:
+            print("Error: username is required for 'blocklist remove'.")
+            return 1
+        print(run_blocklist_remove(username, db_path=db_path))
+        return 0
+
+    # Default: list
+    print(run_blocklist_list(db_path=db_path))
+    return 0
+
+
+def _cmd_report(args: argparse.Namespace) -> int:
+    """Handle the ``report`` subcommand."""
+    from src.cli.report import run_report
+
+    settings = load_settings()
+    output = run_report(settings)
+    print(output)
+    return 0
+
+
 def _build_parser() -> argparse.ArgumentParser:
     """Build the argument parser with subcommands.
 
@@ -471,6 +514,27 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Halt action: 'status' (default) or 'resume'",
     )
 
+    # --- blocklist ---
+    blocklist_parser = subparsers.add_parser(
+        "blocklist", help="User blocklist management"
+    )
+    blocklist_parser.add_argument(
+        "blocklist_action",
+        nargs="?",
+        default="list",
+        choices=["add", "remove", "list"],
+        help="Blocklist action: 'add', 'remove', or 'list' (default)",
+    )
+    blocklist_parser.add_argument(
+        "username",
+        nargs="?",
+        default=None,
+        help="Username to add or remove (e.g. @username)",
+    )
+
+    # --- report ---
+    subparsers.add_parser("report", help="Generate weekly report")
+
     return parser
 
 
@@ -490,6 +554,8 @@ def main() -> None:
         "status": _cmd_status,
         "setup": _cmd_setup,
         "halt": _cmd_halt,
+        "blocklist": _cmd_blocklist,
+        "report": _cmd_report,
     }
 
     handler = dispatch.get(command)
