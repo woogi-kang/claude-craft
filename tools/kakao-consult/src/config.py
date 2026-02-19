@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -43,6 +43,13 @@ class ClassifierConfig(BaseModel):
     model: str = "claude-sonnet-4-20250514"
     confidence_threshold: float = 0.7
     use_local_first: bool = True
+
+    @field_validator("confidence_threshold")
+    @classmethod
+    def validate_threshold(cls, v: float) -> float:
+        if v < 0.0 or v > 1.0:
+            raise ValueError("confidence_threshold must be between 0.0 and 1.0")
+        return v
 
 
 class LLMConfig(BaseModel):
@@ -82,6 +89,20 @@ class RateLimitConfig(BaseModel):
     min_interval_seconds: int = 10
     cooldown_after_errors: int = 60
 
+    @field_validator("max_responses_per_hour")
+    @classmethod
+    def validate_hourly(cls, v: int) -> int:
+        if v < 1 or v > 1000:
+            raise ValueError("max_responses_per_hour must be between 1 and 1000")
+        return v
+
+    @field_validator("max_responses_per_day")
+    @classmethod
+    def validate_daily(cls, v: int) -> int:
+        if v < 1 or v > 10000:
+            raise ValueError("max_responses_per_day must be between 1 and 10000")
+        return v
+
 
 class DelaysConfig(BaseModel):
     """Human-like delay configuration."""
@@ -100,6 +121,13 @@ class SchedulingConfig(BaseModel):
     active_start_hour: int = 9  # KST
     active_end_hour: int = 22  # KST
     weekend_enabled: bool = False
+
+    @field_validator("active_start_hour", "active_end_hour")
+    @classmethod
+    def validate_hour(cls, v: int) -> int:
+        if v < 0 or v > 23:
+            raise ValueError("Hour must be between 0 and 23")
+        return v
 
 
 class LoggingConfig(BaseModel):

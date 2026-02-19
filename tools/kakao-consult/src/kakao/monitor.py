@@ -33,10 +33,16 @@ class MessageMonitor:
         Chatroom names to skip (e.g. official KakaoTalk channels).
     """
 
-    def __init__(self, device: object, ignored_chatrooms: list[str] | None = None) -> None:
+    def __init__(
+        self,
+        device: object,
+        ignored_chatrooms: list[str] | None = None,
+        max_seen: int = 500,
+    ) -> None:
         self._device = device
         self._ignored: set[str] = set(ignored_chatrooms or [])
         self._seen_messages: dict[str, str] = {}  # chatroom_id -> last seen text hash
+        self._max_seen = max_seen
 
     def poll(self) -> list[NewMessage]:
         """Check for new unread messages in the chat list.
@@ -82,6 +88,13 @@ class MessageMonitor:
                         continue
 
                     self._seen_messages[chatroom_id] = msg_hash
+
+                    # Evict oldest entries if cache too large
+                    if len(self._seen_messages) > self._max_seen:
+                        # Remove oldest half
+                        keys = list(self._seen_messages.keys())
+                        for old_key in keys[:len(keys) // 2]:
+                            del self._seen_messages[old_key]
 
                     messages.append(
                         NewMessage(

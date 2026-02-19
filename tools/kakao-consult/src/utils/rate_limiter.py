@@ -126,10 +126,20 @@ class PerUserCooldown:
         self.min_interval_seconds = min_interval_seconds
         self._cooldowns: dict[str, float] = {}
 
+    def _prune_expired(self) -> None:
+        """Remove cooldown entries that have expired."""
+        now = time.monotonic()
+        # Keep entries from the last hour (generous buffer over min_interval)
+        cutoff = now - max(self.min_interval_seconds * 10, 3600)
+        expired = [k for k, v in self._cooldowns.items() if v < cutoff]
+        for k in expired:
+            del self._cooldowns[k]
+
     def can_respond(self, chatroom_id: str) -> bool:
         """Return ``True`` if enough time has elapsed since the last
         response to *chatroom_id*.
         """
+        self._prune_expired()
         last = self._cooldowns.get(chatroom_id)
         if last is None:
             return True
@@ -137,6 +147,7 @@ class PerUserCooldown:
 
     def record_response(self, chatroom_id: str) -> None:
         """Record that a response was sent to *chatroom_id* right now."""
+        self._prune_expired()
         self._cooldowns[chatroom_id] = time.monotonic()
 
 

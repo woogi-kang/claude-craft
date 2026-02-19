@@ -32,7 +32,7 @@ class DeviceManager:
     """
 
     def __init__(
-        self, serial: str = "127.0.0.1:5555", max_retries: int = 3
+        self, serial: str = "127.0.0.1:5555", max_retries: int = 5
     ) -> None:
         self.serial = serial
         self.max_retries = max_retries
@@ -83,7 +83,7 @@ class DeviceManager:
                     exc,
                 )
                 if attempt < self.max_retries:
-                    time.sleep(2)
+                    time.sleep(min(2 ** attempt, 30))  # exponential backoff, max 30s
 
         raise ConnectionError(
             f"Failed to connect to device {self.serial} "

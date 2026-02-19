@@ -29,13 +29,52 @@ class PipelineRunResult:
     error: str | None = None
 
 
+@dataclass
+class PipelineComponents:
+    """Injectable pipeline dependencies for testability."""
+
+    device_mgr: object  # DeviceManager
+    monitor: object  # MessageMonitor
+    navigator: object  # Navigator
+    sender: object  # MessageSender
+    classifier: object  # MessageClassifier
+    router: object  # LLMRouter
+    classify_pipeline: object  # ClassifyPipeline
+    respond_pipeline: object  # RespondPipeline
+    send_pipeline: object  # SendPipeline
+    tracker: object  # ActionTracker
+    limiter: object  # CompositeRateLimiter
+
+
 class PipelineRunner:
     """Orchestrate the Monitor -> Classify -> Respond -> Send pipeline."""
 
-    def __init__(self, settings: Settings, repository: Repository) -> None:
+    def __init__(
+        self,
+        settings: Settings,
+        repository: Repository,
+        components: PipelineComponents | None = None,
+    ) -> None:
         self._settings = settings
         self._repo = repository
         self._initialized = False
+        self._device: object | None = None
+        if components is not None:
+            self._inject_components(components)
+
+    def _inject_components(self, c: PipelineComponents) -> None:
+        """Install pre-built components (for testing)."""
+        self._device_mgr = c.device_mgr
+        self._device = None
+        self._monitor = c.monitor
+        self._navigator = c.navigator
+        self._sender = c.sender
+        self._classify = c.classify_pipeline
+        self._respond = c.respond_pipeline
+        self._send = c.send_pipeline
+        self._tracker = c.tracker
+        self._limiter = c.limiter
+        self._initialized = True
 
     def _lazy_init(self) -> None:
         """Lazy initialization of components that need external deps."""
@@ -67,6 +106,7 @@ class PipelineRunner:
 
         # KakaoTalk UI
         device = self._device_mgr.connect()
+        self._device = device
         self._monitor = MessageMonitor(device, s.monitor.ignored_chatrooms)
         self._navigator = Navigator(device)
         self._sender = MessageSender(
@@ -137,6 +177,18 @@ class PipelineRunner:
 
         try:
             self._lazy_init()
+
+            # Reconnect device if connection lost
+            try:
+                self._device = self._device_mgr.ensure_connected()
+                # Update device reference in components
+                self._monitor._device = self._device
+                self._navigator._device = self._device
+                self._sender._device = self._device
+            except ConnectionError as exc:
+                logger.error("device_reconnect_failed", error=str(exc))
+                result.error = f"Device connection lost: {exc}"
+                return result
 
             # Check active hours
             if not is_active_hours(
