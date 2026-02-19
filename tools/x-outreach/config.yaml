@@ -27,11 +27,11 @@ analyze:
   model: "claude-sonnet-4-20250514"
 
 reply:
-  enabled: false  # M2
+  enabled: true
   daily_limit: 50
 
 dm:
-  enabled: false  # M2
+  enabled: true
   daily_limit: 20
   min_interval_minutes: 25
 

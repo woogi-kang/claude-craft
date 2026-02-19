@@ -1,8 +1,8 @@
 """Pipeline orchestrator -- wire all stages together.
 
 Provides ``PipelineRunner`` which executes the full
-Search -> Collect -> Analyze cycle, and a CLI entry point
-for single runs and dry-run simulations.
+Search -> Collect -> Analyze -> Reply -> DM cycle, and a CLI entry
+point for single runs and dry-run simulations.
 """
 
 from __future__ import annotations
@@ -15,11 +15,14 @@ from dataclasses import dataclass
 from playwright.async_api import async_playwright
 
 from src.ai.classifier import TweetClassifier
+from src.ai.content_gen import ContentGenerator
 from src.config import Settings, load_settings
 from src.db.repository import Repository
 from src.knowledge.treatments import TreatmentKnowledgeBase
 from src.pipeline.analyze import AnalyzePipeline, AnalyzeResult
 from src.pipeline.collect import CollectPipeline, CollectResult
+from src.pipeline.dm import DmPipeline, DmResult
+from src.pipeline.reply import ReplyPipeline, ReplyResult
 from src.pipeline.search import SearchPipeline
 from src.pipeline.track import ActionTracker
 from src.browser.session import SessionManager
@@ -35,12 +38,14 @@ class PipelineRunResult:
     search_count: int = 0
     collect: CollectResult | None = None
     analyze: AnalyzeResult | None = None
+    reply: ReplyResult | None = None
+    dm: DmResult | None = None
     success: bool = False
     error: str | None = None
 
 
 class PipelineRunner:
-    """Orchestrate the Search -> Collect -> Analyze pipeline.
+    """Orchestrate the Search -> Collect -> Analyze -> Reply -> DM pipeline.
 
     Parameters
     ----------
@@ -164,6 +169,66 @@ class PipelineRunner:
                         tweet.get("confidence", 0.0),
                     )
 
+            # --- Reply (if enabled) ---
+            if self._settings.reply.enabled:
+                content_gen = ContentGenerator(
+                    api_key=self._settings.anthropic_api_key,
+                    model=self._settings.analyze.model,
+                )
+                reply_pipeline = ReplyPipeline(
+                    content_gen=content_gen,
+                    knowledge_base=self._kb,
+                )
+                reply_result = await reply_pipeline.run(
+                    repository=self._repo,
+                    tracker=self._tracker,
+                    settings=self._settings,
+                )
+                result.reply = reply_result
+                logger.info(
+                    "reply_stage_done",
+                    sent=reply_result.replies_sent,
+                    errors=reply_result.errors,
+                )
+
+            # --- DM (if enabled) ---
+            if self._settings.dm.enabled:
+                if not self._settings.reply.enabled:
+                    # Content generator needed even without reply stage
+                    content_gen = ContentGenerator(
+                        api_key=self._settings.anthropic_api_key,
+                        model=self._settings.analyze.model,
+                    )
+
+                async with async_playwright() as pw_dm:
+                    dm_session_mgr = SessionManager(
+                        pw_dm,
+                        headless=self._settings.browser.headless,
+                        viewport_width=self._settings.browser.viewport_width,
+                        viewport_height=self._settings.browser.viewport_height,
+                    )
+                    try:
+                        dm_pipeline = DmPipeline(
+                            content_gen=content_gen,
+                            knowledge_base=self._kb,
+                            min_interval_minutes=self._settings.dm.min_interval_minutes,
+                        )
+                        dm_result = await dm_pipeline.run(
+                            repository=self._repo,
+                            session_manager=dm_session_mgr,
+                            tracker=self._tracker,
+                            settings=self._settings,
+                        )
+                        result.dm = dm_result
+                        logger.info(
+                            "dm_stage_done",
+                            sent=dm_result.dms_sent,
+                            errors=dm_result.errors,
+                            emergency=dm_result.emergency_halt,
+                        )
+                    finally:
+                        await dm_session_mgr.close_all()
+
             result.success = True
             self._tracker.log_summary()
 
@@ -190,6 +255,24 @@ def _verify_startup(settings: Settings) -> list[str]:
 
     if not settings.burner_x_password:
         errors.append("BURNER_X_PASSWORD is not set")
+
+    # Reply pipeline requires X API credentials
+    if settings.reply.enabled:
+        if not settings.x_api_key:
+            errors.append("X_API_KEY is not set (required for reply)")
+        if not settings.x_api_secret:
+            errors.append("X_API_SECRET is not set (required for reply)")
+        if not settings.x_access_token:
+            errors.append("X_ACCESS_TOKEN is not set (required for reply)")
+        if not settings.x_access_token_secret:
+            errors.append("X_ACCESS_TOKEN_SECRET is not set (required for reply)")
+
+    # DM pipeline requires nandemo credentials
+    if settings.dm.enabled:
+        if not settings.nandemo_x_username:
+            errors.append("NANDEMO_X_USERNAME is not set (required for DM)")
+        if not settings.nandemo_x_password:
+            errors.append("NANDEMO_X_PASSWORD is not set (required for DM)")
 
     return errors
 
@@ -232,6 +315,8 @@ async def _async_main(args: argparse.Namespace) -> int:
             searched=result.search_count,
             collected=result.collect.stored if result.collect else 0,
             analyzed=result.analyze.total_processed if result.analyze else 0,
+            replied=result.reply.replies_sent if result.reply else 0,
+            dms_sent=result.dm.dms_sent if result.dm else 0,
         )
         return 0
 
