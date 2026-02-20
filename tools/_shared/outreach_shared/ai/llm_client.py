@@ -235,9 +235,10 @@ class CodexClient:
             " No explanations, no code blocks, no markdown formatting."
         )
 
-        cmd = ["codex", "exec", "--quiet"]
+        cmd = ["codex", "exec"]
         if self._model and self._model != "codex-default":
             cmd.extend(["-m", self._model])
+        cmd.append("-")
 
         proc = await asyncio.create_subprocess_exec(
             *cmd,

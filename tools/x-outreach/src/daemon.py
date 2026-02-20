@@ -1,7 +1,8 @@
 """Daemon entry point using the shared DaemonLoop.
 
-Uses a simple asyncio daemon that runs the pipeline at variable
-2-4 hour intervals.
+Keeps a single persistent browser session alive and runs the pipeline
+at variable 1-2 hour intervals. The browser is only opened once at
+startup and closed on shutdown.
 """
 
 from __future__ import annotations
@@ -11,7 +12,9 @@ from zoneinfo import ZoneInfo
 
 from outreach_shared.daemon.loop import DaemonLoop
 from outreach_shared.utils.logger import get_logger
+from playwright.async_api import async_playwright
 
+from src.browser.session import SessionManager
 from src.config import Settings, load_settings
 from src.pipeline.halt import HaltManager, get_volume_multiplier
 
@@ -70,7 +73,10 @@ def create_daemon(
 
 
 async def run_daemon(settings: Settings | None = None) -> None:
-    """Start the daemon and block until shutdown signal.
+    """Start the daemon with a persistent browser session.
+
+    Opens one browser at startup and keeps it alive across all cycles.
+    The browser is only closed on SIGTERM/SIGINT shutdown.
 
     Parameters
     ----------
@@ -97,20 +103,36 @@ async def run_daemon(settings: Settings | None = None) -> None:
 
     runner = PipelineRunner(settings, repo, kb)
 
-    async def _cycle() -> None:
-        result = await runner.run_once()
-        if result.success:
-            logger.info(
-                "pipeline_run_complete",
-                searched=result.search_count,
-                collected=result.collect.stored if result.collect else 0,
-                analyzed=result.analyze.total_processed if result.analyze else 0,
-            )
-        else:
-            logger.error("pipeline_run_failed", error=result.error)
+    # Single persistent browser for the entire daemon lifetime
+    async with async_playwright() as pw:
+        session_mgr = SessionManager(
+            pw,
+            headless=settings.browser.headless,
+            viewport_width=settings.browser.viewport_width,
+            viewport_height=settings.browser.viewport_height,
+        )
+        context = await session_mgr.get_session("burner")
+        logger.info("persistent_browser_started")
 
-    halt_mgr = HaltManager()
-    daemon = create_daemon(settings, _cycle, halt_mgr)
+        async def _cycle() -> None:
+            result = await runner.run_once(context=context)
+            if result.success:
+                logger.info(
+                    "pipeline_run_complete",
+                    searched=result.search_count,
+                    collected=result.collect.stored if result.collect else 0,
+                    analyzed=(result.analyze.total_processed if result.analyze else 0),
+                    replied=result.reply.replies_sent if result.reply else 0,
+                )
+            else:
+                logger.error("pipeline_run_failed", error=result.error)
 
-    logger.info("daemon_starting")
-    await daemon.run()
+        halt_mgr = HaltManager()
+        daemon = create_daemon(settings, _cycle, halt_mgr)
+
+        logger.info("daemon_starting")
+        try:
+            await daemon.run()
+        finally:
+            await session_mgr.close_all()
+            logger.info("persistent_browser_closed")

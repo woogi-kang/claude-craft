@@ -52,8 +52,8 @@ delays:
   action_max_seconds: 42
 
 daemon:
-  min_interval_hours: 2.0
-  max_interval_hours: 4.0
+  min_interval_hours: 1.0
+  max_interval_hours: 2.0
   active_start_hour: 8   # JST
   active_end_hour: 23    # JST
 

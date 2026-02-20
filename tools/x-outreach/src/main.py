@@ -13,7 +13,7 @@ import sys
 from dataclasses import dataclass
 
 from outreach_shared.utils.logger import get_logger, setup_logging
-from playwright.async_api import async_playwright
+from playwright.async_api import BrowserContext, async_playwright
 
 from src.ai.classifier import TweetClassifier
 from src.ai.content_gen import ContentGenerator
@@ -69,14 +69,23 @@ class PipelineRunner:
         self._kb = knowledge_base
         self._tracker = ActionTracker(repository)
 
-    async def run_once(self, *, dry_run: bool = False) -> PipelineRunResult:
-        """Execute a single Search -> Collect -> Analyze cycle.
+    async def run_once(
+        self,
+        *,
+        dry_run: bool = False,
+        context: BrowserContext | None = None,
+    ) -> PipelineRunResult:
+        """Execute a single Search -> Collect -> Analyze -> Reply -> DM cycle.
 
         Parameters
         ----------
         dry_run:
             When ``True``, skip browser-based search and use any
             already-collected tweets for analysis only.
+        context:
+            Pre-existing browser context to reuse. When provided the
+            pipeline will NOT open or close its own browser -- the
+            caller is responsible for lifecycle management.
 
         Returns
         -------
@@ -86,6 +95,21 @@ class PipelineRunner:
         result = PipelineRunResult()
 
         try:
+            # --- Ensure session is healthy ---
+            if context is not None:
+                healthy = await check_session_health(context)
+                if not healthy:
+                    logger.info("session_expired_relogin")
+                    logged_in = await login(
+                        context,
+                        self._settings.burner_x_username,
+                        self._settings.burner_x_password,
+                    )
+                    if not logged_in:
+                        result.error = "Failed to login"
+                        self._tracker.record_error("login", result.error)
+                        return result
+
             # --- Search & Collect ---
             if not dry_run:
                 search_pipeline = SearchPipeline(
@@ -99,53 +123,65 @@ class PipelineRunner:
                     max_tweet_age_hours=self._settings.search.max_post_age_hours,
                 )
 
-                async with async_playwright() as pw:
-                    session_mgr = SessionManager(
-                        pw,
-                        headless=self._settings.browser.headless,
-                        viewport_width=self._settings.browser.viewport_width,
-                        viewport_height=self._settings.browser.viewport_height,
+                if context is not None:
+                    # Use the shared browser context
+                    raw_tweets = await search_pipeline.run(
+                        self._settings.search.keywords,
+                        context,
                     )
+                    result.search_count = len(raw_tweets)
 
-                    try:
-                        context = await session_mgr.get_session("burner")
+                    for kw in self._settings.search.keywords:
+                        kw_tweets = [t for t in raw_tweets if t.search_keyword == kw]
+                        self._tracker.record_search(kw, len(kw_tweets))
 
-                        # Check session health and login if needed
-                        healthy = await check_session_health(context)
-                        if not healthy:
-                            logger.info("session_expired_relogin")
-                            logged_in = await login(
-                                context,
-                                self._settings.burner_x_username,
-                                self._settings.burner_x_password,
+                    collect_result = collect_pipeline.run(raw_tweets, self._repo)
+                    result.collect = collect_result
+                    self._tracker.record_collect(
+                        collect_result.stored,
+                        collect_result.total_input - collect_result.stored,
+                    )
+                else:
+                    # One-shot mode: open browser just for this run
+                    async with async_playwright() as pw:
+                        session_mgr = SessionManager(
+                            pw,
+                            headless=self._settings.browser.headless,
+                            viewport_width=self._settings.browser.viewport_width,
+                            viewport_height=self._settings.browser.viewport_height,
+                        )
+                        try:
+                            ctx = await session_mgr.get_session("burner")
+                            healthy = await check_session_health(ctx)
+                            if not healthy:
+                                logged_in = await login(
+                                    ctx,
+                                    self._settings.burner_x_username,
+                                    self._settings.burner_x_password,
+                                )
+                                if not logged_in:
+                                    result.error = "Failed to login"
+                                    self._tracker.record_error("login", result.error)
+                                    return result
+
+                            raw_tweets = await search_pipeline.run(
+                                self._settings.search.keywords,
+                                ctx,
                             )
-                            if not logged_in:
-                                result.error = "Failed to login to burner account"
-                                self._tracker.record_error("login", result.error)
-                                return result
+                            result.search_count = len(raw_tweets)
 
-                        # Search
-                        raw_tweets = await search_pipeline.run(
-                            self._settings.search.keywords,
-                            context,
-                        )
-                        result.search_count = len(raw_tweets)
+                            for kw in self._settings.search.keywords:
+                                kw_tweets = [t for t in raw_tweets if t.search_keyword == kw]
+                                self._tracker.record_search(kw, len(kw_tweets))
 
-                        for kw in self._settings.search.keywords:
-                            kw_tweets = [t for t in raw_tweets if t.search_keyword == kw]
-                            self._tracker.record_search(kw, len(kw_tweets))
-
-                        # Collect
-                        collect_result = collect_pipeline.run(raw_tweets, self._repo)
-                        result.collect = collect_result
-                        self._tracker.record_collect(
-                            collect_result.stored,
-                            collect_result.total_input - collect_result.stored,
-                        )
-
-                    finally:
-                        await session_mgr.close_all()
-
+                            collect_result = collect_pipeline.run(raw_tweets, self._repo)
+                            result.collect = collect_result
+                            self._tracker.record_collect(
+                                collect_result.stored,
+                                collect_result.total_input - collect_result.stored,
+                            )
+                        finally:
+                            await session_mgr.close_all()
             else:
                 logger.info("dry_run_skip_search")
 
@@ -153,111 +189,66 @@ class PipelineRunner:
             classifier = TweetClassifier(
                 api_key=self._settings.gemini_api_key,
                 model=self._settings.llm.model,
-                confidence_threshold=self._settings.classification.confidence_threshold,
+                confidence_threshold=(self._settings.classification.confidence_threshold),
                 domain_context=self._kb.get_classification_context(),
+                provider=self._settings.llm.provider,
             )
             analyze_pipeline = AnalyzePipeline(classifier)
             analyze_result = await analyze_pipeline.run(self._repo)
             result.analyze = analyze_result
 
             # --- Reply (if enabled) ---
-            if self._settings.reply.enabled:
+            reply_ctx = context  # reuse same browser
+            if self._settings.reply.enabled and reply_ctx is not None:
                 content_gen = ContentGenerator(
                     api_key=self._settings.gemini_api_key,
                     model=self._settings.llm.model,
                     provider=self._settings.llm.provider,
                 )
-
-                async with async_playwright() as pw_reply:
-                    session_mgr = SessionManager(
-                        pw_reply,
-                        headless=self._settings.browser.headless,
-                        viewport_width=self._settings.browser.viewport_width,
-                        viewport_height=self._settings.browser.viewport_height,
-                    )
-                    try:
-                        context = await session_mgr.get_session("nandemo")
-                        healthy = await check_session_health(context)
-                        if not healthy:
-                            logged_in = await login(
-                                context,
-                                self._settings.nandemo_x_username,
-                                self._settings.nandemo_x_password,
-                            )
-                            if not logged_in:
-                                result.error = "Failed to login for reply"
-                                self._tracker.record_error("login", result.error)
-                                return result
-
-                        reply_pipeline = ReplyPipeline(
-                            content_gen=content_gen,
-                            knowledge_base=self._kb,
-                        )
-                        reply_result = await reply_pipeline.run(
-                            repository=self._repo,
-                            context=context,
-                            tracker=self._tracker,
-                            settings=self._settings,
-                        )
-                        result.reply = reply_result
-                        logger.info(
-                            "reply_stage_done",
-                            sent=reply_result.replies_sent,
-                            errors=reply_result.errors,
-                        )
-                    finally:
-                        await session_mgr.close_all()
+                reply_pipeline = ReplyPipeline(
+                    content_gen=content_gen,
+                    knowledge_base=self._kb,
+                )
+                reply_result = await reply_pipeline.run(
+                    repository=self._repo,
+                    context=reply_ctx,
+                    tracker=self._tracker,
+                    settings=self._settings,
+                )
+                result.reply = reply_result
+                logger.info(
+                    "reply_stage_done",
+                    sent=reply_result.replies_sent,
+                    errors=reply_result.errors,
+                )
 
             # --- DM (if enabled) ---
-            if self._settings.dm.enabled:
+            dm_ctx = context  # reuse same browser
+            if self._settings.dm.enabled and dm_ctx is not None:
                 if not self._settings.reply.enabled:
                     content_gen = ContentGenerator(
                         api_key=self._settings.gemini_api_key,
                         model=self._settings.llm.model,
                         provider=self._settings.llm.provider,
                     )
-
-                async with async_playwright() as pw_dm:
-                    dm_session_mgr = SessionManager(
-                        pw_dm,
-                        headless=self._settings.browser.headless,
-                        viewport_width=self._settings.browser.viewport_width,
-                        viewport_height=self._settings.browser.viewport_height,
-                    )
-                    try:
-                        context = await dm_session_mgr.get_session("nandemo")
-                        healthy = await check_session_health(context)
-                        if not healthy:
-                            logged_in = await login(
-                                context,
-                                self._settings.nandemo_x_username,
-                                self._settings.nandemo_x_password,
-                            )
-                            if not logged_in:
-                                result.error = "Failed to login for DM"
-                                self._tracker.record_error("login", result.error)
-                                return result
-
-                        dm_pipeline = DmPipeline(
-                            content_gen=content_gen,
-                            knowledge_base=self._kb,
-                            min_interval_minutes=self._settings.dm.min_interval_minutes,
-                        )
-                        dm_result = await dm_pipeline.run(
-                            repository=self._repo,
-                            context=context,
-                            tracker=self._tracker,
-                            settings=self._settings,
-                        )
-                        result.dm = dm_result
-                        logger.info(
-                            "dm_stage_done",
-                            sent=dm_result.dms_sent,
-                            errors=dm_result.errors,
-                            emergency=dm_result.emergency_halt,
-                        )
-                    finally:
-                        await dm_session_mgr.close_all()
+                dm_pipeline = DmPipeline(
+                    content_gen=content_gen,
+                    knowledge_base=self._kb,
+                    min_interval_minutes=self._settings.dm.min_interval_minutes,
+                )
+                dm_result = await dm_pipeline.run(
+                    repository=self._repo,
+                    context=dm_ctx,
+                    tracker=self._tracker,
+                    settings=self._settings,
+                )
+                result.dm = dm_result
+                logger.info(
+                    "dm_stage_done",
+                    sent=dm_result.dms_sent,
+                    errors=dm_result.errors,
+                    emergency=dm_result.emergency_halt,
+                )
 
             result.success = True
             self._tracker.log_summary()
@@ -277,7 +268,8 @@ def _verify_startup(settings: Settings) -> list[str]:
     """
     errors: list[str] = []
 
-    if not settings.gemini_api_key:
+    # API key only required for non-codex providers
+    if settings.llm.provider != "codex" and not settings.gemini_api_key:
         errors.append("GEMINI_API_KEY is not set")
 
     if not settings.burner_x_username:
@@ -297,7 +289,11 @@ def _verify_startup(settings: Settings) -> list[str]:
 
 
 async def _async_run(args: argparse.Namespace) -> int:
-    """Async entry point for the ``run`` subcommand."""
+    """Async entry point for the ``run`` subcommand.
+
+    Opens a single browser session and keeps it alive for the entire
+    Search -> Collect -> Analyze -> Reply -> DM cycle.
+    """
     settings = load_settings()
 
     setup_logging(
@@ -325,9 +321,24 @@ async def _async_run(args: argparse.Namespace) -> int:
     loaded = kb.load()
     logger.info("knowledge_base_loaded", procedures=loaded)
 
-    # Run pipeline
     runner = PipelineRunner(settings, repo, kb)
-    result = await runner.run_once(dry_run=dry_run)
+
+    if dry_run:
+        result = await runner.run_once(dry_run=True)
+    else:
+        # Single browser session for the entire pipeline
+        async with async_playwright() as pw:
+            session_mgr = SessionManager(
+                pw,
+                headless=settings.browser.headless,
+                viewport_width=settings.browser.viewport_width,
+                viewport_height=settings.browser.viewport_height,
+            )
+            try:
+                context = await session_mgr.get_session("burner")
+                result = await runner.run_once(context=context)
+            finally:
+                await session_mgr.close_all()
 
     if result.success:
         logger.info(
