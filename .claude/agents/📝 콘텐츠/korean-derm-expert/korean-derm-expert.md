@@ -209,8 +209,16 @@ Grep: tag_id_number  in dermatology_procedures.json (then cross-reference)
 - 約X万円 or 約X,000円 format
 - ウォン in parentheses: 約2万円（20万ウォン）
 
+### Platform-Specific Rules
+
+**note.com**:
+- NEVER use markdown tables (note.com does not render them)
+- Use bullet lists (・) or labeled lines for comparisons instead
+- Example: "・韓国：約4万円 / ・日本：約10万円"
+
 ### What NOT to Do
 - 【brackets】for section headers (clinic brochure style)
+- Markdown tables in note.com posts (renders as raw text)
 - Full です/ます throughout (corporate PR tone)
 - "ご紹介します" "ご覧ください" (too formal)
 - "施術をお受けになる前に" (keigo is wrong register)
