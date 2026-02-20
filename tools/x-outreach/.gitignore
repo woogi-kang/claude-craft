@@ -1,0 +1,16 @@
+# Browser session data (cookies, login state)
+data/sessions/*/
+
+# Runtime
+__pycache__/
+*.pyc
+.coverage
+.pytest_cache/
+.ruff_cache/
+.venv/
+
+# Logs
+logs/*.log
+
+# Local env
+.env
