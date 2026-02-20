@@ -63,3 +63,16 @@ logging:
 
 database:
   path: "data/consult.db"
+
+reservation:
+  hospitals_db: "../../data/clinic-results/hospitals.db"
+  export_dir: "data/exports"
+  max_turns: 15
+  greeting_timeout_hours: 2
+  negotiation_timeout_hours: 1
+  followup_after_hours: 4
+  agency_name: "Global Skin Care Concierge"
+
+web:
+  host: "127.0.0.1"
+  port: 8000

@@ -14,6 +14,11 @@ from datetime import datetime, timezone, timedelta
 KST = timezone(timedelta(hours=9))
 
 
+def utc_now_iso() -> str:
+    """Return the current UTC time as an ISO 8601 string."""
+    return datetime.now(timezone.utc).isoformat()
+
+
 def now_kst() -> datetime:
     """Return the current time in KST (Asia/Seoul, UTC+9)."""
     return datetime.now(tz=KST)

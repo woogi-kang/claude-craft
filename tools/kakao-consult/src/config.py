@@ -145,6 +145,25 @@ class DatabaseConfig(BaseModel):
     path: str = "data/consult.db"
 
 
+class ReservationConfig(BaseModel):
+    """Outbound reservation configuration."""
+
+    hospitals_db: str = "../../data/clinic-results/hospitals.db"
+    export_dir: str = "data/exports"
+    max_turns: int = 15
+    greeting_timeout_hours: int = 2
+    negotiation_timeout_hours: int = 1
+    followup_after_hours: int = 4
+    agency_name: str = "Global Skin Care Concierge"
+
+
+class WebConfig(BaseModel):
+    """Web dashboard configuration."""
+
+    host: str = "127.0.0.1"
+    port: int = 8000
+
+
 # ---------------------------------------------------------------------------
 # Root settings
 # ---------------------------------------------------------------------------
@@ -196,6 +215,8 @@ class Settings(BaseSettings):
     scheduling: SchedulingConfig = Field(default_factory=SchedulingConfig)
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
     database: DatabaseConfig = Field(default_factory=DatabaseConfig)
+    reservation: ReservationConfig = Field(default_factory=ReservationConfig)
+    web: WebConfig = Field(default_factory=WebConfig)
 
 
 def load_settings(config_path: Path | None = None) -> Settings:

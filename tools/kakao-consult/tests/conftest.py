@@ -20,6 +20,17 @@ def tmp_db(tmp_path: Path) -> Repository:
 
 
 @pytest.fixture
+def tmp_reservation_repo(tmp_path: Path):
+    """Provide a fresh SQLite ReservationRepository."""
+    from src.reservation.repository import ReservationRepository
+
+    repo = ReservationRepository(tmp_path / "test_reservations.db")
+    repo.init_db()
+    yield repo
+    repo.close()
+
+
+@pytest.fixture
 def sample_messages() -> list[dict]:
     """Provide a batch of sample message dicts for testing."""
     return [
