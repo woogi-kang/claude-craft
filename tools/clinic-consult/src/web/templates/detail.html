@@ -3,241 +3,334 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reservation {{ reservation.request_id }}</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8fafc; color: #1e293b; }
-    .container { max-width: 800px; margin: 0 auto; padding: 24px; }
-    .back { color: #3b82f6; text-decoration: none; font-size: 14px; display: inline-block; margin-bottom: 16px; }
-    .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
-    h1 { font-size: 22px; }
-    .request-id { color: #94a3b8; font-size: 14px; }
-    .badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 600; color: white; }
-    .actions { display: flex; gap: 8px; }
-    .btn { padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 13px; border: none; cursor: pointer; text-decoration: none; }
-    .btn-danger { background: #fee2e2; color: #dc2626; }
-    .btn-danger:hover { background: #fecaca; }
-    .btn-success { background: #d1fae5; color: #059669; }
-    .btn-success:hover { background: #a7f3d0; }
-    .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 16px; }
-    .card-title { font-size: 14px; font-weight: 700; color: #3b82f6; margin-bottom: 12px; }
-    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .info-item label { font-size: 12px; color: #94a3b8; display: block; }
-    .info-item span { font-size: 14px; font-weight: 500; }
-    .result-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin-top: 12px; }
-    .result-box.declined { background: #fef2f2; border-color: #fecaca; }
-    .chat { margin-top: 16px; }
-    .chat-msg { padding: 12px 16px; border-radius: 12px; margin-bottom: 8px; max-width: 80%; font-size: 14px; line-height: 1.5; }
-    .chat-msg.outgoing { margin-left: auto; border-bottom-right-radius: 4px; }
-    .chat-msg.outgoing.kakao { background: #fee500; color: #1e1e1e; }
-    .chat-msg.outgoing.line { background: #06c755; color: white; }
-    .chat-msg.outgoing:not(.kakao):not(.line) { background: #fee500; color: #1e1e1e; }
-    .chat-msg.incoming { background: white; border: 1px solid #e2e8f0; border-bottom-left-radius: 4px; }
-    .chat-msg .meta { font-size: 11px; color: #94a3b8; margin-top: 4px; }
-    .chat-msg .provider { font-size: 11px; color: #3b82f6; }
-    .resume-form { margin-top: 16px; display: flex; gap: 8px; }
-    .resume-form textarea { flex: 1; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; font-family: inherit; resize: vertical; min-height: 60px; }
-    .resume-form button { align-self: flex-end; padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
-    .resume-form button:hover { background: #2563eb; }
-    .pause-alert { background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-size: 14px; color: #92400e; }
-    .empty-chat { text-align: center; padding: 32px; color: #94a3b8; font-size: 14px; }
-    .btn-copy { background: #eff6ff; color: #3b82f6; border: 1px solid #bfdbfe; }
-    .btn-copy:hover { background: #dbeafe; }
-    .copy-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-top: 12px; font-size: 14px; white-space: pre-wrap; line-height: 1.6; }
-    .copied-msg { color: #10b981; font-size: 12px; margin-left: 8px; display: none; }
-    @media (max-width: 768px) {
-      .container { padding: 12px; }
-      .header { flex-direction: column; }
-      .info-grid { grid-template-columns: 1fr; }
-      .chat-msg { max-width: 95%; }
+  <title>예약 {{ reservation.request_id }}</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          borderRadius: { lg: 'var(--radius)' },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          }
+        }
+      }
     }
+  </script>
+  <style>
+    :root {
+      --background: 0 0% 100%;
+      --foreground: 240 10% 3.9%;
+      --card: 0 0% 100%;
+      --card-foreground: 240 10% 3.9%;
+      --primary: 240 5.9% 10%;
+      --primary-foreground: 0 0% 98%;
+      --secondary: 240 4.8% 95.9%;
+      --secondary-foreground: 240 5.9% 10%;
+      --muted: 240 4.8% 95.9%;
+      --muted-foreground: 240 3.8% 46.1%;
+      --accent: 240 4.8% 95.9%;
+      --accent-foreground: 240 5.9% 10%;
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 0 0% 98%;
+      --border: 240 5.9% 90%;
+      --input: 240 5.9% 90%;
+      --ring: 240 5.9% 10%;
+      --radius: 0.5rem;
+    }
+    body { font-family: 'Inter', system-ui, sans-serif; }
   </style>
 </head>
-<body>
-  <div class="container">
-    <a href="/" class="back">&larr; Dashboard</a>
-
-    <div class="header">
-      <div>
-        <h1>{{ reservation.clinic_name }}</h1>
-        <span class="request-id">{{ reservation.request_id }}</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px;">
-        {% set b = badge(reservation.status) %}
-        <span class="badge" style="background:{{ b.color }}">{{ b.label }}</span>
-        <div class="actions">
-          {% if reservation.status == 'confirmed' %}
-          <form method="POST" action="/reservations/{{ reservation.id }}/complete" style="display:inline;">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-            <button type="submit" class="btn btn-success">Mark Completed</button>
-          </form>
+<body class="bg-background text-foreground min-h-screen">
+  <!-- Header -->
+  <header class="border-b border-border bg-gradient-to-r from-card to-secondary/50">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 py-6">
+      <a href="/" class="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+        대시보드
+      </a>
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-bold tracking-tight text-foreground">{{ reservation.clinic_name }}</h1>
+          <p class="text-sm text-muted-foreground mt-0.5 tabular-nums">{{ reservation.request_id }}</p>
+        </div>
+        <div class="flex items-center gap-3 flex-wrap">
+          {% set b = badge(reservation.status) %}
+          {% if reservation.status == 'confirmed' or reservation.status == 'completed' %}
+          <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-emerald-100 text-emerald-700">{{ b.label }}</span>
+          {% elif reservation.status == 'negotiating' or reservation.status == 'contacting' or reservation.status == 'greeting_sent' %}
+          <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-amber-100 text-amber-700">{{ b.label }}</span>
+          {% elif reservation.status == 'paused_for_human' %}
+          <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-red-100 text-red-700">{{ b.label }}</span>
+          {% elif reservation.status == 'declined' or reservation.status == 'failed' or reservation.status == 'timed_out' %}
+          <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-gray-100 text-gray-600">{{ b.label }}</span>
+          {% else %}
+          <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-secondary text-secondary-foreground">{{ b.label }}</span>
           {% endif %}
-          {% if reservation.status not in ('completed', 'failed', 'declined') %}
-          <form method="POST" action="/reservations/{{ reservation.id }}/cancel" style="display:inline;"
-                onsubmit="return confirm('Cancel this reservation?')">
+
+          {% if valid_transitions %}
+          <form method="POST" action="/reservations/{{ reservation.id }}/status" class="inline-flex items-center gap-2">
             <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-            <button type="submit" class="btn btn-danger">Cancel</button>
+            <select name="new_status"
+                    class="rounded-md border border-input bg-background px-3 py-1.5 text-xs font-medium shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+              {% for status_val in valid_transitions %}
+              <option value="{{ status_val }}">{{ badge(status_val).label }}</option>
+              {% endfor %}
+            </select>
+            <button type="submit"
+                    class="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+              변경
+            </button>
           </form>
           {% endif %}
         </div>
       </div>
     </div>
+  </header>
 
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-6 space-y-4">
+    <!-- Paused Alert -->
     {% if reservation.status == 'paused_for_human' %}
-    <div class="pause-alert">
-      This reservation is paused: <strong>{{ reservation.paused_reason or 'Needs human review' }}</strong>.
-      Use the form below to send a manual message and resume.
+    <div class="flex items-start gap-3 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+      <i data-lucide="alert-triangle" class="w-5 h-5 shrink-0 text-amber-500 mt-0.5"></i>
+      <div>
+        <p class="font-semibold">이 예약이 일시정지 상태입니다: <span class="font-normal">{{ reservation.paused_reason or '담당자 확인 필요' }}</span></p>
+        <p class="text-amber-700 mt-1">아래 양식으로 직접 메시지를 보내고 재개할 수 있습니다.</p>
+      </div>
     </div>
     {% endif %}
 
-    <!-- Reservation Info -->
-    <div class="card">
-      <div class="card-title">Reservation Details</div>
-      <div class="info-grid">
-        <div class="info-item">
-          <label>Procedure</label>
-          <span>{{ reservation.procedure_name }}</span>
-        </div>
-        <div class="info-item">
-          <label>Preferred Dates</label>
-          <span>
-            {% if reservation.preferred_dates %}
-              {% set dates = json_loads(reservation.preferred_dates) if reservation.preferred_dates and reservation.preferred_dates.startswith('[') else [reservation.preferred_dates] %}
-              {{ dates | join(', ') }}
-            {% else %}
-              -
-            {% endif %}
-          </span>
-        </div>
-        <div class="info-item">
-          <label>Preferred Time</label>
-          <span>{{ reservation.preferred_time or 'Any' }}</span>
-        </div>
-        <div class="info-item">
-          <label>Turns</label>
-          <span>{{ reservation.turn_count or 0 }}</span>
+    <!-- Reservation Details -->
+    <div class="rounded-lg border border-border bg-card shadow-sm">
+      <div class="border-b border-border px-6 py-4">
+        <h2 class="text-sm font-semibold text-foreground flex items-center gap-2">
+          <i data-lucide="clipboard-list" class="w-4 h-4 text-muted-foreground"></i>
+          예약 상세
+        </h2>
+      </div>
+      <div class="px-6 py-5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6">
+          <div>
+            <p class="text-xs text-muted-foreground mb-0.5">시술</p>
+            <p class="text-sm font-medium">{{ reservation.procedure_name }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-muted-foreground mb-0.5">희망 날짜</p>
+            <p class="text-sm font-medium tabular-nums">
+              {% if reservation.preferred_dates %}
+                {% set dates = json_loads(reservation.preferred_dates) if reservation.preferred_dates and reservation.preferred_dates.startswith('[') else [reservation.preferred_dates] %}
+                {{ dates | join(', ') }}
+              {% else %}
+                -
+              {% endif %}
+            </p>
+          </div>
+          <div>
+            <p class="text-xs text-muted-foreground mb-0.5">선호 시간</p>
+            <p class="text-sm font-medium">{{ reservation.preferred_time or 'Any' }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-muted-foreground mb-0.5">대화 횟수</p>
+            <p class="text-sm font-medium tabular-nums">{{ reservation.turn_count or 0 }}</p>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Patient Info -->
-    <div class="card">
-      <div class="card-title">Patient</div>
-      <div class="info-grid">
-        <div class="info-item">
-          <label>Name</label>
-          <span>{{ reservation.patient_name }}</span>
-        </div>
-        <div class="info-item">
-          <label>Nationality</label>
-          <span>{{ reservation.patient_nationality }}</span>
-        </div>
-        <div class="info-item">
-          <label>Age</label>
-          <span>{{ reservation.patient_age or '-' }}</span>
-        </div>
-        <div class="info-item">
-          <label>Gender</label>
-          <span>{{ reservation.patient_gender or '-' }}</span>
-        </div>
-        <div class="info-item">
-          <label>Contact</label>
-          <span>{{ reservation.patient_contact or '-' }}</span>
-        </div>
-        <div class="info-item">
-          <label>Notes</label>
-          <span>{{ reservation.notes or '-' }}</span>
+    <div class="rounded-lg border border-border bg-card shadow-sm">
+      <div class="border-b border-border px-6 py-4">
+        <h2 class="text-sm font-semibold text-foreground flex items-center gap-2">
+          <i data-lucide="user" class="w-4 h-4 text-muted-foreground"></i>
+          환자 정보
+        </h2>
+      </div>
+      <div class="px-6 py-5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6">
+          <div>
+            <p class="text-xs text-muted-foreground mb-0.5">이름</p>
+            <p class="text-sm font-medium">{{ reservation.patient_name }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-muted-foreground mb-0.5">국적</p>
+            <p class="text-sm font-medium">{{ reservation.patient_nationality }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-muted-foreground mb-0.5">나이</p>
+            <p class="text-sm font-medium">{{ reservation.patient_age or '-' }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-muted-foreground mb-0.5">성별</p>
+            <p class="text-sm font-medium">{{ reservation.patient_gender or '-' }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-muted-foreground mb-0.5">연락처</p>
+            <p class="text-sm font-medium">{{ reservation.patient_contact or '-' }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-muted-foreground mb-0.5">메모</p>
+            <p class="text-sm font-medium">{{ reservation.notes or '-' }}</p>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Result (if confirmed/declined) -->
     {% if reservation.status in ('confirmed', 'completed') and reservation.confirmed_date %}
-    <div class="card">
-      <div class="card-title">Reservation Result</div>
-      <div class="result-box">
-        <div class="info-grid">
-          <div class="info-item">
-            <label>Date</label>
-            <span>{{ reservation.confirmed_date }}</span>
-          </div>
-          <div class="info-item">
-            <label>Time</label>
-            <span>{{ reservation.confirmed_time or '-' }}</span>
-          </div>
-          <div class="info-item">
-            <label>Price</label>
-            <span>{{ reservation.confirmed_price or '-' }}</span>
-          </div>
-          <div class="info-item">
-            <label>Doctor</label>
-            <span>{{ reservation.confirmed_doctor or '-' }}</span>
-          </div>
-        </div>
-        {% if reservation.clinic_instructions %}
-        <div style="margin-top:12px;">
-          <label style="font-size:12px;color:#94a3b8;">Clinic Instructions</label>
-          <p style="font-size:14px;margin-top:4px;">{{ reservation.clinic_instructions }}</p>
-        </div>
-        {% endif %}
+    <div class="rounded-lg border border-border bg-card shadow-sm">
+      <div class="border-b border-border px-6 py-4">
+        <h2 class="text-sm font-semibold text-foreground flex items-center gap-2">
+          <i data-lucide="calendar-check" class="w-4 h-4 text-emerald-600"></i>
+          예약 결과
+        </h2>
       </div>
-      <div style="margin-top:12px;display:flex;align-items:center;">
-        <button class="btn btn-copy" onclick="copyForPatient()">Copy for Patient</button>
-        <span class="copied-msg" id="copied-msg">Copied!</span>
+      <div class="px-6 py-5">
+        <div class="rounded-md border border-emerald-200 bg-emerald-50 p-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6">
+            <div>
+              <p class="text-xs text-emerald-600 mb-0.5">날짜</p>
+              <p class="text-sm font-medium tabular-nums">{{ reservation.confirmed_date }}</p>
+            </div>
+            <div>
+              <p class="text-xs text-emerald-600 mb-0.5">시간</p>
+              <p class="text-sm font-medium">{{ reservation.confirmed_time or '-' }}</p>
+            </div>
+            <div>
+              <p class="text-xs text-emerald-600 mb-0.5">가격</p>
+              <p class="text-sm font-medium">{{ reservation.confirmed_price or '-' }}</p>
+            </div>
+            <div>
+              <p class="text-xs text-emerald-600 mb-0.5">담당의</p>
+              <p class="text-sm font-medium">{{ reservation.confirmed_doctor or '-' }}</p>
+            </div>
+          </div>
+          {% if reservation.clinic_instructions %}
+          <div class="mt-4 pt-4 border-t border-emerald-200">
+            <p class="text-xs text-emerald-600 mb-1">클리닉 안내사항</p>
+            <p class="text-sm">{{ reservation.clinic_instructions }}</p>
+          </div>
+          {% endif %}
+        </div>
+        <div class="mt-4 flex items-center gap-2">
+          <button onclick="copyForPatient()"
+                  class="inline-flex items-center gap-1.5 rounded-md border border-input bg-background px-3 py-1.5 text-xs font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  aria-label="환자용 요약 복사">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            환자용 복사
+          </button>
+          <span class="text-xs text-emerald-600 hidden" id="copied-msg">복사됨!</span>
+        </div>
+        <div class="hidden mt-3 rounded-md border border-border bg-muted p-4 text-sm whitespace-pre-wrap leading-relaxed" id="patient-summary">클리닉: {{ reservation.clinic_name }}
+날짜: {{ reservation.confirmed_date }}
+시간: {{ reservation.confirmed_time or 'TBD' }}
+시술: {{ reservation.procedure_name }}{% if reservation.confirmed_price %}
+가격: {{ reservation.confirmed_price }}{% endif %}{% if reservation.confirmed_doctor %}
+담당의: {{ reservation.confirmed_doctor }}{% endif %}{% if reservation.clinic_instructions %}
+안내사항: {{ reservation.clinic_instructions }}{% endif %}</div>
       </div>
-      <div class="copy-box" id="patient-summary" style="display:none;">Clinic: {{ reservation.clinic_name }}
-Date: {{ reservation.confirmed_date }}
-Time: {{ reservation.confirmed_time or 'TBD' }}
-Procedure: {{ reservation.procedure_name }}{% if reservation.confirmed_price %}
-Price: {{ reservation.confirmed_price }}{% endif %}{% if reservation.confirmed_doctor %}
-Doctor: {{ reservation.confirmed_doctor }}{% endif %}{% if reservation.clinic_instructions %}
-Notes: {{ reservation.clinic_instructions }}{% endif %}</div>
     </div>
     {% elif reservation.status == 'declined' %}
-    <div class="card">
-      <div class="card-title">Declined</div>
-      <div class="result-box declined">
-        <p>{{ reservation.decline_reason or 'No reason provided' }}</p>
+    <div class="rounded-lg border border-border bg-card shadow-sm">
+      <div class="border-b border-border px-6 py-4">
+        <h2 class="text-sm font-semibold text-foreground flex items-center gap-2">
+          <i data-lucide="x-circle" class="w-4 h-4 text-muted-foreground"></i>
+          거절 사유
+        </h2>
+      </div>
+      <div class="px-6 py-5">
+        <div class="rounded-md border border-red-200 bg-red-50 p-4">
+          <p class="text-sm text-red-800">{{ reservation.decline_reason or '사유 없음' }}</p>
+        </div>
       </div>
     </div>
     {% endif %}
 
     <!-- Conversation Log -->
-    <div class="card">
-      <div class="card-title">Conversation Log</div>
-      <div class="chat">
-        {% for msg in messages %}
-        <div class="chat-msg {{ msg.direction }} {{ reservation.contact_platform or 'kakao' }}">
-          {{ msg.content }}
-          <div class="meta">
-            {{ msg.created_at[:19] if msg.created_at else '' }}
-            {% if msg.llm_provider %}
-              <span class="provider">via {{ msg.llm_provider }}</span>
-            {% endif %}
-          </div>
-        </div>
-        {% else %}
-        <div class="empty-chat">No messages yet. Bot will contact the clinic when processing starts.</div>
-        {% endfor %}
+    <div class="rounded-lg border border-border bg-card shadow-sm">
+      <div class="border-b border-border px-6 py-4">
+        <h2 class="text-sm font-semibold text-foreground flex items-center gap-2">
+          <i data-lucide="message-square" class="w-4 h-4 text-muted-foreground"></i>
+          대화 기록
+        </h2>
       </div>
+      <div class="px-6 py-5">
+        <div class="space-y-3">
+          {% for msg in messages %}
+          <div class="flex {{ 'justify-end' if msg.direction == 'outgoing' else 'justify-start' }}">
+            <div class="max-w-[80%] sm:max-w-[70%] rounded-xl px-4 py-2.5 text-sm leading-relaxed
+                        {% if msg.direction == 'outgoing' %}
+                          {% if reservation.contact_platform == 'line' %}
+                            bg-[#06c755] text-white rounded-br-sm
+                          {% else %}
+                            bg-[#fee500] text-[#1e1e1e] rounded-br-sm
+                          {% endif %}
+                        {% else %}
+                          bg-muted text-foreground border border-border rounded-bl-sm
+                        {% endif %}">
+              {{ msg.content }}
+              <div class="mt-1 text-[10px] opacity-70 tabular-nums">
+                {{ msg.created_at[:19] if msg.created_at else '' }}
+                {% if msg.llm_provider %}
+                  <span class="ml-1">via {{ msg.llm_provider }}</span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <div class="flex flex-col items-center justify-center py-10 text-muted-foreground">
+            <i data-lucide="message-square-off" class="w-8 h-8 mb-2 opacity-40"></i>
+            <p class="text-sm">아직 메시지가 없습니다. 처리가 시작되면 봇이 클리닉에 연락합니다.</p>
+          </div>
+          {% endfor %}
+        </div>
 
-      {% if reservation.status in ('paused_for_human', 'negotiating', 'greeting_sent') %}
-      <form method="POST" action="/reservations/{{ reservation.id }}/resume" class="resume-form">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-        <textarea name="message" placeholder="Type a message to send to the clinic..." required></textarea>
-        <button type="submit">Send</button>
-      </form>
-      {% endif %}
+        {% if reservation.status in ('paused_for_human', 'negotiating', 'greeting_sent') %}
+        <form method="POST" action="/reservations/{{ reservation.id }}/resume" class="mt-4 flex gap-2 items-end">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <textarea name="message"
+                    placeholder="클리닉에 보낼 메시지를 입력하세요..."
+                    required
+                    rows="2"
+                    class="flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-y min-h-[60px]"></textarea>
+          <button type="submit"
+                  class="inline-flex items-center gap-1.5 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 self-end"
+                  aria-label="메시지 전송">
+            <i data-lucide="send" class="w-4 h-4"></i>
+            전송
+          </button>
+        </form>
+        {% endif %}
+      </div>
     </div>
-  </div>
+  </main>
+
   <script>
+    lucide.createIcons();
+
     function copyForPatient() {
       const summary = document.getElementById('patient-summary');
       const msg = document.getElementById('copied-msg');
       const text = summary.textContent.trim();
       navigator.clipboard.writeText(text).then(function() {
-        msg.style.display = 'inline';
-        setTimeout(function() { msg.style.display = 'none'; }, 2000);
+        msg.classList.remove('hidden');
+        setTimeout(function() { msg.classList.add('hidden'); }, 2000);
       });
     }
   </script>

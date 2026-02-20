@@ -3,166 +3,257 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reservation Dashboard</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8fafc; color: #1e293b; }
-    .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
-    h1 { font-size: 24px; margin-bottom: 8px; }
-    .subtitle { color: #64748b; margin-bottom: 24px; }
-    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
-    .btn { display: inline-block; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; border: none; cursor: pointer; }
-    .btn-primary { background: #3b82f6; color: white; }
-    .btn-primary:hover { background: #2563eb; }
-    .btn-outline { background: white; color: #3b82f6; border: 1px solid #3b82f6; }
-    .btn-outline:hover { background: #eff6ff; }
-    .btn-sm { padding: 6px 12px; font-size: 13px; }
-    .filters { display: flex; gap: 8px; flex-wrap: wrap; }
-    .filters a { padding: 6px 14px; border-radius: 20px; text-decoration: none; font-size: 13px; background: white; color: #475569; border: 1px solid #e2e8f0; }
-    .filters a.active { background: #3b82f6; color: white; border-color: #3b82f6; }
-    .alert { padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; }
-    .alert-warning { background: #fef3c7; border: 1px solid #f59e0b; color: #92400e; }
-    table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-    th { background: #f1f5f9; padding: 12px 16px; text-align: left; font-size: 13px; color: #64748b; font-weight: 600; }
-    td { padding: 12px 16px; border-top: 1px solid #f1f5f9; font-size: 14px; }
-    tr:hover td { background: #f8fafc; }
-    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; color: white; }
-    .clinic-name { font-weight: 600; color: #1e293b; text-decoration: none; }
-    .clinic-name:hover { color: #3b82f6; }
-    .meta { color: #94a3b8; font-size: 13px; }
-    .empty { text-align: center; padding: 48px; color: #94a3b8; }
-    .platform-tag { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 600; }
-    .platform-tag.kakao { background: #fee500; color: #3c1e1e; }
-    .platform-tag.line { background: #06c755; color: white; }
-    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; }
-    .stat-card { background: white; border-radius: 10px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); text-align: center; }
-    .stat-value { font-size: 28px; font-weight: 700; color: #1e293b; }
-    .stat-label { font-size: 12px; color: #94a3b8; margin-top: 2px; }
-    .stat-card.active .stat-value { color: #3b82f6; }
-    .stat-card.confirmed .stat-value { color: #10b981; }
-    .stat-card.paused .stat-value { color: #ef4444; }
-    @media (max-width: 768px) {
-      .container { padding: 12px; }
-      .topbar { flex-direction: column; align-items: flex-start; }
-      table { font-size: 13px; }
-      th, td { padding: 8px 10px; }
-      .filters { flex-wrap: wrap; }
-      .stats { grid-template-columns: repeat(2, 1fr); }
+  <title>예약 관리 대시보드</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          borderRadius: { lg: 'var(--radius)' },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          }
+        }
+      }
     }
+  </script>
+  <style>
+    :root {
+      --background: 0 0% 100%;
+      --foreground: 240 10% 3.9%;
+      --card: 0 0% 100%;
+      --card-foreground: 240 10% 3.9%;
+      --primary: 240 5.9% 10%;
+      --primary-foreground: 0 0% 98%;
+      --secondary: 240 4.8% 95.9%;
+      --secondary-foreground: 240 5.9% 10%;
+      --muted: 240 4.8% 95.9%;
+      --muted-foreground: 240 3.8% 46.1%;
+      --accent: 240 4.8% 95.9%;
+      --accent-foreground: 240 5.9% 10%;
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 0 0% 98%;
+      --border: 240 5.9% 90%;
+      --input: 240 5.9% 90%;
+      --ring: 240 5.9% 10%;
+      --radius: 0.5rem;
+    }
+    body { font-family: 'Inter', system-ui, sans-serif; }
   </style>
 </head>
-<body>
-  <div class="container">
-    <div class="topbar">
-      <div>
-        <h1>Reservation Dashboard</h1>
-        <p class="subtitle">Outbound clinic reservation management</p>
+<body class="bg-background text-foreground min-h-screen">
+  <!-- Header -->
+  <header class="border-b border-border bg-gradient-to-r from-card to-secondary/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-bold tracking-tight text-foreground">예약 관리 대시보드</h1>
+          <p class="text-sm text-muted-foreground mt-1">클리닉 아웃바운드 예약 관리 시스템</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <a href="/export/csv"
+             class="inline-flex items-center gap-2 rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+            <i data-lucide="download" class="w-4 h-4"></i>
+            CSV 내보내기
+          </a>
+          <a href="/create"
+             class="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            새 예약
+          </a>
+        </div>
       </div>
-      <div style="display:flex;gap:8px;">
-        <a href="/export/csv" class="btn btn-outline btn-sm">CSV Export</a>
-        <a href="/create" class="btn btn-primary">+ New Reservation</a>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <!-- Stats -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div class="rounded-lg border border-border bg-card p-4 shadow-sm">
+        <p class="text-sm font-medium text-muted-foreground">전체</p>
+        <p class="text-3xl font-bold tracking-tight tabular-nums mt-1">{{ stats.total }}</p>
+      </div>
+      <div class="rounded-lg border border-border bg-card p-4 shadow-sm">
+        <p class="text-sm font-medium text-blue-600">진행중</p>
+        <p class="text-3xl font-bold tracking-tight tabular-nums mt-1 text-blue-600">{{ stats.active }}</p>
+      </div>
+      <div class="rounded-lg border border-border bg-card p-4 shadow-sm">
+        <p class="text-sm font-medium text-emerald-600">확정</p>
+        <p class="text-3xl font-bold tracking-tight tabular-nums mt-1 text-emerald-600">{{ stats.confirmed }}</p>
+      </div>
+      <div class="rounded-lg border border-border bg-card p-4 shadow-sm">
+        <p class="text-sm font-medium text-muted-foreground">거절</p>
+        <p class="text-3xl font-bold tracking-tight tabular-nums mt-1">{{ stats.declined }}</p>
+      </div>
+      <div class="rounded-lg border border-border bg-card p-4 shadow-sm">
+        <p class="text-sm font-medium text-destructive">대기중</p>
+        <p class="text-3xl font-bold tracking-tight tabular-nums mt-1 text-destructive">{{ stats.paused }}</p>
       </div>
     </div>
 
-    <div class="stats">
-      <div class="stat-card">
-        <div class="stat-value">{{ stats.total }}</div>
-        <div class="stat-label">Total</div>
-      </div>
-      <div class="stat-card active">
-        <div class="stat-value">{{ stats.active }}</div>
-        <div class="stat-label">Active</div>
-      </div>
-      <div class="stat-card confirmed">
-        <div class="stat-value">{{ stats.confirmed }}</div>
-        <div class="stat-label">Confirmed</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value">{{ stats.declined }}</div>
-        <div class="stat-label">Declined</div>
-      </div>
-      <div class="stat-card paused">
-        <div class="stat-value">{{ stats.paused }}</div>
-        <div class="stat-label">Paused</div>
-      </div>
-    </div>
-
+    <!-- Paused Alert -->
     {% if paused_count > 0 %}
-    <div class="alert alert-warning">
-      {{ paused_count }} reservation(s) paused and waiting for your action.
-      <a href="/?status=paused_for_human" style="font-weight:600;">View</a>
+    <div class="flex items-center gap-3 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+      <i data-lucide="alert-triangle" class="w-5 h-5 shrink-0 text-amber-500"></i>
+      <p>
+        <span class="font-semibold tabular-nums">{{ paused_count }}</span>건의 예약이 대기 중입니다. 확인이 필요합니다.
+        <a href="/?status=paused_for_human" class="font-semibold underline underline-offset-2 hover:text-amber-900">보기</a>
+      </p>
     </div>
     {% endif %}
 
-    <div class="filters">
-      <a href="/" class="{{ 'active' if not current_status else '' }}">All</a>
-      <a href="/?status=created" class="{{ 'active' if current_status == 'created' else '' }}">Created</a>
-      <a href="/?status=negotiating" class="{{ 'active' if current_status == 'negotiating' else '' }}">Negotiating</a>
-      <a href="/?status=paused_for_human" class="{{ 'active' if current_status == 'paused_for_human' else '' }}">Paused</a>
-      <a href="/?status=confirmed" class="{{ 'active' if current_status == 'confirmed' else '' }}">Confirmed</a>
-      <a href="/?status=completed" class="{{ 'active' if current_status == 'completed' else '' }}">Completed</a>
-      <a href="/?status=declined" class="{{ 'active' if current_status == 'declined' else '' }}">Declined</a>
+    <!-- Filters -->
+    <div class="flex items-center gap-2 flex-wrap">
+      <a href="/"
+         class="inline-flex items-center rounded-full px-3 py-1.5 text-xs font-semibold transition-colors
+                {{ 'bg-primary text-primary-foreground shadow-sm' if not current_status else 'bg-secondary text-secondary-foreground hover:bg-accent' }}">
+        전체
+      </a>
+      <a href="/?status=created"
+         class="inline-flex items-center rounded-full px-3 py-1.5 text-xs font-semibold transition-colors
+                {{ 'bg-primary text-primary-foreground shadow-sm' if current_status == 'created' else 'bg-secondary text-secondary-foreground hover:bg-accent' }}">
+        생성됨
+      </a>
+      <a href="/?status=negotiating"
+         class="inline-flex items-center rounded-full px-3 py-1.5 text-xs font-semibold transition-colors
+                {{ 'bg-primary text-primary-foreground shadow-sm' if current_status == 'negotiating' else 'bg-secondary text-secondary-foreground hover:bg-accent' }}">
+        협의중
+      </a>
+      <a href="/?status=paused_for_human"
+         class="inline-flex items-center rounded-full px-3 py-1.5 text-xs font-semibold transition-colors
+                {{ 'bg-primary text-primary-foreground shadow-sm' if current_status == 'paused_for_human' else 'bg-secondary text-secondary-foreground hover:bg-accent' }}">
+        대기중
+      </a>
+      <a href="/?status=confirmed"
+         class="inline-flex items-center rounded-full px-3 py-1.5 text-xs font-semibold transition-colors
+                {{ 'bg-primary text-primary-foreground shadow-sm' if current_status == 'confirmed' else 'bg-secondary text-secondary-foreground hover:bg-accent' }}">
+        확정
+      </a>
+      <a href="/?status=completed"
+         class="inline-flex items-center rounded-full px-3 py-1.5 text-xs font-semibold transition-colors
+                {{ 'bg-primary text-primary-foreground shadow-sm' if current_status == 'completed' else 'bg-secondary text-secondary-foreground hover:bg-accent' }}">
+        완료
+      </a>
+      <a href="/?status=declined"
+         class="inline-flex items-center rounded-full px-3 py-1.5 text-xs font-semibold transition-colors
+                {{ 'bg-primary text-primary-foreground shadow-sm' if current_status == 'declined' else 'bg-secondary text-secondary-foreground hover:bg-accent' }}">
+        거절
+      </a>
     </div>
 
-    <table style="margin-top:16px;">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Clinic</th>
-          <th>Patient</th>
-          <th>Procedure</th>
-          <th>Dates</th>
-          <th>Status</th>
-          <th>Result</th>
-          <th>Created</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for r in reservations %}
-        <tr>
-          <td class="meta">{{ r.request_id }}</td>
-          <td>
-            <a href="/reservations/{{ r.id }}" class="clinic-name">{{ r.clinic_name }}</a>
-            {% if r.clinic_contact_url %}
-              {% if r.contact_platform == 'line' %}
-                <span class="platform-tag line">LINE</span>
-              {% else %}
-                <span class="platform-tag kakao">KT</span>
-              {% endif %}
-            {% endif %}
-          </td>
-          <td>
-            {{ r.patient_name }}
-            <span class="meta">({{ r.patient_nationality }})</span>
-          </td>
-          <td>{{ r.procedure_name }}</td>
-          <td class="meta">
-            {% if r.preferred_dates %}
-              {% set dates = json_loads(r.preferred_dates) if r.preferred_dates.startswith('[') else [r.preferred_dates] %}
-              {{ dates | join(', ') }}
-            {% endif %}
-          </td>
-          <td>
-            {% set b = badge(r.status) %}
-            <span class="badge" style="background:{{ b.color }}">{{ b.label }}</span>
-          </td>
-          <td>
-            {% if r.confirmed_date %}
-              {{ r.confirmed_date }} {{ r.confirmed_time or '' }}
-              {% if r.confirmed_price %}<br><span class="meta">{{ r.confirmed_price }}</span>{% endif %}
-            {% elif r.decline_reason %}
-              <span class="meta">{{ r.decline_reason[:30] }}</span>
-            {% endif %}
-          </td>
-          <td class="meta">{{ r.created_at[:10] if r.created_at else '' }}</td>
-        </tr>
-        {% else %}
-        <tr>
-          <td colspan="8" class="empty">No reservations yet. <a href="/create">Create one</a></td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+    <!-- Table -->
+    <div class="rounded-lg border border-border bg-card shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-border bg-muted/50">
+              <th class="px-4 py-3 text-left font-medium text-muted-foreground">ID</th>
+              <th class="px-4 py-3 text-left font-medium text-muted-foreground">
+                <span class="inline-flex items-center gap-1.5"><i data-lucide="building-2" class="w-3.5 h-3.5"></i> 클리닉</span>
+              </th>
+              <th class="px-4 py-3 text-left font-medium text-muted-foreground">채널</th>
+              <th class="px-4 py-3 text-left font-medium text-muted-foreground">
+                <span class="inline-flex items-center gap-1.5"><i data-lucide="user" class="w-3.5 h-3.5"></i> 환자</span>
+              </th>
+              <th class="px-4 py-3 text-left font-medium text-muted-foreground">시술</th>
+              <th class="px-4 py-3 text-left font-medium text-muted-foreground">
+                <span class="inline-flex items-center gap-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> 희망일</span>
+              </th>
+              <th class="px-4 py-3 text-left font-medium text-muted-foreground">상태</th>
+              <th class="px-4 py-3 text-left font-medium text-muted-foreground">결과</th>
+              <th class="px-4 py-3 text-left font-medium text-muted-foreground">생성일</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-border">
+            {% for r in reservations %}
+            <tr class="transition-colors hover:bg-muted/50 cursor-pointer" onclick="window.location='/reservations/{{ r.id }}'">
+              <td class="px-4 py-3 text-muted-foreground tabular-nums text-xs">{{ r.request_id }}</td>
+              <td class="px-4 py-3">
+                <a href="/reservations/{{ r.id }}" class="font-medium text-foreground hover:text-primary hover:underline underline-offset-2 transition-colors">
+                  {{ r.clinic_name }}
+                </a>
+              </td>
+              <td class="px-4 py-3">
+                {% if r.clinic_contact_url %}
+                  {% if r.contact_platform == 'line' %}
+                    <span class="inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-bold bg-[#06c755] text-white">LINE</span>
+                  {% else %}
+                    <span class="inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-bold bg-[#fee500] text-[#3c1e1e]">카톡</span>
+                  {% endif %}
+                {% else %}
+                  <span class="text-muted-foreground text-xs">-</span>
+                {% endif %}
+              </td>
+              <td class="px-4 py-3">
+                <span class="font-medium">{{ r.patient_name }}</span>
+                <span class="text-muted-foreground text-xs ml-1">({{ r.patient_nationality }})</span>
+              </td>
+              <td class="px-4 py-3">{{ r.procedure_name }}</td>
+              <td class="px-4 py-3 text-muted-foreground text-xs tabular-nums">
+                {% if r.preferred_dates %}
+                  {% set dates = json_loads(r.preferred_dates) if r.preferred_dates.startswith('[') else [r.preferred_dates] %}
+                  {{ dates[0] }}
+                  {% if dates | length > 1 %}
+                    <span class="ml-1 inline-flex items-center rounded-full bg-secondary px-1.5 py-0.5 text-[10px] font-medium text-secondary-foreground">+{{ dates | length - 1 }}</span>
+                  {% endif %}
+                {% endif %}
+              </td>
+              <td class="px-4 py-3">
+                {% set b = badge(r.status) %}
+                {% if r.status == 'confirmed' or r.status == 'completed' %}
+                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-emerald-100 text-emerald-700">{{ b.label }}</span>
+                {% elif r.status == 'negotiating' or r.status == 'contacting' or r.status == 'greeting_sent' %}
+                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-amber-100 text-amber-700">{{ b.label }}</span>
+                {% elif r.status == 'paused_for_human' %}
+                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-red-100 text-red-700">{{ b.label }}</span>
+                {% elif r.status == 'declined' or r.status == 'failed' or r.status == 'timed_out' %}
+                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-gray-100 text-gray-600">{{ b.label }}</span>
+                {% else %}
+                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-secondary text-secondary-foreground">{{ b.label }}</span>
+                {% endif %}
+              </td>
+              <td class="px-4 py-3 text-xs">
+                {% if r.confirmed_date %}
+                  <span class="tabular-nums">{{ r.confirmed_date }} {{ r.confirmed_time or '' }}</span>
+                  {% if r.confirmed_price %}<br><span class="text-muted-foreground">{{ r.confirmed_price }}</span>{% endif %}
+                {% elif r.decline_reason %}
+                  <span class="text-muted-foreground">{{ r.decline_reason[:30] }}</span>
+                {% endif %}
+              </td>
+              <td class="px-4 py-3 text-muted-foreground text-xs tabular-nums">{{ r.created_at[:10] if r.created_at else '' }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="9" class="px-4 py-16 text-center text-muted-foreground">
+                <div class="flex flex-col items-center gap-2">
+                  <i data-lucide="inbox" class="w-10 h-10 text-muted-foreground/40"></i>
+                  <p>예약이 없습니다. <a href="/create" class="font-medium text-primary hover:underline underline-offset-2">새로 만들어보세요</a></p>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script>lucide.createIcons();</script>
 </body>
 </html>

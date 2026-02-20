@@ -100,6 +100,11 @@ class ReservationRepository:
         # Migration: add contact_platform column
         if "contact_platform" not in columns:
             conn.execute(MIGRATION_ADD_CONTACT_PLATFORM)
+        # Migration: add patient_age and patient_gender columns
+        if "patient_age" not in columns:
+            conn.execute("ALTER TABLE reservations ADD COLUMN patient_age INTEGER")
+        if "patient_gender" not in columns:
+            conn.execute("ALTER TABLE reservations ADD COLUMN patient_gender TEXT")
 
     # ------------------------------------------------------------------
     # Reservations

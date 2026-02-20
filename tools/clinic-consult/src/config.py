@@ -203,6 +203,8 @@ class Settings(BaseSettings):
     # --- Secrets (loaded from .env only) ---
     anthropic_api_key: str = ""
     openai_api_key: str = ""
+    reserve_user: str = "admin"
+    reserve_pass: str = ""
 
     # --- Non-secret configuration sections ---
     emulator: EmulatorConfig = Field(default_factory=EmulatorConfig)

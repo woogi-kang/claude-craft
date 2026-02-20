@@ -21,7 +21,7 @@ from starlette.status import HTTP_401_UNAUTHORIZED
 
 from src.clinic.lookup import ClinicLookup
 from src.reservation.exporter import ReservationExporter
-from src.reservation.repository import ReservationRepository
+from src.reservation.repository import VALID_TRANSITIONS, ReservationRepository
 
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 _TEMPLATES_DIR = Path(__file__).resolve().parent / "templates"
@@ -41,10 +41,11 @@ _csrf_tokens: dict[str, str] = {}
 
 
 def _get_auth_credentials() -> tuple[str, str]:
-    """Read auth credentials from environment variables."""
-    username = os.environ.get("RESERVE_USER", "admin")
-    password = os.environ.get("RESERVE_PASS", "")
-    return username, password
+    """Read auth credentials from Settings (which loads .env automatically)."""
+    from src.config import load_settings
+
+    settings = load_settings()
+    return settings.reserve_user, settings.reserve_pass
 
 
 def verify_credentials(
@@ -132,16 +133,16 @@ def _get_lookup() -> ClinicLookup:
 # ------------------------------------------------------------------
 
 _STATUS_BADGES: dict[str, dict[str, str]] = {
-    "created": {"label": "Created", "color": "#6b7280"},
-    "contacting": {"label": "Contacting", "color": "#3b82f6"},
-    "greeting_sent": {"label": "Sent", "color": "#8b5cf6"},
-    "negotiating": {"label": "Negotiating", "color": "#f59e0b"},
-    "paused_for_human": {"label": "Paused", "color": "#ef4444"},
-    "confirmed": {"label": "Confirmed", "color": "#10b981"},
-    "declined": {"label": "Declined", "color": "#6b7280"},
-    "completed": {"label": "Completed", "color": "#059669"},
-    "timed_out": {"label": "Timed Out", "color": "#9ca3af"},
-    "failed": {"label": "Failed", "color": "#dc2626"},
+    "created": {"label": "생성됨", "color": "#6b7280"},
+    "contacting": {"label": "연락중", "color": "#3b82f6"},
+    "greeting_sent": {"label": "발송됨", "color": "#8b5cf6"},
+    "negotiating": {"label": "협의중", "color": "#f59e0b"},
+    "paused_for_human": {"label": "일시정지", "color": "#ef4444"},
+    "confirmed": {"label": "확정", "color": "#10b981"},
+    "declined": {"label": "거절", "color": "#6b7280"},
+    "completed": {"label": "완료", "color": "#059669"},
+    "timed_out": {"label": "시간초과", "color": "#9ca3af"},
+    "failed": {"label": "실패", "color": "#dc2626"},
 }
 
 
@@ -294,6 +295,9 @@ async def reservation_detail(
     messages = repo.get_messages(reservation_id)
     csrf_token = _generate_csrf_token(username)
 
+    # Get valid next statuses for the current state
+    next_statuses = sorted(VALID_TRANSITIONS.get(reservation["status"], frozenset()))
+
     return templates.TemplateResponse("detail.html", {
         "request": request,
         "reservation": reservation,
@@ -301,6 +305,7 @@ async def reservation_detail(
         "badge": _badge,
         "json_loads": json.loads,
         "csrf_token": csrf_token,
+        "valid_transitions": next_statuses,
     })
 
 
@@ -331,6 +336,35 @@ async def resume_reservation(
         paused_reason=None,
     )
 
+    return RedirectResponse(url=f"/reservations/{reservation_id}", status_code=303)
+
+
+@app.post("/reservations/{reservation_id}/status")
+async def change_status(
+    reservation_id: int,
+    new_status: str = Form(...),
+    csrf_token: str = Form(...),
+    username: str = Depends(verify_credentials),
+):
+    """Change reservation status using VALID_TRANSITIONS."""
+    _verify_csrf_token(username, csrf_token)
+    repo = _get_repo()
+    reservation = repo.get_reservation(reservation_id)
+    if not reservation:
+        raise HTTPException(status_code=404, detail="Reservation not found")
+
+    allowed = VALID_TRANSITIONS.get(reservation["status"], frozenset())
+    if new_status not in allowed:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Cannot transition from '{reservation['status']}' to '{new_status}'",
+        )
+
+    update_kwargs: dict[str, Any] = {"status": new_status}
+    if new_status in ("completed", "failed", "declined"):
+        update_kwargs["completed_at"] = datetime.now(timezone.utc).isoformat()
+
+    repo.update_reservation(reservation_id, **update_kwargs)
     return RedirectResponse(url=f"/reservations/{reservation_id}", status_code=303)
 
 
