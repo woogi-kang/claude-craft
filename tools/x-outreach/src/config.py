@@ -14,7 +14,6 @@ import yaml
 from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-
 # ---------------------------------------------------------------------------
 # Sub-models (nested configuration sections)
 # ---------------------------------------------------------------------------
@@ -24,7 +23,22 @@ class SearchConfig(BaseModel):
     """Search pipeline configuration."""
 
     keywords: list[str] = Field(default_factory=list)
-    max_tweet_age_hours: int = 24
+    max_post_age_hours: int = 24
+
+
+class ClassificationConfig(BaseModel):
+    """Classification pipeline configuration (5-category)."""
+
+    confidence_threshold: float = 0.7
+    categories: list[str] = Field(
+        default_factory=lambda: [
+            "hospital",
+            "price",
+            "procedure",
+            "complaint",
+            "review",
+        ]
+    )
 
 
 class CollectConfig(BaseModel):
@@ -35,22 +49,15 @@ class CollectConfig(BaseModel):
     require_bio: bool = True
 
 
-class AnalyzeConfig(BaseModel):
-    """Analyze pipeline configuration."""
-
-    confidence_threshold: float = 0.7
-    model: str = "claude-sonnet-4-20250514"
-
-
 class ReplyConfig(BaseModel):
-    """Reply pipeline configuration (M2 stub)."""
+    """Reply pipeline configuration."""
 
     enabled: bool = False
     daily_limit: int = 50
 
 
 class DmConfig(BaseModel):
-    """DM pipeline configuration (M2 stub)."""
+    """DM pipeline configuration."""
 
     enabled: bool = False
     daily_limit: int = 20
@@ -74,10 +81,11 @@ class DelaysConfig(BaseModel):
     action_max_seconds: int = 30
 
 
-class SchedulingConfig(BaseModel):
-    """Scheduler configuration."""
+class DaemonConfig(BaseModel):
+    """Daemon loop configuration."""
 
-    interval_hours: int = 2
+    min_interval_hours: float = 2.0
+    max_interval_hours: float = 4.0
     active_start_hour: int = 8  # JST
     active_end_hour: int = 23  # JST
 
@@ -92,9 +100,25 @@ class LoggingConfig(BaseModel):
 
 
 class DatabaseConfig(BaseModel):
-    """Database configuration."""
+    """PostgreSQL database configuration."""
 
-    path: str = "data/outreach.db"
+    url: str = "postgresql://localhost:5432/outreach"
+    min_pool_size: int = 2
+    max_pool_size: int = 10
+
+
+class AccountPoolConfig(BaseModel):
+    """Account pool configuration."""
+
+    cooldown_minutes_crawl: int = 30
+    cooldown_minutes_outreach: int = 60
+
+
+class LLMConfig(BaseModel):
+    """LLM provider configuration."""
+
+    provider: str = "gemini"
+    model: str = "gemini-2.0-flash"
 
 
 # ---------------------------------------------------------------------------
@@ -135,25 +159,24 @@ class Settings(BaseSettings):
     # --- Secrets (loaded from .env only) ---
     burner_x_username: str = ""
     burner_x_password: str = ""
-    x_api_key: str = ""
-    x_api_secret: str = ""
-    x_access_token: str = ""
-    x_access_token_secret: str = ""
     nandemo_x_username: str = ""
     nandemo_x_password: str = ""
-    anthropic_api_key: str = ""
+    gemini_api_key: str = ""
+    database_url: str = ""
 
     # --- Non-secret configuration sections ---
     search: SearchConfig = Field(default_factory=SearchConfig)
+    classification: ClassificationConfig = Field(default_factory=ClassificationConfig)
     collect: CollectConfig = Field(default_factory=CollectConfig)
-    analyze: AnalyzeConfig = Field(default_factory=AnalyzeConfig)
     reply: ReplyConfig = Field(default_factory=ReplyConfig)
     dm: DmConfig = Field(default_factory=DmConfig)
     browser: BrowserConfig = Field(default_factory=BrowserConfig)
     delays: DelaysConfig = Field(default_factory=DelaysConfig)
-    scheduling: SchedulingConfig = Field(default_factory=SchedulingConfig)
+    daemon: DaemonConfig = Field(default_factory=DaemonConfig)
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
     database: DatabaseConfig = Field(default_factory=DatabaseConfig)
+    account_pool: AccountPoolConfig = Field(default_factory=AccountPoolConfig)
+    llm: LLMConfig = Field(default_factory=LLMConfig)
 
 
 def load_settings(config_path: Path | None = None) -> Settings:

@@ -2,37 +2,38 @@
 
 from __future__ import annotations
 
-import asyncio
-import time
-from datetime import datetime, timezone, timedelta
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from unittest.mock import MagicMock
 
 import pytest
-
-from src.knowledge.treatments import (
-    CONCERN_TO_PROCEDURES,
-    JAPANESE_TO_KOREAN,
-    TreatmentKnowledgeBase,
-)
-from src.knowledge.templates import TemplateSelector
-from src.pipeline.track import ActionTracker
-from src.utils.rate_limiter import (
+from outreach_shared.utils.rate_limiter import (
     MonthlyBudgetTracker,
     SlidingWindowLimiter,
     TokenBucketLimiter,
 )
-from src.utils.time_utils import (
-    JST,
+from outreach_shared.utils.time_utils import (
     now_jst,
-    parse_tweet_timestamp,
-    tweet_age_hours,
 )
+from outreach_shared.utils.time_utils import (
+    parse_post_timestamp as parse_tweet_timestamp,
+)
+from outreach_shared.utils.time_utils import (
+    post_age_hours as tweet_age_hours,
+)
+
 from src.ai.prompts import (
     build_classification_system_prompt,
     build_classification_user_prompt,
 )
 from src.db.repository import Repository
-
+from src.knowledge.templates import TemplateSelector
+from src.knowledge.treatments import (
+    CONCERN_TO_PROCEDURES,
+    JAPANESE_TO_KOREAN,
+    TreatmentKnowledgeBase,
+)
+from src.pipeline.track import ActionTracker
 
 # =========================================================================
 # Time utilities
@@ -75,12 +76,12 @@ class TestTimeUtils:
             parse_tweet_timestamp("not a date")
 
     def test_tweet_age_hours(self) -> None:
-        recent = datetime.now(tz=timezone.utc) - timedelta(hours=2)
+        recent = datetime.now(tz=UTC) - timedelta(hours=2)
         age = tweet_age_hours(recent)
         assert 1.9 < age < 2.1
 
     def test_tweet_age_hours_old(self) -> None:
-        old = datetime.now(tz=timezone.utc) - timedelta(days=3)
+        old = datetime.now(tz=UTC) - timedelta(days=3)
         age = tweet_age_hours(old)
         assert age > 70
 
@@ -175,15 +176,11 @@ class TestTreatmentKnowledgeBase:
         assert info is not None
         assert info.procedure_id == 2
 
-    def test_lookup_case_insensitive(
-        self, knowledge_base: TreatmentKnowledgeBase
-    ) -> None:
+    def test_lookup_case_insensitive(self, knowledge_base: TreatmentKnowledgeBase) -> None:
         info = knowledge_base.lookup_by_name("POTENZA")
         assert info is not None
 
-    def test_lookup_nonexistent(
-        self, knowledge_base: TreatmentKnowledgeBase
-    ) -> None:
+    def test_lookup_nonexistent(self, knowledge_base: TreatmentKnowledgeBase) -> None:
         assert knowledge_base.lookup_by_name("없는시술") is None
 
     def test_japanese_to_korean_mapping(self) -> None:
@@ -197,9 +194,7 @@ class TestTreatmentKnowledgeBase:
         assert "ポテンツァ" in procs
         assert "ダーマペン" in procs
 
-    def test_get_classification_context(
-        self, knowledge_base: TreatmentKnowledgeBase
-    ) -> None:
+    def test_get_classification_context(self, knowledge_base: TreatmentKnowledgeBase) -> None:
         ctx = knowledge_base.get_classification_context()
         assert "ボトックス" in ctx
         assert "보톡스" in ctx
@@ -222,46 +217,44 @@ class TestTemplateSelector:
 
     def test_get_reply_template(self) -> None:
         selector = TemplateSelector()
-        template = selector.get_reply_template("A")
+        template = selector.get_reply_template("hospital")
         assert template is not None
-        assert template.category == "A"
+        assert template.category == "hospital"
         assert len(template.text) > 0
 
-    def test_get_reply_template_f_returns_none(self) -> None:
-        """Category F has empty templates (skip clinic accounts)."""
-        selector = TemplateSelector()
-        template = selector.get_reply_template("F")
-        assert template is None
-
-    def test_get_reply_template_unknown_category(self) -> None:
+    def test_get_reply_template_unknown_returns_none(self) -> None:
         selector = TemplateSelector()
         assert selector.get_reply_template("Z") is None
 
+    def test_get_reply_template_unknown_category(self) -> None:
+        selector = TemplateSelector()
+        assert selector.get_reply_template("nonexistent") is None
+
     def test_get_dm_template(self) -> None:
         selector = TemplateSelector()
-        template = selector.get_dm_template("A")
+        template = selector.get_dm_template("procedure")
         assert template is not None
-        assert template.category == "A"
+        assert template.category == "procedure"
         assert "{施術名}" in template.text
 
     def test_rotation_increments_count(self) -> None:
         selector = TemplateSelector()
-        t1 = selector.get_reply_template("A")
+        t1 = selector.get_reply_template("hospital")
         assert t1 is not None
         assert t1.use_count == 1
-        t2 = selector.get_reply_template("A")
+        t2 = selector.get_reply_template("hospital")
         assert t2 is not None
-        # With 2 templates in A, rotation should pick the other first
+        # With 2 templates in hospital, rotation should pick the other first
         assert t1.use_count + t2.use_count >= 2
 
     def test_get_categories(self) -> None:
         selector = TemplateSelector()
         reply_cats = selector.get_categories("reply")
-        assert "A" in reply_cats
-        assert "G" in reply_cats
+        assert "hospital" in reply_cats
+        assert "review" in reply_cats
         dm_cats = selector.get_categories("dm")
-        assert "A" in dm_cats
-        assert "E" in dm_cats
+        assert "hospital" in dm_cats
+        assert "complaint" in dm_cats
 
 
 # =========================================================================
@@ -275,9 +268,9 @@ class TestPrompts:
     def test_system_prompt_includes_context(self) -> None:
         prompt = build_classification_system_prompt("Test domain context here")
         assert "Test domain context here" in prompt
-        assert "needs_help" in prompt
-        assert "seeking_info" in prompt
-        assert "irrelevant" in prompt
+        assert "intent_type" in prompt
+        assert "llm_decision" in prompt
+        assert "hospital" in prompt
 
     def test_user_prompt_includes_data(self) -> None:
         prompt = build_classification_user_prompt(
@@ -314,56 +307,82 @@ class TestPrompts:
 
 
 class TestActionTracker:
-    """Test the action tracking module."""
+    """Test the action tracking module with mocked repository."""
 
-    def test_record_search(self, tmp_db: Repository) -> None:
-        tracker = ActionTracker(tmp_db)
+    def _make_mock_repo(self) -> MagicMock:
+        repo = MagicMock(spec=Repository)
+        repo.record_action.return_value = 1
+        repo.update_daily_stats.return_value = None
+        repo.get_daily_stats.return_value = {
+            "tweets_searched": 5,
+            "tweets_collected": 10,
+            "tweets_analyzed": 1,
+            "replies_sent": 1,
+            "dms_sent": 1,
+            "dms_skipped": 1,
+            "errors": 1,
+        }
+        return repo
+
+    def test_record_search(self) -> None:
+        repo = self._make_mock_repo()
+        tracker = ActionTracker(repo)
         tracker.record_search("テスト", 5)
-        stats = tracker.get_today_summary()
-        assert stats.get("tweets_searched", 0) == 5
+        repo.record_action.assert_called_once()
+        repo.update_daily_stats.assert_called_once()
 
-    def test_record_collect(self, tmp_db: Repository) -> None:
-        tracker = ActionTracker(tmp_db)
+    def test_record_collect(self) -> None:
+        repo = self._make_mock_repo()
+        tracker = ActionTracker(repo)
         tracker.record_collect(stored=10, rejected=3)
-        stats = tracker.get_today_summary()
-        assert stats.get("tweets_collected", 0) == 10
+        repo.record_action.assert_called_once()
 
-    def test_record_error(self, tmp_db: Repository) -> None:
-        tracker = ActionTracker(tmp_db)
+    def test_record_error(self) -> None:
+        repo = self._make_mock_repo()
+        tracker = ActionTracker(repo)
         tracker.record_error("test", "Something broke")
-        stats = tracker.get_today_summary()
-        assert stats.get("errors", 0) == 1
+        repo.record_action.assert_called_once_with(
+            action_type="test",
+            tweet_id=None,
+            username=None,
+            details=None,
+            status="error",
+            error_message="Something broke",
+        )
 
-    def test_log_summary_no_crash(self, tmp_db: Repository) -> None:
-        tracker = ActionTracker(tmp_db)
+    def test_log_summary_no_crash(self) -> None:
+        repo = self._make_mock_repo()
+        repo.get_daily_stats.return_value = None
+        tracker = ActionTracker(repo)
         tracker.log_summary()  # Should not raise even with no data
 
-    def test_record_analyze(self, tmp_db: Repository) -> None:
-        tracker = ActionTracker(tmp_db)
-        tracker.record_analyze("t1", "seeking_info", 0.9)
-        stats = tracker.get_today_summary()
-        assert stats.get("tweets_analyzed", 0) == 1
+    def test_record_analyze(self) -> None:
+        repo = self._make_mock_repo()
+        tracker = ActionTracker(repo)
+        tracker.record_analyze("t1", "hospital", 0.9)
+        repo.record_action.assert_called_once()
 
-    def test_record_reply(self, tmp_db: Repository) -> None:
-        tracker = ActionTracker(tmp_db)
+    def test_record_reply(self) -> None:
+        repo = self._make_mock_repo()
+        tracker = ActionTracker(repo)
         tracker.record_reply("t1", "user1")
-        stats = tracker.get_today_summary()
-        assert stats.get("replies_sent", 0) == 1
+        repo.record_action.assert_called_once()
 
-    def test_record_dm(self, tmp_db: Repository) -> None:
-        tracker = ActionTracker(tmp_db)
-        tracker.record_dm("user1", "A")
-        stats = tracker.get_today_summary()
-        assert stats.get("dms_sent", 0) == 1
+    def test_record_dm(self) -> None:
+        repo = self._make_mock_repo()
+        tracker = ActionTracker(repo)
+        tracker.record_dm("user1", "hospital")
+        repo.record_action.assert_called_once()
 
-    def test_record_dm_skip(self, tmp_db: Repository) -> None:
-        tracker = ActionTracker(tmp_db)
+    def test_record_dm_skip(self) -> None:
+        repo = self._make_mock_repo()
+        tracker = ActionTracker(repo)
         tracker.record_dm_skip("user1", "DM closed")
-        stats = tracker.get_today_summary()
-        assert stats.get("dms_skipped", 0) == 1
+        repo.record_action.assert_called_once()
 
-    def test_log_summary_with_data(self, tmp_db: Repository) -> None:
-        tracker = ActionTracker(tmp_db)
+    def test_log_summary_with_data(self) -> None:
+        repo = self._make_mock_repo()
+        tracker = ActionTracker(repo)
         tracker.record_search("テスト", 3)
         tracker.record_collect(stored=2, rejected=1)
         tracker.log_summary()  # Should not raise
@@ -378,7 +397,8 @@ class TestLogger:
     """Test the logger setup."""
 
     def test_setup_logging(self, tmp_path: Path) -> None:
-        from src.utils.logger import setup_logging
+        from outreach_shared.utils.logger import setup_logging
+
         log = setup_logging(
             level="DEBUG",
             log_dir=str(tmp_path / "logs"),
@@ -387,12 +407,14 @@ class TestLogger:
         assert log is not None
 
     def test_get_logger_with_module(self) -> None:
-        from src.utils.logger import get_logger
+        from outreach_shared.utils.logger import get_logger
+
         log = get_logger("test_module")
         assert log is not None
 
     def test_get_logger_without_module(self) -> None:
-        from src.utils.logger import get_logger
+        from outreach_shared.utils.logger import get_logger
+
         log = get_logger()
         assert log is not None
 
@@ -406,12 +428,14 @@ class TestIsActiveHours:
     """Test the is_active_hours function."""
 
     def test_returns_bool(self) -> None:
-        from src.utils.time_utils import is_active_hours
+        from outreach_shared.utils.time_utils import is_active_hours
+
         result = is_active_hours(0, 23)
         assert result is True  # Any hour between 0-23 is active
 
     def test_narrow_window(self) -> None:
-        from src.utils.time_utils import is_active_hours
+        from outreach_shared.utils.time_utils import is_active_hours
+
         # This may or may not be true depending on current JST hour
         result = is_active_hours(0, 23)
         assert isinstance(result, bool)
@@ -422,7 +446,8 @@ class TestRandomDelay:
 
     @pytest.mark.asyncio
     async def test_returns_delay_value(self) -> None:
-        from src.utils.time_utils import random_delay
+        from outreach_shared.utils.time_utils import random_delay
+
         delay = await random_delay(0.01, 0.02)
         assert 0.01 <= delay <= 0.02
 
@@ -435,22 +460,16 @@ class TestRandomDelay:
 class TestKnowledgeBaseEdgeCases:
     """Test knowledge base edge cases."""
 
-    def test_lookup_by_japanese_known(
-        self, knowledge_base: TreatmentKnowledgeBase
-    ) -> None:
+    def test_lookup_by_japanese_known(self, knowledge_base: TreatmentKnowledgeBase) -> None:
         info = knowledge_base.lookup_by_japanese("ボトックス")
         assert info is not None
         assert info.korean_name == "보톡스"
 
-    def test_lookup_by_japanese_unknown(
-        self, knowledge_base: TreatmentKnowledgeBase
-    ) -> None:
+    def test_lookup_by_japanese_unknown(self, knowledge_base: TreatmentKnowledgeBase) -> None:
         result = knowledge_base.lookup_by_japanese("存在しない施術")
         assert result is None
 
-    def test_get_procedures_for_concern(
-        self, knowledge_base: TreatmentKnowledgeBase
-    ) -> None:
+    def test_get_procedures_for_concern(self, knowledge_base: TreatmentKnowledgeBase) -> None:
         procs = knowledge_base.get_procedures_for_concern("毛穴")
         assert len(procs) > 0
 

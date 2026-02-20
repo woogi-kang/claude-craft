@@ -2,18 +2,18 @@
 
 During the first 14 days of pipeline operation, all volume limits are
 reduced by 50% to avoid triggering X's anti-automation systems on a
-new account.  The pipeline start date is persisted in the SQLite
-``config`` table so it survives restarts.
+new account.  The pipeline start date is persisted in the config
+store so it survives restarts.
 """
 
 from __future__ import annotations
 
-import copy
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
+from outreach_shared.utils.logger import get_logger
 
 from src.config import Settings
 from src.db.repository import Repository
-from src.utils.logger import get_logger
 
 logger = get_logger("warmup")
 
@@ -62,7 +62,7 @@ class WarmupManager:
         if existing is not None:
             return existing
 
-        today = datetime.now(tz=timezone.utc).strftime("%Y-%m-%d")
+        today = datetime.now(tz=UTC).strftime("%Y-%m-%d")
         self._repo.set_config(_CONFIG_KEY_START_DATE, today)
         logger.info("warmup_start_date_recorded", start_date=today)
         return today
@@ -83,13 +83,11 @@ class WarmupManager:
             return 1
 
         try:
-            start_date = datetime.strptime(start_str, "%Y-%m-%d").replace(
-                tzinfo=timezone.utc
-            )
+            start_date = datetime.strptime(start_str, "%Y-%m-%d").replace(tzinfo=UTC)
         except ValueError:
             return 1
 
-        now = datetime.now(tz=timezone.utc)
+        now = datetime.now(tz=UTC)
         delta_days = (now - start_date).days
         return max(1, delta_days + 1)
 

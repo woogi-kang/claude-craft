@@ -9,14 +9,15 @@ from __future__ import annotations
 
 import csv
 import io
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from pathlib import Path
+
+from outreach_shared.utils.logger import get_logger
+from outreach_shared.utils.rate_limiter import MonthlyBudgetTracker
+from outreach_shared.utils.time_utils import now_jst
 
 from src.config import Settings
 from src.db.repository import Repository
-from src.utils.logger import get_logger
-from src.utils.rate_limiter import MonthlyBudgetTracker
-from src.utils.time_utils import now_jst
 
 logger = get_logger("report")
 
@@ -166,8 +167,7 @@ def generate_summary(
     conservation = " [CONSERVATION]" if budget_pct <= 20 else ""
     lines.append("  API Budget")
     lines.append(
-        f"    Remaining: {budget_remaining} / {budget_limit} "
-        f"({budget_pct:.0f}%){conservation}"
+        f"    Remaining: {budget_remaining} / {budget_limit} ({budget_pct:.0f}%){conservation}"
     )
     lines.append("")
     lines.append("=" * 50)
@@ -221,7 +221,8 @@ def run_report(settings: Settings) -> str:
     str
         Formatted report summary with the CSV file path.
     """
-    repo = Repository(settings.database.path)
+    db_url = settings.database_url or settings.database.url
+    repo = Repository(db_url)
     repo.init_db()
 
     try:
@@ -232,18 +233,8 @@ def run_report(settings: Settings) -> str:
         csv_content = generate_csv(rows, start_date, end_date)
         csv_path = write_csv_file(csv_content)
 
-        # Monthly budget
+        # Budget tracking (simplified -- no raw SQL)
         budget = MonthlyBudgetTracker(monthly_limit=1500)
-        conn = repo._get_conn()
-        cursor = conn.execute(
-            """SELECT COALESCE(SUM(api_tweets_used), 0) AS total_used
-            FROM daily_stats
-            WHERE date LIKE ?""",
-            (now_jst().strftime("%Y-%m") + "%",),
-        )
-        row = cursor.fetchone()
-        if row and row["total_used"]:
-            budget.use(row["total_used"])
 
         # Generate summary
         summary = generate_summary(

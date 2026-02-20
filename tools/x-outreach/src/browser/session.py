@@ -8,11 +8,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from outreach_shared.browser.human_sim import human_type, random_pause
+from outreach_shared.browser.stealth import create_stealth_browser
+from outreach_shared.utils.logger import get_logger
 from playwright.async_api import BrowserContext, Page, Playwright
-
-from src.browser.human_sim import human_type, random_pause
-from src.browser.stealth import create_stealth_browser
-from src.utils.logger import get_logger
 
 logger = get_logger("session")
 
@@ -106,7 +105,8 @@ class SessionManager:
         """
         page = context.pages[0] if context.pages else await context.new_page()
         try:
-            await page.goto("https://x.com/i/flow/login", wait_until="domcontentloaded", timeout=30_000)
+            login_url = "https://x.com/i/flow/login"
+            await page.goto(login_url, wait_until="domcontentloaded", timeout=30_000)
             await random_pause(2.0, 4.0)
 
             # Enter username
@@ -126,9 +126,7 @@ class SessionManager:
                 await random_pause(1.5, 3.0)
 
             # Enter password
-            password_input = await page.wait_for_selector(
-                'input[type="password"]', timeout=15_000
-            )
+            password_input = await page.wait_for_selector('input[type="password"]', timeout=15_000)
             if password_input:
                 await human_type(page, 'input[type="password"]', password)
                 await random_pause(0.5, 1.0)

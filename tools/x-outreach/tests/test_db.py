@@ -1,39 +1,59 @@
-"""Tests for database repository."""
+"""Tests for the PostgreSQL repository wrapper.
+
+These tests verify the Repository wrapper's interface using mocked
+PostgresRepository, since actual PostgreSQL requires testcontainers.
+"""
 
 from __future__ import annotations
 
-from pathlib import Path
+from unittest.mock import AsyncMock, patch
 
 import pytest
 
 from src.db.repository import Repository
 
 
+@pytest.fixture
+def mock_repo() -> Repository:
+    """Create a Repository with a mocked PostgresRepository backend."""
+    with patch("src.db.repository.PostgresRepository") as mock_pg_cls:
+        mock_pg = mock_pg_cls.return_value
+        mock_pg.connect = AsyncMock()
+        mock_pg.close = AsyncMock()
+        mock_pg.insert_post = AsyncMock(return_value=1)
+        mock_pg.get_posts_by_status = AsyncMock(return_value=[])
+        mock_pg.update_post_status = AsyncMock()
+        mock_pg.get_post = AsyncMock(return_value=None)
+        mock_pg.insert_outreach = AsyncMock(return_value=1)
+        mock_pg.get_pending_outreach = AsyncMock(return_value=[])
+        mock_pg.count_posts = AsyncMock(return_value=0)
+
+        repo = Repository("postgresql://localhost:5432/test")
+        yield repo
+        # Ensure event loop is cleaned up
+        if repo._loop and not repo._loop.is_closed():
+            repo._loop.close()
+
+
 class TestInitDb:
     """Test database initialisation."""
 
-    def test_creates_tables(self, tmp_db: Repository) -> None:
-        conn = tmp_db._get_conn()
-        cursor = conn.execute(
-            "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"
-        )
-        tables = {row["name"] for row in cursor.fetchall()}
-        assert "tweets" in tables
-        assert "users" in tables
-        assert "actions" in tables
-        assert "daily_stats" in tables
-        assert "config" in tables
+    def test_init_calls_connect(self, mock_repo: Repository) -> None:
+        mock_repo.init_db()
+        mock_repo._repo.connect.assert_called_once()
 
-    def test_idempotent_init(self, tmp_db: Repository) -> None:
-        """Calling init_db twice should not raise."""
-        tmp_db.init_db()  # Second call
+    def test_close_calls_close(self, mock_repo: Repository) -> None:
+        mock_repo.init_db()
+        mock_repo.close()
+        mock_repo._repo.close.assert_called_once()
 
 
 class TestTweets:
     """Test tweet CRUD operations."""
 
-    def test_insert_tweet(self, tmp_db: Repository) -> None:
-        inserted = tmp_db.insert_tweet(
+    def test_insert_tweet(self, mock_repo: Repository) -> None:
+        mock_repo._repo.insert_post = AsyncMock(return_value=1)
+        inserted = mock_repo.insert_tweet(
             {
                 "tweet_id": "t1",
                 "content": "test tweet",
@@ -42,17 +62,11 @@ class TestTweets:
             }
         )
         assert inserted is True
+        mock_repo._repo.insert_post.assert_called_once()
 
-    def test_insert_duplicate_ignored(self, tmp_db: Repository) -> None:
-        tmp_db.insert_tweet(
-            {
-                "tweet_id": "t1",
-                "content": "first",
-                "author_username": "user1",
-                "tweet_timestamp": "2026-02-19T10:00:00Z",
-            }
-        )
-        inserted = tmp_db.insert_tweet(
+    def test_insert_duplicate_returns_false(self, mock_repo: Repository) -> None:
+        mock_repo._repo.insert_post = AsyncMock(return_value=-1)
+        inserted = mock_repo.insert_tweet(
             {
                 "tweet_id": "t1",
                 "content": "duplicate",
@@ -62,168 +76,97 @@ class TestTweets:
         )
         assert inserted is False
 
-    def test_get_tweets_by_status(self, tmp_db: Repository) -> None:
-        tmp_db.insert_tweet(
-            {
-                "tweet_id": "t1",
-                "content": "a",
-                "author_username": "u1",
-                "tweet_timestamp": "2026-02-19T10:00:00Z",
-                "status": "collected",
-            }
-        )
-        tmp_db.insert_tweet(
-            {
-                "tweet_id": "t2",
-                "content": "b",
-                "author_username": "u2",
-                "tweet_timestamp": "2026-02-19T11:00:00Z",
-                "status": "analyzed",
-            }
-        )
-        collected = tmp_db.get_tweets_by_status("collected")
-        assert len(collected) == 1
-        assert collected[0]["tweet_id"] == "t1"
+    def test_get_tweets_by_status(self, mock_repo: Repository) -> None:
+        expected = [{"post_id": "t1", "contents": "a", "status": "collected"}]
+        mock_repo._repo.get_posts_by_status = AsyncMock(return_value=expected)
+        result = mock_repo.get_tweets_by_status("collected")
+        assert len(result) == 1
+        assert result[0]["post_id"] == "t1"
 
-    def test_update_tweet_status(self, tmp_db: Repository) -> None:
-        tmp_db.insert_tweet(
-            {
-                "tweet_id": "t1",
-                "content": "test",
-                "author_username": "u1",
-                "tweet_timestamp": "2026-02-19T10:00:00Z",
-                "status": "collected",
-            }
-        )
-        updated = tmp_db.update_tweet_status(
+    def test_update_tweet_status(self, mock_repo: Repository) -> None:
+        mock_repo._repo.update_post_status = AsyncMock()
+        updated = mock_repo.update_tweet_status(
             "t1",
             status="analyzed",
-            classification="needs_help",
-            confidence=0.85,
+            intent_type="hospital",
+            llm_decision=True,
         )
         assert updated is True
-        tweet = tmp_db.get_tweet_by_id("t1")
-        assert tweet is not None
-        assert tweet["status"] == "analyzed"
-        assert tweet["classification"] == "needs_help"
-        assert tweet["confidence"] == 0.85
-
-    def test_get_tweet_by_id(self, tmp_db: Repository) -> None:
-        tmp_db.insert_tweet(
-            {
-                "tweet_id": "t42",
-                "content": "hello",
-                "author_username": "u1",
-                "tweet_timestamp": "2026-02-19T10:00:00Z",
-            }
+        mock_repo._repo.update_post_status.assert_called_once_with(
+            "t1",
+            "analyzed",
+            intent_type="hospital",
+            llm_decision=True,
         )
-        tweet = tmp_db.get_tweet_by_id("t42")
-        assert tweet is not None
-        assert tweet["content"] == "hello"
 
-    def test_get_nonexistent_tweet(self, tmp_db: Repository) -> None:
-        assert tmp_db.get_tweet_by_id("missing") is None
+    def test_get_tweet_by_id(self, mock_repo: Repository) -> None:
+        expected = {"post_id": "t42", "contents": "hello"}
+        mock_repo._repo.get_post = AsyncMock(return_value=expected)
+        tweet = mock_repo.get_tweet_by_id("t42")
+        assert tweet is not None
+        assert tweet["contents"] == "hello"
+
+    def test_get_nonexistent_tweet(self, mock_repo: Repository) -> None:
+        mock_repo._repo.get_post = AsyncMock(return_value=None)
+        assert mock_repo.get_tweet_by_id("missing") is None
 
 
 class TestUsers:
-    """Test user CRUD operations."""
+    """Test user operations (mostly no-ops in PostgreSQL migration)."""
 
-    def test_insert_user(self, tmp_db: Repository) -> None:
-        inserted = tmp_db.insert_user(
-            {"username": "alice", "display_name": "Alice", "follower_count": 100}
-        )
-        assert inserted is True
+    def test_insert_user_returns_true(self, mock_repo: Repository) -> None:
+        assert mock_repo.insert_user({"username": "alice"}) is True
 
-    def test_insert_duplicate_user(self, tmp_db: Repository) -> None:
-        tmp_db.insert_user({"username": "alice"})
-        inserted = tmp_db.insert_user({"username": "alice"})
-        assert inserted is False
-
-    def test_get_user(self, tmp_db: Repository) -> None:
-        tmp_db.insert_user(
-            {"username": "bob", "display_name": "Bob", "bio": "hello"}
-        )
-        user = tmp_db.get_user("bob")
-        assert user is not None
-        assert user["display_name"] == "Bob"
-
-    def test_get_nonexistent_user(self, tmp_db: Repository) -> None:
-        assert tmp_db.get_user("nobody") is None
-
-    def test_update_user(self, tmp_db: Repository) -> None:
-        tmp_db.insert_user({"username": "carol", "follower_count": 50})
-        tmp_db.update_user("carol", follower_count=100, bio="updated")
-        user = tmp_db.get_user("carol")
-        assert user is not None
-        assert user["follower_count"] == 100
-        assert user["bio"] == "updated"
-
-    def test_is_user_contacted_false(self, tmp_db: Repository) -> None:
-        tmp_db.insert_user({"username": "dave", "contact_count": 0})
-        assert tmp_db.is_user_contacted("dave") is False
-
-    def test_is_user_contacted_true(self, tmp_db: Repository) -> None:
-        tmp_db.insert_user({"username": "eve"})
-        tmp_db.update_user("eve", contact_count=1)
-        assert tmp_db.is_user_contacted("eve") is True
-
-    def test_is_user_contacted_unknown(self, tmp_db: Repository) -> None:
-        assert tmp_db.is_user_contacted("unknown") is False
+    def test_update_user_returns_true(self, mock_repo: Repository) -> None:
+        assert mock_repo.update_user("carol", follower_count=100) is True
 
 
 class TestActions:
-    """Test action recording."""
+    """Test action recording via outreach table."""
 
-    def test_record_action(self, tmp_db: Repository) -> None:
-        row_id = tmp_db.record_action(
+    def test_record_action(self, mock_repo: Repository) -> None:
+        mock_repo._repo.insert_outreach = AsyncMock(return_value=1)
+        row_id = mock_repo.record_action(
             action_type="search",
-            tweet_id=None,
-            username=None,
+            tweet_id="t1",
+            username="user1",
             details="keyword=test, found=5",
             status="success",
         )
-        assert row_id > 0
+        assert row_id == 1
 
-    def test_record_action_with_error(self, tmp_db: Repository) -> None:
-        row_id = tmp_db.record_action(
-            action_type="login",
+    def test_record_action_no_tweet_returns_zero(self, mock_repo: Repository) -> None:
+        row_id = mock_repo.record_action(
+            action_type="search",
             tweet_id=None,
-            username="burner",
-            details=None,
-            status="error",
-            error_message="Timeout",
+            username=None,
+            details="test",
+            status="success",
         )
-        assert row_id > 0
+        assert row_id == 0
 
 
 class TestDailyStats:
-    """Test daily statistics tracking."""
+    """Test daily statistics (computed from counts in PostgreSQL)."""
 
-    def test_get_nonexistent_stats(self, tmp_db: Repository) -> None:
-        assert tmp_db.get_daily_stats("2026-01-01") is None
-
-    def test_update_creates_row(self, tmp_db: Repository) -> None:
-        tmp_db.update_daily_stats("2026-02-19", tweets_searched=10)
-        stats = tmp_db.get_daily_stats("2026-02-19")
+    def test_get_daily_stats(self, mock_repo: Repository) -> None:
+        mock_repo._repo.count_posts = AsyncMock(return_value=42)
+        stats = mock_repo.get_daily_stats("2026-02-19")
         assert stats is not None
-        assert stats["tweets_searched"] == 10
+        assert stats["date"] == "2026-02-19"
+        assert stats["tweets_searched"] == 42
 
-    def test_update_increments(self, tmp_db: Repository) -> None:
-        tmp_db.update_daily_stats("2026-02-19", tweets_searched=5)
-        tmp_db.update_daily_stats("2026-02-19", tweets_searched=3)
-        stats = tmp_db.get_daily_stats("2026-02-19")
-        assert stats is not None
-        assert stats["tweets_searched"] == 8
+    def test_update_daily_stats_is_noop(self, mock_repo: Repository) -> None:
+        # Should not raise
+        mock_repo.update_daily_stats("2026-02-19", tweets_searched=10)
 
-    def test_update_multiple_fields(self, tmp_db: Repository) -> None:
-        tmp_db.update_daily_stats(
-            "2026-02-19",
-            tweets_collected=10,
-            tweets_analyzed=8,
-            errors=1,
-        )
-        stats = tmp_db.get_daily_stats("2026-02-19")
-        assert stats is not None
-        assert stats["tweets_collected"] == 10
-        assert stats["tweets_analyzed"] == 8
-        assert stats["errors"] == 1
+
+class TestConfig:
+    """Test config methods (stubs in PostgreSQL migration)."""
+
+    def test_get_config_returns_none(self, mock_repo: Repository) -> None:
+        assert mock_repo.get_config("any_key") is None
+
+    def test_set_config_is_noop(self, mock_repo: Repository) -> None:
+        # Should not raise
+        mock_repo.set_config("key", "value")

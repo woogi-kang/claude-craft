@@ -1,1 +1,1 @@
-"""Database models and repository for SQLite storage."""
+"""Database layer -- re-exports from outreach_shared.db."""

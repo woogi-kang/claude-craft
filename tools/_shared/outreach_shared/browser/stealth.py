@@ -10,25 +10,27 @@ import json
 import random
 from pathlib import Path
 
-from playwright.async_api import Browser, BrowserContext, Playwright, async_playwright
-from playwright_stealth import stealth_async
+from playwright.async_api import Browser, BrowserContext, Playwright
+from playwright_stealth import Stealth
+
+_stealth = Stealth()
 
 
-_USER_AGENTS_PATH = (
-    Path(__file__).resolve().parent.parent.parent / "data" / "user_agents.json"
-)
+_DEFAULT_USER_AGENTS = [
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/131.0.0.0 Safari/537.36"
+]
 
 
 def _load_user_agents(path: Path | None = None) -> list[str]:
-    """Load the user-agent pool from the JSON data file."""
-    ua_path = path or _USER_AGENTS_PATH
-    if not ua_path.exists():
-        return [
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/131.0.0.0 Safari/537.36"
-        ]
-    with open(ua_path, encoding="utf-8") as f:
+    """Load the user-agent pool from a JSON file.
+
+    Returns a sensible default when no file is available.
+    """
+    if path is None or not path.exists():
+        return list(_DEFAULT_USER_AGENTS)
+    with open(path, encoding="utf-8") as f:
         agents: list[str] = json.load(f)
     return agents
 
@@ -41,6 +43,9 @@ async def create_stealth_browser(
     viewport_width: int = 1280,
     viewport_height: int = 720,
     user_agents_path: Path | None = None,
+    locale: str = "ja-JP",
+    timezone_id: str = "Asia/Tokyo",
+    proxy: dict[str, str] | None = None,
 ) -> tuple[Browser, BrowserContext]:
     """Launch a Chromium browser with stealth patches applied.
 
@@ -57,6 +62,13 @@ async def create_stealth_browser(
         Browser viewport dimensions.
     user_agents_path:
         Override path for the user-agent pool JSON file.
+    locale:
+        Browser locale (e.g. ``"ja-JP"``, ``"zh-CN"``).
+    timezone_id:
+        Browser timezone (e.g. ``"Asia/Tokyo"``, ``"Asia/Shanghai"``).
+    proxy:
+        Proxy configuration dict with ``server`` key and optional
+        ``username``/``password`` keys.  ``None`` means no proxy.
 
     Returns
     -------
@@ -82,12 +94,15 @@ async def create_stealth_browser(
             args=launch_args,
             viewport={"width": viewport_width, "height": viewport_height},
             user_agent=selected_ua,
-            locale="ja-JP",
-            timezone_id="Asia/Tokyo",
+            locale=locale,
+            timezone_id=timezone_id,
+            proxy=proxy,
         )
         # For persistent contexts the browser is accessed via context.browser
         browser = context.browser  # type: ignore[assignment]
-        await stealth_async(context.pages[0] if context.pages else await context.new_page())
+        await _stealth.apply_stealth_async(
+            context.pages[0] if context.pages else await context.new_page()
+        )
         return browser, context  # type: ignore[return-value]
 
     browser = await playwright.chromium.launch(
@@ -98,12 +113,13 @@ async def create_stealth_browser(
     context = await browser.new_context(
         viewport={"width": viewport_width, "height": viewport_height},
         user_agent=selected_ua,
-        locale="ja-JP",
-        timezone_id="Asia/Tokyo",
+        locale=locale,
+        timezone_id=timezone_id,
+        proxy=proxy,
     )
 
     # Apply stealth to a new page (patches the context-level JS)
     page = await context.new_page()
-    await stealth_async(page)
+    await _stealth.apply_stealth_async(page)
 
     return browser, context

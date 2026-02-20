@@ -3,25 +3,13 @@
 from __future__ import annotations
 
 import json
-import tempfile
 from pathlib import Path
 
 import pytest
 
 from src.config import Settings, load_settings
-from src.db.repository import Repository
 from src.knowledge.treatments import TreatmentKnowledgeBase
 from src.pipeline.search import RawTweet
-
-
-@pytest.fixture
-def tmp_db(tmp_path: Path) -> Repository:
-    """Provide a fresh in-memory-style SQLite repository."""
-    db_path = tmp_path / "test.db"
-    repo = Repository(db_path)
-    repo.init_db()
-    yield repo
-    repo.close()
 
 
 @pytest.fixture
@@ -33,14 +21,15 @@ def settings(tmp_path: Path) -> Settings:
 search:
   keywords:
     - "テスト検索"
-  max_tweet_age_hours: 24
-collect:
-  max_follower_count: 10000
-  require_profile_pic: true
-  require_bio: true
-analyze:
+  max_post_age_hours: 24
+classification:
   confidence_threshold: 0.7
-  model: "claude-sonnet-4-20250514"
+  categories:
+    - hospital
+    - price
+    - procedure
+    - complaint
+    - review
 browser:
   headless: true
   viewport_width: 1280
@@ -54,7 +43,10 @@ logging:
   level: "DEBUG"
   log_dir: "logs"
 database:
-  path: "data/test.db"
+  url: "postgresql://localhost:5432/outreach_test"
+llm:
+  provider: gemini
+  model: gemini-2.0-flash
 """,
         encoding="utf-8",
     )

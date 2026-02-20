@@ -8,10 +8,10 @@ provides a resume mechanism with reduced volume.
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
-from src.utils.logger import get_logger
+from outreach_shared.utils.logger import get_logger
 
 logger = get_logger("halt")
 
@@ -75,7 +75,7 @@ class HaltManager:
         halt_data = {
             "reason": reason,
             "source": source,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "resumed": False,
         }
         self._halt_path.write_text(
@@ -220,6 +220,6 @@ def mark_resumed(halt_manager: HaltManager) -> None:
     resumed_path = halt_manager.halt_path.parent / ".halt.resumed"
     resumed_path.parent.mkdir(parents=True, exist_ok=True)
     resumed_path.write_text(
-        json.dumps({"resumed_at": datetime.now(timezone.utc).isoformat()}),
+        json.dumps({"resumed_at": datetime.now(UTC).isoformat()}),
         encoding="utf-8",
     )

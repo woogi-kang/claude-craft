@@ -1,53 +1,59 @@
 search:
   keywords:
     - "韓国皮膚科"
-    - "韓国美容"
     - "韓国美容皮膚科"
-    - "レーザー治療"
-    - "ピコレーザー"
-    - "韓国クリニック"
-    - "韓国整形"
-    - "美容皮膚科 韓国"
-    - "韓国 シミ取り"
-    - "韓国 ニキビ跡"
-    - "韓国 毛穴"
-    - "フラクショナルレーザー"
-    - "韓国 ボトックス"
-    - "韓国 ヒアルロン酸"
-    - "韓国 美肌"
-  max_tweet_age_hours: 24
+    #- "韓国美容"
+    #- "レーザー治療"
+    #- "ピコレーザー"
+    #- "韓国クリニック"
+    #- "韓国整形"
+    #- "美容皮膚科 韓国"
+    #- "韓国 シミ取り"
+    #- "韓国 ニキビ跡"
+    #- "韓国 毛穴"
+    #- "フラクショナルレーザー"
+    #- "韓国 ボトックス"
+    #- "韓国 ヒアルロン酸"
+    #- "韓国 美肌"
+  max_post_age_hours: 24
 
 collect:
   max_follower_count: 10000
-  require_profile_pic: true
-  require_bio: true
+  require_profile_pic: false
+  require_bio: false
 
-analyze:
+classification:
   confidence_threshold: 0.7
-  model: "claude-sonnet-4-20250514"
+  categories:
+    - hospital
+    - price
+    - procedure
+    - complaint
+    - review
 
 reply:
   enabled: true
-  daily_limit: 50
+  daily_limit: 3
 
 dm:
-  enabled: true
+  enabled: false
   daily_limit: 20
   min_interval_minutes: 25
 
 browser:
-  headless: true
+  headless: false
   viewport_width: 1280
   viewport_height: 720
 
 delays:
-  search_min_seconds: 30
-  search_max_seconds: 300
-  action_min_seconds: 5
-  action_max_seconds: 30
+  search_min_seconds: 45
+  search_max_seconds: 420
+  action_min_seconds: 7
+  action_max_seconds: 42
 
-scheduling:
-  interval_hours: 2
+daemon:
+  min_interval_hours: 2.0
+  max_interval_hours: 4.0
   active_start_hour: 8   # JST
   active_end_hour: 23    # JST
 
@@ -58,4 +64,14 @@ logging:
   backup_count: 5
 
 database:
-  path: "data/outreach.db"
+  url: "postgresql://localhost:5432/outreach"
+  min_pool_size: 2
+  max_pool_size: 10
+
+account_pool:
+  cooldown_minutes_crawl: 30
+  cooldown_minutes_outreach: 60
+
+llm:
+  provider: codex
+  model: gpt-5.1-codex-mini

@@ -65,8 +65,8 @@ async def human_type(
     selector: str,
     text: str,
     *,
-    min_delay_ms: int = 50,
-    max_delay_ms: int = 200,
+    min_delay_ms: int = 70,
+    max_delay_ms: int = 280,
 ) -> None:
     """Type *text* into the element matched by *selector* with per-character delays.
 

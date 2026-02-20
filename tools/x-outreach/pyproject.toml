@@ -4,16 +4,19 @@ version = "0.1.0"
 description = "Automated X outreach pipeline for @ask.nandemo Korean dermatology expert"
 requires-python = ">=3.13"
 dependencies = [
+    "outreach-shared",
     "playwright>=1.49",
     "playwright-stealth>=1.0.6",
-    "tweepy>=4.14",
     "pydantic>=2.9",
     "pydantic-settings>=2.7",
     "structlog>=24.4",
     "pyyaml>=6.0",
     "python-dotenv>=1.0",
-    "apscheduler>=3.10",
+    "nest-asyncio>=1.6",
 ]
+
+[tool.uv.sources]
+outreach-shared = { path = "../_shared", editable = true }
 
 [project.optional-dependencies]
 dev = [

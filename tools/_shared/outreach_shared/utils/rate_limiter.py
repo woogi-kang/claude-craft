@@ -1,4 +1,4 @@
-"""Rate limiting utilities for X API and DM operations.
+"""Rate limiting utilities for outreach operations.
 
 Provides three complementary limiters:
 
@@ -6,7 +6,7 @@ Provides three complementary limiters:
   (e.g. 17 writes per 15 minutes on the X API).
 * ``SlidingWindowLimiter`` -- sliding-window counter for daily caps
   (e.g. max 20-30 DMs per day).
-* ``MonthlyBudgetTracker`` -- simple counter for monthly API tweet
+* ``MonthlyBudgetTracker`` -- simple counter for monthly API
   budgets (e.g. 1 500 tweets/month on free tier).
 
 All limiters are async-compatible and safe for single-process use.
@@ -110,12 +110,12 @@ class SlidingWindowLimiter:
 
 
 class MonthlyBudgetTracker:
-    """Simple counter for monthly API tweet usage budgets.
+    """Simple counter for monthly API usage budgets.
 
     Parameters
     ----------
     monthly_limit:
-        Maximum tweets allowed per calendar month.
+        Maximum actions allowed per calendar month.
     """
 
     def __init__(self, monthly_limit: int = 1500) -> None:
@@ -130,24 +130,24 @@ class MonthlyBudgetTracker:
             self._used = 0
 
     def can_use(self, count: int = 1) -> bool:
-        """Return ``True`` if *count* tweets can be consumed."""
+        """Return ``True`` if *count* actions can be consumed."""
         self._maybe_reset()
         return self._used + count <= self.monthly_limit
 
     def use(self, count: int = 1) -> None:
-        """Record usage of *count* tweets."""
+        """Record usage of *count* actions."""
         self._maybe_reset()
         self._used += count
 
     @property
     def remaining(self) -> int:
-        """Number of tweets remaining in the current month."""
+        """Number of actions remaining in the current month."""
         self._maybe_reset()
         return max(0, self.monthly_limit - self._used)
 
     @property
     def used(self) -> int:
-        """Number of tweets used in the current month."""
+        """Number of actions used in the current month."""
         self._maybe_reset()
         return self._used
 
@@ -173,8 +173,8 @@ class MonthlyBudgetTracker:
     def is_critical_mode(self, threshold: float = 0.95) -> bool:
         """Return ``True`` when monthly usage has reached *threshold*.
 
-        At this level, API-based replies should be stopped entirely
-        while Playwright-based DMs can continue.
+        At this level, API-based actions should be stopped entirely
+        while browser-based actions can continue.
 
         Parameters
         ----------

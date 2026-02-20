@@ -1,64 +1,33 @@
-"""Content generation using Claude API.
+"""Content generation using Gemini API via shared LLM client.
 
 Generates personalised reply and DM content based on tweet classification,
-template categories, and treatment knowledge. All output is in natural
+intent categories, and treatment knowledge. All output is in natural
 Japanese matching the @ask.nandemo voice.
 """
 
 from __future__ import annotations
 
-import anthropic
+import re
 
-from src.utils.logger import get_logger
+from outreach_shared.ai.llm_client import LLMClient, create_llm_client
+from outreach_shared.utils.logger import get_logger
+
+from src.ai.prompts import DM_SYSTEM_PROMPT, REPLY_SYSTEM_PROMPT
 
 logger = get_logger("content_gen")
-
-
-# ---------------------------------------------------------------------------
-# Prompt templates
-# ---------------------------------------------------------------------------
-
-REPLY_SYSTEM_PROMPT = """\
-You are @ask.nandemo, a neutral data-driven resource about Korean dermatology.
-Generate a helpful reply in natural Japanese to this tweet.
-
-Voice guide:
-- Casual Japanese (plain form base: da-yo, da-ne, kana)
-- Occasionally use desu/masu for softening
-- Warm but not overly friendly
-- Data-driven: include specific numbers when possible
-- Never sound like a clinic marketing account
-- Keep under 280 characters
-
-Respond with ONLY the reply text. No explanation, no quotes, no prefix."""
-
-DM_SYSTEM_PROMPT = """\
-You are @ask.nandemo. Generate a personalized DM in natural Japanese.
-
-Rules:
-- Start with a warm greeting referencing their tweet
-- Show understanding of their specific concern
-- Offer to help with specific knowledge
-- DO NOT include any links or URLs
-- Keep under 500 characters
-- Use casual but respectful Japanese
-
-Respond with ONLY the DM text. No explanation, no quotes, no prefix."""
 
 
 def _build_reply_user_prompt(
     tweet_content: str,
     author_username: str,
-    template_category: str,
-    classification: str,
+    intent_type: str,
     treatment_context: str,
 ) -> str:
     """Build the user prompt for reply generation."""
     parts = [
-        f"Tweet: {tweet_content}",
+        f"Tweet:\n<tweet>\n{tweet_content}\n</tweet>",
         f"Author: @{author_username}",
-        f"Classification: {classification}",
-        f"Template category: {template_category}",
+        f"Intent category: {intent_type}",
     ]
     if treatment_context:
         parts.append(f"\nRelevant treatment data:\n{treatment_context}")
@@ -68,56 +37,54 @@ def _build_reply_user_prompt(
 def _build_dm_user_prompt(
     tweet_content: str,
     author_username: str,
-    template_category: str,
-    classification: str,
+    intent_type: str,
     reply_content: str,
     treatment_context: str,
     previous_dm: str,
 ) -> str:
     """Build the user prompt for DM generation."""
     parts = [
-        f"Tweet they posted: {tweet_content}",
+        f"Tweet they posted:\n<tweet>\n{tweet_content}\n</tweet>",
         f"Author: @{author_username}",
-        f"Their concern category: {template_category}",
-        f"Classification: {classification}",
+        f"Their concern category: {intent_type}",
     ]
     if reply_content:
         parts.append(f"Our reply to their tweet: {reply_content}")
     if treatment_context:
         parts.append(f"\nRelevant treatment data:\n{treatment_context}")
     if previous_dm:
-        parts.append(
-            f"\nPrevious DM sent (must differ by 30+ chars): {previous_dm}"
-        )
+        parts.append(f"\nPrevious DM sent (must differ by 30+ chars): {previous_dm}")
     return "\n".join(parts)
 
 
 class ContentGenerator:
-    """Generate reply and DM content using Claude API.
+    """Generate reply and DM content using Gemini API.
 
     Parameters
     ----------
     api_key:
-        Anthropic API key.
+        Gemini API key.
     model:
-        Claude model identifier.
+        LLM model identifier.
+    provider:
+        LLM provider name (default: ``"gemini"``).
     """
 
     def __init__(
         self,
         *,
         api_key: str,
-        model: str = "claude-sonnet-4-20250514",
+        model: str = "gemini-2.0-flash",
+        provider: str = "gemini",
     ) -> None:
-        self._client = anthropic.AsyncAnthropic(api_key=api_key)
-        self._model = model
+        self._llm: LLMClient = create_llm_client(provider, api_key, model=model)
 
     async def generate_reply(
         self,
         tweet_content: str,
         author_username: str,
         template_category: str,
-        classification: str,
+        classification: str = "",
         treatment_context: str = "",
     ) -> str:
         """Generate a natural Japanese reply based on tweet context.
@@ -129,9 +96,9 @@ class ContentGenerator:
         author_username:
             The tweet author's username.
         template_category:
-            Classification template category (A-G).
+            Intent category (hospital/price/procedure/complaint/review).
         classification:
-            Tweet classification (needs_help / seeking_info).
+            Unused, kept for backward compatibility.
         treatment_context:
             Optional treatment data for context enrichment.
 
@@ -143,24 +110,23 @@ class ContentGenerator:
         Raises
         ------
         ContentGenerationError
-            When Claude API call fails.
+            When LLM API call fails.
         """
         user_prompt = _build_reply_user_prompt(
             tweet_content=tweet_content,
             author_username=author_username,
-            template_category=template_category,
-            classification=classification,
+            intent_type=template_category,
             treatment_context=treatment_context,
         )
 
         try:
-            response = await self._client.messages.create(
-                model=self._model,
-                max_tokens=200,
+            response = await self._llm.generate(
+                user_prompt,
                 system=REPLY_SYSTEM_PROMPT,
-                messages=[{"role": "user", "content": user_prompt}],
+                temperature=0.8,
+                max_tokens=200,
             )
-            reply_text = response.content[0].text.strip()
+            reply_text = response.text.strip()
 
             # Enforce 280 character limit
             if len(reply_text) > 280:
@@ -178,18 +144,16 @@ class ContentGenerator:
             logger.error(
                 "reply_generation_error",
                 username=author_username,
-                error=str(exc),
+                error=str(exc)[:200],
             )
-            raise ContentGenerationError(
-                f"Failed to generate reply: {exc}"
-            ) from exc
+            raise ContentGenerationError(f"Failed to generate reply: {exc}") from exc
 
     async def generate_dm(
         self,
         tweet_content: str,
         author_username: str,
         template_category: str,
-        classification: str,
+        classification: str = "",
         reply_content: str = "",
         treatment_context: str = "",
         previous_dm: str = "",
@@ -203,9 +167,9 @@ class ContentGenerator:
         author_username:
             The tweet author's username.
         template_category:
-            DM template category (A-E).
+            Intent category (hospital/price/procedure/complaint/review).
         classification:
-            Tweet classification.
+            Unused, kept for backward compatibility.
         reply_content:
             The reply already sent to this tweet (for context).
         treatment_context:
@@ -221,26 +185,25 @@ class ContentGenerator:
         Raises
         ------
         ContentGenerationError
-            When Claude API call fails.
+            When LLM API call fails.
         """
         user_prompt = _build_dm_user_prompt(
             tweet_content=tweet_content,
             author_username=author_username,
-            template_category=template_category,
-            classification=classification,
+            intent_type=template_category,
             reply_content=reply_content,
             treatment_context=treatment_context,
             previous_dm=previous_dm,
         )
 
         try:
-            response = await self._client.messages.create(
-                model=self._model,
-                max_tokens=400,
+            response = await self._llm.generate(
+                user_prompt,
                 system=DM_SYSTEM_PROMPT,
-                messages=[{"role": "user", "content": user_prompt}],
+                temperature=0.8,
+                max_tokens=400,
             )
-            dm_text = response.content[0].text.strip()
+            dm_text = response.text.strip()
 
             # Enforce 500 character limit
             if len(dm_text) > 500:
@@ -261,24 +224,20 @@ class ContentGenerator:
             logger.error(
                 "dm_generation_error",
                 username=author_username,
-                error=str(exc),
+                error=str(exc)[:200],
             )
-            raise ContentGenerationError(
-                f"Failed to generate DM: {exc}"
-            ) from exc
+            raise ContentGenerationError(f"Failed to generate DM: {exc}") from exc
 
 
 class ContentGenerationError(Exception):
-    """Raised when content generation via Claude API fails."""
+    """Raised when content generation via LLM API fails."""
 
 
 def _strip_urls(text: str) -> str:
     """Remove any URLs from the text as a safety measure.
 
-    DMs must not contain links per R5.8.
+    DMs must not contain links.
     """
-    import re
-
     return re.sub(r"https?://\S+", "", text).strip()
 
 
@@ -302,8 +261,6 @@ def dm_uniqueness_check(new_dm: str, previous_dm: str) -> bool:
     if not previous_dm:
         return True
 
-    # Count characters in new_dm that are not at the same position in previous
-    # Use a simple approach: find the longest common substring deficit
     unique_chars = 0
     prev_chars = list(previous_dm)
     for char in new_dm:

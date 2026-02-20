@@ -18,7 +18,7 @@ def setup_logging(
     *,
     level: str = "INFO",
     log_dir: str = "logs",
-    log_file: str = "x-outreach.log",
+    log_file: str = "outreach.log",
     max_bytes: int = 10_485_760,
     backup_count: int = 5,
     project_root: Path | None = None,
@@ -38,8 +38,8 @@ def setup_logging(
     backup_count:
         Number of rotated backup files to keep.
     project_root:
-        Base path for resolving *log_dir*.  Defaults to two levels up
-        from this file (i.e. the ``tools/x-outreach/`` directory).
+        Base path for resolving *log_dir*.  Must be provided explicitly
+        by the calling application.  Falls back to CWD when ``None``.
 
     Returns
     -------
@@ -47,7 +47,7 @@ def setup_logging(
         A configured logger instance.
     """
     if project_root is None:
-        project_root = Path(__file__).resolve().parent.parent.parent
+        project_root = Path.cwd()
 
     log_path = project_root / log_dir
     log_path.mkdir(parents=True, exist_ok=True)

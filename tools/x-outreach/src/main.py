@@ -12,10 +12,12 @@ import asyncio
 import sys
 from dataclasses import dataclass
 
+from outreach_shared.utils.logger import get_logger, setup_logging
 from playwright.async_api import async_playwright
 
 from src.ai.classifier import TweetClassifier
 from src.ai.content_gen import ContentGenerator
+from src.browser.session import SessionManager
 from src.config import Settings, load_settings
 from src.db.repository import Repository
 from src.knowledge.treatments import TreatmentKnowledgeBase
@@ -25,8 +27,7 @@ from src.pipeline.dm import DmPipeline, DmResult
 from src.pipeline.reply import ReplyPipeline, ReplyResult
 from src.pipeline.search import SearchPipeline
 from src.pipeline.track import ActionTracker
-from src.browser.session import SessionManager
-from src.utils.logger import get_logger, setup_logging
+from src.platform.login import check_session_health, login
 
 logger = get_logger("main")
 
@@ -95,7 +96,7 @@ class PipelineRunner:
                     max_follower_count=self._settings.collect.max_follower_count,
                     require_profile_pic=self._settings.collect.require_profile_pic,
                     require_bio=self._settings.collect.require_bio,
-                    max_tweet_age_hours=self._settings.search.max_tweet_age_hours,
+                    max_tweet_age_hours=self._settings.search.max_post_age_hours,
                 )
 
                 async with async_playwright() as pw:
@@ -110,10 +111,10 @@ class PipelineRunner:
                         context = await session_mgr.get_session("burner")
 
                         # Check session health and login if needed
-                        healthy = await session_mgr.check_session_health(context)
+                        healthy = await check_session_health(context)
                         if not healthy:
                             logger.info("session_expired_relogin")
-                            logged_in = await session_mgr.login(
+                            logged_in = await login(
                                 context,
                                 self._settings.burner_x_username,
                                 self._settings.burner_x_password,
@@ -150,54 +151,70 @@ class PipelineRunner:
 
             # --- Analyze ---
             classifier = TweetClassifier(
-                api_key=self._settings.anthropic_api_key,
-                model=self._settings.analyze.model,
-                confidence_threshold=self._settings.analyze.confidence_threshold,
+                api_key=self._settings.gemini_api_key,
+                model=self._settings.llm.model,
+                confidence_threshold=self._settings.classification.confidence_threshold,
                 domain_context=self._kb.get_classification_context(),
             )
             analyze_pipeline = AnalyzePipeline(classifier)
             analyze_result = await analyze_pipeline.run(self._repo)
             result.analyze = analyze_result
 
-            # Track individual classifications
-            analyzed_tweets = self._repo.get_tweets_by_status("analyzed")
-            for tweet in analyzed_tweets:
-                if tweet.get("classification"):
-                    self._tracker.record_analyze(
-                        tweet["tweet_id"],
-                        tweet["classification"],
-                        tweet.get("confidence", 0.0),
-                    )
-
             # --- Reply (if enabled) ---
             if self._settings.reply.enabled:
                 content_gen = ContentGenerator(
-                    api_key=self._settings.anthropic_api_key,
-                    model=self._settings.analyze.model,
+                    api_key=self._settings.gemini_api_key,
+                    model=self._settings.llm.model,
+                    provider=self._settings.llm.provider,
                 )
-                reply_pipeline = ReplyPipeline(
-                    content_gen=content_gen,
-                    knowledge_base=self._kb,
-                )
-                reply_result = await reply_pipeline.run(
-                    repository=self._repo,
-                    tracker=self._tracker,
-                    settings=self._settings,
-                )
-                result.reply = reply_result
-                logger.info(
-                    "reply_stage_done",
-                    sent=reply_result.replies_sent,
-                    errors=reply_result.errors,
-                )
+
+                async with async_playwright() as pw_reply:
+                    session_mgr = SessionManager(
+                        pw_reply,
+                        headless=self._settings.browser.headless,
+                        viewport_width=self._settings.browser.viewport_width,
+                        viewport_height=self._settings.browser.viewport_height,
+                    )
+                    try:
+                        context = await session_mgr.get_session("nandemo")
+                        healthy = await check_session_health(context)
+                        if not healthy:
+                            logged_in = await login(
+                                context,
+                                self._settings.nandemo_x_username,
+                                self._settings.nandemo_x_password,
+                            )
+                            if not logged_in:
+                                result.error = "Failed to login for reply"
+                                self._tracker.record_error("login", result.error)
+                                return result
+
+                        reply_pipeline = ReplyPipeline(
+                            content_gen=content_gen,
+                            knowledge_base=self._kb,
+                        )
+                        reply_result = await reply_pipeline.run(
+                            repository=self._repo,
+                            context=context,
+                            tracker=self._tracker,
+                            settings=self._settings,
+                        )
+                        result.reply = reply_result
+                        logger.info(
+                            "reply_stage_done",
+                            sent=reply_result.replies_sent,
+                            errors=reply_result.errors,
+                        )
+                    finally:
+                        await session_mgr.close_all()
 
             # --- DM (if enabled) ---
             if self._settings.dm.enabled:
                 if not self._settings.reply.enabled:
-                    # Content generator needed even without reply stage
                     content_gen = ContentGenerator(
-                        api_key=self._settings.anthropic_api_key,
-                        model=self._settings.analyze.model,
+                        api_key=self._settings.gemini_api_key,
+                        model=self._settings.llm.model,
+                        provider=self._settings.llm.provider,
                     )
 
                 async with async_playwright() as pw_dm:
@@ -208,6 +225,19 @@ class PipelineRunner:
                         viewport_height=self._settings.browser.viewport_height,
                     )
                     try:
+                        context = await dm_session_mgr.get_session("nandemo")
+                        healthy = await check_session_health(context)
+                        if not healthy:
+                            logged_in = await login(
+                                context,
+                                self._settings.nandemo_x_username,
+                                self._settings.nandemo_x_password,
+                            )
+                            if not logged_in:
+                                result.error = "Failed to login for DM"
+                                self._tracker.record_error("login", result.error)
+                                return result
+
                         dm_pipeline = DmPipeline(
                             content_gen=content_gen,
                             knowledge_base=self._kb,
@@ -215,7 +245,7 @@ class PipelineRunner:
                         )
                         dm_result = await dm_pipeline.run(
                             repository=self._repo,
-                            session_manager=dm_session_mgr,
+                            context=context,
                             tracker=self._tracker,
                             settings=self._settings,
                         )
@@ -247,25 +277,14 @@ def _verify_startup(settings: Settings) -> list[str]:
     """
     errors: list[str] = []
 
-    if not settings.anthropic_api_key:
-        errors.append("ANTHROPIC_API_KEY is not set")
+    if not settings.gemini_api_key:
+        errors.append("GEMINI_API_KEY is not set")
 
     if not settings.burner_x_username:
         errors.append("BURNER_X_USERNAME is not set")
 
     if not settings.burner_x_password:
         errors.append("BURNER_X_PASSWORD is not set")
-
-    # Reply pipeline requires X API credentials
-    if settings.reply.enabled:
-        if not settings.x_api_key:
-            errors.append("X_API_KEY is not set (required for reply)")
-        if not settings.x_api_secret:
-            errors.append("X_API_SECRET is not set (required for reply)")
-        if not settings.x_access_token:
-            errors.append("X_ACCESS_TOKEN is not set (required for reply)")
-        if not settings.x_access_token_secret:
-            errors.append("X_ACCESS_TOKEN_SECRET is not set (required for reply)")
 
     # DM pipeline requires nandemo credentials
     if settings.dm.enabled:
@@ -281,7 +300,6 @@ async def _async_run(args: argparse.Namespace) -> int:
     """Async entry point for the ``run`` subcommand."""
     settings = load_settings()
 
-    # Setup logging
     setup_logging(
         level=settings.logging.level,
         log_dir=settings.logging.log_dir,
@@ -298,7 +316,8 @@ async def _async_run(args: argparse.Namespace) -> int:
             return 1
 
     # Initialize database
-    repo = Repository(settings.database.path)
+    db_url = settings.database_url or settings.database.url
+    repo = Repository(db_url)
     repo.init_db()
 
     # Load knowledge base
@@ -327,8 +346,7 @@ async def _async_run(args: argparse.Namespace) -> int:
 
 async def _async_daemon(args: argparse.Namespace) -> int:
     """Async entry point for the ``daemon`` subcommand."""
-    from src.pipeline.halt import HaltManager
-    from src.scheduler import PipelineScheduler
+    from src.daemon import run_daemon
 
     settings = load_settings()
 
@@ -344,17 +362,7 @@ async def _async_daemon(args: argparse.Namespace) -> int:
             logger.error("startup_check_failed", error=err)
         return 1
 
-    repo = Repository(settings.database.path)
-    repo.init_db()
-
-    kb = TreatmentKnowledgeBase()
-    kb.load()
-
-    runner = PipelineRunner(settings, repo, kb)
-    halt_mgr = HaltManager()
-    scheduler = PipelineScheduler(runner, settings, halt_manager=halt_mgr)
-
-    await scheduler.run_forever()
+    await run_daemon(settings)
     return 0
 
 
@@ -425,7 +433,7 @@ def _cmd_blocklist(args: argparse.Namespace) -> int:
     )
 
     settings = load_settings()
-    db_path = settings.database.path
+    db_url = settings.database_url or settings.database.url
     action = getattr(args, "blocklist_action", "list")
 
     if action == "add":
@@ -433,7 +441,7 @@ def _cmd_blocklist(args: argparse.Namespace) -> int:
         if not username:
             print("Error: username is required for 'blocklist add'.")
             return 1
-        print(run_blocklist_add(username, db_path=db_path))
+        print(run_blocklist_add(username, db_url=db_url))
         return 0
 
     if action == "remove":
@@ -441,11 +449,11 @@ def _cmd_blocklist(args: argparse.Namespace) -> int:
         if not username:
             print("Error: username is required for 'blocklist remove'.")
             return 1
-        print(run_blocklist_remove(username, db_path=db_path))
+        print(run_blocklist_remove(username, db_url=db_url))
         return 0
 
     # Default: list
-    print(run_blocklist_list(db_path=db_path))
+    print(run_blocklist_list(db_url=db_url))
     return 0
 
 
@@ -460,11 +468,7 @@ def _cmd_report(args: argparse.Namespace) -> int:
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    """Build the argument parser with subcommands.
-
-    Backward compatible: bare ``--once`` and ``--dry-run`` flags still
-    work without specifying a subcommand.
-    """
+    """Build the argument parser with subcommands."""
     parser = argparse.ArgumentParser(
         prog="x-outreach",
         description="X Outreach Pipeline for @ask.nandemo",
@@ -496,7 +500,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     # --- daemon ---
-    subparsers.add_parser("daemon", help="Start the scheduler daemon")
+    subparsers.add_parser("daemon", help="Start the daemon loop (24hr, variable 2-4hr cycles)")
 
     # --- status ---
     subparsers.add_parser("status", help="Show pipeline status and stats")
@@ -515,9 +519,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     # --- blocklist ---
-    blocklist_parser = subparsers.add_parser(
-        "blocklist", help="User blocklist management"
-    )
+    blocklist_parser = subparsers.add_parser("blocklist", help="User blocklist management")
     blocklist_parser.add_argument(
         "blocklist_action",
         nargs="?",

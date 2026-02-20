@@ -10,10 +10,12 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
+from outreach_shared.utils.logger import get_logger
+from outreach_shared.utils.time_utils import parse_post_timestamp as parse_tweet_timestamp
+from outreach_shared.utils.time_utils import post_age_hours as tweet_age_hours
+
 from src.db.repository import Repository
 from src.pipeline.search import RawTweet
-from src.utils.logger import get_logger
-from src.utils.time_utils import parse_tweet_timestamp, tweet_age_hours
 
 logger = get_logger("collect")
 

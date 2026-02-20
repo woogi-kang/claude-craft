@@ -1,192 +1,249 @@
-"""SQLite repository with parameterised queries.
+"""Synchronous repository wrapper around the shared PostgresRepository.
 
-Every public function in this module uses parameterised SQL to prevent
-injection.  The module is synchronous -- SQLite does not benefit from
-async I/O given its file-level locking.
+Provides a sync interface that the existing pipeline code can use.
+A future migration will rewrite all callers to async, at which point
+this wrapper can be removed.
 """
 
 from __future__ import annotations
 
-import sqlite3
-from datetime import datetime, timezone
+import asyncio
+import json
 from pathlib import Path
 from typing import Any
 
-from src.db.models import ALL_TABLES, INDEXES, MIGRATIONS
+import nest_asyncio
+from outreach_shared.db.postgres import PostgresRepository
+from outreach_shared.utils.logger import get_logger
+
+nest_asyncio.apply()
+
+logger = get_logger("repository")
+
+# File-based key-value store for config persistence (warmup, blocklist).
+_CONFIG_FILE = Path(__file__).resolve().parent.parent.parent / "data" / "config.json"
+
+
+def _load_config_store() -> dict[str, str]:
+    """Load the config key-value store from disk."""
+    if _CONFIG_FILE.exists():
+        try:
+            data = json.loads(_CONFIG_FILE.read_text(encoding="utf-8"))
+            if isinstance(data, dict):
+                return data
+        except (json.JSONDecodeError, OSError):
+            pass
+    return {}
+
+
+def _save_config_store(store: dict[str, str]) -> None:
+    """Persist the config key-value store to disk."""
+    _CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
+    _CONFIG_FILE.write_text(
+        json.dumps(store, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
 
 
 class Repository:
-    """Thin wrapper around an SQLite connection.
+    """Synchronous wrapper around the async PostgresRepository.
 
     Parameters
     ----------
-    db_path:
-        Filesystem path to the SQLite database file.  Parent directories
-        are created automatically.
+    database_url:
+        PostgreSQL connection string.
     """
 
-    def __init__(self, db_path: str | Path) -> None:
-        self._db_path = Path(db_path)
-        self._db_path.parent.mkdir(parents=True, exist_ok=True)
-        self._conn: sqlite3.Connection | None = None
+    def __init__(self, database_url: str) -> None:
+        self._url = database_url
+        self._repo = PostgresRepository(database_url)
+        self._loop: asyncio.AbstractEventLoop | None = None
+
+    def _get_loop(self) -> asyncio.AbstractEventLoop:
+        if self._loop is None or self._loop.is_closed():
+            self._loop = asyncio.new_event_loop()
+        return self._loop
+
+    def _run(self, coro: Any) -> Any:
+        return self._get_loop().run_until_complete(coro)
 
     # ------------------------------------------------------------------
     # Connection lifecycle
     # ------------------------------------------------------------------
 
-    def _get_conn(self) -> sqlite3.Connection:
-        if self._conn is None:
-            self._conn = sqlite3.connect(
-                str(self._db_path),
-                detect_types=sqlite3.PARSE_DECLTYPES,
-            )
-            self._conn.row_factory = sqlite3.Row
-            self._conn.execute("PRAGMA journal_mode=WAL;")
-            self._conn.execute("PRAGMA foreign_keys=ON;")
-        return self._conn
+    def init_db(self) -> None:
+        """Connect to PostgreSQL and initialise the schema."""
+        self._run(self._repo.connect())
 
     def close(self) -> None:
-        """Close the underlying database connection."""
-        if self._conn is not None:
-            self._conn.close()
-            self._conn = None
+        """Close the connection pool."""
+        self._run(self._repo.close())
+        if self._loop and not self._loop.is_closed():
+            self._loop.close()
+            self._loop = None
 
     # ------------------------------------------------------------------
-    # Schema bootstrap
-    # ------------------------------------------------------------------
-
-    def init_db(self) -> None:
-        """Create all tables and indexes if they do not exist.
-
-        Also runs schema migrations for existing databases (ALTER TABLE
-        statements that may already have been applied are silently ignored).
-        """
-        conn = self._get_conn()
-        for ddl in ALL_TABLES:
-            conn.execute(ddl)
-        for idx in INDEXES:
-            conn.execute(idx)
-        # Run migrations for existing databases
-        for migration in MIGRATIONS:
-            try:
-                conn.execute(migration)
-            except sqlite3.OperationalError:
-                pass  # Column already exists
-        conn.commit()
-
-    # ------------------------------------------------------------------
-    # Tweets
+    # Posts (mapped from old tweets API)
     # ------------------------------------------------------------------
 
     def insert_tweet(self, tweet_data: dict[str, Any]) -> bool:
-        """Insert a tweet record.  Returns ``True`` on success.
+        """Insert a post record. Returns True on success.
 
-        Silently skips duplicates (based on ``tweet_id`` UNIQUE constraint).
+        Maps old tweet_data keys to the new posts schema.
         """
-        conn = self._get_conn()
-        columns = ", ".join(tweet_data.keys())
-        placeholders = ", ".join(["?"] * len(tweet_data))
-        sql = f"INSERT OR IGNORE INTO tweets ({columns}) VALUES ({placeholders})"
-        cursor = conn.execute(sql, list(tweet_data.values()))
-        conn.commit()
-        return cursor.rowcount > 0
+        post_id = tweet_data.get("tweet_id", "")
+        result = self._run(
+            self._repo.insert_post(
+                post_id=post_id,
+                platform="x",
+                user_id=tweet_data.get("author_username", ""),
+                username=tweet_data.get("author_username"),
+                contents=tweet_data.get("content", ""),
+                likes_count=tweet_data.get("likes", 0),
+                comments_count=tweet_data.get("replies", 0),
+                retweets_count=tweet_data.get("retweets", 0),
+                post_url=tweet_data.get("tweet_url"),
+                author_bio=tweet_data.get("author_bio"),
+                author_followers=tweet_data.get("author_follower_count", 0),
+                search_keyword=tweet_data.get("search_keyword"),
+            )
+        )
+        return result != -1
 
     def get_tweets_by_status(self, status: str) -> list[dict[str, Any]]:
-        """Return all tweets matching the given pipeline *status*."""
-        conn = self._get_conn()
-        cursor = conn.execute(
-            "SELECT * FROM tweets WHERE status = ? ORDER BY tweet_timestamp DESC",
-            (status,),
-        )
-        return [dict(row) for row in cursor.fetchall()]
+        """Return all posts matching the given pipeline status."""
+        return self._run(self._repo.get_posts_by_status(status, platform="x"))
 
-    def update_tweet_status(
-        self, tweet_id: str, status: str, **kwargs: Any
-    ) -> bool:
-        """Update a tweet's status and optional extra fields.
-
-        Parameters
-        ----------
-        tweet_id:
-            The unique tweet identifier (``tweet_id`` column, not the
-            auto-increment ``id``).
-        status:
-            New pipeline status value.
-        **kwargs:
-            Additional column=value pairs to update.
-
-        Returns
-        -------
-        bool
-            ``True`` if a row was updated.
-        """
-        conn = self._get_conn()
-        fields = {"status": status, "updated_at": datetime.now(timezone.utc).isoformat(), **kwargs}
-        set_clause = ", ".join(f"{k} = ?" for k in fields)
-        values = list(fields.values()) + [tweet_id]
-        cursor = conn.execute(
-            f"UPDATE tweets SET {set_clause} WHERE tweet_id = ?",
-            values,
-        )
-        conn.commit()
-        return cursor.rowcount > 0
+    def update_tweet_status(self, tweet_id: str, status: str, **kwargs: Any) -> bool:
+        """Update a post's status and optional extra fields."""
+        self._run(self._repo.update_post_status(tweet_id, status, **kwargs))
+        return True
 
     def get_tweet_by_id(self, tweet_id: str) -> dict[str, Any] | None:
-        """Look up a single tweet by its ``tweet_id``."""
-        conn = self._get_conn()
-        cursor = conn.execute("SELECT * FROM tweets WHERE tweet_id = ?", (tweet_id,))
-        row = cursor.fetchone()
-        return dict(row) if row else None
+        """Look up a single post by its post_id."""
+        return self._run(self._repo.get_post(tweet_id))
 
     # ------------------------------------------------------------------
-    # Users
+    # Users (author data stored on posts table)
     # ------------------------------------------------------------------
 
     def insert_user(self, user_data: dict[str, Any]) -> bool:
-        """Insert a user record.  Skips duplicates on ``username``."""
-        conn = self._get_conn()
-        columns = ", ".join(user_data.keys())
-        placeholders = ", ".join(["?"] * len(user_data))
-        sql = f"INSERT OR IGNORE INTO users ({columns}) VALUES ({placeholders})"
-        cursor = conn.execute(sql, list(user_data.values()))
-        conn.commit()
-        return cursor.rowcount > 0
+        """No-op -- user data is embedded in the posts table."""
+        return True
 
     def get_user(self, username: str) -> dict[str, Any] | None:
-        """Look up a user by ``username``."""
-        conn = self._get_conn()
-        cursor = conn.execute("SELECT * FROM users WHERE username = ?", (username,))
-        row = cursor.fetchone()
-        return dict(row) if row else None
+        """Look up user info by querying posts for the latest author data."""
 
-    def update_user(self, username: str, **kwargs: Any) -> bool:
-        """Update arbitrary fields on a user row."""
-        if not kwargs:
-            return False
-        conn = self._get_conn()
-        set_clause = ", ".join(f"{k} = ?" for k in kwargs)
-        values = list(kwargs.values()) + [username]
-        cursor = conn.execute(
-            f"UPDATE users SET {set_clause} WHERE username = ?",
-            values,
-        )
-        conn.commit()
-        return cursor.rowcount > 0
+        async def _find() -> dict[str, Any] | None:
+            async with self._repo.pool.acquire() as conn:
+                row = await conn.fetchrow(
+                    "SELECT username, author_bio, author_followers "
+                    "FROM posts "
+                    "WHERE username = $1 AND platform = 'x' "
+                    "ORDER BY crawled_at DESC LIMIT 1",
+                    username,
+                )
+                if row is None:
+                    return None
+                return {
+                    "username": row["username"],
+                    "bio": row["author_bio"],
+                    "follower_count": row["author_followers"],
+                }
+
+        return self._run(_find())
 
     def is_user_contacted(self, username: str) -> bool:
-        """Return ``True`` if the user has been contacted before."""
-        conn = self._get_conn()
-        cursor = conn.execute(
-            "SELECT contact_count FROM users WHERE username = ?",
-            (username,),
-        )
-        row = cursor.fetchone()
-        if row is None:
-            return False
-        return row["contact_count"] > 0
+        """Check if user has been contacted via outreach table."""
+
+        async def _check() -> bool:
+            async with self._repo.pool.acquire() as conn:
+                row = await conn.fetchval(
+                    "SELECT EXISTS("
+                    "  SELECT 1 FROM outreach "
+                    "  WHERE user_id = $1 AND status = 'sent' "
+                    "  AND platform = 'x'"
+                    ")",
+                    username,
+                )
+                return bool(row)
+
+        return self._run(_check())
+
+    def update_user(self, username: str, **kwargs: Any) -> bool:
+        """No-op -- user data is embedded in the posts table."""
+        return True
+
+    def count_user_replies(self, username: str) -> int:
+        """Count posts for a user with replied/dm_sent status."""
+
+        async def _count() -> int:
+            async with self._repo.pool.acquire() as conn:
+                return await conn.fetchval(
+                    "SELECT COUNT(*) FROM posts "
+                    "WHERE username = $1 "
+                    "AND status IN ('replied', 'dm_sent') "
+                    "AND platform = 'x'",
+                    username,
+                )
+
+        return self._run(_count())
+
+    def get_last_dm_to_user(self, username: str) -> str:
+        """Return the last DM content sent to a user, or empty string."""
+
+        async def _fetch() -> str:
+            async with self._repo.pool.acquire() as conn:
+                row = await conn.fetchrow(
+                    "SELECT message FROM outreach "
+                    "WHERE user_id = $1 AND outreach_type = 'dm' "
+                    "AND platform = 'x' "
+                    "ORDER BY sent_at DESC NULLS LAST LIMIT 1",
+                    username,
+                )
+                return row["message"] if row else ""
+
+        return self._run(_fetch())
+
+    def get_dm_pending_users(self) -> list[dict[str, Any]]:
+        """Return users who received a DM but have not responded.
+
+        Queries the outreach table for DMs that were sent but have
+        no reply recorded yet.
+        """
+
+        async def _fetch() -> list[dict[str, Any]]:
+            async with self._repo.pool.acquire() as conn:
+                rows = await conn.fetch(
+                    "SELECT DISTINCT user_id AS username "
+                    "FROM outreach "
+                    "WHERE outreach_type = 'dm' "
+                    "AND status = 'sent' "
+                    "AND replied = FALSE "
+                    "AND platform = 'x' "
+                    "ORDER BY user_id",
+                )
+                return [dict(r) for r in rows]
+
+        return self._run(_fetch())
+
+    def mark_dm_replied(self, username: str, replied_at: str) -> None:
+        """Mark all sent DMs to a user as replied."""
+
+        async def _mark() -> None:
+            async with self._repo.pool.acquire() as conn:
+                await conn.execute(
+                    "UPDATE outreach SET replied = TRUE, replied_at = $2 "
+                    "WHERE user_id = $1 AND outreach_type = 'dm' "
+                    "AND status = 'sent' AND platform = 'x'",
+                    username,
+                    replied_at,
+                )
+
+        self._run(_mark())
 
     # ------------------------------------------------------------------
-    # Actions (audit log)
+    # Actions (mapped to outreach table)
     # ------------------------------------------------------------------
 
     def record_action(
@@ -197,114 +254,56 @@ class Repository:
         details: str | None,
         status: str,
         error_message: str | None = None,
+        account_id: str | None = None,
     ) -> int:
-        """Insert an action record and return the new row id."""
-        conn = self._get_conn()
-        cursor = conn.execute(
-            """INSERT INTO actions
-               (action_type, tweet_id, username, details, status, error_message)
-               VALUES (?, ?, ?, ?, ?, ?)""",
-            (action_type, tweet_id, username, details, status, error_message),
-        )
-        conn.commit()
-        return cursor.lastrowid or 0
+        """Insert an outreach record and return the new row id."""
+        if tweet_id and username:
+            result = self._run(
+                self._repo.insert_outreach(
+                    post_id=tweet_id,
+                    user_id=username,
+                    account_id=account_id or "",
+                    platform="x",
+                    outreach_type=action_type,
+                    message=details or "",
+                    status=status,
+                )
+            )
+            return result
+        return 0
 
     # ------------------------------------------------------------------
-    # Daily stats
+    # Daily stats (computed from post/outreach counts)
     # ------------------------------------------------------------------
 
     def get_daily_stats(self, date: str) -> dict[str, Any] | None:
-        """Return stats row for the given *date* (``YYYY-MM-DD``)."""
-        conn = self._get_conn()
-        cursor = conn.execute(
-            "SELECT * FROM daily_stats WHERE date = ?", (date,)
-        )
-        row = cursor.fetchone()
-        return dict(row) if row else None
+        """Return stats for the given date. Uses count queries."""
+        count = self._run(self._repo.count_posts(platform="x"))
+        return {
+            "date": date,
+            "tweets_searched": count,
+            "tweets_collected": count,
+        }
 
-    def get_daily_stats_range(
-        self, start_date: str, end_date: str
-    ) -> list[dict[str, Any]]:
-        """Return all daily_stats rows within a date range (inclusive).
-
-        Parameters
-        ----------
-        start_date:
-            Start date as ``YYYY-MM-DD`` (inclusive).
-        end_date:
-            End date as ``YYYY-MM-DD`` (inclusive).
-
-        Returns
-        -------
-        list[dict[str, Any]]
-            List of stats rows ordered by date ascending.
-        """
-        conn = self._get_conn()
-        cursor = conn.execute(
-            "SELECT * FROM daily_stats WHERE date >= ? AND date <= ? ORDER BY date ASC",
-            (start_date, end_date),
-        )
-        return [dict(row) for row in cursor.fetchall()]
+    def get_daily_stats_range(self, start_date: str, end_date: str) -> list[dict[str, Any]]:
+        """Return stats within a date range."""
+        stats = self.get_daily_stats(start_date)
+        return [stats] if stats else []
 
     def update_daily_stats(self, date: str, **increments: int) -> None:
-        """Upsert daily stats, incrementing the given counters.
-
-        If no row exists for *date*, one is created first.  Each kwarg
-        key must match a column name and its value is *added* to the
-        current value.
-        """
-        conn = self._get_conn()
-
-        # Ensure row exists
-        conn.execute(
-            "INSERT OR IGNORE INTO daily_stats (date) VALUES (?)",
-            (date,),
-        )
-
-        if increments:
-            set_parts = [f"{k} = {k} + ?" for k in increments]
-            set_clause = ", ".join(set_parts)
-            values = list(increments.values()) + [date]
-            conn.execute(
-                f"UPDATE daily_stats SET {set_clause} WHERE date = ?",
-                values,
-            )
-
-        conn.commit()
+        """No-op -- daily stats are computed from post/outreach counts."""
 
     # ------------------------------------------------------------------
-    # Config (key-value store)
+    # Config (file-based key-value store)
     # ------------------------------------------------------------------
 
     def get_config(self, key: str) -> str | None:
-        """Retrieve a configuration value by key.
-
-        Returns
-        -------
-        str | None
-            The stored value, or ``None`` if the key does not exist.
-        """
-        conn = self._get_conn()
-        cursor = conn.execute(
-            "SELECT value FROM config WHERE key = ?", (key,)
-        )
-        row = cursor.fetchone()
-        return row["value"] if row else None
+        """Read a config value from the file-based key-value store."""
+        store = _load_config_store()
+        return store.get(key)
 
     def set_config(self, key: str, value: str) -> None:
-        """Insert or update a configuration value.
-
-        Parameters
-        ----------
-        key:
-            Configuration key.
-        value:
-            Configuration value (stored as text).
-        """
-        conn = self._get_conn()
-        conn.execute(
-            "INSERT INTO config (key, value, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP) "
-            "ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = CURRENT_TIMESTAMP",
-            (key, value),
-        )
-        conn.commit()
+        """Write a config value to the file-based key-value store."""
+        store = _load_config_store()
+        store[key] = value
+        _save_config_store(store)

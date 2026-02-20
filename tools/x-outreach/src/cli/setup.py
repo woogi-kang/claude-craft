@@ -8,9 +8,7 @@ file, and database writability.
 from __future__ import annotations
 
 import shutil
-import sqlite3
 import sys
-import tempfile
 from pathlib import Path
 
 from src.config import PROJECT_ROOT
@@ -68,7 +66,7 @@ def check_python_version(min_version: tuple[int, int] = (3, 13)) -> SetupCheck:
 def check_env_file(project_root: Path | None = None) -> SetupCheck:
     """Verify that the ``.env`` file exists and contains required keys.
 
-    Required keys: ``ANTHROPIC_API_KEY``, ``BURNER_X_USERNAME``,
+    Required keys: ``GEMINI_API_KEY``, ``BURNER_X_USERNAME``,
     ``BURNER_X_PASSWORD``.
     """
     root = project_root or PROJECT_ROOT
@@ -83,7 +81,7 @@ def check_env_file(project_root: Path | None = None) -> SetupCheck:
 
     content = env_path.read_text(encoding="utf-8")
     required_keys = [
-        "ANTHROPIC_API_KEY",
+        "GEMINI_API_KEY",
         "BURNER_X_USERNAME",
         "BURNER_X_PASSWORD",
     ]
@@ -111,7 +109,7 @@ def check_playwright_browsers() -> SetupCheck:
             return SetupCheck(
                 "playwright",
                 True,
-                "Playwright module available (run 'playwright install chromium' if browsers missing)",
+                "Playwright available (run 'playwright install chromium' if needed)",
             )
         except ImportError:
             return SetupCheck(
@@ -156,7 +154,7 @@ def check_config_yaml(project_root: Path | None = None) -> SetupCheck:
 
 
 def check_database_writable(project_root: Path | None = None) -> SetupCheck:
-    """Verify that the SQLite database directory is writable."""
+    """Verify that the data directory is writable."""
     root = project_root or PROJECT_ROOT
     db_dir = root / "data"
     db_dir.mkdir(parents=True, exist_ok=True)
@@ -167,19 +165,12 @@ def check_database_writable(project_root: Path | None = None) -> SetupCheck:
         test_path.write_text("test", encoding="utf-8")
         test_path.unlink()
 
-        # Also verify SQLite can open a temp database there
-        test_db = db_dir / ".test.db"
-        conn = sqlite3.connect(str(test_db))
-        conn.execute("CREATE TABLE IF NOT EXISTS _test (id INTEGER)")
-        conn.close()
-        test_db.unlink(missing_ok=True)
-
-        return SetupCheck("database", True, f"Database directory writable: {db_dir}")
-    except (OSError, sqlite3.Error) as exc:
+        return SetupCheck("database", True, f"Data directory writable: {db_dir}")
+    except OSError as exc:
         return SetupCheck(
             "database",
             False,
-            f"Database directory not writable: {exc}",
+            f"Data directory not writable: {exc}",
         )
 
 

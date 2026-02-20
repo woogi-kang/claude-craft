@@ -1,17 +1,20 @@
-"""JST time utilities and human-like delay helpers.
+"""Timezone utilities and human-like delay helpers.
 
-All datetime-aware operations use Asia/Tokyo (JST, UTC+9) as the
-canonical timezone for active-hours checks and tweet timestamp parsing.
+Provides timezone constants and helpers for JST (Asia/Tokyo, UTC+9)
+and CST (Asia/Shanghai, UTC+8), plus common timing operations.
 """
 
 from __future__ import annotations
 
 import asyncio
 import random
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
 
-# JST is UTC+9 -- defined as a fixed offset to avoid third-party deps.
+# JST is UTC+9 (Japan Standard Time)
 JST = timezone(timedelta(hours=9))
+
+# CST is UTC+8 (China Standard Time)
+CST = timezone(timedelta(hours=8))
 
 
 def now_jst() -> datetime:
@@ -19,8 +22,17 @@ def now_jst() -> datetime:
     return datetime.now(tz=JST)
 
 
-def is_active_hours(start_hour: int = 8, end_hour: int = 23) -> bool:
-    """Check whether the current JST hour falls within active hours.
+def now_cst() -> datetime:
+    """Return the current time in CST (Asia/Shanghai, UTC+8)."""
+    return datetime.now(tz=CST)
+
+
+def is_active_hours(
+    start_hour: int = 8,
+    end_hour: int = 23,
+    tz: timezone = JST,
+) -> bool:
+    """Check whether the current hour falls within active hours.
 
     Parameters
     ----------
@@ -28,13 +40,15 @@ def is_active_hours(start_hour: int = 8, end_hour: int = 23) -> bool:
         Inclusive start of the active window (0-23).
     end_hour:
         Inclusive end of the active window (0-23).
+    tz:
+        Timezone for the check.  Defaults to JST.
 
     Returns
     -------
     bool
         ``True`` when ``start_hour <= current_hour <= end_hour``.
     """
-    current_hour = now_jst().hour
+    current_hour = datetime.now(tz=tz).hour
     return start_hour <= current_hour <= end_hour
 
 
@@ -48,11 +62,11 @@ async def random_delay(min_seconds: float, max_seconds: float) -> float:
     return delay
 
 
-def parse_tweet_timestamp(timestamp_str: str) -> datetime:
-    """Parse an X (Twitter) timestamp string into a timezone-aware datetime.
+def parse_post_timestamp(timestamp_str: str) -> datetime:
+    """Parse a social platform timestamp string into a timezone-aware datetime.
 
-    X uses the ISO-8601 format ``YYYY-MM-DDTHH:MM:SS.000Z`` in its API
-    responses.  The parsed result is returned in UTC.
+    Supports ISO-8601 and common alternative formats used by X and
+    other platforms.  The parsed result is returned in UTC.
 
     Falls back to common alternative formats when the primary format
     does not match.
@@ -72,11 +86,11 @@ def parse_tweet_timestamp(timestamp_str: str) -> datetime:
         except ValueError:
             continue
 
-    raise ValueError(f"Unable to parse tweet timestamp: {timestamp_str!r}")
+    raise ValueError(f"Unable to parse timestamp: {timestamp_str!r}")
 
 
-def tweet_age_hours(tweet_time: datetime) -> float:
-    """Return the age of a tweet in hours relative to the current UTC time."""
+def post_age_hours(post_time: datetime) -> float:
+    """Return the age of a post in hours relative to the current UTC time."""
     now_utc = datetime.now(tz=timezone.utc)
-    delta = now_utc - tweet_time.astimezone(timezone.utc)
+    delta = now_utc - post_time.astimezone(timezone.utc)
     return delta.total_seconds() / 3600.0

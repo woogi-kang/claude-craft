@@ -2,8 +2,8 @@
 
 After the DM pipeline sends messages, this module periodically checks
 each conversation for new incoming messages.  When a response is
-detected the user record is updated with ``dm_response_received=1``
-and a timestamp, and the daily ``dm_responses`` counter is incremented.
+detected the outreach record is updated with ``replied=True`` and the
+daily stats counter is incremented.
 
 The check is performed via Playwright by navigating to the X messages
 interface and inspecting the conversation list for unread indicators.
@@ -12,10 +12,11 @@ interface and inspecting the conversation list for unread indicators.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
+from outreach_shared.utils.logger import get_logger
 
 from src.db.repository import Repository
-from src.utils.logger import get_logger
 
 logger = get_logger("dm_track")
 
@@ -44,27 +45,20 @@ class DmResponseTracker:
     def get_pending_users(self) -> list[dict]:
         """Return users who received a DM but have not responded yet.
 
-        Queries the ``users`` table for rows where:
-        - ``contact_count > 0`` (we sent them a DM)
-        - ``dm_response_received = 0`` (no response recorded yet)
+        Queries the outreach table for DMs with status ``sent`` and
+        ``replied = FALSE``.
 
         Returns
         -------
         list[dict]
             User rows eligible for response checking.
         """
-        conn = self._repo._get_conn()
-        cursor = conn.execute(
-            "SELECT * FROM users "
-            "WHERE contact_count > 0 AND dm_response_received = 0 "
-            "ORDER BY last_contacted ASC",
-        )
-        return [dict(row) for row in cursor.fetchall()]
+        return self._repo.get_dm_pending_users()
 
     def mark_response(self, username: str) -> bool:
         """Record that a user has responded to our DM.
 
-        Updates the user record and increments the daily
+        Updates the outreach record and increments the daily
         ``dm_responses`` counter.
 
         Parameters
@@ -75,21 +69,15 @@ class DmResponseTracker:
         Returns
         -------
         bool
-            ``True`` if the user record was updated.
+            ``True`` if the record was updated.
         """
-        now_iso = datetime.now(tz=timezone.utc).isoformat()
-        updated = self._repo.update_user(
-            username,
-            dm_response_received=1,
-            dm_response_at=now_iso,
-        )
+        now_iso = datetime.now(tz=UTC).isoformat()
+        self._repo.mark_dm_replied(username, replied_at=now_iso)
 
-        if updated:
-            today = datetime.now(tz=timezone.utc).strftime("%Y-%m-%d")
-            self._repo.update_daily_stats(today, dm_responses=1)
-            logger.info("dm_response_detected", username=username)
-
-        return updated
+        today = datetime.now(tz=UTC).strftime("%Y-%m-%d")
+        self._repo.update_daily_stats(today, dm_responses=1)
+        logger.info("dm_response_detected", username=username)
+        return True
 
     async def check_responses_playwright(
         self,
@@ -166,9 +154,8 @@ class DmResponseTracker:
 
         assert isinstance(page, Page)
 
-        # Navigate to the direct conversation with the user
         await page.goto(
-            f"https://x.com/messages",
+            "https://x.com/messages",
             wait_until="domcontentloaded",
             timeout=30_000,
         )
@@ -193,12 +180,8 @@ class DmResponseTracker:
         await page.wait_for_timeout(2000)
 
         # Check if there are messages from the other user
-        # (messages not sent by us -- identified by message alignment/style)
         incoming_messages = await page.query_selector_all(
-            '[data-testid="messageEntry"][class*="incoming"], '
-            '[data-testid="tweetText"]'
+            '[data-testid="messageEntry"][class*="incoming"], [data-testid="tweetText"]'
         )
 
-        # Simple heuristic: if there are more messages in the conversation
-        # than just ours, the user likely responded.
         return len(incoming_messages) > 0

@@ -6,9 +6,10 @@ running totals in ``daily_stats`` for observability.
 
 from __future__ import annotations
 
+from outreach_shared.utils.logger import get_logger
+from outreach_shared.utils.time_utils import now_jst
+
 from src.db.repository import Repository
-from src.utils.logger import get_logger
-from src.utils.time_utils import now_jst
 
 logger = get_logger("track")
 
@@ -73,7 +74,7 @@ class ActionTracker:
         self._repo.update_daily_stats(self._today(), tweets_analyzed=1, **{stat_key: 1})
 
     def record_reply(self, tweet_id: str, username: str) -> None:
-        """Record a reply action (M2 placeholder)."""
+        """Record a reply action."""
         self._repo.record_action(
             action_type="reply",
             tweet_id=tweet_id,
@@ -84,7 +85,7 @@ class ActionTracker:
         self._repo.update_daily_stats(self._today(), replies_sent=1)
 
     def record_dm(self, username: str, template_used: str) -> None:
-        """Record a DM action (M2 placeholder)."""
+        """Record a DM action."""
         self._repo.record_action(
             action_type="dm",
             tweet_id=None,

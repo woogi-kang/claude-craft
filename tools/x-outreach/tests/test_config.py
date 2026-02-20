@@ -4,18 +4,17 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from src.config import (
-    AnalyzeConfig,
+    AccountPoolConfig,
     BrowserConfig,
-    CollectConfig,
+    ClassificationConfig,
+    DaemonConfig,
     DatabaseConfig,
     DelaysConfig,
     DmConfig,
+    LLMConfig,
     LoggingConfig,
     ReplyConfig,
-    SchedulingConfig,
     SearchConfig,
     Settings,
     load_settings,
@@ -28,18 +27,13 @@ class TestSubConfigs:
     def test_search_defaults(self) -> None:
         cfg = SearchConfig()
         assert cfg.keywords == []
-        assert cfg.max_tweet_age_hours == 24
+        assert cfg.max_post_age_hours == 24
 
-    def test_collect_defaults(self) -> None:
-        cfg = CollectConfig()
-        assert cfg.max_follower_count == 10_000
-        assert cfg.require_profile_pic is True
-        assert cfg.require_bio is True
-
-    def test_analyze_defaults(self) -> None:
-        cfg = AnalyzeConfig()
+    def test_classification_defaults(self) -> None:
+        cfg = ClassificationConfig()
         assert cfg.confidence_threshold == 0.7
-        assert cfg.model == "claude-sonnet-4-20250514"
+        assert len(cfg.categories) == 5
+        assert "hospital" in cfg.categories
 
     def test_reply_defaults(self) -> None:
         cfg = ReplyConfig()
@@ -63,9 +57,10 @@ class TestSubConfigs:
         assert cfg.search_min_seconds == 30
         assert cfg.search_max_seconds == 300
 
-    def test_scheduling_defaults(self) -> None:
-        cfg = SchedulingConfig()
-        assert cfg.interval_hours == 2
+    def test_daemon_defaults(self) -> None:
+        cfg = DaemonConfig()
+        assert cfg.min_interval_hours == 2.0
+        assert cfg.max_interval_hours == 4.0
         assert cfg.active_start_hour == 8
         assert cfg.active_end_hour == 23
 
@@ -76,7 +71,19 @@ class TestSubConfigs:
 
     def test_database_defaults(self) -> None:
         cfg = DatabaseConfig()
-        assert cfg.path == "data/outreach.db"
+        assert cfg.url == "postgresql://localhost:5432/outreach"
+        assert cfg.min_pool_size == 2
+        assert cfg.max_pool_size == 10
+
+    def test_account_pool_defaults(self) -> None:
+        cfg = AccountPoolConfig()
+        assert cfg.cooldown_minutes_crawl == 30
+        assert cfg.cooldown_minutes_outreach == 60
+
+    def test_llm_defaults(self) -> None:
+        cfg = LLMConfig()
+        assert cfg.provider == "gemini"
+        assert cfg.model == "gemini-2.0-flash"
 
 
 class TestSettings:
@@ -85,15 +92,16 @@ class TestSettings:
     def test_default_secrets_are_empty(self) -> None:
         s = Settings()
         assert s.burner_x_username == ""
-        assert s.anthropic_api_key == ""
+        assert s.gemini_api_key == ""
 
     def test_nested_configs_present(self) -> None:
         s = Settings()
         assert isinstance(s.search, SearchConfig)
-        assert isinstance(s.collect, CollectConfig)
-        assert isinstance(s.analyze, AnalyzeConfig)
+        assert isinstance(s.classification, ClassificationConfig)
         assert isinstance(s.browser, BrowserConfig)
         assert isinstance(s.database, DatabaseConfig)
+        assert isinstance(s.daemon, DaemonConfig)
+        assert isinstance(s.llm, LLMConfig)
 
 
 class TestLoadSettings:
@@ -106,21 +114,21 @@ class TestLoadSettings:
 search:
   keywords:
     - "テスト"
-  max_tweet_age_hours: 12
-collect:
-  max_follower_count: 5000
+  max_post_age_hours: 12
+classification:
+  confidence_threshold: 0.8
 """,
             encoding="utf-8",
         )
         s = load_settings(config_path=config)
         assert s.search.keywords == ["テスト"]
-        assert s.search.max_tweet_age_hours == 12
-        assert s.collect.max_follower_count == 5000
+        assert s.search.max_post_age_hours == 12
+        assert s.classification.confidence_threshold == 0.8
 
     def test_load_nonexistent_yaml(self, tmp_path: Path) -> None:
         """When the YAML file does not exist, defaults should be used."""
         s = load_settings(config_path=tmp_path / "missing.yaml")
-        assert s.search.max_tweet_age_hours == 24
+        assert s.search.max_post_age_hours == 24
 
     def test_load_empty_yaml(self, tmp_path: Path) -> None:
         config = tmp_path / "config.yaml"

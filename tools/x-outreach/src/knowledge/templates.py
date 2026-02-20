@@ -1,13 +1,14 @@
-"""Reply and DM template management.
+"""Reply and DM template management for 5 intent categories.
 
-Templates are organised by classification category (A-G for replies,
-A-E for DMs) with rotation tracking to avoid sending identical messages.
+Templates are organised by intent category (hospital / price / procedure /
+complaint / review) with rotation tracking to avoid sending identical
+messages.
 """
 
 from __future__ import annotations
 
 import random
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
 @dataclass
@@ -21,34 +22,14 @@ class Template:
 
 
 # ---------------------------------------------------------------------------
-# Reply templates (categories A-G from strategy docs)
+# Reply templates by intent category
 # ---------------------------------------------------------------------------
 
 REPLY_TEMPLATES: dict[str, list[Template]] = {
-    "A": [
-        # Positive experience
+    "hospital": [
         Template(
-            id="A1",
-            category="A",
-            text=(
-                "いいなあ！仕上がりめっちゃ自然だね。ちなみにそのクリニック、"
-                "カウンセリングって日本語でできた？"
-            ),
-        ),
-        Template(
-            id="A2",
-            category="A",
-            text=(
-                "これは良い結果！同じ施術でも場所によって結構違うから、"
-                "いいとこ見つけたね。ダウンタイムどのくらいだった？"
-            ),
-        ),
-    ],
-    "B": [
-        # Questions / concerns
-        Template(
-            id="B1",
-            category="B",
+            id="H1",
+            category="hospital",
             text=(
                 "クリニック選び悩むよね。個人的に調べてて思うのは"
                 "「外国人患者誘致医療機関」登録の有無と日本語対応のレベル"
@@ -56,8 +37,8 @@ REPLY_TEMPLATES: dict[str, list[Template]] = {
             ),
         ),
         Template(
-            id="B2",
-            category="B",
+            id="H2",
+            category="hospital",
             text=(
                 "いま韓国の皮膚科データ調べてるんだけど、同じ施術でも"
                 "クリニックで最大数倍の価格差あるから、まず施術を決めてから"
@@ -65,98 +46,87 @@ REPLY_TEMPLATES: dict[str, list[Template]] = {
             ),
         ),
     ],
-    "C": [
-        # Price sharing
+    "price": [
         Template(
-            id="C1",
-            category="C",
+            id="PR1",
+            category="price",
             text=(
                 "お、いい価格帯！ちなみにその料金は製剤何使ってるか聞いた？"
                 "韓国製とアラガンで相場が結構変わるんだよね"
             ),
         ),
-    ],
-    "D": [
-        # Trouble / failure
         Template(
-            id="D1",
-            category="D",
+            id="PR2",
+            category="price",
+            text=(
+                "韓国の皮膚科って「安い」イメージあるけど、"
+                "クリニックによって同じ施術で2-3倍の差があるよ。"
+                "料金だけじゃなくて製剤の種類も要チェック"
+            ),
+        ),
+    ],
+    "procedure": [
+        Template(
+            id="PD1",
+            category="procedure",
+            text=(
+                "いいなあ！仕上がりめっちゃ自然だね。ちなみにそのクリニック、"
+                "カウンセリングって日本語でできた？"
+            ),
+        ),
+        Template(
+            id="PD2",
+            category="procedure",
+            text=(
+                "これは良い結果！同じ施術でも場所によって結構違うから、"
+                "いいとこ見つけたね。ダウンタイムどのくらいだった？"
+            ),
+        ),
+    ],
+    "complaint": [
+        Template(
+            id="CP1",
+            category="complaint",
             text=(
                 "読んでてつらい…本当に大変だったね。韓国のクリニックが"
                 "「外国人患者誘致医療機関」登録してたら対応義務があるから、"
                 "まだ対応求められるかも。確認してみて"
             ),
         ),
-    ],
-    "E": [
-        # Planning / preparation
         Template(
-            id="E1",
-            category="E",
+            id="CP2",
+            category="complaint",
             text=(
-                "初渡韓美容たのしみだね！もし施術決まってるなら、"
-                "同じエリアの他クリニックの相場もざっくり把握しておくと安心だよ。"
-                "何受ける予定？"
+                "それは大変だったね…。韓国の皮膚科で万が一のときは、"
+                "KIMA（韓国国際医療協会）に相談できるよ。"
+                "日本語窓口もあるから調べてみて"
             ),
         ),
     ],
-    "F": [
-        # Clinic official (usually do not reply)
+    "review": [
         Template(
-            id="F1",
-            category="F",
-            text="",  # Intentionally empty -- skip replies to clinic accounts
+            id="RV1",
+            category="review",
+            text=("1週間でこの変化すごい！はっきり見える。これって何回目の施術？"),
         ),
-    ],
-    "G": [
-        # Before/after progress
         Template(
-            id="G1",
-            category="G",
-            text=(
-                "1週間でこの変化すごい！はっきり見える。"
-                "これって何回目の施術？"
-            ),
+            id="RV2",
+            category="review",
+            text=("レポありがとう！すごく参考になる。行く前にいちばん不安だったこととかある？"),
         ),
     ],
 }
 
 
 # ---------------------------------------------------------------------------
-# DM templates (A-E from strategy docs) -- M2 stubs
+# DM templates by intent category
 # ---------------------------------------------------------------------------
 
 DM_TEMPLATES: dict[str, list[Template]] = {
-    "A": [
+    "hospital": [
         Template(
-            id="DM_A1",
-            category="A",
-            text=(
-                "{施術名}の投稿見て気になってDMしちゃった！"
-                "{具体的な感想}ってあったけど、実際受けてみてクリニック探すの大変だった？\n\n"
-                "じつは韓国の皮膚科クリニックの料金とか施術データ集めてまとめてるんだけど、"
-                "実際に行った人の声がいちばん参考になるなって思って。\n\n"
-                "よかったらクリニックどうやって見つけたか教えてほしいな"
-            ),
-        ),
-    ],
-    "B": [
-        Template(
-            id="DM_B1",
-            category="B",
-            text=(
-                "ビフォーアフターすごい！{具体的な変化}。\n\n"
-                "ちょっと聞きたいんだけど、このクリニックって何で知った？"
-                "ネットで調べた？それとも誰かの紹介？\n\n"
-                "いま韓国の皮膚科の料金比較データまとめてて、"
-                "探し方のリアルが知りたくて。迷惑じゃなければ教えてほしい"
-            ),
-        ),
-    ],
-    "C": [
-        Template(
-            id="DM_C1",
-            category="C",
+            id="DM_H1",
+            category="hospital",
             text=(
                 "クリニック選びの投稿めっちゃわかる！{相手の悩みへの共感}\n\n"
                 "じつは自分も韓国の皮膚科データずっと調べてて、"
@@ -166,10 +136,10 @@ DM_TEMPLATES: dict[str, list[Template]] = {
             ),
         ),
     ],
-    "D": [
+    "price": [
         Template(
-            id="DM_D1",
-            category="D",
+            id="DM_PR1",
+            category="price",
             text=(
                 "料金の話すごく気になった！{相手の投稿内容}\n\n"
                 "韓国の皮膚科って「安い」って言われてるけど、"
@@ -180,17 +150,42 @@ DM_TEMPLATES: dict[str, list[Template]] = {
             ),
         ),
     ],
-    "E": [
+    "procedure": [
         Template(
-            id="DM_E1",
-            category="E",
+            id="DM_PD1",
+            category="procedure",
             text=(
-                "初の渡韓美容おつかれさま！{投稿の感想への反応}\n\n"
-                "初めてだと色々わからないこと多かったんじゃない？"
+                "{施術名}の投稿見て気になってDMしちゃった！"
+                "{具体的な感想}ってあったけど、実際受けてみてクリニック探すの大変だった？\n\n"
+                "じつは韓国の皮膚科クリニックの料金とか施術データ集めてまとめてるんだけど、"
+                "実際に行った人の声がいちばん参考になるなって思って。\n\n"
+                "よかったらクリニックどうやって見つけたか教えてほしいな"
+            ),
+        ),
+    ],
+    "complaint": [
+        Template(
+            id="DM_CP1",
+            category="complaint",
+            text=(
+                "投稿読ませてもらいました。{相手の体験への共感}\n\n"
                 "自分は韓国の皮膚科情報を調べてまとめてる人なんだけど、"
-                "行く前にいちばん不安だったこととか、"
-                "「これ先に知りたかった」ってことあったら聞きたいな\n\n"
-                "今後行く人の参考にできたらいいなと思って"
+                "こういうリアルな声がいちばん大事だと思ってて。"
+                "もしよければ、どういう経緯でそうなったか教えてほしい\n\n"
+                "同じ目に遭う人を減らせるかもしれないから"
+            ),
+        ),
+    ],
+    "review": [
+        Template(
+            id="DM_RV1",
+            category="review",
+            text=(
+                "ビフォーアフターすごい！{具体的な変化}。\n\n"
+                "ちょっと聞きたいんだけど、このクリニックって何で知った？"
+                "ネットで調べた？それとも誰かの紹介？\n\n"
+                "いま韓国の皮膚科の料金比較データまとめてて、"
+                "探し方のリアルが知りたくて。迷惑じゃなければ教えてほしい"
             ),
         ),
     ],
@@ -214,7 +209,7 @@ class TemplateSelector:
         """Pick the least-used reply template for *category*.
 
         Returns ``None`` if the category has no templates or the
-        template text is empty (e.g. category F -- clinic accounts).
+        template text is empty.
         """
         templates = self._reply_templates.get(category, [])
         if not templates:

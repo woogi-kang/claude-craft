@@ -1,16 +1,19 @@
-"""Analyze pipeline -- classify collected tweets via Claude.
+"""Analyze pipeline -- classify collected tweets via LLM.
 
 Processes all tweets with status ``collected``, calls the AI classifier,
-and updates each tweet with its classification result.
+and updates each tweet with its classification result.  Uses the 5-category
+intent system (hospital/price/procedure/complaint/review) with keyword
+pre-filtering and llm_decision boolean.
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+
+from outreach_shared.utils.logger import get_logger
 
 from src.ai.classifier import TweetClassifier
 from src.db.repository import Repository
-from src.utils.logger import get_logger
 
 logger = get_logger("analyze")
 
@@ -20,9 +23,9 @@ class AnalyzeResult:
     """Summary of the analyze pipeline run."""
 
     total_processed: int = 0
-    needs_help: int = 0
-    seeking_info: int = 0
-    irrelevant: int = 0
+    approved: int = 0
+    rejected: int = 0
+    by_intent: dict[str, int] = field(default_factory=dict)
     errors: int = 0
 
 
@@ -42,10 +45,10 @@ class AnalyzePipeline:
         """Process all ``collected`` tweets through classification.
 
         Each tweet is classified and updated in-place with:
-        - ``classification`` (needs_help / seeking_info / irrelevant)
-        - ``confidence`` score
-        - ``classification_rationale``
-        - ``template_category`` (A-G)
+        - ``intent_type`` (hospital/price/procedure/complaint/review)
+        - ``llm_decision`` (True = actionable)
+        - ``keyword_intent`` (from keyword pre-filter, may be None)
+        - ``llm_rationale`` (explanation text)
         - ``status`` set to ``analyzed``
 
         Returns
@@ -65,47 +68,48 @@ class AnalyzePipeline:
         for tweet in tweets:
             try:
                 classification = await self._classifier.classify(
-                    tweet_content=tweet["content"],
-                    author_username=tweet["author_username"],
+                    tweet_content=tweet.get("contents", ""),
+                    author_username=tweet.get("username", ""),
                     author_bio=tweet.get("author_bio", ""),
-                    follower_count=tweet.get("author_follower_count", 0),
-                    following_count=tweet.get("author_following_count", 0),
-                    likes=tweet.get("likes", 0),
-                    retweets=tweet.get("retweets", 0),
-                    replies=tweet.get("replies", 0),
+                    follower_count=tweet.get("author_followers", 0),
+                    following_count=0,
+                    likes=tweet.get("likes_count", 0),
+                    retweets=tweet.get("retweets_count", 0),
+                    replies=tweet.get("comments_count", 0),
                 )
 
                 repository.update_tweet_status(
-                    tweet["tweet_id"],
+                    tweet["post_id"],
                     status="analyzed",
-                    classification=classification.classification,
-                    confidence=classification.confidence,
-                    classification_rationale=classification.rationale,
-                    template_category=classification.template_category,
+                    intent_type=classification.intent_type,
+                    llm_decision=classification.llm_decision,
+                    keyword_intent=classification.keyword_intent,
+                    llm_rationale=classification.rationale,
                 )
 
                 result.total_processed += 1
-                if classification.classification == "needs_help":
-                    result.needs_help += 1
-                elif classification.classification == "seeking_info":
-                    result.seeking_info += 1
+                intent = classification.intent_type
+                result.by_intent[intent] = result.by_intent.get(intent, 0) + 1
+
+                if classification.llm_decision:
+                    result.approved += 1
                 else:
-                    result.irrelevant += 1
+                    result.rejected += 1
 
             except Exception as exc:
                 result.errors += 1
                 logger.error(
                     "analyze_tweet_error",
-                    tweet_id=tweet["tweet_id"],
+                    tweet_id=tweet.get("post_id", "unknown"),
                     error=str(exc),
                 )
 
         logger.info(
             "analyze_complete",
             total=result.total_processed,
-            needs_help=result.needs_help,
-            seeking_info=result.seeking_info,
-            irrelevant=result.irrelevant,
+            approved=result.approved,
+            rejected=result.rejected,
+            by_intent=result.by_intent,
             errors=result.errors,
         )
         return result

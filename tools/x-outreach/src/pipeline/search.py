@@ -7,14 +7,19 @@ from the DOM, and returns unfiltered results for the collect stage.
 from __future__ import annotations
 
 import urllib.parse
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from dataclasses import dataclass
 
+from outreach_shared.browser.human_sim import human_scroll, random_mouse_move, random_pause
+from outreach_shared.utils.logger import get_logger
+from outreach_shared.utils.time_utils import random_delay
 from playwright.async_api import BrowserContext, Page
 
-from src.browser.human_sim import human_scroll, random_mouse_move, random_pause
-from src.utils.logger import get_logger
-from src.utils.time_utils import random_delay
+from src.platform.selectors import (
+    METRICS_GROUP,
+    TWEET_ARTICLE,
+    TWEET_TEXT,
+    USER_NAME_CONTAINER,
+)
 
 logger = get_logger("search")
 
@@ -125,7 +130,7 @@ class SearchPipeline:
             await random_pause(1.0, 2.0)
 
         # Extract tweet articles
-        tweet_elements = await page.query_selector_all('article[data-testid="tweet"]')
+        tweet_elements = await page.query_selector_all(TWEET_ARTICLE)
         logger.info("search_elements_found", keyword=keyword, count=len(tweet_elements))
 
         tweets: list[RawTweet] = []
@@ -166,7 +171,7 @@ class SearchPipeline:
                 tweet.tweet_timestamp = datetime_attr
 
         # Extract tweet text
-        text_el = await el.query_selector('[data-testid="tweetText"]')
+        text_el = await el.query_selector(TWEET_TEXT)
         if text_el:
             tweet.content = (await text_el.inner_text()).strip()
 
@@ -181,16 +186,14 @@ class SearchPipeline:
                     break
 
         # Extract display name
-        display_name_el = await el.query_selector(
-            '[data-testid="User-Name"] span'
-        )
+        display_name_el = await el.query_selector(f"{USER_NAME_CONTAINER} span")
         if display_name_el:
             tweet.author_display_name = (await display_name_el.inner_text()).strip()
 
         # Extract engagement metrics from aria-labels on group buttons
-        metrics_group = await el.query_selector('[role="group"]')
-        if metrics_group:
-            buttons = await metrics_group.query_selector_all("button")
+        metrics_el = await el.query_selector(METRICS_GROUP)
+        if metrics_el:
+            buttons = await metrics_el.query_selector_all("button")
             # Typical order: reply, retweet, like, bookmark, share
             for i, btn in enumerate(buttons):
                 aria = await btn.get_attribute("aria-label") or ""

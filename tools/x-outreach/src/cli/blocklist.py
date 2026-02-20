@@ -1,7 +1,7 @@
 """User blocklist management via the ``config`` table.
 
 Blocked users are stored as a JSON array under the ``blocked_users``
-key in the SQLite ``config`` table.  The :class:`BlocklistManager`
+key in the database config table.  The :class:`BlocklistManager`
 provides a simple interface for add/remove/query operations, and the
 module-level functions implement the CLI subcommand handlers.
 """
@@ -10,8 +10,9 @@ from __future__ import annotations
 
 import json
 
+from outreach_shared.utils.logger import get_logger
+
 from src.db.repository import Repository
-from src.utils.logger import get_logger
 
 logger = get_logger("blocklist")
 
@@ -105,10 +106,12 @@ class BlocklistManager:
 # CLI handlers
 # ---------------------------------------------------------------------------
 
+_DEFAULT_DB_URL = "postgresql://localhost:5432/outreach"
 
-def run_blocklist_add(username: str, db_path: str = "data/outreach.db") -> str:
+
+def run_blocklist_add(username: str, db_url: str = _DEFAULT_DB_URL) -> str:
     """Add a user to the blocklist and return a status message."""
-    repo = Repository(db_path)
+    repo = Repository(db_url)
     repo.init_db()
     try:
         mgr = BlocklistManager(repo)
@@ -120,9 +123,9 @@ def run_blocklist_add(username: str, db_path: str = "data/outreach.db") -> str:
         repo.close()
 
 
-def run_blocklist_remove(username: str, db_path: str = "data/outreach.db") -> str:
+def run_blocklist_remove(username: str, db_url: str = _DEFAULT_DB_URL) -> str:
     """Remove a user from the blocklist and return a status message."""
-    repo = Repository(db_path)
+    repo = Repository(db_url)
     repo.init_db()
     try:
         mgr = BlocklistManager(repo)
@@ -134,9 +137,9 @@ def run_blocklist_remove(username: str, db_path: str = "data/outreach.db") -> st
         repo.close()
 
 
-def run_blocklist_list(db_path: str = "data/outreach.db") -> str:
+def run_blocklist_list(db_url: str = _DEFAULT_DB_URL) -> str:
     """List all blocked users and return formatted output."""
-    repo = Repository(db_path)
+    repo = Repository(db_url)
     repo.init_db()
     try:
         mgr = BlocklistManager(repo)
