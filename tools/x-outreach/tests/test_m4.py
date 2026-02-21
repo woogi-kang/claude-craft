@@ -133,12 +133,17 @@ class TestWarmupManager:
         settings = Settings(
             reply={"enabled": True, "daily_limit": 50},
             dm={"enabled": True, "daily_limit": 20},
+            nurture={"follow_daily_limit": 10, "like_daily_limit": 15},
+            posting={"daily_limit": 2},
             search={"keywords": ["a", "b", "c", "d", "e", "f"]},
         )
 
         adjusted = mgr.apply_limits(settings)
         assert adjusted.reply.daily_limit == 25
         assert adjusted.dm.daily_limit == 10
+        assert adjusted.nurture.follow_daily_limit == 5
+        assert adjusted.nurture.like_daily_limit == 7
+        assert adjusted.posting.daily_limit == 1
         assert len(adjusted.search.keywords) == 3
 
     def test_apply_limits_after_warmup(self) -> None:
@@ -151,12 +156,17 @@ class TestWarmupManager:
         settings = Settings(
             reply={"enabled": True, "daily_limit": 50},
             dm={"enabled": True, "daily_limit": 20},
+            nurture={"follow_daily_limit": 10, "like_daily_limit": 15},
+            posting={"daily_limit": 2},
             search={"keywords": ["a", "b", "c", "d"]},
         )
 
         adjusted = mgr.apply_limits(settings)
         assert adjusted.reply.daily_limit == 50
         assert adjusted.dm.daily_limit == 20
+        assert adjusted.nurture.follow_daily_limit == 10
+        assert adjusted.nurture.like_daily_limit == 15
+        assert adjusted.posting.daily_limit == 2
         assert len(adjusted.search.keywords) == 4
 
     def test_apply_limits_does_not_mutate_original(self) -> None:
@@ -169,10 +179,15 @@ class TestWarmupManager:
         settings = Settings(
             reply={"enabled": True, "daily_limit": 50},
             dm={"enabled": True, "daily_limit": 20},
+            nurture={"follow_daily_limit": 10, "like_daily_limit": 15},
+            posting={"daily_limit": 2},
         )
         mgr.apply_limits(settings)
         assert settings.reply.daily_limit == 50
         assert settings.dm.daily_limit == 20
+        assert settings.nurture.follow_daily_limit == 10
+        assert settings.nurture.like_daily_limit == 15
+        assert settings.posting.daily_limit == 2
 
     def test_apply_limits_minimum_one(self) -> None:
         from src.pipeline.warmup import WarmupManager
@@ -184,11 +199,16 @@ class TestWarmupManager:
         settings = Settings(
             reply={"enabled": True, "daily_limit": 1},
             dm={"enabled": True, "daily_limit": 1},
+            nurture={"follow_daily_limit": 1, "like_daily_limit": 1},
+            posting={"daily_limit": 1},
             search={"keywords": ["one"]},
         )
         adjusted = mgr.apply_limits(settings)
         assert adjusted.reply.daily_limit >= 1
         assert adjusted.dm.daily_limit >= 1
+        assert adjusted.nurture.follow_daily_limit >= 1
+        assert adjusted.nurture.like_daily_limit >= 1
+        assert adjusted.posting.daily_limit >= 1
         assert len(adjusted.search.keywords) >= 1
 
 

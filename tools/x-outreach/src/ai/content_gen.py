@@ -1,4 +1,4 @@
-"""Content generation using Gemini API via shared LLM client.
+"""Content generation via shared LLM client (Codex CLI default).
 
 Generates personalised reply and DM content based on tweet classification,
 intent categories, and treatment knowledge. All output is in natural
@@ -12,7 +12,7 @@ import re
 from outreach_shared.ai.llm_client import LLMClient, create_llm_client
 from outreach_shared.utils.logger import get_logger
 
-from src.ai.prompts import DM_SYSTEM_PROMPT, REPLY_SYSTEM_PROMPT
+from src.ai.prompts import CASUAL_POST_SYSTEM_PROMPT, DM_SYSTEM_PROMPT, REPLY_SYSTEM_PROMPT
 
 logger = get_logger("content_gen")
 
@@ -58,24 +58,24 @@ def _build_dm_user_prompt(
 
 
 class ContentGenerator:
-    """Generate reply and DM content using Gemini API.
+    """Generate reply and DM content using a configurable LLM provider.
 
     Parameters
     ----------
     api_key:
-        Gemini API key.
+        API key (unused for Codex provider).
     model:
         LLM model identifier.
     provider:
-        LLM provider name (default: ``"gemini"``).
+        LLM provider name (default: ``"codex"``).
     """
 
     def __init__(
         self,
         *,
-        api_key: str,
-        model: str = "gemini-2.0-flash",
-        provider: str = "gemini",
+        api_key: str = "",
+        model: str = "gpt-5.1-codex-mini",
+        provider: str = "codex",
     ) -> None:
         self._llm: LLMClient = create_llm_client(provider, api_key, model=model)
 
@@ -227,6 +227,45 @@ class ContentGenerator:
                 error=str(exc)[:200],
             )
             raise ContentGenerationError(f"Failed to generate DM: {exc}") from exc
+
+    async def generate_casual_post(self) -> str:
+        """Generate a casual daily tweet for the @ask.nandemo account.
+
+        Content is casual and personal -- explicitly NOT about dermatology.
+        Topics include daily life, food, weather, Tokyo observations, etc.
+
+        Returns
+        -------
+        str
+            Generated tweet text (under 140 characters).
+
+        Raises
+        ------
+        ContentGenerationError
+            When LLM API call fails.
+        """
+        try:
+            response = await self._llm.generate(
+                "Generate one casual tweet.",
+                system=CASUAL_POST_SYSTEM_PROMPT,
+                temperature=0.95,
+                max_tokens=100,
+            )
+            post_text = response.text.strip()
+
+            # Enforce 280 character hard limit
+            if len(post_text) > 280:
+                post_text = post_text[:277] + "..."
+
+            # Strip any URLs that may have been generated
+            post_text = _strip_urls(post_text)
+
+            logger.info("casual_post_generated", length=len(post_text))
+            return post_text
+
+        except Exception as exc:
+            logger.error("casual_post_generation_error", error=str(exc)[:200])
+            raise ContentGenerationError(f"Failed to generate casual post: {exc}") from exc
 
 
 class ContentGenerationError(Exception):

@@ -28,7 +28,7 @@ from src.platform.selectors import (
     REPLY_BUTTON,
     REPLY_SUBMIT_BUTTON,
     REPLY_TEXT_INPUT,
-    RESTRICTION_INDICATORS,
+    detect_restriction,
 )
 
 logger = get_logger("reply")
@@ -280,7 +280,7 @@ async def _post_reply_via_playwright(
 
         # Check for rate limit / restriction
         page_content = await page.content()
-        if _detect_restriction(page_content):
+        if detect_restriction(page_content):
             raise ReplyRateLimitError("Account rate-limited or restricted")
 
         # Click the reply button on the tweet
@@ -304,10 +304,10 @@ async def _post_reply_via_playwright(
 
         # Type character by character with human-like delays
         for char in reply_text:
-            delay_ms = random.randint(50, 210)
+            delay_ms = random.randint(65, 273)
             await page.keyboard.type(char, delay=delay_ms)
             if random.random() < 0.08:
-                await asyncio.sleep(random.uniform(0.7, 2.0))
+                await asyncio.sleep(random.uniform(0.9, 2.6))
 
         await random_pause(0.7, 2.0)
 
@@ -321,7 +321,7 @@ async def _post_reply_via_playwright(
 
         # Check for restriction after posting
         page_content = await page.content()
-        if _detect_restriction(page_content):
+        if detect_restriction(page_content):
             raise ReplyRateLimitError("Restriction detected after reply attempt")
 
         logger.info("reply_playwright_sent", url=tweet_url)
@@ -332,12 +332,6 @@ async def _post_reply_via_playwright(
     except Exception as exc:
         logger.error("reply_playwright_error", url=tweet_url, error=str(exc))
         raise
-
-
-def _detect_restriction(page_content: str) -> bool:
-    """Check page content for rate limit or restriction indicators."""
-    lower_content = page_content.lower()
-    return any(ind in lower_content for ind in RESTRICTION_INDICATORS)
 
 
 def _build_treatment_context(tweet_content: str, kb: TreatmentKnowledgeBase) -> str:

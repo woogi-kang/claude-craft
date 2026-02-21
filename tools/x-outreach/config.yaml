@@ -36,9 +36,23 @@ reply:
   daily_limit: 3
 
 dm:
-  enabled: false
+  enabled: true
   daily_limit: 20
   min_interval_minutes: 25
+
+nurture:
+  enabled: true
+  follow_daily_limit: 5
+  like_daily_limit: 8
+  follow_probability: 0.4
+  like_probability: 0.6
+
+posting:
+  enabled: true
+  daily_limit: 2
+  min_interval_hours: 4.0
+  active_start_hour: 10  # JST, narrower than pipeline
+  active_end_hour: 21    # JST
 
 browser:
   headless: false
@@ -52,8 +66,8 @@ delays:
   action_max_seconds: 42
 
 daemon:
-  min_interval_hours: 1.0
-  max_interval_hours: 2.0
+  min_interval_hours: 2.0
+  max_interval_hours: 3.0
   active_start_hour: 8   # JST
   active_end_hour: 23    # JST
 

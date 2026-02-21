@@ -352,14 +352,15 @@ class PostgresRepository:
         platform: str,
         outreach_type: str,
         message: str,
+        status: str = "pending",
         scheduled_at: datetime | None = None,
     ) -> int:
         """Queue a new outreach action and return its id."""
         sql = """\
             INSERT INTO outreach (
                 post_id, user_id, account_id, platform,
-                outreach_type, message, scheduled_at
-            ) VALUES ($1,$2,$3,$4,$5,$6,$7)
+                outreach_type, message, status, scheduled_at
+            ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
             RETURNING id
         """
         async with self.pool.acquire() as conn:
@@ -371,6 +372,7 @@ class PostgresRepository:
                 platform,
                 outreach_type,
                 message,
+                status,
                 scheduled_at,
             )
         return row["id"]  # type: ignore[index]

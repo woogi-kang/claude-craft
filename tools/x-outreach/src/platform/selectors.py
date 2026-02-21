@@ -60,6 +60,27 @@ DM_SEND_BUTTON = '[data-testid="dmComposerSendButton"]'
 DM_CONVERSATION = '[data-testid="dmConversation"]'
 
 # ---------------------------------------------------------------------------
+# Follow
+# ---------------------------------------------------------------------------
+
+PROFILE_FOLLOW_BUTTON = '[data-testid$="-follow"]'
+PROFILE_UNFOLLOW_BUTTON = '[data-testid$="-unfollow"]'
+
+# ---------------------------------------------------------------------------
+# Like
+# ---------------------------------------------------------------------------
+
+LIKE_BUTTON = '[data-testid="like"]'
+UNLIKE_BUTTON = '[data-testid="unlike"]'
+
+# ---------------------------------------------------------------------------
+# Compose (tweet posting) -- aliases for clarity
+# ---------------------------------------------------------------------------
+
+COMPOSE_TEXT_INPUT = '[data-testid="tweetTextarea_0"]'
+COMPOSE_SUBMIT_BUTTON = '[data-testid="tweetButton"]'
+
+# ---------------------------------------------------------------------------
 # Restriction / rate limit page indicators
 # ---------------------------------------------------------------------------
 
@@ -76,3 +97,9 @@ RESTRICTION_INDICATORS = [
     "unusual login activity",
     "caution: this account is temporarily limited",
 ]
+
+
+def detect_restriction(page_content: str) -> bool:
+    """Check page content for rate limit or restriction indicators."""
+    lower_content = page_content.lower()
+    return any(ind in lower_content for ind in RESTRICTION_INDICATORS)

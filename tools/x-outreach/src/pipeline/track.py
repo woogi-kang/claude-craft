@@ -106,6 +106,33 @@ class ActionTracker:
         )
         self._repo.update_daily_stats(self._today(), dms_skipped=1)
 
+    def record_follow(self, tweet_id: str, username: str) -> None:
+        """Record a follow action (daily stats only).
+
+        The outreach table insert is handled by
+        ``Repository.record_nurture_action`` to avoid double INSERT.
+        """
+        self._repo.update_daily_stats(self._today(), follows_sent=1)
+
+    def record_like(self, tweet_id: str, username: str) -> None:
+        """Record a like action (daily stats only).
+
+        The outreach table insert is handled by
+        ``Repository.record_nurture_action`` to avoid double INSERT.
+        """
+        self._repo.update_daily_stats(self._today(), likes_sent=1)
+
+    def record_post(self, content_length: int) -> None:
+        """Record an original post action."""
+        self._repo.record_action(
+            action_type="post",
+            tweet_id=None,
+            username=None,
+            details=f"content_length={content_length}",
+            status="success",
+        )
+        self._repo.update_daily_stats(self._today(), posts_published=1)
+
     def record_error(self, action_type: str, error_message: str) -> None:
         """Record an error that occurred during pipeline execution."""
         self._repo.record_action(

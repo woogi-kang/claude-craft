@@ -339,7 +339,7 @@ async def _send_dm_via_playwright(
             await random_pause(0.3, 0.8)
             # Type username character by character
             for char in username:
-                delay_ms = random.randint(50, 120)
+                delay_ms = random.randint(65, 156)
                 await page.keyboard.type(char, delay=delay_ms)
             await random_pause(1.5, 3.0)
 
@@ -397,12 +397,12 @@ async def _send_dm_via_playwright(
 async def _type_message_naturally(page: Page, message: str) -> None:
     """Type a message with natural-feeling speed variation."""
     for char in message:
-        delay_ms = random.randint(30, 150)
+        delay_ms = random.randint(65, 273)
         await page.keyboard.type(char, delay=delay_ms)
 
         # Occasional longer pause (simulating thinking)
-        if random.random() < 0.05:
-            await asyncio.sleep(random.uniform(0.5, 1.5))
+        if random.random() < 0.08:
+            await asyncio.sleep(random.uniform(0.9, 2.6))
 
 
 def _detect_rate_limit(page_content: str) -> bool:

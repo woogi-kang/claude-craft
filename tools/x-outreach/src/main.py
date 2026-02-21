@@ -9,10 +9,12 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import random
 import sys
 from dataclasses import dataclass
 
 from outreach_shared.utils.logger import get_logger, setup_logging
+from outreach_shared.utils.rate_limiter import SlidingWindowLimiter
 from playwright.async_api import BrowserContext, async_playwright
 
 from src.ai.classifier import TweetClassifier
@@ -24,6 +26,8 @@ from src.knowledge.treatments import TreatmentKnowledgeBase
 from src.pipeline.analyze import AnalyzePipeline, AnalyzeResult
 from src.pipeline.collect import CollectPipeline, CollectResult
 from src.pipeline.dm import DmPipeline, DmResult
+from src.pipeline.nurture import NurturePipeline, NurtureResult
+from src.pipeline.posting import PostingPipeline, PostingResult, posting_probability
 from src.pipeline.reply import ReplyPipeline, ReplyResult
 from src.pipeline.search import SearchPipeline
 from src.pipeline.track import ActionTracker
@@ -39,14 +43,16 @@ class PipelineRunResult:
     search_count: int = 0
     collect: CollectResult | None = None
     analyze: AnalyzeResult | None = None
+    nurture: NurtureResult | None = None
     reply: ReplyResult | None = None
     dm: DmResult | None = None
+    posting: PostingResult | None = None
     success: bool = False
     error: str | None = None
 
 
 class PipelineRunner:
-    """Orchestrate the Search -> Collect -> Analyze -> Reply -> DM pipeline.
+    """Orchestrate the Search -> Collect -> Analyze -> Nurture -> Reply -> DM -> Posting pipeline.
 
     Parameters
     ----------
@@ -69,13 +75,28 @@ class PipelineRunner:
         self._kb = knowledge_base
         self._tracker = ActionTracker(repository)
 
+        # Persistent limiters -- must survive across run_once() calls so
+        # that daily caps are actually enforced during daemon operation.
+        self._follow_limiter = SlidingWindowLimiter(
+            max_actions=settings.nurture.follow_daily_limit,
+            window_seconds=86_400.0,
+        )
+        self._like_limiter = SlidingWindowLimiter(
+            max_actions=settings.nurture.like_daily_limit,
+            window_seconds=86_400.0,
+        )
+        self._posting_limiter = SlidingWindowLimiter(
+            max_actions=settings.posting.daily_limit,
+            window_seconds=86_400.0,
+        )
+
     async def run_once(
         self,
         *,
         dry_run: bool = False,
         context: BrowserContext | None = None,
     ) -> PipelineRunResult:
-        """Execute a single Search -> Collect -> Analyze -> Reply -> DM cycle.
+        """Execute a single Search -> Collect -> Analyze -> Nurture -> Reply -> DM -> Posting cycle.
 
         Parameters
         ----------
@@ -187,7 +208,7 @@ class PipelineRunner:
 
             # --- Analyze ---
             classifier = TweetClassifier(
-                api_key=self._settings.gemini_api_key,
+                api_key=self._settings.llm_api_key,
                 model=self._settings.llm.model,
                 confidence_threshold=(self._settings.classification.confidence_threshold),
                 domain_context=self._kb.get_classification_context(),
@@ -197,11 +218,33 @@ class PipelineRunner:
             analyze_result = await analyze_pipeline.run(self._repo)
             result.analyze = analyze_result
 
+            # --- Nurture: follow/like (if enabled) ---
+            if self._settings.nurture.enabled and context is not None:
+                nurture_pipeline = NurturePipeline(
+                    follow_daily_limiter=self._follow_limiter,
+                    like_daily_limiter=self._like_limiter,
+                    follow_probability=self._settings.nurture.follow_probability,
+                    like_probability=self._settings.nurture.like_probability,
+                )
+                nurture_result = await nurture_pipeline.run(
+                    repository=self._repo,
+                    context=context,
+                    tracker=self._tracker,
+                    settings=self._settings,
+                )
+                result.nurture = nurture_result
+                logger.info(
+                    "nurture_stage_done",
+                    follows=nurture_result.follows_sent,
+                    likes=nurture_result.likes_sent,
+                    errors=nurture_result.errors,
+                )
+
             # --- Reply (if enabled) ---
             reply_ctx = context  # reuse same browser
             if self._settings.reply.enabled and reply_ctx is not None:
                 content_gen = ContentGenerator(
-                    api_key=self._settings.gemini_api_key,
+                    api_key=self._settings.llm_api_key,
                     model=self._settings.llm.model,
                     provider=self._settings.llm.provider,
                 )
@@ -227,7 +270,7 @@ class PipelineRunner:
             if self._settings.dm.enabled and dm_ctx is not None:
                 if not self._settings.reply.enabled:
                     content_gen = ContentGenerator(
-                        api_key=self._settings.gemini_api_key,
+                        api_key=self._settings.llm_api_key,
                         model=self._settings.llm.model,
                         provider=self._settings.llm.provider,
                     )
@@ -250,6 +293,33 @@ class PipelineRunner:
                     emergency=dm_result.emergency_halt,
                 )
 
+            # --- Posting: casual tweet (if enabled, probability-gated) ---
+            if self._settings.posting.enabled and context is not None:
+                prob = posting_probability(self._settings)
+                if random.random() < prob:
+                    content_gen = ContentGenerator(
+                        api_key=self._settings.llm_api_key,
+                        model=self._settings.llm.model,
+                        provider=self._settings.llm.provider,
+                    )
+                    posting_pipeline = PostingPipeline(
+                        content_gen=content_gen,
+                        daily_limiter=self._posting_limiter,
+                        min_interval_hours=self._settings.posting.min_interval_hours,
+                    )
+                    posting_result = await posting_pipeline.run(
+                        repository=self._repo,
+                        context=context,
+                        tracker=self._tracker,
+                        settings=self._settings,
+                    )
+                    result.posting = posting_result
+                    logger.info(
+                        "posting_stage_done",
+                        published=posting_result.posts_published,
+                        errors=posting_result.errors,
+                    )
+
             result.success = True
             self._tracker.log_summary()
 
@@ -265,25 +335,33 @@ def _verify_startup(settings: Settings) -> list[str]:
     """Verify that required resources are available.
 
     Returns a list of error messages (empty if all checks pass).
+    Credential checks are skipped when a persistent browser session
+    already exists on disk (manual login flow).
     """
+    from pathlib import Path
+
     errors: list[str] = []
 
     # API key only required for non-codex providers
-    if settings.llm.provider != "codex" and not settings.gemini_api_key:
-        errors.append("GEMINI_API_KEY is not set")
+    if settings.llm.provider != "codex" and not settings.llm_api_key:
+        errors.append("LLM API key is not set (GEMINI_API_KEY in .env)")
 
-    if not settings.burner_x_username:
-        errors.append("BURNER_X_USERNAME is not set")
+    # Skip credential checks if a saved session exists
+    session_dir = Path(__file__).resolve().parent.parent / "data" / "sessions" / "nandemo"
+    has_session = (session_dir / "Default" / "Cookies").exists()
 
-    if not settings.burner_x_password:
-        errors.append("BURNER_X_PASSWORD is not set")
+    if not has_session:
+        if not settings.burner_x_username:
+            errors.append("BURNER_X_USERNAME is not set")
+        if not settings.burner_x_password:
+            errors.append("BURNER_X_PASSWORD is not set")
 
-    # DM pipeline requires nandemo credentials
-    if settings.dm.enabled:
-        if not settings.nandemo_x_username:
-            errors.append("NANDEMO_X_USERNAME is not set (required for DM)")
-        if not settings.nandemo_x_password:
-            errors.append("NANDEMO_X_PASSWORD is not set (required for DM)")
+        needs_nandemo = settings.dm.enabled or settings.nurture.enabled or settings.posting.enabled
+        if needs_nandemo:
+            if not settings.nandemo_x_username:
+                errors.append("NANDEMO_X_USERNAME is not set (required for DM/nurture/posting)")
+            if not settings.nandemo_x_password:
+                errors.append("NANDEMO_X_PASSWORD is not set (required for DM/nurture/posting)")
 
     return errors
 
@@ -346,8 +424,11 @@ async def _async_run(args: argparse.Namespace) -> int:
             searched=result.search_count,
             collected=result.collect.stored if result.collect else 0,
             analyzed=result.analyze.total_processed if result.analyze else 0,
+            follows=result.nurture.follows_sent if result.nurture else 0,
+            likes=result.nurture.likes_sent if result.nurture else 0,
             replied=result.reply.replies_sent if result.reply else 0,
             dms_sent=result.dm.dms_sent if result.dm else 0,
+            posted=result.posting.posts_published if result.posting else 0,
         )
         return 0
 

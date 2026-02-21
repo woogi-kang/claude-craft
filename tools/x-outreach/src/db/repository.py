@@ -243,6 +243,64 @@ class Repository:
         self._run(_mark())
 
     # ------------------------------------------------------------------
+    # Nurture (follow/like deduplication)
+    # ------------------------------------------------------------------
+
+    def is_user_followed(self, username: str) -> bool:
+        """Check if we have already followed this user."""
+
+        async def _check() -> bool:
+            async with self._repo.pool.acquire() as conn:
+                row = await conn.fetchval(
+                    "SELECT EXISTS("
+                    "  SELECT 1 FROM outreach "
+                    "  WHERE user_id = $1 AND outreach_type = 'follow' "
+                    "  AND status = 'sent' AND platform = 'x'"
+                    ")",
+                    username,
+                )
+                return bool(row)
+
+        return self._run(_check())
+
+    def is_tweet_liked(self, tweet_id: str) -> bool:
+        """Check if we have already liked this tweet."""
+
+        async def _check() -> bool:
+            async with self._repo.pool.acquire() as conn:
+                row = await conn.fetchval(
+                    "SELECT EXISTS("
+                    "  SELECT 1 FROM outreach "
+                    "  WHERE post_id = $1 AND outreach_type = 'like' "
+                    "  AND status = 'sent' AND platform = 'x'"
+                    ")",
+                    tweet_id,
+                )
+                return bool(row)
+
+        return self._run(_check())
+
+    def record_nurture_action(
+        self,
+        action_type: str,
+        tweet_id: str,
+        username: str,
+    ) -> int:
+        """Record a nurture action (follow/like) in the outreach table."""
+        result = self._run(
+            self._repo.insert_outreach(
+                post_id=tweet_id,
+                user_id=username,
+                account_id="nandemo",
+                platform="x",
+                outreach_type=action_type,
+                message="",
+                status="sent",
+            )
+        )
+        return result
+
+    # ------------------------------------------------------------------
     # Actions (mapped to outreach table)
     # ------------------------------------------------------------------
 

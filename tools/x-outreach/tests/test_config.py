@@ -82,8 +82,8 @@ class TestSubConfigs:
 
     def test_llm_defaults(self) -> None:
         cfg = LLMConfig()
-        assert cfg.provider == "gemini"
-        assert cfg.model == "gemini-2.0-flash"
+        assert cfg.provider == "codex"
+        assert cfg.model == "gpt-5.1-codex-mini"
 
 
 class TestSettings:

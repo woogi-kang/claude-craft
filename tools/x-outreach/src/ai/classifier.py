@@ -1,4 +1,4 @@
-"""Tweet classifier using Gemini API via shared LLM client.
+"""Tweet classifier via shared LLM client (Codex CLI default).
 
 Classifies tweets into 5 intent categories (hospital / price / procedure /
 complaint / review) with a keyword pre-filter and LLM decision.
@@ -48,12 +48,12 @@ class ClassificationResult:
 
 
 class TweetClassifier:
-    """Classify tweets using keyword pre-filter + Gemini LLM.
+    """Classify tweets using keyword pre-filter + LLM.
 
     Parameters
     ----------
     api_key:
-        Gemini API key.
+        API key (unused for Codex provider).
     model:
         LLM model identifier.
     confidence_threshold:
@@ -61,17 +61,17 @@ class TweetClassifier:
     domain_context:
         Treatment knowledge context string to embed in the system prompt.
     provider:
-        LLM provider name (default: ``"gemini"``).
+        LLM provider name (default: ``"codex"``).
     """
 
     def __init__(
         self,
         *,
-        api_key: str,
-        model: str = "gemini-2.0-flash",
+        api_key: str = "",
+        model: str = "gpt-5.1-codex-mini",
         confidence_threshold: float = 0.7,
         domain_context: str = "",
-        provider: str = "gemini",
+        provider: str = "codex",
     ) -> None:
         self._llm: LLMClient = create_llm_client(provider, api_key, model=model)
         self._confidence_threshold = confidence_threshold

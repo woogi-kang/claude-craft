@@ -110,6 +110,9 @@ class WarmupManager:
 
         * ``reply.daily_limit`` -- halved
         * ``dm.daily_limit`` -- halved
+        * ``nurture.follow_daily_limit`` -- halved
+        * ``nurture.like_daily_limit`` -- halved
+        * ``posting.daily_limit`` -- halved
         * ``search.keywords`` -- only the first half of keywords
 
         Parameters
@@ -120,7 +123,7 @@ class WarmupManager:
         Returns
         -------
         Settings
-            A shallow copy with adjusted limits.  If warmup is not
+            A deep copy with adjusted limits.  If warmup is not
             active, the original settings are returned unchanged.
         """
         if not self.is_warmup_active():
@@ -132,6 +135,9 @@ class WarmupManager:
         # Halve daily limits
         adjusted.reply.daily_limit = max(1, settings.reply.daily_limit // 2)
         adjusted.dm.daily_limit = max(1, settings.dm.daily_limit // 2)
+        adjusted.nurture.follow_daily_limit = max(1, settings.nurture.follow_daily_limit // 2)
+        adjusted.nurture.like_daily_limit = max(1, settings.nurture.like_daily_limit // 2)
+        adjusted.posting.daily_limit = max(1, settings.posting.daily_limit // 2)
 
         # Use only the first half of keywords
         keywords = settings.search.keywords
@@ -144,6 +150,9 @@ class WarmupManager:
             day=warmup_day,
             reply_limit=adjusted.reply.daily_limit,
             dm_limit=adjusted.dm.daily_limit,
+            follow_limit=adjusted.nurture.follow_daily_limit,
+            like_limit=adjusted.nurture.like_daily_limit,
+            posting_limit=adjusted.posting.daily_limit,
             keyword_count=len(adjusted.search.keywords),
         )
 

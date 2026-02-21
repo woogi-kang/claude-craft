@@ -7,8 +7,7 @@ startup and closed on shutdown.
 
 from __future__ import annotations
 
-from datetime import timezone
-from zoneinfo import ZoneInfo
+from datetime import timedelta, timezone
 
 from outreach_shared.daemon.loop import DaemonLoop
 from outreach_shared.utils.logger import get_logger
@@ -20,8 +19,8 @@ from src.pipeline.halt import HaltManager, get_volume_multiplier
 
 logger = get_logger("daemon")
 
-# Japan Standard Time for active-hours checking
-_JST = ZoneInfo("Asia/Tokyo")
+# Japan Standard Time (UTC+9)
+_JST = timezone(timedelta(hours=9))
 
 
 def create_daemon(
@@ -68,7 +67,7 @@ def create_daemon(
         min_interval_hours=cfg.min_interval_hours,
         max_interval_hours=cfg.max_interval_hours,
         active_hours=(cfg.active_start_hour, cfg.active_end_hour),
-        tz=timezone(offset=_JST.utcoffset(None)),  # type: ignore[arg-type]
+        tz=_JST,
     )
 
 
@@ -111,7 +110,7 @@ async def run_daemon(settings: Settings | None = None) -> None:
             viewport_width=settings.browser.viewport_width,
             viewport_height=settings.browser.viewport_height,
         )
-        context = await session_mgr.get_session("burner")
+        context = await session_mgr.get_session("nandemo")
         logger.info("persistent_browser_started")
 
         async def _cycle() -> None:
@@ -122,7 +121,11 @@ async def run_daemon(settings: Settings | None = None) -> None:
                     searched=result.search_count,
                     collected=result.collect.stored if result.collect else 0,
                     analyzed=(result.analyze.total_processed if result.analyze else 0),
+                    follows=result.nurture.follows_sent if result.nurture else 0,
+                    likes=result.nurture.likes_sent if result.nurture else 0,
                     replied=result.reply.replies_sent if result.reply else 0,
+                    dms_sent=result.dm.dms_sent if result.dm else 0,
+                    posted=result.posting.posts_published if result.posting else 0,
                 )
             else:
                 logger.error("pipeline_run_failed", error=result.error)

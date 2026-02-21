@@ -114,11 +114,31 @@ class AccountPoolConfig(BaseModel):
     cooldown_minutes_outreach: int = 60
 
 
+class NurtureConfig(BaseModel):
+    """Nurture (follow/like) pipeline configuration."""
+
+    enabled: bool = False
+    follow_daily_limit: int = 10
+    like_daily_limit: int = 15
+    follow_probability: float = 0.4
+    like_probability: float = 0.6
+
+
+class PostingConfig(BaseModel):
+    """Original tweet posting configuration."""
+
+    enabled: bool = False
+    daily_limit: int = 2
+    min_interval_hours: float = 4.0
+    active_start_hour: int = 10  # JST, narrower than pipeline
+    active_end_hour: int = 21  # JST
+
+
 class LLMConfig(BaseModel):
     """LLM provider configuration."""
 
-    provider: str = "gemini"
-    model: str = "gemini-2.0-flash"
+    provider: str = "codex"
+    model: str = "gpt-5.1-codex-mini"
 
 
 # ---------------------------------------------------------------------------
@@ -161,8 +181,13 @@ class Settings(BaseSettings):
     burner_x_password: str = ""
     nandemo_x_username: str = ""
     nandemo_x_password: str = ""
-    gemini_api_key: str = ""
+    gemini_api_key: str = ""  # Kept for .env backward compat (GEMINI_API_KEY)
     database_url: str = ""
+
+    @property
+    def llm_api_key(self) -> str:
+        """Alias for ``gemini_api_key``, used by non-Codex providers."""
+        return self.gemini_api_key
 
     # --- Non-secret configuration sections ---
     search: SearchConfig = Field(default_factory=SearchConfig)
@@ -177,6 +202,8 @@ class Settings(BaseSettings):
     database: DatabaseConfig = Field(default_factory=DatabaseConfig)
     account_pool: AccountPoolConfig = Field(default_factory=AccountPoolConfig)
     llm: LLMConfig = Field(default_factory=LLMConfig)
+    nurture: NurtureConfig = Field(default_factory=NurtureConfig)
+    posting: PostingConfig = Field(default_factory=PostingConfig)
 
 
 def load_settings(config_path: Path | None = None) -> Settings:
