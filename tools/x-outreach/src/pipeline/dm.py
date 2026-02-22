@@ -135,7 +135,10 @@ class DmPipeline:
         """
         result = DmResult()
 
-        if not is_active_hours(start_hour=8, end_hour=22):
+        if not is_active_hours(
+            start_hour=settings.daemon.active_start_hour,
+            end_hour=settings.daemon.active_end_hour,
+        ):
             logger.info("dm_quiet_hours")
             return result
 
@@ -153,7 +156,10 @@ class DmPipeline:
             intent_type = tweet.get("intent_type", "review")
 
             # Re-check quiet hours
-            if not is_active_hours(start_hour=8, end_hour=22):
+            if not is_active_hours(
+                start_hour=settings.daemon.active_start_hour,
+                end_hour=settings.daemon.active_end_hour,
+            ):
                 result.skipped_quiet_hours += 1
                 break
 

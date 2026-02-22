@@ -248,14 +248,22 @@ class PipelineRunner:
                     errors=nurture_result.errors,
                 )
 
-            # --- Reply (if enabled) ---
-            reply_ctx = context  # reuse same browser
-            if self._settings.reply.enabled and reply_ctx is not None:
+            # Shared ContentGenerator for reply, DM, and posting stages
+            content_gen: ContentGenerator | None = None
+            needs_content_gen = (
+                self._settings.reply.enabled
+                or self._settings.dm.enabled
+                or self._settings.posting.enabled
+            )
+            if needs_content_gen and context is not None:
                 content_gen = ContentGenerator(
                     api_key=self._settings.llm_api_key,
                     model=self._settings.llm.model,
                     provider=self._settings.llm.provider,
                 )
+
+            # --- Reply (if enabled) ---
+            if self._settings.reply.enabled and context is not None and content_gen is not None:
                 reply_pipeline = ReplyPipeline(
                     content_gen=content_gen,
                     knowledge_base=self._kb,
@@ -265,7 +273,7 @@ class PipelineRunner:
                 )
                 reply_result = await reply_pipeline.run(
                     repository=self._repo,
-                    context=reply_ctx,
+                    context=context,
                     tracker=self._tracker,
                     settings=self._settings,
                 )
@@ -277,14 +285,7 @@ class PipelineRunner:
                 )
 
             # --- DM (if enabled) ---
-            dm_ctx = context  # reuse same browser
-            if self._settings.dm.enabled and dm_ctx is not None:
-                if not self._settings.reply.enabled:
-                    content_gen = ContentGenerator(
-                        api_key=self._settings.llm_api_key,
-                        model=self._settings.llm.model,
-                        provider=self._settings.llm.provider,
-                    )
+            if self._settings.dm.enabled and context is not None and content_gen is not None:
                 dm_pipeline = DmPipeline(
                     content_gen=content_gen,
                     knowledge_base=self._kb,
@@ -294,7 +295,7 @@ class PipelineRunner:
                 )
                 dm_result = await dm_pipeline.run(
                     repository=self._repo,
-                    context=dm_ctx,
+                    context=context,
                     tracker=self._tracker,
                     settings=self._settings,
                 )
@@ -307,14 +308,9 @@ class PipelineRunner:
                 )
 
             # --- Posting: casual tweet (if enabled, probability-gated) ---
-            if self._settings.posting.enabled and context is not None:
+            if self._settings.posting.enabled and context is not None and content_gen is not None:
                 prob = posting_probability(self._settings)
                 if random.random() < prob:
-                    content_gen = ContentGenerator(
-                        api_key=self._settings.llm_api_key,
-                        model=self._settings.llm.model,
-                        provider=self._settings.llm.provider,
-                    )
                     posting_pipeline = PostingPipeline(
                         content_gen=content_gen,
                         knowledge_base=self._kb,
@@ -394,6 +390,16 @@ async def _async_run(args: argparse.Namespace) -> int:
     )
     dry_run = getattr(args, "dry_run", False)
     logger.info("pipeline_starting", mode="dry_run" if dry_run else "live")
+
+    # Check emergency halt state
+    from src.pipeline.halt import HaltManager
+
+    halt_mgr = HaltManager()
+    if halt_mgr.is_halted():
+        halt_info = halt_mgr.get_halt_info()
+        reason = halt_info.get("reason", "unknown") if halt_info else "unknown"
+        logger.error("pipeline_halted", reason=reason)
+        return 1
 
     # Startup verification
     if not dry_run:

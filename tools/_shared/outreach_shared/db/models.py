@@ -28,6 +28,12 @@ CREATE TABLE IF NOT EXISTS posts (
     author_followers INTEGER DEFAULT 0,
     search_keyword  TEXT,
     status          TEXT NOT NULL DEFAULT 'collected',
+    reply_content   TEXT,
+    reply_timestamp TIMESTAMPTZ,
+    dm_content      TEXT,
+    dm_timestamp    TIMESTAMPTZ,
+    dm_template_used TEXT,
+    dm_skip_reason  TEXT,
     crawled_at      TIMESTAMPTZ DEFAULT NOW(),
     post_created_at TIMESTAMPTZ,
     created_at      TIMESTAMPTZ DEFAULT NOW()
@@ -88,4 +94,14 @@ CREATE INDEX IF NOT EXISTS idx_accounts_status ON accounts(status);
 CREATE INDEX IF NOT EXISTS idx_accounts_maturity ON accounts(maturity);
 """
 
-ALL_DDL = [ACCOUNTS_DDL, POSTS_DDL, OUTREACH_DDL, INDEXES_DDL]
+MIGRATION_001_DDL = """\
+-- Migration 001: add reply/DM tracking columns to posts (idempotent)
+ALTER TABLE posts ADD COLUMN IF NOT EXISTS reply_content TEXT;
+ALTER TABLE posts ADD COLUMN IF NOT EXISTS reply_timestamp TIMESTAMPTZ;
+ALTER TABLE posts ADD COLUMN IF NOT EXISTS dm_content TEXT;
+ALTER TABLE posts ADD COLUMN IF NOT EXISTS dm_timestamp TIMESTAMPTZ;
+ALTER TABLE posts ADD COLUMN IF NOT EXISTS dm_template_used TEXT;
+ALTER TABLE posts ADD COLUMN IF NOT EXISTS dm_skip_reason TEXT;
+"""
+
+ALL_DDL = [ACCOUNTS_DDL, POSTS_DDL, OUTREACH_DDL, INDEXES_DDL, MIGRATION_001_DDL]

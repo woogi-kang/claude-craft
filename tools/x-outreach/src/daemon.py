@@ -113,6 +113,8 @@ async def run_daemon(settings: Settings | None = None) -> None:
         context = await session_mgr.get_session("nandemo")
         logger.info("persistent_browser_started")
 
+        halt_mgr = HaltManager()
+
         async def _cycle() -> None:
             result = await runner.run_once(context=context)
             if result.success:
@@ -130,7 +132,8 @@ async def run_daemon(settings: Settings | None = None) -> None:
             else:
                 logger.error("pipeline_run_failed", error=result.error)
 
-        halt_mgr = HaltManager()
+            # Persist emergency halt so the daemon stops on the next cycle
+            _check_emergency_halt(result, halt_mgr)
         daemon = create_daemon(settings, _cycle, halt_mgr)
 
         logger.info("daemon_starting")
@@ -139,3 +142,30 @@ async def run_daemon(settings: Settings | None = None) -> None:
         finally:
             await session_mgr.close_all()
             logger.info("persistent_browser_closed")
+
+
+def _check_emergency_halt(
+    result: object,
+    halt_mgr: HaltManager,
+) -> None:
+    """Inspect pipeline result for emergency halt flags and persist halt state.
+
+    Checks reply, DM, nurture, and posting result objects for
+    ``emergency_halt=True`` and triggers HaltManager so the daemon
+    skips subsequent cycles until manually resumed.
+    """
+    halt_sources: list[tuple[str, str]] = []
+
+    if getattr(result, "reply", None) and getattr(result.reply, "emergency_halt", False):
+        halt_sources.append(("Reply rate limit detected", "reply_pipeline"))
+    if getattr(result, "dm", None) and getattr(result.dm, "emergency_halt", False):
+        halt_sources.append(("DM rate limit detected", "dm_pipeline"))
+    if getattr(result, "nurture", None) and getattr(result.nurture, "emergency_halt", False):
+        halt_sources.append(("Nurture rate limit detected", "nurture_pipeline"))
+    if getattr(result, "posting", None) and getattr(result.posting, "emergency_halt", False):
+        halt_sources.append(("Posting rate limit detected", "posting_pipeline"))
+
+    if halt_sources:
+        reason = "; ".join(r for r, _ in halt_sources)
+        source = ", ".join(s for _, s in halt_sources)
+        halt_mgr.trigger_halt(reason, source=source)

@@ -123,7 +123,9 @@ class ReplyPipeline:
         """
         result = ReplyResult()
 
-        if not is_active_hours(start_hour=8, end_hour=22):
+        if not is_active_hours(
+            start_hour=settings.daemon.active_start_hour, end_hour=settings.daemon.active_end_hour
+        ):
             logger.info("reply_quiet_hours")
             return result
 
@@ -149,7 +151,10 @@ class ReplyPipeline:
             tweet_url = tweet.get("post_url", "")
 
             # Re-check quiet hours (loop may span midnight)
-            if not is_active_hours(start_hour=8, end_hour=22):
+            if not is_active_hours(
+                start_hour=settings.daemon.active_start_hour,
+                end_hour=settings.daemon.active_end_hour,
+            ):
                 result.skipped_quiet_hours += 1
                 break
 

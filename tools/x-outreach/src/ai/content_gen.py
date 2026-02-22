@@ -132,10 +132,14 @@ class ContentGenerator:
                 max_tokens=200,
             )
             reply_text = response.text.strip()
+            reply_text = _sanitize_llm_output(reply_text)
 
             # Enforce 280 character limit
             if len(reply_text) > 280:
                 reply_text = reply_text[:277] + "..."
+
+            # Strip any URLs that may have been generated
+            reply_text = _strip_urls(reply_text)
 
             logger.info(
                 "reply_generated",
@@ -209,6 +213,7 @@ class ContentGenerator:
                 max_tokens=400,
             )
             dm_text = response.text.strip()
+            dm_text = _sanitize_llm_output(dm_text)
 
             # Enforce 500 character limit
             if len(dm_text) > 500:
@@ -257,6 +262,7 @@ class ContentGenerator:
                 max_tokens=100,
             )
             post_text = response.text.strip()
+            post_text = _sanitize_llm_output(post_text)
 
             # Enforce 280 character hard limit
             if len(post_text) > 280:
@@ -271,7 +277,6 @@ class ContentGenerator:
         except Exception as exc:
             logger.error("casual_post_generation_error", error=str(exc)[:200])
             raise ContentGenerationError(f"Failed to generate casual post: {exc}") from exc
-
 
     async def generate_knowledge_post(self, treatment_context: str) -> str:
         """Generate a Korean dermatology knowledge tweet.
@@ -296,8 +301,7 @@ class ContentGenerator:
             When LLM API call fails.
         """
         user_prompt = (
-            "Generate one informative tweet.\n\n"
-            f"Available treatment data:\n{treatment_context}"
+            f"Generate one informative tweet.\n\nAvailable treatment data:\n{treatment_context}"
         )
 
         try:
@@ -308,6 +312,7 @@ class ContentGenerator:
                 max_tokens=150,
             )
             post_text = response.text.strip()
+            post_text = _sanitize_llm_output(post_text)
 
             if len(post_text) > 280:
                 post_text = post_text[:277] + "..."
@@ -332,6 +337,32 @@ def _strip_urls(text: str) -> str:
     DMs must not contain links.
     """
     return re.sub(r"https?://\S+", "", text).strip()
+
+
+def _sanitize_llm_output(text: str) -> str:
+    """Remove dangerous patterns from LLM-generated text before posting.
+
+    Strips email addresses, @mentions, and phone number patterns that
+    the LLM might hallucinate despite system prompt instructions.
+
+    Order matters: email regex runs first so that the ``@`` anchor is
+    intact; then @mentions are stripped.
+    """
+    # Strip zero-width characters that could bypass filters
+    text = re.sub(r"[\u200b\u200c\u200d\u2060\ufeff]", "", text)
+    # Strip email addresses (MUST run before @mention removal)
+    text = re.sub(r"\b[\w.+-]+@[\w-]+\.[\w.-]+\b", "", text)
+    # Strip @mentions (e.g. @username)
+    text = re.sub(r"@\w+", "", text)
+    # Strip phone number patterns (international, local, and Korean fixed-line)
+    text = re.sub(
+        r"(?:\+?\d{1,3}[-.\s]?)?\(?\d{1,4}\)?[-.\s]?\d{3,4}[-.\s]?\d{3,4}",
+        "",
+        text,
+    )
+    # Collapse multiple spaces left by removals
+    text = re.sub(r"  +", " ", text).strip()
+    return text
 
 
 def dm_uniqueness_check(new_dm: str, previous_dm: str) -> bool:

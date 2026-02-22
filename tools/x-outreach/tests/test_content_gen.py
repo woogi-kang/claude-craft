@@ -9,6 +9,7 @@ import pytest
 from src.ai.content_gen import (
     ContentGenerationError,
     ContentGenerator,
+    _sanitize_llm_output,
     _strip_urls,
     dm_uniqueness_check,
 )
@@ -30,6 +31,45 @@ class TestStripUrls:
     def test_multiple_urls(self) -> None:
         text = "visit https://a.com and http://b.com please"
         assert _strip_urls(text) == "visit  and  please"
+
+
+class TestSanitizeLlmOutput:
+    """Test LLM output sanitization (email, @mention, phone)."""
+
+    def test_strips_mention(self) -> None:
+        assert _sanitize_llm_output("hi @username there") == "hi there"
+
+    def test_strips_email(self) -> None:
+        assert _sanitize_llm_output("mail foo@bar.com here") == "mail here"
+
+    def test_email_before_mention_order(self) -> None:
+        """Email regex must run before @mention to preserve the @ anchor."""
+        text = "contact user@example.com please"
+        result = _sanitize_llm_output(text)
+        assert "user" not in result or "example" not in result
+        assert "@" not in result
+
+    def test_strips_phone_international(self) -> None:
+        result = _sanitize_llm_output("call +82-2-1234-5678 now")
+        assert "1234" not in result
+
+    def test_strips_phone_local(self) -> None:
+        result = _sanitize_llm_output("call 03-1234-5678 now")
+        assert "1234" not in result
+
+    def test_strips_zero_width_chars(self) -> None:
+        text = "hi @\u200busername there"
+        result = _sanitize_llm_output(text)
+        assert "@" not in result
+
+    def test_preserves_normal_text(self) -> None:
+        text = "韓国の皮膚科について知りたいですか？"
+        assert _sanitize_llm_output(text) == text
+
+    def test_collapses_extra_spaces(self) -> None:
+        text = "hi @user and @other there"
+        result = _sanitize_llm_output(text)
+        assert "  " not in result
 
 
 class TestDmUniquenessCheck:

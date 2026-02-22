@@ -156,6 +156,12 @@ class PostgresRepository:
             "retweets_count",
             "search_keyword",
             "post_created_at",
+            "reply_content",
+            "reply_timestamp",
+            "dm_content",
+            "dm_timestamp",
+            "dm_template_used",
+            "dm_skip_reason",
         }
     )
     _ACCOUNTS_ALLOWED_COLUMNS = frozenset(

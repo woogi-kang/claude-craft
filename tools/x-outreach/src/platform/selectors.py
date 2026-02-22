@@ -85,6 +85,7 @@ COMPOSE_SUBMIT_BUTTON = '[data-testid="tweetButton"]'
 # ---------------------------------------------------------------------------
 
 RESTRICTION_INDICATORS = [
+    # English
     "rate limit",
     "temporarily restricted",
     "suspicious activity",
@@ -96,6 +97,13 @@ RESTRICTION_INDICATORS = [
     "verify your identity",
     "unusual login activity",
     "caution: this account is temporarily limited",
+    # Japanese (X may display in user's locale)
+    "レート制限",
+    "一時的に制限",
+    "不審なアクティビティ",
+    "しばらくしてからもう一度",
+    "アカウントがロック",
+    "本人確認",
 ]
 
 
