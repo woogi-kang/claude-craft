@@ -14,7 +14,6 @@ from src.pipeline.nurture import (
     NurtureResult,
 )
 
-
 # =========================================================================
 # NurtureResult
 # =========================================================================
@@ -139,6 +138,7 @@ class TestNurturePipeline:
     @patch("src.pipeline.nurture.is_active_hours", return_value=True)
     @patch("src.pipeline.nurture._follow_user_via_playwright", new_callable=AsyncMock)
     @patch("src.pipeline.nurture._like_tweet_via_playwright", new_callable=AsyncMock)
+    @patch("src.pipeline.nurture.human_scroll", new_callable=AsyncMock)
     @patch("src.pipeline.nurture.random_pause", new_callable=AsyncMock)
     @patch("src.pipeline.nurture.random.random", return_value=0.1)
     @patch("src.pipeline.nurture.random.shuffle")
@@ -147,6 +147,7 @@ class TestNurturePipeline:
         mock_shuffle: MagicMock,
         _mock_rand: MagicMock,
         _mock_pause: AsyncMock,
+        _mock_scroll: AsyncMock,
         mock_like: AsyncMock,
         mock_follow: AsyncMock,
         _mock_hours: MagicMock,
@@ -172,6 +173,7 @@ class TestNurturePipeline:
 
     @pytest.mark.asyncio
     @patch("src.pipeline.nurture.is_active_hours", return_value=True)
+    @patch("src.pipeline.nurture.human_scroll", new_callable=AsyncMock)
     @patch("src.pipeline.nurture.random_pause", new_callable=AsyncMock)
     @patch("src.pipeline.nurture.random.random", return_value=0.1)
     @patch("src.pipeline.nurture.random.shuffle")
@@ -180,6 +182,7 @@ class TestNurturePipeline:
         mock_shuffle: MagicMock,
         _mock_rand: MagicMock,
         _mock_pause: AsyncMock,
+        _mock_scroll: AsyncMock,
         _mock_hours: MagicMock,
     ) -> None:
         tweets = [_analyzed_tweet()]
@@ -194,6 +197,7 @@ class TestNurturePipeline:
 
     @pytest.mark.asyncio
     @patch("src.pipeline.nurture.is_active_hours", return_value=True)
+    @patch("src.pipeline.nurture.human_scroll", new_callable=AsyncMock)
     @patch("src.pipeline.nurture.random_pause", new_callable=AsyncMock)
     @patch("src.pipeline.nurture.random.random", return_value=0.1)
     @patch("src.pipeline.nurture.random.shuffle")
@@ -202,6 +206,7 @@ class TestNurturePipeline:
         mock_shuffle: MagicMock,
         _mock_rand: MagicMock,
         _mock_pause: AsyncMock,
+        _mock_scroll: AsyncMock,
         _mock_hours: MagicMock,
     ) -> None:
         tweets = [_analyzed_tweet()]
@@ -217,6 +222,7 @@ class TestNurturePipeline:
     @pytest.mark.asyncio
     @patch("src.pipeline.nurture.is_active_hours", return_value=True)
     @patch("src.pipeline.nurture._follow_user_via_playwright", new_callable=AsyncMock)
+    @patch("src.pipeline.nurture.human_scroll", new_callable=AsyncMock)
     @patch("src.pipeline.nurture.random_pause", new_callable=AsyncMock)
     @patch("src.pipeline.nurture.random.random", return_value=0.1)
     @patch("src.pipeline.nurture.random.shuffle")
@@ -225,6 +231,7 @@ class TestNurturePipeline:
         mock_shuffle: MagicMock,
         _mock_rand: MagicMock,
         _mock_pause: AsyncMock,
+        _mock_scroll: AsyncMock,
         mock_follow: AsyncMock,
         _mock_hours: MagicMock,
     ) -> None:
@@ -244,6 +251,7 @@ class TestNurturePipeline:
 
     @pytest.mark.asyncio
     @patch("src.pipeline.nurture.is_active_hours", return_value=True)
+    @patch("src.pipeline.nurture.human_scroll", new_callable=AsyncMock)
     @patch("src.pipeline.nurture.random_pause", new_callable=AsyncMock)
     @patch("src.pipeline.nurture.random.random", return_value=0.1)
     @patch("src.pipeline.nurture.random.shuffle")
@@ -252,6 +260,7 @@ class TestNurturePipeline:
         mock_shuffle: MagicMock,
         _mock_rand: MagicMock,
         _mock_pause: AsyncMock,
+        _mock_scroll: AsyncMock,
         _mock_hours: MagicMock,
     ) -> None:
         from outreach_shared.utils.rate_limiter import SlidingWindowLimiter
@@ -273,6 +282,7 @@ class TestNurturePipeline:
 
     @pytest.mark.asyncio
     @patch("src.pipeline.nurture.is_active_hours", return_value=True)
+    @patch("src.pipeline.nurture.human_scroll", new_callable=AsyncMock)
     @patch("src.pipeline.nurture.random_pause", new_callable=AsyncMock)
     @patch("src.pipeline.nurture.random.random", return_value=0.1)
     @patch("src.pipeline.nurture.random.shuffle")
@@ -281,6 +291,7 @@ class TestNurturePipeline:
         mock_shuffle: MagicMock,
         _mock_rand: MagicMock,
         _mock_pause: AsyncMock,
+        _mock_scroll: AsyncMock,
         _mock_hours: MagicMock,
     ) -> None:
         from outreach_shared.utils.rate_limiter import SlidingWindowLimiter

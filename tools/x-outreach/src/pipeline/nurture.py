@@ -14,7 +14,7 @@ import random
 from dataclasses import dataclass, field
 from enum import Enum
 
-from outreach_shared.browser.human_sim import random_mouse_move, random_pause
+from outreach_shared.browser.human_sim import human_scroll, random_mouse_move, random_pause
 from outreach_shared.utils.logger import get_logger
 from outreach_shared.utils.rate_limiter import SlidingWindowLimiter
 from outreach_shared.utils.time_utils import is_active_hours
@@ -178,6 +178,11 @@ class NurturePipeline:
             random.shuffle(actions)
 
             for action in actions:
+                # Idle browsing before each action for natural behavior
+                page = context.pages[0] if context.pages else await context.new_page()
+                await human_scroll(page, direction="down")
+                await random_pause(2.0, 5.0)
+
                 if action == "follow":
                     await self._do_follow(
                         result,

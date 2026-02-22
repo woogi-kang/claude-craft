@@ -76,6 +76,9 @@ class DmPipeline:
         Sliding window limiter for daily DM cap.
     min_interval_minutes:
         Minimum interval between DMs in minutes.
+    max_interval_minutes:
+        Maximum interval between DMs in minutes. Actual interval is
+        randomized uniformly between min and max each time.
     dm_delay_min_minutes:
         Minimum delay after reply before sending DM.
     dm_delay_max_minutes:
@@ -88,7 +91,8 @@ class DmPipeline:
         knowledge_base: TreatmentKnowledgeBase,
         template_selector: TemplateSelector | None = None,
         daily_limiter: SlidingWindowLimiter | None = None,
-        min_interval_minutes: int = 25,
+        min_interval_minutes: int = 20,
+        max_interval_minutes: int = 40,
         dm_delay_min_minutes: int = 10,
         dm_delay_max_minutes: int = 30,
     ) -> None:
@@ -96,9 +100,10 @@ class DmPipeline:
         self._kb = knowledge_base
         self._template_selector = template_selector or TemplateSelector()
         self._daily_limiter = daily_limiter or SlidingWindowLimiter(
-            max_actions=20, window_seconds=86_400.0
+            max_actions=15, window_seconds=86_400.0
         )
         self._min_interval_minutes = min_interval_minutes
+        self._max_interval_minutes = max_interval_minutes
         self._dm_delay_min = dm_delay_min_minutes
         self._dm_delay_max = dm_delay_max_minutes
         self._last_dm_time: datetime | None = None
@@ -164,12 +169,15 @@ class DmPipeline:
                 result.skipped_too_soon += 1
                 continue
 
-            # Min interval between DMs
+            # Randomized interval between DMs (20-40 min default)
             if self._last_dm_time is not None:
                 elapsed = (datetime.now(tz=UTC) - self._last_dm_time).total_seconds()
-                min_interval_secs = self._min_interval_minutes * 60
-                if elapsed < min_interval_secs:
-                    wait_time = min_interval_secs - elapsed
+                interval_minutes = random.uniform(
+                    self._min_interval_minutes, self._max_interval_minutes
+                )
+                interval_secs = interval_minutes * 60
+                if elapsed < interval_secs:
+                    wait_time = interval_secs - elapsed
                     logger.info("dm_interval_wait", wait_seconds=int(wait_time))
                     await asyncio.sleep(wait_time)
 
@@ -209,9 +217,9 @@ class DmPipeline:
                 )
                 continue
 
-            # Send DM via Playwright
+            # Send DM via Playwright (retry once on transient failure)
             try:
-                dm_sent = await _send_dm_via_playwright(context, username, dm_text)
+                dm_sent = await _send_dm_with_retry(context, username, dm_text)
             except DmClosedError:
                 result.skipped_dm_closed += 1
                 repository.update_tweet_status(
@@ -276,6 +284,35 @@ class DmPipeline:
 # ---------------------------------------------------------------------------
 # Playwright DM automation
 # ---------------------------------------------------------------------------
+
+
+async def _send_dm_with_retry(
+    context: BrowserContext,
+    username: str,
+    message: str,
+    max_attempts: int = 2,
+) -> bool:
+    """Send a DM with retry on transient failures.
+
+    DmClosedError and DmRateLimitError are raised immediately without retry.
+    Other exceptions are retried up to *max_attempts* times.
+    """
+    for attempt in range(max_attempts):
+        try:
+            return await _send_dm_via_playwright(context, username, message)
+        except (DmClosedError, DmRateLimitError):
+            raise
+        except Exception:
+            if attempt < max_attempts - 1:
+                logger.warning(
+                    "dm_send_retry",
+                    username=username,
+                    attempt=attempt + 1,
+                )
+                await asyncio.sleep(random.uniform(5.0, 15.0))
+            else:
+                raise
+    return False  # unreachable, satisfies type checker
 
 
 async def _send_dm_via_playwright(

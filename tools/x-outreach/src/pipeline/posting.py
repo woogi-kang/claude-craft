@@ -1,16 +1,13 @@
-"""Posting pipeline -- publish casual tweets via Playwright.
+"""Posting pipeline -- publish tweets via Playwright.
 
-Generates and publishes original casual tweets from the @ask.nandemo
-account to build a natural activity profile.  Runs independently from
-the main outreach pipeline, gated by a probability check per daemon
-cycle.
-
-Content is explicitly non-professional: daily life, food, weather,
-Tokyo observations -- never dermatology or beauty topics.
+Generates and publishes original tweets from the @ask.nandemo account.
+Alternates between casual daily life content and knowledge-based
+Korean dermatology tips to build a natural yet expert profile.
 """
 
 from __future__ import annotations
 
+import asyncio
 import random
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
@@ -24,6 +21,7 @@ from playwright.async_api import BrowserContext
 from src.ai.content_gen import ContentGenerationError, ContentGenerator
 from src.config import Settings
 from src.db.repository import Repository
+from src.knowledge.treatments import TreatmentKnowledgeBase
 from src.pipeline.track import ActionTracker
 from src.platform.selectors import (
     COMPOSE_SUBMIT_BUTTON,
@@ -49,12 +47,19 @@ class PostingResult:
 
 
 class PostingPipeline:
-    """Publish casual tweets to build natural account activity.
+    """Publish tweets to build a natural yet expert account profile.
+
+    Alternates between casual daily-life tweets and knowledge-based
+    Korean dermatology tips (roughly 50/50 when a knowledge base is
+    provided).
 
     Parameters
     ----------
     content_gen:
-        Content generator for creating casual tweet text.
+        Content generator for creating tweet text.
+    knowledge_base:
+        Treatment knowledge base for dermatology posts. When ``None``,
+        only casual posts are generated.
     daily_limiter:
         Sliding-window limiter for daily post cap.
     min_interval_hours:
@@ -65,10 +70,12 @@ class PostingPipeline:
         self,
         content_gen: ContentGenerator,
         *,
+        knowledge_base: TreatmentKnowledgeBase | None = None,
         daily_limiter: SlidingWindowLimiter | None = None,
         min_interval_hours: float = 4.0,
     ) -> None:
         self._content_gen = content_gen
+        self._kb = knowledge_base
         self._daily_limiter = daily_limiter or SlidingWindowLimiter(
             max_actions=2, window_seconds=86_400.0
         )
@@ -138,9 +145,14 @@ class PostingPipeline:
             except (ValueError, TypeError):
                 pass  # Invalid stored time, proceed
 
-        # Generate casual content
+        # Alternate between casual and knowledge posts (~50/50)
+        use_knowledge = self._kb is not None and random.random() < 0.5
         try:
-            tweet_text = await self._content_gen.generate_casual_post()
+            if use_knowledge:
+                treatment_ctx = self._kb.get_classification_context()
+                tweet_text = await self._content_gen.generate_knowledge_post(treatment_ctx)
+            else:
+                tweet_text = await self._content_gen.generate_casual_post()
         except ContentGenerationError as exc:
             result.errors += 1
             result.error_details.append(f"content_gen: {exc}")

@@ -6,6 +6,7 @@ from the DOM, and returns unfiltered results for the collect stage.
 
 from __future__ import annotations
 
+import random
 import urllib.parse
 from dataclasses import dataclass
 
@@ -86,6 +87,10 @@ class SearchPipeline:
         """
         all_tweets: list[RawTweet] = []
         page = context.pages[0] if context.pages else await context.new_page()
+
+        # Randomize keyword order each run for natural-looking search patterns
+        keywords = list(keywords)  # copy to avoid mutating caller's list
+        random.shuffle(keywords)
 
         for idx, keyword in enumerate(keywords):
             logger.info("search_keyword_start", keyword=keyword, index=idx + 1, total=len(keywords))

@@ -53,15 +53,18 @@ class ReplyConfig(BaseModel):
     """Reply pipeline configuration."""
 
     enabled: bool = False
-    daily_limit: int = 50
+    daily_limit: int = 20
+    min_interval_minutes: int = 15
+    max_interval_minutes: int = 20
 
 
 class DmConfig(BaseModel):
     """DM pipeline configuration."""
 
     enabled: bool = False
-    daily_limit: int = 20
-    min_interval_minutes: int = 25
+    daily_limit: int = 15
+    min_interval_minutes: int = 20
+    max_interval_minutes: int = 40
 
 
 class BrowserConfig(BaseModel):

@@ -38,13 +38,16 @@ class TestSubConfigs:
     def test_reply_defaults(self) -> None:
         cfg = ReplyConfig()
         assert cfg.enabled is False
-        assert cfg.daily_limit == 50
+        assert cfg.daily_limit == 20
+        assert cfg.min_interval_minutes == 15
+        assert cfg.max_interval_minutes == 20
 
     def test_dm_defaults(self) -> None:
         cfg = DmConfig()
         assert cfg.enabled is False
-        assert cfg.daily_limit == 20
-        assert cfg.min_interval_minutes == 25
+        assert cfg.daily_limit == 15
+        assert cfg.min_interval_minutes == 20
+        assert cfg.max_interval_minutes == 40
 
     def test_browser_defaults(self) -> None:
         cfg = BrowserConfig()

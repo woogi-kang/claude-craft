@@ -85,6 +85,14 @@ class PipelineRunner:
             max_actions=settings.nurture.like_daily_limit,
             window_seconds=86_400.0,
         )
+        self._reply_limiter = SlidingWindowLimiter(
+            max_actions=settings.reply.daily_limit,
+            window_seconds=86_400.0,
+        )
+        self._dm_limiter = SlidingWindowLimiter(
+            max_actions=settings.dm.daily_limit,
+            window_seconds=86_400.0,
+        )
         self._posting_limiter = SlidingWindowLimiter(
             max_actions=settings.posting.daily_limit,
             window_seconds=86_400.0,
@@ -251,6 +259,9 @@ class PipelineRunner:
                 reply_pipeline = ReplyPipeline(
                     content_gen=content_gen,
                     knowledge_base=self._kb,
+                    daily_limiter=self._reply_limiter,
+                    min_interval_minutes=self._settings.reply.min_interval_minutes,
+                    max_interval_minutes=self._settings.reply.max_interval_minutes,
                 )
                 reply_result = await reply_pipeline.run(
                     repository=self._repo,
@@ -277,7 +288,9 @@ class PipelineRunner:
                 dm_pipeline = DmPipeline(
                     content_gen=content_gen,
                     knowledge_base=self._kb,
+                    daily_limiter=self._dm_limiter,
                     min_interval_minutes=self._settings.dm.min_interval_minutes,
+                    max_interval_minutes=self._settings.dm.max_interval_minutes,
                 )
                 dm_result = await dm_pipeline.run(
                     repository=self._repo,
@@ -304,6 +317,7 @@ class PipelineRunner:
                     )
                     posting_pipeline = PostingPipeline(
                         content_gen=content_gen,
+                        knowledge_base=self._kb,
                         daily_limiter=self._posting_limiter,
                         min_interval_hours=self._settings.posting.min_interval_hours,
                     )

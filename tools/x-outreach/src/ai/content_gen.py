@@ -12,7 +12,12 @@ import re
 from outreach_shared.ai.llm_client import LLMClient, create_llm_client
 from outreach_shared.utils.logger import get_logger
 
-from src.ai.prompts import CASUAL_POST_SYSTEM_PROMPT, DM_SYSTEM_PROMPT, REPLY_SYSTEM_PROMPT
+from src.ai.prompts import (
+    CASUAL_POST_SYSTEM_PROMPT,
+    DM_SYSTEM_PROMPT,
+    KNOWLEDGE_POST_SYSTEM_PROMPT,
+    REPLY_SYSTEM_PROMPT,
+)
 
 logger = get_logger("content_gen")
 
@@ -266,6 +271,55 @@ class ContentGenerator:
         except Exception as exc:
             logger.error("casual_post_generation_error", error=str(exc)[:200])
             raise ContentGenerationError(f"Failed to generate casual post: {exc}") from exc
+
+
+    async def generate_knowledge_post(self, treatment_context: str) -> str:
+        """Generate a Korean dermatology knowledge tweet.
+
+        Uses treatment data to create an informative post that positions
+        @ask.nandemo as a knowledgeable resource.
+
+        Parameters
+        ----------
+        treatment_context:
+            Treatment data snippet (procedure names, price ranges, etc.)
+            to ground the post in real data.
+
+        Returns
+        -------
+        str
+            Generated tweet text (under 240 characters).
+
+        Raises
+        ------
+        ContentGenerationError
+            When LLM API call fails.
+        """
+        user_prompt = (
+            "Generate one informative tweet.\n\n"
+            f"Available treatment data:\n{treatment_context}"
+        )
+
+        try:
+            response = await self._llm.generate(
+                user_prompt,
+                system=KNOWLEDGE_POST_SYSTEM_PROMPT,
+                temperature=0.9,
+                max_tokens=150,
+            )
+            post_text = response.text.strip()
+
+            if len(post_text) > 280:
+                post_text = post_text[:277] + "..."
+
+            post_text = _strip_urls(post_text)
+
+            logger.info("knowledge_post_generated", length=len(post_text))
+            return post_text
+
+        except Exception as exc:
+            logger.error("knowledge_post_generation_error", error=str(exc)[:200])
+            raise ContentGenerationError(f"Failed to generate knowledge post: {exc}") from exc
 
 
 class ContentGenerationError(Exception):

@@ -74,16 +74,18 @@ class ReplyPipeline:
         knowledge_base: TreatmentKnowledgeBase,
         template_selector: TemplateSelector | None = None,
         daily_limiter: SlidingWindowLimiter | None = None,
-        min_interval_minutes: int = 20,
+        min_interval_minutes: int = 15,
+        max_interval_minutes: int = 20,
         max_thread_replies: int = 3,
     ) -> None:
         self._content_gen = content_gen
         self._kb = knowledge_base
         self._template_selector = template_selector or TemplateSelector()
         self._daily_limiter = daily_limiter or SlidingWindowLimiter(
-            max_actions=50, window_seconds=86_400.0
+            max_actions=20, window_seconds=86_400.0
         )
         self._min_interval_minutes = min_interval_minutes
+        self._max_interval_minutes = max_interval_minutes
         self._max_thread_replies = max_thread_replies
         self._last_reply_time: datetime | None = None
 
@@ -169,12 +171,15 @@ class ReplyPipeline:
                 )
                 continue
 
-            # Min interval between replies
+            # Randomized interval between replies (15-20 min default)
             if self._last_reply_time is not None:
                 elapsed = (datetime.now(tz=UTC) - self._last_reply_time).total_seconds()
-                min_secs = self._min_interval_minutes * 60
-                if elapsed < min_secs:
-                    wait_time = min_secs - elapsed
+                interval_minutes = random.uniform(
+                    self._min_interval_minutes, self._max_interval_minutes
+                )
+                interval_secs = interval_minutes * 60
+                if elapsed < interval_secs:
+                    wait_time = interval_secs - elapsed
                     logger.info("reply_interval_wait", wait_seconds=int(wait_time))
                     await asyncio.sleep(wait_time)
 
