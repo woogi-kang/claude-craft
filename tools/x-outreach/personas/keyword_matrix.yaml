@@ -1,0 +1,118 @@
+version: v1
+validated_on: "2026-02-23"
+source: "x.com live search sampling"
+
+profiles:
+  p01_price:
+    primary:
+      - keyword: "韓国 美容 コスパ"
+        recent_30d: 10
+      - keyword: "韓国 美容 料金"
+        recent_30d: 9
+      - keyword: "韓国 施術 価格"
+        recent_30d: 8
+      - keyword: "韓国 追加料金"
+        recent_30d: 5
+      - keyword: "韓国 皮膚科 値段"
+        recent_30d: 0
+      - keyword: "韓国 皮膚科 相場"
+        recent_30d: 0
+    secondary:
+      - keyword: "#韓国美容"
+        recent_30d: 10
+      - keyword: "韓国美容"
+        recent_30d: 7
+      - keyword: "韓国クリニック"
+        recent_30d: 11
+
+  p02_beginner:
+    primary:
+      - keyword: "韓国 皮膚科 初めて"
+        recent_30d: 10
+      - keyword: "韓国 皮膚科 おすすめ"
+        recent_30d: 7
+      - keyword: "初渡韓 美容"
+        recent_30d: 9
+      - keyword: "韓国美容皮膚科"
+        recent_30d: 6
+      - keyword: "美容皮膚科 韓国"
+        recent_30d: 6
+      - keyword: "韓国 皮膚科 どこ"
+        recent_30d: 2
+    secondary:
+      - keyword: "日本語対応 皮膚科 韓国"
+        recent_30d: 2
+      - keyword: "韓国皮膚科"
+        recent_30d: 10
+      - keyword: "韓国クリニック"
+        recent_30d: 11
+
+  p03_procedure:
+    primary:
+      - keyword: "ポテンツァ"
+        recent_30d: 17
+      - keyword: "レーザー治療"
+        recent_30d: 16
+      - keyword: "ピコレーザー"
+        recent_30d: 14
+      - keyword: "ピコトーニング"
+        recent_30d: 13
+      - keyword: "韓国 ヒアルロン酸"
+        recent_30d: 10
+      - keyword: "韓国 シミ取り"
+        recent_30d: 10
+      - keyword: "リジュラン 韓国"
+        recent_30d: 9
+      - keyword: "ダーマペン 韓国"
+        recent_30d: 8
+    secondary:
+      - keyword: "韓国 毛穴"
+        recent_30d: 7
+      - keyword: "韓国 ニキビ跡"
+        recent_30d: 9
+      - keyword: "#韓国肌管理"
+        recent_30d: 8
+
+  p04_risk:
+    primary:
+      - keyword: "韓国 追加料金"
+        recent_30d: 5
+      - keyword: "韓国 皮膚科 トラブル"
+        recent_30d: 4
+      - keyword: "韓国 皮膚科 失敗"
+        recent_30d: 0
+      - keyword: "韓国 施術 後悔"
+        recent_30d: 0
+      - keyword: "韓国 皮膚科 腫れ"
+        recent_30d: 0
+      - keyword: "韓国 皮膚科 痛い"
+        recent_30d: 0
+    secondary:
+      - keyword: "韓国 施術 ダウンタイム"
+        recent_30d: 6
+      - keyword: "韓国 美容 体験談"
+        recent_30d: 0
+      - keyword: "韓国 皮膚科 行ってみた"
+        recent_30d: 0
+
+  p05_lifestyle:
+    primary:
+      - keyword: "韓国 美容 よかった"
+        recent_30d: 10
+      - keyword: "#韓国美容"
+        recent_30d: 10
+      - keyword: "渡韓美容 レポ"
+        recent_30d: 7
+      - keyword: "韓国美容"
+        recent_30d: 7
+      - keyword: "韓国 ニキビ跡"
+        recent_30d: 9
+      - keyword: "韓国 毛穴"
+        recent_30d: 7
+    secondary:
+      - keyword: "#韓国肌管理"
+        recent_30d: 8
+      - keyword: "韓国 肌管理 日記"
+        recent_30d: 0
+      - keyword: "韓国 美容 体験談"
+        recent_30d: 0

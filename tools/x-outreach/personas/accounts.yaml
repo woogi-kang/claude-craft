@@ -1,0 +1,47 @@
+version: v2
+
+validation:
+  measured_at_jst: "2026-02-23"
+  method: "Playwright x.com live search sampling (burner session, f=live, 2 scrolls)"
+  metric_note: "recent_30d = count of tweets within 30 days among first 25 tweet cards"
+
+mappings:
+  - account_id: master_a
+    persona_id: p01_price
+    keyword_profile: p01_price
+    active: true
+  - account_id: master_b
+    persona_id: p02_beginner_guide
+    keyword_profile: p02_beginner
+    active: true
+  - account_id: master_c
+    persona_id: p03_procedure_explainer
+    keyword_profile: p03_procedure
+    active: true
+  - account_id: master_d
+    persona_id: p04_risk_care
+    keyword_profile: p04_risk
+    active: true
+  - account_id: master_e
+    persona_id: p05_lifestyle
+    keyword_profile: p05_lifestyle
+    active: true
+
+stage_overrides:
+  reply:
+    max_chars: 260
+  dm:
+    max_chars: 480
+  post:
+    max_chars: 240
+
+global_fallback_keywords:
+  - "レーザー治療"
+  - "ピコレーザー"
+  - "韓国クリニック"
+  - "韓国皮膚科"
+  - "韓国整形"
+  - "韓国 シミ取り"
+  - "韓国 ヒアルロン酸"
+  - "#韓国美容"
+  - "#韓国肌管理"
