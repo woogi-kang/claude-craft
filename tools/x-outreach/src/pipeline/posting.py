@@ -1,6 +1,6 @@
 """Posting pipeline -- publish tweets via Playwright.
 
-Generates and publishes original tweets from the @ask.nandemo account.
+Generates and publishes original tweets from the master account.
 Alternates between casual daily life content and knowledge-based
 Korean dermatology tips to build a natural yet expert profile.
 """

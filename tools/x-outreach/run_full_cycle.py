@@ -32,14 +32,14 @@ load_dotenv(Path(__file__).parent / ".env")
 # Monkey-patch ask() to auto-accept (no interactive stdin)
 verify.ask = lambda prompt: True
 
-SESSION_DIR = Path(__file__).parent / "data" / "sessions" / "nandemo"
+SESSION_DIR = Path(__file__).parent / "data" / "sessions" / "master"
 
 
 async def main() -> None:
     print("=" * 60)
     print("  X Outreach - Full Cycle (Auto Mode)")
     print("  Mode 3: Search -> Reply -> DM")
-    print("  Session: nandemo (saved)")
+    print("  Session: master (saved)")
     print("=" * 60)
 
     import shutil
@@ -53,7 +53,7 @@ async def main() -> None:
     async with async_playwright() as pw:
         # Reuse saved session
         print("\n[1/5] Opening saved session...")
-        ctx = await create_browser(pw, "nandemo")
+        ctx = await create_browser(pw, "master")
         page = ctx.pages[0]
 
         # Verify session is alive

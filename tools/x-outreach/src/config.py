@@ -182,15 +182,26 @@ class Settings(BaseSettings):
     # --- Secrets (loaded from .env only) ---
     burner_x_username: str = ""
     burner_x_password: str = ""
-    nandemo_x_username: str = ""
-    nandemo_x_password: str = ""
+    master_x_username: str = ""
+    master_x_password: str = ""
     gemini_api_key: str = ""  # Kept for .env backward compat (GEMINI_API_KEY)
     database_url: str = ""
+    x_dm_encryption_passcode: str = ""  # 4-digit PIN for X DM encryption
 
     @property
     def llm_api_key(self) -> str:
         """Alias for ``gemini_api_key``, used by non-Codex providers."""
         return self.gemini_api_key
+
+    @property
+    def dm_passcode_digits(self) -> list[str] | None:
+        """Return the passcode as individual digit strings, or None if unset."""
+        code = self.x_dm_encryption_passcode.strip()
+        if not code:
+            return None
+        if len(code) != 4 or not code.isdigit():
+            raise ValueError(f"X_DM_ENCRYPTION_PASSCODE must be exactly 4 digits, got: '{code}'")
+        return list(code)
 
     # --- Non-secret configuration sections ---
     search: SearchConfig = Field(default_factory=SearchConfig)

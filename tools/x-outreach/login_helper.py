@@ -1,6 +1,6 @@
 """Open a headed browser for manual X login.
 
-Session persists to data/sessions/nandemo/ automatically.
+Session persists to data/sessions/master/ automatically.
 The browser stays open until a signal file is created or timeout.
 """
 
@@ -11,7 +11,7 @@ from playwright.async_api import async_playwright
 from playwright_stealth import Stealth
 
 SIGNAL_FILE = Path(__file__).parent / "data" / ".login_done"
-SESSION_DIR = Path(__file__).parent / "data" / "sessions" / "nandemo"
+SESSION_DIR = Path(__file__).parent / "data" / "sessions" / "master"
 
 
 async def main() -> None:

@@ -1,7 +1,7 @@
 [project]
 name = "x-outreach"
 version = "0.1.0"
-description = "Automated X outreach pipeline for @ask.nandemo Korean dermatology expert"
+description = "Automated X outreach pipeline for Korean dermatology expert (master account)"
 requires-python = ">=3.13"
 dependencies = [
     "outreach-shared",

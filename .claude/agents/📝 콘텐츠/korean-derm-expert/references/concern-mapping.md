@@ -141,4 +141,4 @@ To find procedures for a Japanese concern:
 3. Sort results by `grade` (1 first = most popular)
 4. Fetch top 3-5 procedure details from `dermatology_procedure_details_complete.json`
 5. Present in Japanese with treatment-translation.md names
-6. Use casual tone (常体 base) matching the @ask.nandemo voice
+6. Use casual tone (常体 base) matching the master account voice

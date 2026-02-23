@@ -357,7 +357,7 @@ def _verify_startup(settings: Settings) -> list[str]:
         errors.append("LLM API key is not set (GEMINI_API_KEY in .env)")
 
     # Skip credential checks if a saved session exists
-    session_dir = Path(__file__).resolve().parent.parent / "data" / "sessions" / "nandemo"
+    session_dir = Path(__file__).resolve().parent.parent / "data" / "sessions" / "master"
     has_session = (session_dir / "Default" / "Cookies").exists()
 
     if not has_session:
@@ -366,12 +366,12 @@ def _verify_startup(settings: Settings) -> list[str]:
         if not settings.burner_x_password:
             errors.append("BURNER_X_PASSWORD is not set")
 
-        needs_nandemo = settings.dm.enabled or settings.nurture.enabled or settings.posting.enabled
-        if needs_nandemo:
-            if not settings.nandemo_x_username:
-                errors.append("NANDEMO_X_USERNAME is not set (required for DM/nurture/posting)")
-            if not settings.nandemo_x_password:
-                errors.append("NANDEMO_X_PASSWORD is not set (required for DM/nurture/posting)")
+        needs_master = settings.dm.enabled or settings.nurture.enabled or settings.posting.enabled
+        if needs_master:
+            if not settings.master_x_username:
+                errors.append("MASTER_X_USERNAME is not set (required for DM/nurture/posting)")
+            if not settings.master_x_password:
+                errors.append("MASTER_X_PASSWORD is not set (required for DM/nurture/posting)")
 
     return errors
 
@@ -583,7 +583,7 @@ def _build_parser() -> argparse.ArgumentParser:
     """Build the argument parser with subcommands."""
     parser = argparse.ArgumentParser(
         prog="x-outreach",
-        description="X Outreach Pipeline for @ask.nandemo",
+        description="X Outreach Pipeline (master account)",
     )
 
     # Top-level flags for backward compatibility

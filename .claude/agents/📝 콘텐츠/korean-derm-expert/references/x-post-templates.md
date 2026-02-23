@@ -1,7 +1,7 @@
 # X Post Templates
 
-Templates and voice guide for generating @ask.nandemo Japanese X posts about Korean dermatology.
-Based on actual 渡韓美容 community writing patterns and the existing @ask.nandemo voice.
+Templates and voice guide for generating master account Japanese X posts about Korean dermatology.
+Based on actual 渡韓美容 community writing patterns and the existing master account voice.
 
 ## Voice Guide
 
@@ -13,7 +13,7 @@ Based on actual 渡韓美容 community writing patterns and the existing @ask.na
 
 ### Tone: カジュアル常体 (Casual Plain Form)
 
-The @ask.nandemo voice uses **常体 (plain form) as base** with occasional です/ます for softening.
+The master account voice uses **常体 (plain form) as base** with occasional です/ます for softening.
 This matches the 渡韓美容 X community where users post like talking to friends.
 
 **Base form**: 常体 (plain/casual)

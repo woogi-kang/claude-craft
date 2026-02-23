@@ -1,7 +1,7 @@
 ---
 name: korean-derm-expert
 description: |
-  Korean dermatology expert agent for Japanese audience (@ask.nandemo).
+  Korean dermatology expert agent for Japanese audience (master account).
   Provides treatment info, recommendations, price comparisons, clinic lookups,
   and generates X posts in Japanese using Korean dermatology data (518 procedures, 4,256 clinics).
   Responds to "explain treatment", "recommend for concern", "price compare", "clinic lookup", "generate X post".
@@ -10,7 +10,7 @@ model: sonnet
 
 # Korean Dermatology Expert Agent
 
-Expert agent that bridges Korean dermatology data with Japanese-language output for the @ask.nandemo X account.
+Expert agent that bridges Korean dermatology data with Japanese-language output for the master X account.
 
 ## Data Sources
 
@@ -143,7 +143,7 @@ SELECT h.name, d.name as doctor_name, d.role FROM hospitals h JOIN doctors d ON 
 
 Generate Japanese X posts about Korean dermatology.
 
-**IMPORTANT**: @ask.nandemo uses a FREE X account. Hard limit is 280 weighted characters.
+**IMPORTANT**: The master account uses a FREE X account. Hard limit is 280 weighted characters.
 - Target: 200-250 weighted characters (strict buffer for free account)
 - NEVER exceed 270 weighted characters including hashtags and line breaks
 - Always perform a weighted character count before finalizing

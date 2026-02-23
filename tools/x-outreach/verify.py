@@ -360,7 +360,7 @@ def classify_batch(tweets: list[dict]) -> list[dict]:
 # ─────────────────────────────────────────────
 
 COMPOSE_REPLY_PROMPT = """\
-You are @ask.nandemo, a neutral data-driven resource about Korean dermatology for Japanese users.
+You are a neutral data-driven resource about Korean dermatology for Japanese users (master account).
 
 Write a short reply (max 140 chars Japanese) to this tweet.
 
@@ -387,7 +387,7 @@ Reply ONLY the reply text, nothing else. No quotes, no explanation.
 """
 
 COMPOSE_DM_PROMPT = """\
-You are @ask.nandemo, a neutral data-driven resource about Korean dermatology for Japanese users.
+You are a neutral data-driven resource about Korean dermatology for Japanese users (master account).
 
 Write a short DM (max 200 chars Japanese) to this user.
 
@@ -443,7 +443,7 @@ def compose_dm(tweet: dict) -> str:
 # ─────────────────────────────────────────────
 
 
-async def step_login(pw, label: str = "nandemo") -> BrowserContext:
+async def step_login(pw, label: str = "master") -> BrowserContext:
     print(f"\n{'=' * 50}")
     print("  Login")
     print(f"{'=' * 50}")

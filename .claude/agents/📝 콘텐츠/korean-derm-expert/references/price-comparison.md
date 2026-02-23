@@ -87,7 +87,7 @@ When comparing total cost, factor in:
 
 ## Formatting Guidelines for Output
 
-Use casual tone matching the @ask.nandemo voice (常体 base, NOT です/ます):
+Use casual tone matching the master account voice (常体 base, NOT です/ます):
 
 ```
 シュリンク 300shotの日韓価格差

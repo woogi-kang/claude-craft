@@ -1,1 +1,1 @@
-"""X Outreach Pipeline for @ask.nandemo Korean dermatology expert."""
+"""X Outreach Pipeline for Korean dermatology expert (master account)."""

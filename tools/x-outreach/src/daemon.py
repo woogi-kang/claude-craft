@@ -110,7 +110,7 @@ async def run_daemon(settings: Settings | None = None) -> None:
             viewport_width=settings.browser.viewport_width,
             viewport_height=settings.browser.viewport_height,
         )
-        context = await session_mgr.get_session("nandemo")
+        context = await session_mgr.get_session("master")
         logger.info("persistent_browser_started")
 
         halt_mgr = HaltManager()

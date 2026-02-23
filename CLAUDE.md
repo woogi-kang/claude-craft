@@ -129,7 +129,7 @@ Content:
 - ppt-agent: Presentation automation
 - tech-blog-agent: Hashnode blog writing
 - social-media-agent: Multi-platform social content
-- korean-derm-expert: Korean dermatology expert for Japanese audience (@ask.nandemo)
+- korean-derm-expert: Korean dermatology expert for Japanese audience (master account)
 
 Planning:
 - planning-agent: Service planning and roadmap

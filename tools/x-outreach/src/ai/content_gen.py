@@ -2,7 +2,7 @@
 
 Generates personalised reply and DM content based on tweet classification,
 intent categories, and treatment knowledge. All output is in natural
-Japanese matching the @ask.nandemo voice.
+Japanese matching the master account voice.
 """
 
 from __future__ import annotations
@@ -239,7 +239,7 @@ class ContentGenerator:
             raise ContentGenerationError(f"Failed to generate DM: {exc}") from exc
 
     async def generate_casual_post(self) -> str:
-        """Generate a casual daily tweet for the @ask.nandemo account.
+        """Generate a casual daily tweet for the master account.
 
         Content is casual and personal -- explicitly NOT about dermatology.
         Topics include daily life, food, weather, Tokyo observations, etc.
@@ -282,7 +282,7 @@ class ContentGenerator:
         """Generate a Korean dermatology knowledge tweet.
 
         Uses treatment data to create an informative post that positions
-        @ask.nandemo as a knowledgeable resource.
+        the master account as a knowledgeable resource.
 
         Parameters
         ----------

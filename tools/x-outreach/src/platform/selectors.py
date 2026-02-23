@@ -60,6 +60,44 @@ DM_SEND_BUTTON = '[data-testid="dmComposerSendButton"]'
 DM_CONVERSATION = '[data-testid="dmConversation"]'
 
 # ---------------------------------------------------------------------------
+# DM Encryption Passcode Dialog
+# ---------------------------------------------------------------------------
+
+# Modal overlay container
+DM_ENCRYPTION_DIALOG = '[aria-modal="true"]'
+
+# Text indicators that identify the passcode dialog (lowercase for matching)
+DM_ENCRYPTION_DIALOG_TEXTS: list[str] = [
+    "enter passcode",
+    "recover encryption keys",
+    "decrypt previous messages",
+    # Japanese locale variants
+    "パスコードを入力",
+    "暗号化キーを回復",
+]
+
+# Individual digit input fields inside the modal
+DM_PASSCODE_INPUT = (
+    '[aria-modal="true"] input[inputmode="numeric"],'
+    ' [aria-modal="true"] input[type="tel"],'
+    ' [aria-modal="true"] input[autocomplete="one-time-code"]'
+)
+
+# Confirm/submit button
+DM_PASSCODE_CONFIRM = (
+    '[aria-modal="true"] [data-testid="confirmationSheetConfirm"],'
+    ' [aria-modal="true"] [role="button"]:has-text("Confirm"),'
+    ' [aria-modal="true"] [role="button"]:has-text("確認")'
+)
+
+# Dismiss/cancel/skip button
+DM_PASSCODE_DISMISS = (
+    '[aria-modal="true"] [data-testid="confirmationSheetCancel"],'
+    ' [aria-modal="true"] [role="button"]:has-text("Not now"),'
+    ' [aria-modal="true"] [aria-label="Close"]'
+)
+
+# ---------------------------------------------------------------------------
 # Follow
 # ---------------------------------------------------------------------------
 

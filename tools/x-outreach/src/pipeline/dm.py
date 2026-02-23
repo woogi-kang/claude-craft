@@ -32,7 +32,12 @@ from src.pipeline.track import ActionTracker
 from src.platform.selectors import (
     DM_COMPOSER_INPUT,
     DM_CONVERSATION,
+    DM_ENCRYPTION_DIALOG,
+    DM_ENCRYPTION_DIALOG_TEXTS,
     DM_NEXT_BUTTON,
+    DM_PASSCODE_CONFIRM,
+    DM_PASSCODE_DISMISS,
+    DM_PASSCODE_INPUT,
     DM_SEARCH_INPUT,
     DM_TYPEAHEAD_RESULT,
     MESSAGES_URL,
@@ -58,6 +63,7 @@ class DmResult:
     skipped_too_soon: int = 0
     errors: int = 0
     emergency_halt: bool = False
+    encryption_passcode_error: bool = False
     error_details: list[str] = field(default_factory=list)
 
 
@@ -225,7 +231,14 @@ class DmPipeline:
 
             # Send DM via Playwright (retry once on transient failure)
             try:
-                dm_sent = await _send_dm_with_retry(context, username, dm_text)
+                dm_sent = await _send_dm_with_retry(context, username, dm_text, settings=settings)
+            except DmEncryptionPasscodeError as exc:
+                result.encryption_passcode_error = True
+                result.errors += 1
+                result.error_details.append(f"{tweet_id}: encryption_passcode: {exc}")
+                tracker.record_error("dm_encryption_passcode", str(exc))
+                logger.error("dm_encryption_passcode_error", error=str(exc))
+                break  # Dialog will reappear for every DM
             except DmClosedError:
                 result.skipped_dm_closed += 1
                 repository.update_tweet_status(
@@ -297,16 +310,19 @@ async def _send_dm_with_retry(
     username: str,
     message: str,
     max_attempts: int = 2,
+    *,
+    settings: Settings | None = None,
 ) -> bool:
     """Send a DM with retry on transient failures.
 
-    DmClosedError and DmRateLimitError are raised immediately without retry.
-    Other exceptions are retried up to *max_attempts* times.
+    DmClosedError, DmRateLimitError, and DmEncryptionPasscodeError are raised
+    immediately without retry. Other exceptions are retried up to
+    *max_attempts* times.
     """
     for attempt in range(max_attempts):
         try:
-            return await _send_dm_via_playwright(context, username, message)
-        except (DmClosedError, DmRateLimitError):
+            return await _send_dm_via_playwright(context, username, message, settings=settings)
+        except (DmClosedError, DmRateLimitError, DmEncryptionPasscodeError):
             raise
         except Exception:
             if attempt < max_attempts - 1:
@@ -325,6 +341,8 @@ async def _send_dm_via_playwright(
     context: BrowserContext,
     username: str,
     message: str,
+    *,
+    settings: Settings | None = None,
 ) -> bool:
     """Send a DM to the specified user via Playwright.
 
@@ -339,6 +357,8 @@ async def _send_dm_via_playwright(
         Target user's X username (without @).
     message:
         DM text to send.
+    settings:
+        Application settings (used for DM encryption passcode).
 
     Returns
     -------
@@ -351,6 +371,8 @@ async def _send_dm_via_playwright(
         When the user's DMs are closed.
     DmRateLimitError
         When X rate-limits or restricts the account.
+    DmEncryptionPasscodeError
+        When the encryption passcode dialog cannot be resolved.
     """
     page = context.pages[0] if context.pages else await context.new_page()
 
@@ -358,6 +380,10 @@ async def _send_dm_via_playwright(
         # Step 1: Navigate to messages
         await page.goto(MESSAGES_URL, wait_until="domcontentloaded", timeout=30_000)
         await random_pause(2.0, 4.0)
+
+        # Step 1a: Handle DM encryption passcode dialog if present
+        passcode_digits = settings.dm_passcode_digits if settings else None
+        await _handle_encryption_passcode(page, passcode_digits)
 
         # Check for rate limit / restriction indicators
         page_content = await page.content()
@@ -430,11 +456,126 @@ async def _send_dm_via_playwright(
 
         return True
 
-    except (DmClosedError, DmRateLimitError):
+    except (DmClosedError, DmRateLimitError, DmEncryptionPasscodeError):
         raise
     except Exception as exc:
         logger.error("dm_playwright_error", username=username, error=str(exc))
         raise
+
+
+# ---------------------------------------------------------------------------
+# Encryption passcode handler
+# ---------------------------------------------------------------------------
+
+
+async def _handle_encryption_passcode(
+    page: Page,
+    passcode_digits: list[str] | None,
+    *,
+    timeout_ms: int = 2_000,
+) -> bool:
+    """Detect and handle X's DM encryption passcode dialog if present.
+
+    Parameters
+    ----------
+    page:
+        The current Playwright page after navigating to messages.
+    passcode_digits:
+        List of 4 single-digit strings, or ``None`` if not configured.
+    timeout_ms:
+        How long to wait for the dialog. Short timeout because the
+        dialog either shows immediately or not at all.
+
+    Returns
+    -------
+    bool
+        ``True`` if the dialog was handled, ``False`` if not detected.
+
+    Raises
+    ------
+    DmEncryptionPasscodeError
+        When the dialog appears but cannot be resolved.
+    """
+    # Check if the encryption dialog is present
+    try:
+        dialog = await page.wait_for_selector(DM_ENCRYPTION_DIALOG, timeout=timeout_ms)
+    except Exception:
+        return False
+
+    if dialog is None:
+        return False
+
+    # Verify this is specifically the encryption passcode dialog
+    dialog_text = (await page.inner_text(DM_ENCRYPTION_DIALOG)).lower()
+    is_passcode_dialog = any(indicator in dialog_text for indicator in DM_ENCRYPTION_DIALOG_TEXTS)
+
+    if not is_passcode_dialog:
+        logger.debug("modal_not_passcode_dialog", text_preview=dialog_text[:100])
+        return False
+
+    logger.info("dm_encryption_passcode_dialog_detected")
+
+    # If no passcode configured, try to dismiss
+    if passcode_digits is None:
+        dismiss_btn = await page.query_selector(DM_PASSCODE_DISMISS)
+        if dismiss_btn:
+            await dismiss_btn.click()
+            await random_pause(1.0, 2.0)
+            logger.info("dm_encryption_dialog_dismissed")
+            return True
+        raise DmEncryptionPasscodeError(
+            "DM encryption passcode dialog appeared but X_DM_ENCRYPTION_PASSCODE "
+            "is not configured and no dismiss option is available. "
+            "Set X_DM_ENCRYPTION_PASSCODE in your .env file."
+        )
+
+    # Enter the passcode digit by digit
+    inputs = await page.query_selector_all(DM_PASSCODE_INPUT)
+
+    if len(inputs) < 4:
+        # Fallback: try broader selector for any input inside the modal
+        inputs = await page.query_selector_all('[aria-modal="true"] input')
+
+    if len(inputs) < 4:
+        raise DmEncryptionPasscodeError(
+            f"Expected 4 passcode input fields, found {len(inputs)}. "
+            "The dialog DOM structure may have changed."
+        )
+
+    for i, digit in enumerate(passcode_digits):
+        await inputs[i].click()
+        await random_pause(0.2, 0.5)
+        await page.keyboard.type(digit, delay=random.randint(80, 180))
+        await random_pause(0.3, 0.7)
+
+    # Click confirm button (some dialogs auto-submit after 4 digits)
+    await random_pause(0.5, 1.0)
+    confirm_btn = await page.query_selector(DM_PASSCODE_CONFIRM)
+    if confirm_btn:
+        await random_mouse_move(page)
+        await random_pause(0.3, 0.8)
+        await confirm_btn.click()
+
+    # Wait for the dialog to disappear
+    await random_pause(2.0, 4.0)
+
+    # Verify dialog is gone
+    remaining = await page.query_selector(DM_ENCRYPTION_DIALOG)
+    if remaining:
+        remaining_text = (await page.inner_text(DM_ENCRYPTION_DIALOG)).lower()
+        if any(ind in remaining_text for ind in DM_ENCRYPTION_DIALOG_TEXTS):
+            raise DmEncryptionPasscodeError(
+                "Passcode dialog still visible after entry. "
+                "The passcode may be incorrect. Verify X_DM_ENCRYPTION_PASSCODE."
+            )
+
+    logger.info("dm_encryption_passcode_entered_successfully")
+    return True
+
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
 
 
 async def _type_message_naturally(page: Page, message: str) -> None:
@@ -496,3 +637,7 @@ class DmClosedError(Exception):
 
 class DmRateLimitError(Exception):
     """Raised when X rate-limits or restricts the account."""
+
+
+class DmEncryptionPasscodeError(Exception):
+    """Raised when the DM encryption passcode dialog cannot be resolved."""

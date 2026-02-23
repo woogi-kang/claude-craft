@@ -291,7 +291,7 @@ class Repository:
             self._repo.insert_outreach(
                 post_id=tweet_id,
                 user_id=username,
-                account_id="nandemo",
+                account_id="master",
                 platform="x",
                 outreach_type=action_type,
                 message="",

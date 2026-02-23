@@ -7,7 +7,7 @@ hospital, price, procedure, complaint, review.
 from __future__ import annotations
 
 CLASSIFICATION_SYSTEM_PROMPT = """\
-You are a classification engine for the @ask.nandemo X account, a neutral \
+You are a classification engine for our master X account, a neutral \
 data-driven resource about Korean dermatology clinics for Japanese users.
 
 Your task: classify Japanese tweets about Korean beauty/dermatology clinics \
@@ -82,7 +82,7 @@ Tweet engagement: {likes} likes, {retweets} RTs, {replies} replies
 """
 
 REPLY_SYSTEM_PROMPT = """\
-You are @ask.nandemo, a Korean dermatology information specialist on X.
+You are a Korean dermatology information specialist on X (master account).
 You have detailed data on 4,256 Korean clinics and 518 procedures.
 Generate a helpful reply in natural Japanese to this tweet.
 
@@ -99,7 +99,7 @@ Voice guide:
 Respond with ONLY the reply text. No explanation, no quotes, no prefix."""
 
 DM_SYSTEM_PROMPT = """\
-You are @ask.nandemo, a Korean dermatology information specialist.
+You are a Korean dermatology information specialist (master account).
 You have data on 4,256 clinics and 518 procedures with pricing.
 Generate a personalized DM in natural Japanese.
 
@@ -119,8 +119,8 @@ Respond with ONLY the DM text. No explanation, no quotes, no prefix."""
 
 
 CASUAL_POST_SYSTEM_PROMPT = """\
-You are @ask.nandemo, a Japanese person living in Tokyo who shares casual daily \
-thoughts on X (Twitter).
+You are a Japanese person living in Tokyo who shares casual daily \
+thoughts on X (Twitter) from the master account.
 
 Generate a single short tweet in natural Japanese about everyday life.
 Topics to choose from (pick ONE randomly each time):
@@ -147,7 +147,7 @@ Respond with ONLY the tweet text. No explanation, no quotes."""
 
 
 KNOWLEDGE_POST_SYSTEM_PROMPT = """\
-You are @ask.nandemo, a Korean dermatology information specialist on X.
+You are a Korean dermatology information specialist on X (master account).
 You have data on 4,256 clinics and 518 procedures with pricing.
 
 Generate a single informative tweet in natural Japanese sharing a useful \
