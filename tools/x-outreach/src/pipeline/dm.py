@@ -34,6 +34,7 @@ from src.platform.selectors import (
     DM_CONVERSATION,
     DM_NEXT_BUTTON,
     DM_PASSCODE_INPUT,
+    DM_PASSCODE_INPUT_FALLBACK,
     DM_PASSCODE_TITLE,
     DM_SEARCH_INPUT,
     DM_TYPEAHEAD_RESULT,
@@ -520,8 +521,8 @@ async def _handle_encryption_passcode(
     inputs = await page.query_selector_all(DM_PASSCODE_INPUT)
 
     if len(inputs) < 4:
-        # Fallback: any input on the page with inputmode=numeric
-        inputs = await page.query_selector_all('input[inputmode="numeric"]')
+        # Fallback: any input inside the passcode container (scoped, not page-global)
+        inputs = await page.query_selector_all(DM_PASSCODE_INPUT_FALLBACK)
 
     if len(inputs) < 4:
         raise DmEncryptionPasscodeError(
@@ -536,26 +537,20 @@ async def _handle_encryption_passcode(
         await page.keyboard.type(digit, delay=random.randint(80, 180))
         await random_pause(0.3, 0.7)
 
-    # No confirm button -- auto-submits after 4th digit. Wait for page transition.
-    await random_pause(3.0, 5.0)
+    # No confirm button -- auto-submits after 4th digit.
+    # Wait for passcode title to disappear (primary success indicator).
+    await random_pause(2.0, 3.0)
 
-    # Verify passcode was accepted: the NewDM button should appear
-    new_dm_btn = await page.query_selector(NEW_DM_BUTTON)
-    if new_dm_btn:
-        logger.info("dm_encryption_passcode_accepted")
-        return True
-
-    # Check if the passcode page is still showing (wrong code)
-    still_showing = await page.query_selector(DM_PASSCODE_TITLE)
-    if still_showing:
+    try:
+        await page.wait_for_selector(DM_PASSCODE_TITLE, state="hidden", timeout=8_000)
+    except Exception:
+        # Title still visible after timeout -- wrong passcode
         raise DmEncryptionPasscodeError(
             "Passcode page still visible after entry. "
             "The passcode may be incorrect. Verify X_DM_ENCRYPTION_PASSCODE."
         )
 
-    # Page changed but NewDM button not found yet -- give it more time
-    await random_pause(2.0, 3.0)
-    logger.info("dm_encryption_passcode_entered")
+    logger.info("dm_encryption_passcode_accepted")
     return True
 
 

@@ -66,13 +66,13 @@ DM_CONVERSATION = '[data-testid="dmConversation"]'
 # Title element that identifies the passcode page
 DM_PASSCODE_TITLE = '[data-testid="pin-title"]'
 
-# Container holding the 4 digit inputs
-DM_PASSCODE_CONTAINER = '[data-testid="pin-code-input-container"]'
-
 # Individual digit input fields (4x maxlength=1, inputmode=numeric)
 DM_PASSCODE_INPUT = '[data-testid="pin-code-input-container"] input[inputmode="numeric"]'
 
-# "Forgot passcode" link/button
+# Fallback: any input inside the container (if inputmode attribute changes)
+DM_PASSCODE_INPUT_FALLBACK = '[data-testid="pin-code-input-container"] input'
+
+# "Forgot passcode" link/button (reserved for stuck-state detection)
 DM_PASSCODE_FORGOT = 'button:has-text("Forgot passcode"), button:has-text("パスコードを忘れた")'
 
 # ---------------------------------------------------------------------------
