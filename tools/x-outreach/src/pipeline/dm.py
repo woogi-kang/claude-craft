@@ -32,12 +32,9 @@ from src.pipeline.track import ActionTracker
 from src.platform.selectors import (
     DM_COMPOSER_INPUT,
     DM_CONVERSATION,
-    DM_ENCRYPTION_DIALOG,
-    DM_ENCRYPTION_DIALOG_TEXTS,
     DM_NEXT_BUTTON,
-    DM_PASSCODE_CONFIRM,
-    DM_PASSCODE_DISMISS,
     DM_PASSCODE_INPUT,
+    DM_PASSCODE_TITLE,
     DM_SEARCH_INPUT,
     DM_TYPEAHEAD_RESULT,
     MESSAGES_URL,
@@ -372,7 +369,7 @@ async def _send_dm_via_playwright(
     DmRateLimitError
         When X rate-limits or restricts the account.
     DmEncryptionPasscodeError
-        When the encryption passcode dialog cannot be resolved.
+        When the encryption passcode page cannot be resolved.
     """
     page = context.pages[0] if context.pages else await context.new_page()
 
@@ -381,7 +378,7 @@ async def _send_dm_via_playwright(
         await page.goto(MESSAGES_URL, wait_until="domcontentloaded", timeout=30_000)
         await random_pause(2.0, 4.0)
 
-        # Step 1a: Handle DM encryption passcode dialog if present
+        # Step 1a: Handle DM encryption passcode if present
         passcode_digits = settings.dm_passcode_digits if settings else None
         await _handle_encryption_passcode(page, passcode_digits)
 
@@ -472,104 +469,93 @@ async def _handle_encryption_passcode(
     page: Page,
     passcode_digits: list[str] | None,
     *,
-    timeout_ms: int = 2_000,
+    timeout_ms: int = 3_000,
 ) -> bool:
-    """Detect and handle X's DM encryption passcode dialog if present.
+    """Detect and handle X's DM encryption passcode page if present.
+
+    The passcode page is rendered inline within the messages page (NOT as a
+    modal overlay). It shows ``data-testid="pin-title"`` with text
+    "Enter Passcode" and 4 individual ``input[inputmode="numeric"]`` fields
+    inside ``data-testid="pin-code-input-container"``.  There is no confirm
+    button -- the form auto-submits after all 4 digits are entered.
 
     Parameters
     ----------
     page:
-        The current Playwright page after navigating to messages.
+        The current Playwright page after navigating to /messages.
     passcode_digits:
         List of 4 single-digit strings, or ``None`` if not configured.
     timeout_ms:
-        How long to wait for the dialog. Short timeout because the
-        dialog either shows immediately or not at all.
+        How long to wait for the passcode title element.
 
     Returns
     -------
     bool
-        ``True`` if the dialog was handled, ``False`` if not detected.
+        ``True`` if the passcode page was handled, ``False`` if not detected.
 
     Raises
     ------
     DmEncryptionPasscodeError
-        When the dialog appears but cannot be resolved.
+        When the passcode page appears but cannot be resolved.
     """
-    # Check if the encryption dialog is present
+    # Detect the passcode page by its title element
     try:
-        dialog = await page.wait_for_selector(DM_ENCRYPTION_DIALOG, timeout=timeout_ms)
+        title_el = await page.wait_for_selector(DM_PASSCODE_TITLE, timeout=timeout_ms)
     except Exception:
         return False
 
-    if dialog is None:
+    if title_el is None:
         return False
 
-    # Verify this is specifically the encryption passcode dialog
-    dialog_text = (await page.inner_text(DM_ENCRYPTION_DIALOG)).lower()
-    is_passcode_dialog = any(indicator in dialog_text for indicator in DM_ENCRYPTION_DIALOG_TEXTS)
+    logger.info("dm_encryption_passcode_page_detected")
 
-    if not is_passcode_dialog:
-        logger.debug("modal_not_passcode_dialog", text_preview=dialog_text[:100])
-        return False
-
-    logger.info("dm_encryption_passcode_dialog_detected")
-
-    # If no passcode configured, try to dismiss
+    # No passcode configured -- cannot proceed
     if passcode_digits is None:
-        dismiss_btn = await page.query_selector(DM_PASSCODE_DISMISS)
-        if dismiss_btn:
-            await dismiss_btn.click()
-            await random_pause(1.0, 2.0)
-            logger.info("dm_encryption_dialog_dismissed")
-            return True
         raise DmEncryptionPasscodeError(
-            "DM encryption passcode dialog appeared but X_DM_ENCRYPTION_PASSCODE "
-            "is not configured and no dismiss option is available. "
-            "Set X_DM_ENCRYPTION_PASSCODE in your .env file."
+            "DM encryption passcode page appeared but X_DM_ENCRYPTION_PASSCODE "
+            "is not configured. Set X_DM_ENCRYPTION_PASSCODE in your .env file."
         )
 
-    # Enter the passcode digit by digit
+    # Find the 4 digit input fields
     inputs = await page.query_selector_all(DM_PASSCODE_INPUT)
 
     if len(inputs) < 4:
-        # Fallback: try broader selector for any input inside the modal
-        inputs = await page.query_selector_all('[aria-modal="true"] input')
+        # Fallback: any input on the page with inputmode=numeric
+        inputs = await page.query_selector_all('input[inputmode="numeric"]')
 
     if len(inputs) < 4:
         raise DmEncryptionPasscodeError(
             f"Expected 4 passcode input fields, found {len(inputs)}. "
-            "The dialog DOM structure may have changed."
+            "The page DOM structure may have changed."
         )
 
+    # Enter each digit with human-like delays
     for i, digit in enumerate(passcode_digits):
         await inputs[i].click()
         await random_pause(0.2, 0.5)
         await page.keyboard.type(digit, delay=random.randint(80, 180))
         await random_pause(0.3, 0.7)
 
-    # Click confirm button (some dialogs auto-submit after 4 digits)
-    await random_pause(0.5, 1.0)
-    confirm_btn = await page.query_selector(DM_PASSCODE_CONFIRM)
-    if confirm_btn:
-        await random_mouse_move(page)
-        await random_pause(0.3, 0.8)
-        await confirm_btn.click()
+    # No confirm button -- auto-submits after 4th digit. Wait for page transition.
+    await random_pause(3.0, 5.0)
 
-    # Wait for the dialog to disappear
-    await random_pause(2.0, 4.0)
+    # Verify passcode was accepted: the NewDM button should appear
+    new_dm_btn = await page.query_selector(NEW_DM_BUTTON)
+    if new_dm_btn:
+        logger.info("dm_encryption_passcode_accepted")
+        return True
 
-    # Verify dialog is gone
-    remaining = await page.query_selector(DM_ENCRYPTION_DIALOG)
-    if remaining:
-        remaining_text = (await page.inner_text(DM_ENCRYPTION_DIALOG)).lower()
-        if any(ind in remaining_text for ind in DM_ENCRYPTION_DIALOG_TEXTS):
-            raise DmEncryptionPasscodeError(
-                "Passcode dialog still visible after entry. "
-                "The passcode may be incorrect. Verify X_DM_ENCRYPTION_PASSCODE."
-            )
+    # Check if the passcode page is still showing (wrong code)
+    still_showing = await page.query_selector(DM_PASSCODE_TITLE)
+    if still_showing:
+        raise DmEncryptionPasscodeError(
+            "Passcode page still visible after entry. "
+            "The passcode may be incorrect. Verify X_DM_ENCRYPTION_PASSCODE."
+        )
 
-    logger.info("dm_encryption_passcode_entered_successfully")
+    # Page changed but NewDM button not found yet -- give it more time
+    await random_pause(2.0, 3.0)
+    logger.info("dm_encryption_passcode_entered")
     return True
 
 
@@ -640,4 +626,4 @@ class DmRateLimitError(Exception):
 
 
 class DmEncryptionPasscodeError(Exception):
-    """Raised when the DM encryption passcode dialog cannot be resolved."""
+    """Raised when the DM encryption passcode page cannot be resolved."""

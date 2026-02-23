@@ -60,42 +60,20 @@ DM_SEND_BUTTON = '[data-testid="dmComposerSendButton"]'
 DM_CONVERSATION = '[data-testid="dmConversation"]'
 
 # ---------------------------------------------------------------------------
-# DM Encryption Passcode Dialog
+# DM Encryption Passcode (inline page element, NOT a modal)
 # ---------------------------------------------------------------------------
 
-# Modal overlay container
-DM_ENCRYPTION_DIALOG = '[aria-modal="true"]'
+# Title element that identifies the passcode page
+DM_PASSCODE_TITLE = '[data-testid="pin-title"]'
 
-# Text indicators that identify the passcode dialog (lowercase for matching)
-DM_ENCRYPTION_DIALOG_TEXTS: list[str] = [
-    "enter passcode",
-    "recover encryption keys",
-    "decrypt previous messages",
-    # Japanese locale variants
-    "パスコードを入力",
-    "暗号化キーを回復",
-]
+# Container holding the 4 digit inputs
+DM_PASSCODE_CONTAINER = '[data-testid="pin-code-input-container"]'
 
-# Individual digit input fields inside the modal
-DM_PASSCODE_INPUT = (
-    '[aria-modal="true"] input[inputmode="numeric"],'
-    ' [aria-modal="true"] input[type="tel"],'
-    ' [aria-modal="true"] input[autocomplete="one-time-code"]'
-)
+# Individual digit input fields (4x maxlength=1, inputmode=numeric)
+DM_PASSCODE_INPUT = '[data-testid="pin-code-input-container"] input[inputmode="numeric"]'
 
-# Confirm/submit button
-DM_PASSCODE_CONFIRM = (
-    '[aria-modal="true"] [data-testid="confirmationSheetConfirm"],'
-    ' [aria-modal="true"] [role="button"]:has-text("Confirm"),'
-    ' [aria-modal="true"] [role="button"]:has-text("確認")'
-)
-
-# Dismiss/cancel/skip button
-DM_PASSCODE_DISMISS = (
-    '[aria-modal="true"] [data-testid="confirmationSheetCancel"],'
-    ' [aria-modal="true"] [role="button"]:has-text("Not now"),'
-    ' [aria-modal="true"] [aria-label="Close"]'
-)
+# "Forgot passcode" link/button
+DM_PASSCODE_FORGOT = 'button:has-text("Forgot passcode"), button:has-text("パスコードを忘れた")'
 
 # ---------------------------------------------------------------------------
 # Follow

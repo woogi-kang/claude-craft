@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from src.config import (
     AccountPoolConfig,
     BrowserConfig,
@@ -92,8 +94,15 @@ class TestSubConfigs:
 class TestSettings:
     """Test the root Settings class."""
 
-    def test_default_secrets_are_empty(self) -> None:
-        s = Settings()
+    def test_default_secrets_are_empty(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.delenv("BURNER_X_USERNAME", raising=False)
+        monkeypatch.delenv("BURNER_X_PASSWORD", raising=False)
+        monkeypatch.delenv("MASTER_X_USERNAME", raising=False)
+        monkeypatch.delenv("MASTER_X_PASSWORD", raising=False)
+        monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+        monkeypatch.delenv("DATABASE_URL", raising=False)
+        monkeypatch.delenv("X_DM_ENCRYPTION_PASSCODE", raising=False)
+        s = Settings(_env_file=None)
         assert s.burner_x_username == ""
         assert s.gemini_api_key == ""
 

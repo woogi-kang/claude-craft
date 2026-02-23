@@ -1,4 +1,10 @@
-"""Tests for DM encryption passcode handling."""
+"""Tests for DM encryption passcode handling.
+
+The passcode page is an inline element (NOT a modal). Detection uses
+``data-testid="pin-title"`` and inputs are inside
+``data-testid="pin-code-input-container"``.  After all 4 digits are entered
+the form auto-submits (no confirm button).
+"""
 
 from __future__ import annotations
 
@@ -11,6 +17,10 @@ from src.pipeline.dm import (
     DmEncryptionPasscodeError,
     _handle_encryption_passcode,
 )
+from src.platform.selectors import (
+    DM_PASSCODE_TITLE,
+    NEW_DM_BUTTON,
+)
 
 # =========================================================================
 # Fixtures
@@ -19,45 +29,45 @@ from src.pipeline.dm import (
 
 def _make_page(
     *,
-    has_dialog: bool = False,
-    dialog_text: str = "Enter Passcode recover encryption keys",
+    has_passcode_page: bool = False,
     input_count: int = 4,
-    has_confirm: bool = True,
-    has_dismiss: bool = False,
-    dialog_persists: bool = False,
+    passcode_accepted: bool = True,
+    new_dm_button_visible: bool = False,
 ) -> AsyncMock:
-    """Create a mock Playwright Page with configurable passcode dialog state."""
+    """Create a mock Playwright Page with configurable passcode page state.
+
+    Parameters
+    ----------
+    has_passcode_page:
+        Whether the ``pin-title`` element is detected on initial load.
+    input_count:
+        Number of numeric input fields returned by ``query_selector_all``.
+    passcode_accepted:
+        If ``True``, the passcode title disappears after digit entry (success).
+        If ``False``, it persists (wrong passcode).
+    new_dm_button_visible:
+        If ``True``, the ``NewDM_Button`` is found after passcode entry.
+    """
     page = AsyncMock()
 
-    # wait_for_selector for the modal dialog
-    if has_dialog:
-        dialog_el = AsyncMock()
-        page.wait_for_selector = AsyncMock(return_value=dialog_el)
+    # wait_for_selector for DM_PASSCODE_TITLE
+    if has_passcode_page:
+        title_el = AsyncMock()
+        page.wait_for_selector = AsyncMock(return_value=title_el)
     else:
-        page.wait_for_selector = AsyncMock(side_effect=TimeoutError("no dialog"))
+        page.wait_for_selector = AsyncMock(side_effect=TimeoutError("no passcode page"))
 
-    # inner_text returns the dialog text
-    page.inner_text = AsyncMock(return_value=dialog_text)
-
-    # query_selector_all for passcode inputs
+    # query_selector_all for passcode digit inputs
     inputs = [AsyncMock() for _ in range(input_count)]
     page.query_selector_all = AsyncMock(return_value=inputs)
 
-    # query_selector for confirm/dismiss buttons and post-entry check
+    # query_selector for post-entry verification
     def mock_query_selector(selector: str) -> AsyncMock | None:
-        from src.platform.selectors import DM_PASSCODE_CONFIRM, DM_PASSCODE_DISMISS
-
-        if selector == DM_PASSCODE_CONFIRM and has_confirm:
-            return AsyncMock()
-        if selector == DM_PASSCODE_DISMISS and has_dismiss:
-            return AsyncMock()
-        # After entry: check if dialog persists
-        from src.platform.selectors import DM_ENCRYPTION_DIALOG
-
-        if selector == DM_ENCRYPTION_DIALOG:
-            if dialog_persists:
-                return AsyncMock()
-            return None
+        if selector == NEW_DM_BUTTON:
+            return AsyncMock() if new_dm_button_visible else None
+        if selector == DM_PASSCODE_TITLE:
+            # After entry: None = accepted, AsyncMock = still showing
+            return None if passcode_accepted else AsyncMock()
         return None
 
     page.query_selector = AsyncMock(side_effect=mock_query_selector)
@@ -103,53 +113,60 @@ class TestDmPasscodeDigits:
 
 
 class TestHandleEncryptionPasscode:
-    """Test the passcode dialog handler function."""
+    """Test the inline passcode page handler function."""
 
     @pytest.mark.asyncio
-    async def test_no_dialog_returns_false(self) -> None:
-        page = _make_page(has_dialog=False)
+    async def test_no_passcode_page_returns_false(self) -> None:
+        """No passcode page detected -> return False."""
+        page = _make_page(has_passcode_page=False)
         result = await _handle_encryption_passcode(page, None, timeout_ms=100)
         assert result is False
 
     @pytest.mark.asyncio
-    async def test_non_passcode_modal_ignored(self) -> None:
-        page = _make_page(has_dialog=True, dialog_text="Cookie consent dialog")
-        result = await _handle_encryption_passcode(page, None, timeout_ms=100)
-        assert result is False
-
-    @pytest.mark.asyncio
-    async def test_passcode_entered_successfully(self) -> None:
-        page = _make_page(has_dialog=True, dialog_persists=False)
-        digits = ["1", "2", "3", "4"]
-
-        with patch("src.pipeline.dm.random_pause", new_callable=AsyncMock):
-            with patch("src.pipeline.dm.random_mouse_move", new_callable=AsyncMock):
-                result = await _handle_encryption_passcode(page, digits, timeout_ms=100)
-
-        assert result is True
-        # Verify 4 digits were typed
-        assert page.keyboard.type.call_count == 4
-
-    @pytest.mark.asyncio
-    async def test_no_passcode_dismiss_available(self) -> None:
-        page = _make_page(has_dialog=True, has_dismiss=True)
-
-        with patch("src.pipeline.dm.random_pause", new_callable=AsyncMock):
-            result = await _handle_encryption_passcode(page, None, timeout_ms=100)
-
-        assert result is True
-
-    @pytest.mark.asyncio
-    async def test_no_passcode_no_dismiss_raises(self) -> None:
-        page = _make_page(has_dialog=True, has_dismiss=False)
+    async def test_no_passcode_configured_raises(self) -> None:
+        """Passcode page shown but no passcode configured -> raise."""
+        page = _make_page(has_passcode_page=True)
 
         with pytest.raises(DmEncryptionPasscodeError, match="X_DM_ENCRYPTION_PASSCODE"):
             await _handle_encryption_passcode(page, None, timeout_ms=100)
 
     @pytest.mark.asyncio
+    async def test_passcode_entered_newdm_visible(self) -> None:
+        """Passcode accepted: NewDM button appears (fast path)."""
+        page = _make_page(
+            has_passcode_page=True,
+            passcode_accepted=True,
+            new_dm_button_visible=True,
+        )
+        digits = ["1", "2", "3", "4"]
+
+        with patch("src.pipeline.dm.random_pause", new_callable=AsyncMock):
+            result = await _handle_encryption_passcode(page, digits, timeout_ms=100)
+
+        assert result is True
+        assert page.keyboard.type.call_count == 4
+
+    @pytest.mark.asyncio
+    async def test_passcode_entered_no_newdm_but_accepted(self) -> None:
+        """Passcode accepted: NewDM button absent but passcode page gone (fallback)."""
+        page = _make_page(
+            has_passcode_page=True,
+            passcode_accepted=True,
+            new_dm_button_visible=False,
+        )
+        digits = ["0", "8", "2", "6"]
+
+        with patch("src.pipeline.dm.random_pause", new_callable=AsyncMock):
+            result = await _handle_encryption_passcode(page, digits, timeout_ms=100)
+
+        assert result is True
+        assert page.keyboard.type.call_count == 4
+
+    @pytest.mark.asyncio
     async def test_insufficient_input_fields_raises(self) -> None:
-        page = _make_page(has_dialog=True, input_count=2)
-        # Override fallback query_selector_all to also return 2
+        """Fewer than 4 input fields found -> raise."""
+        page = _make_page(has_passcode_page=True, input_count=2)
+        # Override both primary and fallback selectors to return only 2
         page.query_selector_all = AsyncMock(return_value=[AsyncMock(), AsyncMock()])
 
         with pytest.raises(DmEncryptionPasscodeError, match="Expected 4"):
@@ -157,10 +174,14 @@ class TestHandleEncryptionPasscode:
                 await _handle_encryption_passcode(page, ["1", "2", "3", "4"], timeout_ms=100)
 
     @pytest.mark.asyncio
-    async def test_wrong_passcode_dialog_persists_raises(self) -> None:
-        page = _make_page(has_dialog=True, dialog_persists=True)
+    async def test_wrong_passcode_page_persists_raises(self) -> None:
+        """Passcode page still visible after entry -> wrong passcode."""
+        page = _make_page(
+            has_passcode_page=True,
+            passcode_accepted=False,
+            new_dm_button_visible=False,
+        )
 
         with pytest.raises(DmEncryptionPasscodeError, match="passcode may be incorrect"):
             with patch("src.pipeline.dm.random_pause", new_callable=AsyncMock):
-                with patch("src.pipeline.dm.random_mouse_move", new_callable=AsyncMock):
-                    await _handle_encryption_passcode(page, ["1", "2", "3", "4"], timeout_ms=100)
+                await _handle_encryption_passcode(page, ["1", "2", "3", "4"], timeout_ms=100)
