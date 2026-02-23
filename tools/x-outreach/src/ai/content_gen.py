@@ -2,14 +2,20 @@
 
 Generates personalised reply and DM content based on tweet classification,
 intent categories, and treatment knowledge. All output is in natural
-Japanese matching the master account voice.
+Japanese matching the master account voice. Supports optional persona
+context for account-specific voice and style.
 """
 
 from __future__ import annotations
 
 import re
+from typing import TYPE_CHECKING
 
 from outreach_shared.ai.llm_client import LLMClient, create_llm_client
+
+if TYPE_CHECKING:
+    from src.persona import PersonaContext
+
 from outreach_shared.utils.logger import get_logger
 
 from src.ai.prompts import (
@@ -91,6 +97,7 @@ class ContentGenerator:
         template_category: str,
         classification: str = "",
         treatment_context: str = "",
+        persona: PersonaContext | None = None,
     ) -> str:
         """Generate a natural Japanese reply based on tweet context.
 
@@ -106,6 +113,8 @@ class ContentGenerator:
             Unused, kept for backward compatibility.
         treatment_context:
             Optional treatment data for context enrichment.
+        persona:
+            Optional persona context for account-specific voice.
 
         Returns
         -------
@@ -124,27 +133,39 @@ class ContentGenerator:
             treatment_context=treatment_context,
         )
 
+        system_prompt = REPLY_SYSTEM_PROMPT
+        max_chars = 280
+        if persona is not None:
+            from src.persona import build_persona_system_prompt
+
+            system_prompt = build_persona_system_prompt(REPLY_SYSTEM_PROMPT, persona)
+            max_chars = persona.stage_overrides.get("reply", {}).get("max_chars", 280)
+
         try:
             response = await self._llm.generate(
                 user_prompt,
-                system=REPLY_SYSTEM_PROMPT,
+                system=system_prompt,
                 temperature=0.8,
                 max_tokens=200,
             )
             reply_text = response.text.strip()
             reply_text = _sanitize_llm_output(reply_text)
 
-            # Enforce X's 280 weighted character limit (CJK = 2 each)
-            reply_text = _x_truncate(reply_text, 280)
+            # Enforce X's weighted character limit (CJK = 2 each)
+            reply_text = _x_truncate(reply_text, max_chars)
 
             # Strip any URLs that may have been generated
             reply_text = _strip_urls(reply_text)
+
+            if not _check_persona_violations(reply_text, persona, "reply"):
+                raise ContentGenerationError("Persona validation failed for reply")
 
             logger.info(
                 "reply_generated",
                 username=author_username,
                 category=template_category,
                 length=x_weighted_len(reply_text),
+                persona_id=persona.persona_id if persona else None,
             )
             return reply_text
 
@@ -165,6 +186,7 @@ class ContentGenerator:
         reply_content: str = "",
         treatment_context: str = "",
         previous_dm: str = "",
+        persona: PersonaContext | None = None,
     ) -> str:
         """Generate a personalized Japanese DM.
 
@@ -184,6 +206,8 @@ class ContentGenerator:
             Optional treatment data for context enrichment.
         previous_dm:
             The previous DM sent (new DM must differ by 30+ chars).
+        persona:
+            Optional persona context for account-specific voice.
 
         Returns
         -------
@@ -204,27 +228,39 @@ class ContentGenerator:
             previous_dm=previous_dm,
         )
 
+        system_prompt = DM_SYSTEM_PROMPT
+        max_chars = 500
+        if persona is not None:
+            from src.persona import build_persona_system_prompt
+
+            system_prompt = build_persona_system_prompt(DM_SYSTEM_PROMPT, persona)
+            max_chars = persona.stage_overrides.get("dm", {}).get("max_chars", 500)
+
         try:
             response = await self._llm.generate(
                 user_prompt,
-                system=DM_SYSTEM_PROMPT,
+                system=system_prompt,
                 temperature=0.8,
                 max_tokens=400,
             )
             dm_text = response.text.strip()
             dm_text = _sanitize_llm_output(dm_text)
 
-            # Enforce X's 500 weighted character limit (CJK = 2 each)
-            dm_text = _x_truncate(dm_text, 500)
+            # Enforce X's weighted character limit (CJK = 2 each)
+            dm_text = _x_truncate(dm_text, max_chars)
 
             # Strip any URLs that may have been generated
             dm_text = _strip_urls(dm_text)
+
+            if not _check_persona_violations(dm_text, persona, "dm"):
+                raise ContentGenerationError("Persona validation failed for DM")
 
             logger.info(
                 "dm_generated",
                 username=author_username,
                 category=template_category,
                 length=x_weighted_len(dm_text),
+                persona_id=persona.persona_id if persona else None,
             )
             return dm_text
 
@@ -236,11 +272,19 @@ class ContentGenerator:
             )
             raise ContentGenerationError(f"Failed to generate DM: {exc}") from exc
 
-    async def generate_casual_post(self) -> str:
+    async def generate_casual_post(
+        self,
+        persona: PersonaContext | None = None,
+    ) -> str:
         """Generate a casual daily tweet for the master account.
 
         Content is casual and personal -- explicitly NOT about dermatology.
         Topics include daily life, food, weather, Tokyo observations, etc.
+
+        Parameters
+        ----------
+        persona:
+            Optional persona context for account-specific voice.
 
         Returns
         -------
@@ -252,30 +296,47 @@ class ContentGenerator:
         ContentGenerationError
             When LLM API call fails.
         """
+        system_prompt = CASUAL_POST_SYSTEM_PROMPT
+        max_chars = 280
+        if persona is not None:
+            from src.persona import build_persona_system_prompt
+
+            system_prompt = build_persona_system_prompt(CASUAL_POST_SYSTEM_PROMPT, persona)
+            max_chars = persona.stage_overrides.get("post", {}).get("max_chars", 280)
+
         try:
             response = await self._llm.generate(
                 "Generate one casual tweet.",
-                system=CASUAL_POST_SYSTEM_PROMPT,
+                system=system_prompt,
                 temperature=0.95,
                 max_tokens=100,
             )
             post_text = response.text.strip()
             post_text = _sanitize_llm_output(post_text)
 
-            # Enforce X's 280 weighted character limit (CJK = 2 each)
-            post_text = _x_truncate(post_text, 280)
+            post_text = _x_truncate(post_text, max_chars)
 
-            # Strip any URLs that may have been generated
             post_text = _strip_urls(post_text)
 
-            logger.info("casual_post_generated", length=x_weighted_len(post_text))
+            if not _check_persona_violations(post_text, persona, "post"):
+                raise ContentGenerationError("Persona validation failed for casual post")
+
+            logger.info(
+                "casual_post_generated",
+                length=x_weighted_len(post_text),
+                persona_id=persona.persona_id if persona else None,
+            )
             return post_text
 
         except Exception as exc:
             logger.error("casual_post_generation_error", error=str(exc)[:200])
             raise ContentGenerationError(f"Failed to generate casual post: {exc}") from exc
 
-    async def generate_knowledge_post(self, treatment_context: str) -> str:
+    async def generate_knowledge_post(
+        self,
+        treatment_context: str,
+        persona: PersonaContext | None = None,
+    ) -> str:
         """Generate a Korean dermatology knowledge tweet.
 
         Uses treatment data to create an informative post that positions
@@ -286,6 +347,8 @@ class ContentGenerator:
         treatment_context:
             Treatment data snippet (procedure names, price ranges, etc.)
             to ground the post in real data.
+        persona:
+            Optional persona context for account-specific voice.
 
         Returns
         -------
@@ -301,21 +364,36 @@ class ContentGenerator:
             f"Generate one informative tweet.\n\nAvailable treatment data:\n{treatment_context}"
         )
 
+        system_prompt = KNOWLEDGE_POST_SYSTEM_PROMPT
+        max_chars = 280
+        if persona is not None:
+            from src.persona import build_persona_system_prompt
+
+            system_prompt = build_persona_system_prompt(KNOWLEDGE_POST_SYSTEM_PROMPT, persona)
+            max_chars = persona.stage_overrides.get("post", {}).get("max_chars", 280)
+
         try:
             response = await self._llm.generate(
                 user_prompt,
-                system=KNOWLEDGE_POST_SYSTEM_PROMPT,
+                system=system_prompt,
                 temperature=0.9,
                 max_tokens=150,
             )
             post_text = response.text.strip()
             post_text = _sanitize_llm_output(post_text)
 
-            post_text = _x_truncate(post_text, 280)
+            post_text = _x_truncate(post_text, max_chars)
 
             post_text = _strip_urls(post_text)
 
-            logger.info("knowledge_post_generated", length=x_weighted_len(post_text))
+            if not _check_persona_violations(post_text, persona, "post"):
+                raise ContentGenerationError("Persona validation failed for knowledge post")
+
+            logger.info(
+                "knowledge_post_generated",
+                length=x_weighted_len(post_text),
+                persona_id=persona.persona_id if persona else None,
+            )
             return post_text
 
         except Exception as exc:
@@ -463,3 +541,29 @@ def dm_uniqueness_check(new_dm: str, previous_dm: str) -> bool:
             unique_chars += 1
 
     return unique_chars >= 30
+
+
+def _check_persona_violations(
+    text: str,
+    persona: PersonaContext | None,
+    stage: str,
+) -> bool:
+    """Check generated text against persona rules.
+
+    Returns ``True`` if text passes validation (or persona is None).
+    Returns ``False`` and logs a warning on violation.
+    """
+    if persona is None:
+        return True
+    from src.persona import validate_persona_content
+
+    valid, violations = validate_persona_content(text, persona, stage)
+    if not valid:
+        logger.warning(
+            "persona_content_violation",
+            persona_id=persona.persona_id,
+            stage=stage,
+            violations=violations,
+        )
+        return False
+    return True

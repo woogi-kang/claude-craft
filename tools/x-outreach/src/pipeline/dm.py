@@ -11,6 +11,7 @@ import asyncio
 import random
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from outreach_shared.browser.human_sim import random_mouse_move, random_pause
 from outreach_shared.utils.logger import get_logger
@@ -23,6 +24,10 @@ from src.ai.content_gen import (
     ContentGenerator,
     dm_uniqueness_check,
 )
+
+if TYPE_CHECKING:
+    from src.persona import PersonaContext
+
 from src.config import Settings
 from src.db.repository import Repository
 from src.knowledge.templates import TemplateSelector
@@ -83,6 +88,8 @@ class DmPipeline:
         Minimum delay after reply before sending DM.
     dm_delay_max_minutes:
         Maximum delay after reply before sending DM.
+    persona:
+        Optional persona context for account-specific voice.
     """
 
     def __init__(
@@ -95,6 +102,7 @@ class DmPipeline:
         max_interval_minutes: int = 40,
         dm_delay_min_minutes: int = 10,
         dm_delay_max_minutes: int = 30,
+        persona: PersonaContext | None = None,
     ) -> None:
         self._content_gen = content_gen
         self._kb = knowledge_base
@@ -106,6 +114,7 @@ class DmPipeline:
         self._max_interval_minutes = max_interval_minutes
         self._dm_delay_min = dm_delay_min_minutes
         self._dm_delay_max = dm_delay_max_minutes
+        self._persona = persona
         self._last_dm_time: datetime | None = None
 
     async def run(
@@ -206,6 +215,7 @@ class DmPipeline:
                     reply_content=tweet.get("reply_content", ""),
                     treatment_context=treatment_ctx,
                     previous_dm=previous_dm,
+                    persona=self._persona,
                 )
             except ContentGenerationError as exc:
                 result.errors += 1
@@ -273,7 +283,11 @@ class DmPipeline:
                     dm_timestamp=datetime.now(tz=UTC),
                     dm_template_used=effective_category,
                 )
-                tracker.record_dm(username, effective_category)
+                tracker.record_dm(
+                    username,
+                    effective_category,
+                    persona_id=self._persona.persona_id if self._persona else None,
+                )
                 result.dms_sent += 1
 
                 logger.info(
@@ -282,6 +296,7 @@ class DmPipeline:
                     username=username,
                     template=effective_category,
                     daily_used=self._daily_limiter.actions_used,
+                    persona_id=self._persona.persona_id if self._persona else None,
                 )
 
         logger.info(

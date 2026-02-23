@@ -103,6 +103,7 @@ class PipelineRunner:
         *,
         dry_run: bool = False,
         context: BrowserContext | None = None,
+        account_id: str | None = None,
     ) -> PipelineRunResult:
         """Execute a single Search -> Collect -> Analyze -> Nurture -> Reply -> DM -> Posting cycle.
 
@@ -115,6 +116,10 @@ class PipelineRunner:
             Pre-existing browser context to reuse. When provided the
             pipeline will NOT open or close its own browser -- the
             caller is responsible for lifecycle management.
+        account_id:
+            Optional account identifier for persona-specific voice.
+            When provided, loads the matching persona and uses its
+            keywords, style, and content rules.
 
         Returns
         -------
@@ -122,6 +127,34 @@ class PipelineRunner:
             Aggregated statistics from all pipeline stages.
         """
         result = PipelineRunResult()
+
+        # Load persona if account_id is provided
+        from src.persona import PersonaContext, load_persona, sample_keywords
+
+        persona: PersonaContext | None = None
+        if account_id is not None:
+            persona = load_persona(account_id)
+            if persona is not None:
+                logger.info(
+                    "persona_loaded",
+                    account_id=account_id,
+                    persona_id=persona.persona_id,
+                )
+            else:
+                logger.warning("persona_not_found", account_id=account_id)
+
+        # Determine search keywords: persona keywords with settings fallback
+        search_keywords = self._settings.search.keywords
+        if persona is not None:
+            persona_keywords = sample_keywords(persona)
+            if persona_keywords:
+                search_keywords = persona_keywords
+            else:
+                logger.warning(
+                    "persona_keywords_empty_fallback",
+                    account_id=account_id,
+                    persona_id=persona.persona_id,
+                )
 
         try:
             # --- Ensure session is healthy ---
@@ -155,12 +188,12 @@ class PipelineRunner:
                 if context is not None:
                     # Use the shared browser context
                     raw_tweets = await search_pipeline.run(
-                        self._settings.search.keywords,
+                        search_keywords,
                         context,
                     )
                     result.search_count = len(raw_tweets)
 
-                    for kw in self._settings.search.keywords:
+                    for kw in search_keywords:
                         kw_tweets = [t for t in raw_tweets if t.search_keyword == kw]
                         self._tracker.record_search(kw, len(kw_tweets))
 
@@ -194,12 +227,12 @@ class PipelineRunner:
                                     return result
 
                             raw_tweets = await search_pipeline.run(
-                                self._settings.search.keywords,
+                                search_keywords,
                                 ctx,
                             )
                             result.search_count = len(raw_tweets)
 
-                            for kw in self._settings.search.keywords:
+                            for kw in search_keywords:
                                 kw_tweets = [t for t in raw_tweets if t.search_keyword == kw]
                                 self._tracker.record_search(kw, len(kw_tweets))
 
@@ -233,6 +266,7 @@ class PipelineRunner:
                     like_daily_limiter=self._like_limiter,
                     follow_probability=self._settings.nurture.follow_probability,
                     like_probability=self._settings.nurture.like_probability,
+                    account_id=persona.account_id if persona else "master",
                 )
                 nurture_result = await nurture_pipeline.run(
                     repository=self._repo,
@@ -270,6 +304,7 @@ class PipelineRunner:
                     daily_limiter=self._reply_limiter,
                     min_interval_minutes=self._settings.reply.min_interval_minutes,
                     max_interval_minutes=self._settings.reply.max_interval_minutes,
+                    persona=persona,
                 )
                 reply_result = await reply_pipeline.run(
                     repository=self._repo,
@@ -292,6 +327,7 @@ class PipelineRunner:
                     daily_limiter=self._dm_limiter,
                     min_interval_minutes=self._settings.dm.min_interval_minutes,
                     max_interval_minutes=self._settings.dm.max_interval_minutes,
+                    persona=persona,
                 )
                 dm_result = await dm_pipeline.run(
                     repository=self._repo,
@@ -316,6 +352,7 @@ class PipelineRunner:
                         knowledge_base=self._kb,
                         daily_limiter=self._posting_limiter,
                         min_interval_hours=self._settings.posting.min_interval_hours,
+                        persona=persona,
                     )
                     posting_result = await posting_pipeline.run(
                         repository=self._repo,
@@ -389,7 +426,8 @@ async def _async_run(args: argparse.Namespace) -> int:
         log_dir=settings.logging.log_dir,
     )
     dry_run = getattr(args, "dry_run", False)
-    logger.info("pipeline_starting", mode="dry_run" if dry_run else "live")
+    account_id = getattr(args, "account_id", None)
+    logger.info("pipeline_starting", mode="dry_run" if dry_run else "live", account_id=account_id)
 
     # Check emergency halt state
     from src.pipeline.halt import HaltManager
@@ -422,7 +460,7 @@ async def _async_run(args: argparse.Namespace) -> int:
     runner = PipelineRunner(settings, repo, kb)
 
     if dry_run:
-        result = await runner.run_once(dry_run=True)
+        result = await runner.run_once(dry_run=True, account_id=account_id)
     else:
         # Single browser session for the entire pipeline
         async with async_playwright() as pw:
@@ -434,7 +472,7 @@ async def _async_run(args: argparse.Namespace) -> int:
             )
             try:
                 context = await session_mgr.get_session("burner")
-                result = await runner.run_once(context=context)
+                result = await runner.run_once(context=context, account_id=account_id)
             finally:
                 await session_mgr.close_all()
 
@@ -474,7 +512,8 @@ async def _async_daemon(args: argparse.Namespace) -> int:
             logger.error("startup_check_failed", error=err)
         return 1
 
-    await run_daemon(settings)
+    account_id = getattr(args, "account_id", None)
+    await run_daemon(settings, account_id=account_id)
     return 0
 
 
@@ -610,9 +649,21 @@ def _build_parser() -> argparse.ArgumentParser:
         default=False,
         help="Skip browser search; only analyze already-collected tweets",
     )
+    run_parser.add_argument(
+        "--account-id",
+        default=None,
+        help="Account ID for persona-specific voice (e.g. master_a)",
+    )
 
     # --- daemon ---
-    subparsers.add_parser("daemon", help="Start the daemon loop (24hr, variable 2-4hr cycles)")
+    daemon_parser = subparsers.add_parser(
+        "daemon", help="Start the daemon loop (24hr, variable 2-4hr cycles)"
+    )
+    daemon_parser.add_argument(
+        "--account-id",
+        default=None,
+        help="Account ID for persona-specific voice (e.g. master_a)",
+    )
 
     # --- status ---
     subparsers.add_parser("status", help="Show pipeline status and stats")

@@ -11,6 +11,7 @@ import asyncio
 import random
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from outreach_shared.browser.human_sim import random_mouse_move, random_pause
 from outreach_shared.utils.logger import get_logger
@@ -19,6 +20,10 @@ from outreach_shared.utils.time_utils import is_active_hours
 from playwright.async_api import BrowserContext
 
 from src.ai.content_gen import ContentGenerationError, ContentGenerator
+
+if TYPE_CHECKING:
+    from src.persona import PersonaContext
+
 from src.config import Settings
 from src.db.repository import Repository
 from src.knowledge.treatments import TreatmentKnowledgeBase
@@ -64,6 +69,8 @@ class PostingPipeline:
         Sliding-window limiter for daily post cap.
     min_interval_hours:
         Minimum hours between posts.
+    persona:
+        Optional persona context for account-specific voice.
     """
 
     def __init__(
@@ -73,6 +80,7 @@ class PostingPipeline:
         knowledge_base: TreatmentKnowledgeBase | None = None,
         daily_limiter: SlidingWindowLimiter | None = None,
         min_interval_hours: float = 4.0,
+        persona: PersonaContext | None = None,
     ) -> None:
         self._content_gen = content_gen
         self._kb = knowledge_base
@@ -80,6 +88,7 @@ class PostingPipeline:
             max_actions=2, window_seconds=86_400.0
         )
         self._min_interval_hours = min_interval_hours
+        self._persona = persona
         self._last_post_time: datetime | None = None
 
     async def run(
@@ -150,9 +159,11 @@ class PostingPipeline:
         try:
             if use_knowledge:
                 treatment_ctx = self._kb.get_classification_context()
-                tweet_text = await self._content_gen.generate_knowledge_post(treatment_ctx)
+                tweet_text = await self._content_gen.generate_knowledge_post(
+                    treatment_ctx, persona=self._persona
+                )
             else:
-                tweet_text = await self._content_gen.generate_casual_post()
+                tweet_text = await self._content_gen.generate_casual_post(persona=self._persona)
         except ContentGenerationError as exc:
             result.errors += 1
             result.error_details.append(f"content_gen: {exc}")
@@ -184,12 +195,16 @@ class PostingPipeline:
         if success:
             self._daily_limiter.record()
             repository.set_config("last_post_time", datetime.now(tz=UTC).isoformat())
-            tracker.record_post(len(tweet_text))
+            tracker.record_post(
+                len(tweet_text),
+                persona_id=self._persona.persona_id if self._persona else None,
+            )
             result.posts_published += 1
             logger.info(
                 "posting_published",
                 length=len(tweet_text),
                 content=tweet_text[:50],
+                persona_id=self._persona.persona_id if self._persona else None,
             )
 
         return result

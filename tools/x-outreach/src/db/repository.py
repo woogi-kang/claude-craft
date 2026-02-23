@@ -286,13 +286,14 @@ class Repository:
         action_type: str,
         tweet_id: str,
         username: str,
+        account_id: str = "master",
     ) -> int:
         """Record a nurture action (follow/like) in the outreach table."""
         result = self._run(
             self._repo.insert_outreach(
                 post_id=tweet_id,
                 user_id=username,
-                account_id="master",
+                account_id=account_id,
                 platform="x",
                 outreach_type=action_type,
                 message="",

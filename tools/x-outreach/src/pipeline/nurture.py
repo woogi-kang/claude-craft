@@ -100,6 +100,7 @@ class NurturePipeline:
         like_daily_limiter: SlidingWindowLimiter | None = None,
         follow_probability: float = 0.4,
         like_probability: float = 0.6,
+        account_id: str = "master",
     ) -> None:
         self._follow_limiter = follow_daily_limiter or SlidingWindowLimiter(
             max_actions=10, window_seconds=86_400.0
@@ -107,6 +108,7 @@ class NurturePipeline:
         self._like_limiter = like_daily_limiter or SlidingWindowLimiter(
             max_actions=15, window_seconds=86_400.0
         )
+        self._account_id = account_id
         self._follow_prob = follow_probability
         self._like_prob = like_probability
 
@@ -263,7 +265,7 @@ class NurturePipeline:
 
         if outcome == FollowOutcome.SUCCESS:
             self._follow_limiter.record()
-            repository.record_nurture_action("follow", tweet_id, username)
+            repository.record_nurture_action("follow", tweet_id, username, account_id=self._account_id)
             tracker.record_follow(tweet_id, username)
             result.follows_sent += 1
             logger.info("nurture_followed", username=username)
@@ -317,7 +319,7 @@ class NurturePipeline:
 
         if outcome == LikeOutcome.SUCCESS:
             self._like_limiter.record()
-            repository.record_nurture_action("like", tweet_id, username)
+            repository.record_nurture_action("like", tweet_id, username, account_id=self._account_id)
             tracker.record_like(tweet_id, username)
             result.likes_sent += 1
             logger.info("nurture_liked", tweet_id=tweet_id)

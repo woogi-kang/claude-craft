@@ -71,7 +71,10 @@ def create_daemon(
     )
 
 
-async def run_daemon(settings: Settings | None = None) -> None:
+async def run_daemon(
+    settings: Settings | None = None,
+    account_id: str | None = None,
+) -> None:
     """Start the daemon with a persistent browser session.
 
     Opens one browser at startup and keeps it alive across all cycles.
@@ -81,6 +84,8 @@ async def run_daemon(settings: Settings | None = None) -> None:
     ----------
     settings:
         Application settings. Loaded from config if not provided.
+    account_id:
+        Optional account identifier for persona-specific voice.
     """
     if settings is None:
         settings = load_settings()
@@ -116,7 +121,7 @@ async def run_daemon(settings: Settings | None = None) -> None:
         halt_mgr = HaltManager()
 
         async def _cycle() -> None:
-            result = await runner.run_once(context=context)
+            result = await runner.run_once(context=context, account_id=account_id)
             if result.success:
                 logger.info(
                     "pipeline_run_complete",
@@ -134,6 +139,7 @@ async def run_daemon(settings: Settings | None = None) -> None:
 
             # Persist emergency halt so the daemon stops on the next cycle
             _check_emergency_halt(result, halt_mgr)
+
         daemon = create_daemon(settings, _cycle, halt_mgr)
 
         logger.info("daemon_starting")

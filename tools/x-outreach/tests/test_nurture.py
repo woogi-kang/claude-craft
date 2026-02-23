@@ -168,8 +168,8 @@ class TestNurturePipeline:
         assert result.errors == 0
         tracker.record_follow.assert_called_once()
         tracker.record_like.assert_called_once()
-        repo.record_nurture_action.assert_any_call("follow", "t1", "user_a")
-        repo.record_nurture_action.assert_any_call("like", "t1", "user_a")
+        repo.record_nurture_action.assert_any_call("follow", "t1", "user_a", account_id="master")
+        repo.record_nurture_action.assert_any_call("like", "t1", "user_a", account_id="master")
 
     @pytest.mark.asyncio
     @patch("src.pipeline.nurture.is_active_hours", return_value=True)

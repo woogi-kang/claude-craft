@@ -11,6 +11,7 @@ import asyncio
 import random
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from outreach_shared.browser.human_sim import random_mouse_move, random_pause
 from outreach_shared.utils.logger import get_logger
@@ -19,6 +20,10 @@ from outreach_shared.utils.time_utils import is_active_hours
 from playwright.async_api import BrowserContext
 
 from src.ai.content_gen import ContentGenerationError, ContentGenerator
+
+if TYPE_CHECKING:
+    from src.persona import PersonaContext
+
 from src.config import Settings
 from src.db.repository import Repository
 from src.knowledge.templates import TemplateSelector
@@ -64,6 +69,8 @@ class ReplyPipeline:
         Minimum minutes between replies.
     max_thread_replies:
         Maximum replies per conversation thread.
+    persona:
+        Optional persona context for account-specific voice.
     """
 
     def __init__(
@@ -75,6 +82,7 @@ class ReplyPipeline:
         min_interval_minutes: int = 15,
         max_interval_minutes: int = 20,
         max_thread_replies: int = 3,
+        persona: PersonaContext | None = None,
     ) -> None:
         self._content_gen = content_gen
         self._kb = knowledge_base
@@ -85,6 +93,7 @@ class ReplyPipeline:
         self._min_interval_minutes = min_interval_minutes
         self._max_interval_minutes = max_interval_minutes
         self._max_thread_replies = max_thread_replies
+        self._persona = persona
         self._last_reply_time: datetime | None = None
 
     async def run(
@@ -196,6 +205,7 @@ class ReplyPipeline:
                     author_username=username,
                     template_category=intent_type,
                     treatment_context=treatment_ctx,
+                    persona=self._persona,
                 )
             except ContentGenerationError as exc:
                 result.errors += 1
@@ -230,7 +240,11 @@ class ReplyPipeline:
                     reply_content=reply_text,
                     reply_timestamp=datetime.now(tz=UTC),
                 )
-                tracker.record_reply(tweet_id, username)
+                tracker.record_reply(
+                    tweet_id,
+                    username,
+                    persona_id=self._persona.persona_id if self._persona else None,
+                )
                 result.replies_sent += 1
 
                 logger.info(
@@ -238,6 +252,7 @@ class ReplyPipeline:
                     tweet_id=tweet_id,
                     username=username,
                     daily_used=self._daily_limiter.actions_used,
+                    persona_id=self._persona.persona_id if self._persona else None,
                 )
 
         logger.info(

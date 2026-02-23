@@ -173,7 +173,7 @@ class TestReplyPipeline:
         assert result.errors == 0
         assert result.total_candidates == 1
         mock_post.assert_called_once_with(ctx, "https://x.com/user_a/status/t1", reply_text)
-        tracker.record_reply.assert_called_once_with("t1", "user_a")
+        tracker.record_reply.assert_called_once_with("t1", "user_a", persona_id=None)
         repo.update_tweet_status.assert_called_once()
 
     @pytest.mark.asyncio

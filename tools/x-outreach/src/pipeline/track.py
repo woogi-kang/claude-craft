@@ -73,24 +73,28 @@ class ActionTracker:
         stat_key = f"tweets_{classification}"
         self._repo.update_daily_stats(self._today(), tweets_analyzed=1, **{stat_key: 1})
 
-    def record_reply(self, tweet_id: str, username: str) -> None:
+    def record_reply(self, tweet_id: str, username: str, persona_id: str | None = None) -> None:
         """Record a reply action."""
+        details = f"persona={persona_id}" if persona_id else None
         self._repo.record_action(
             action_type="reply",
             tweet_id=tweet_id,
             username=username,
-            details=None,
+            details=details,
             status="success",
         )
         self._repo.update_daily_stats(self._today(), replies_sent=1)
 
-    def record_dm(self, username: str, template_used: str) -> None:
+    def record_dm(self, username: str, template_used: str, persona_id: str | None = None) -> None:
         """Record a DM action."""
+        details = f"template={template_used}"
+        if persona_id:
+            details += f", persona={persona_id}"
         self._repo.record_action(
             action_type="dm",
             tweet_id=None,
             username=username,
-            details=f"template={template_used}",
+            details=details,
             status="success",
         )
         self._repo.update_daily_stats(self._today(), dms_sent=1)
@@ -122,13 +126,16 @@ class ActionTracker:
         """
         self._repo.update_daily_stats(self._today(), likes_sent=1)
 
-    def record_post(self, content_length: int) -> None:
+    def record_post(self, content_length: int, persona_id: str | None = None) -> None:
         """Record an original post action."""
+        details = f"content_length={content_length}"
+        if persona_id:
+            details += f", persona={persona_id}"
         self._repo.record_action(
             action_type="post",
             tweet_id=None,
             username=None,
-            details=f"content_length={content_length}",
+            details=details,
             status="success",
         )
         self._repo.update_daily_stats(self._today(), posts_published=1)
