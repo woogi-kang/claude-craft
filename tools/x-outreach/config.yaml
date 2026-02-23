@@ -16,9 +16,11 @@ search:
     #- "韓国 ヒアルロン酸"
     #- "韓国 美肌"
   max_post_age_hours: 24
+  block_media_resources: true
+  blocked_resource_types: ["image", "media", "font"]
+  log_network_usage: true
 
 collect:
-  max_follower_count: 10000
   require_profile_pic: false
   require_bio: false
 
@@ -92,3 +94,5 @@ account_pool:
 llm:
   provider: codex
   model: gpt-5.1-codex-mini
+  fallback_provider: gemini_cli
+  fallback_model: gemini-3-flash-preview

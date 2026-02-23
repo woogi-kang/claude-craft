@@ -6,14 +6,16 @@ from the DOM, and returns unfiltered results for the collect stage.
 
 from __future__ import annotations
 
+import asyncio
 import random
 import urllib.parse
-from dataclasses import dataclass
+from collections.abc import Awaitable, Callable
+from dataclasses import dataclass, field
 
 from outreach_shared.browser.human_sim import human_scroll, random_mouse_move, random_pause
 from outreach_shared.utils.logger import get_logger
 from outreach_shared.utils.time_utils import random_delay
-from playwright.async_api import BrowserContext, Page
+from playwright.async_api import BrowserContext, Page, Request, Route
 
 from src.platform.selectors import (
     METRICS_GROUP,
@@ -23,6 +25,24 @@ from src.platform.selectors import (
 )
 
 logger = get_logger("search")
+
+
+@dataclass
+class _SearchNetworkStats:
+    """In-memory counters for search-stage network optimization metrics."""
+
+    blocked_requests: int = 0
+    blocked_by_type: dict[str, int] = field(default_factory=dict)
+    finished_requests: int = 0
+    failed_requests: int = 0
+    request_bytes: int = 0
+    response_bytes: int = 0
+    size_errors: int = 0
+
+    @property
+    def total_bytes(self) -> int:
+        """Total transfer bytes (request + response)."""
+        return self.request_bytes + self.response_bytes
 
 
 @dataclass
@@ -62,9 +82,15 @@ class SearchPipeline:
         *,
         min_delay: float = 30.0,
         max_delay: float = 300.0,
+        block_media_resources: bool = False,
+        blocked_resource_types: tuple[str, ...] = ("image", "media", "font"),
+        log_network_usage: bool = False,
     ) -> None:
         self._min_delay = min_delay
         self._max_delay = max_delay
+        self._block_media_resources = block_media_resources
+        self._blocked_resource_types = {t.strip().lower() for t in blocked_resource_types if t}
+        self._log_network_usage = log_network_usage
 
     async def run(
         self,
@@ -87,27 +113,60 @@ class SearchPipeline:
         """
         all_tweets: list[RawTweet] = []
         page = context.pages[0] if context.pages else await context.new_page()
+        should_track_network = self._block_media_resources or self._log_network_usage
+        network_stats = _SearchNetworkStats() if should_track_network else None
+        route_handler: Callable[[Route, Request], Awaitable[None]] | None = None
+        finished_handler: Callable[[Request], None] | None = None
+        failed_handler: Callable[[Request], None] | None = None
+        pending_size_tasks: list[asyncio.Task[None]] = []
+
+        if network_stats is not None:
+            if self._block_media_resources:
+                route_handler = self._make_route_handler(network_stats)
+                await page.route("**/*", route_handler)
+            if self._log_network_usage:
+                finished_handler = self._make_request_finished_handler(
+                    network_stats, pending_size_tasks
+                )
+                failed_handler = self._make_request_failed_handler(network_stats)
+                page.on("requestfinished", finished_handler)
+                page.on("requestfailed", failed_handler)
 
         # Randomize keyword order each run for natural-looking search patterns
         keywords = list(keywords)  # copy to avoid mutating caller's list
         random.shuffle(keywords)
 
-        for idx, keyword in enumerate(keywords):
-            logger.info("search_keyword_start", keyword=keyword, index=idx + 1, total=len(keywords))
-            try:
-                tweets = await self._search_keyword(page, keyword)
-                all_tweets.extend(tweets)
+        try:
+            for idx, keyword in enumerate(keywords):
                 logger.info(
-                    "search_keyword_done",
+                    "search_keyword_start",
                     keyword=keyword,
-                    found=len(tweets),
+                    index=idx + 1,
+                    total=len(keywords),
                 )
-            except Exception as exc:
-                logger.error("search_keyword_error", keyword=keyword, error=str(exc))
+                try:
+                    tweets = await self._search_keyword(page, keyword)
+                    all_tweets.extend(tweets)
+                    logger.info(
+                        "search_keyword_done",
+                        keyword=keyword,
+                        found=len(tweets),
+                    )
+                except Exception as exc:
+                    logger.error("search_keyword_error", keyword=keyword, error=str(exc))
 
-            # Human-like delay between searches
-            if idx < len(keywords) - 1:
-                await random_delay(self._min_delay, self._max_delay)
+                # Human-like delay between searches
+                if idx < len(keywords) - 1:
+                    await random_delay(self._min_delay, self._max_delay)
+        finally:
+            if finished_handler is not None:
+                page.remove_listener("requestfinished", finished_handler)
+            if failed_handler is not None:
+                page.remove_listener("requestfailed", failed_handler)
+            if route_handler is not None:
+                await page.unroute("**/*", route_handler)
+            if pending_size_tasks:
+                await asyncio.gather(*pending_size_tasks, return_exceptions=True)
 
         # Deduplicate by tweet_id
         seen: set[str] = set()
@@ -118,6 +177,18 @@ class SearchPipeline:
                 unique.append(tweet)
 
         logger.info("search_complete", total_unique=len(unique), total_raw=len(all_tweets))
+        if network_stats is not None:
+            logger.info(
+                "search_network_usage",
+                blocked_requests=network_stats.blocked_requests,
+                blocked_by_type=dict(sorted(network_stats.blocked_by_type.items())),
+                finished_requests=network_stats.finished_requests,
+                failed_requests=network_stats.failed_requests,
+                request_bytes=network_stats.request_bytes,
+                response_bytes=network_stats.response_bytes,
+                total_bytes=network_stats.total_bytes,
+                size_errors=network_stats.size_errors,
+            )
         return unique
 
     async def _search_keyword(self, page: Page, keyword: str) -> list[RawTweet]:
@@ -223,3 +294,65 @@ class SearchPipeline:
             if cleaned.isdigit():
                 return int(cleaned)
         return 0
+
+    def _make_route_handler(
+        self,
+        stats: _SearchNetworkStats,
+    ) -> Callable[[Route, Request], Awaitable[None]]:
+        """Create a route handler that blocks non-essential heavy resources."""
+        blocked = self._blocked_resource_types
+
+        async def _handle(route: Route, request: Request) -> None:
+            rtype = request.resource_type.strip().lower()
+            if rtype in blocked:
+                stats.blocked_requests += 1
+                stats.blocked_by_type[rtype] = stats.blocked_by_type.get(rtype, 0) + 1
+                await route.abort()
+                return
+            await route.continue_()
+
+        return _handle
+
+    @staticmethod
+    def _make_request_finished_handler(
+        stats: _SearchNetworkStats,
+        pending_size_tasks: list[asyncio.Task[None]],
+    ) -> Callable[[Request], None]:
+        """Create a handler that tracks finished requests and their transfer size."""
+
+        def _handle(request: Request) -> None:
+            stats.finished_requests += 1
+            pending_size_tasks.append(
+                asyncio.create_task(SearchPipeline._collect_sizes(request, stats))
+            )
+
+        return _handle
+
+    @staticmethod
+    def _make_request_failed_handler(
+        stats: _SearchNetworkStats,
+    ) -> Callable[[Request], None]:
+        """Create a handler that tracks failed requests."""
+
+        def _handle(_request: Request) -> None:
+            stats.failed_requests += 1
+
+        return _handle
+
+    @staticmethod
+    async def _collect_sizes(
+        request: Request,
+        stats: _SearchNetworkStats,
+    ) -> None:
+        """Collect request/response sizes from Playwright when available."""
+        try:
+            sizes = await request.sizes()
+        except Exception:
+            stats.size_errors += 1
+            return
+
+        stats.request_bytes += sizes.get("requestBodySize", 0) + sizes.get("requestHeadersSize", 0)
+        stats.response_bytes += sizes.get("responseBodySize", 0) + sizes.get(
+            "responseHeadersSize",
+            0,
+        )

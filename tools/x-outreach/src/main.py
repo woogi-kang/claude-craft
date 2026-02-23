@@ -13,6 +13,7 @@ import random
 import sys
 from dataclasses import dataclass
 
+from outreach_shared.ai.llm_client import create_llm_client_with_fallback
 from outreach_shared.utils.logger import get_logger, setup_logging
 from outreach_shared.utils.rate_limiter import SlidingWindowLimiter
 from playwright.async_api import BrowserContext, async_playwright
@@ -160,15 +161,17 @@ class PipelineRunner:
             # --- Ensure session is healthy ---
             if context is not None:
                 healthy = await check_session_health(context)
-                if not healthy:
-                    logger.info("session_expired_relogin")
-                    logged_in = await login(
-                        context,
-                        self._settings.burner_x_username,
-                        self._settings.burner_x_password,
-                    )
-                    if not logged_in:
-                        result.error = "Failed to login"
+                if not healthy and account_id:
+                    logger.info("session_expired_relogin", account_id=account_id)
+                    username, password = self._settings.get_account_credentials(account_id)
+                    if username and password:
+                        logged_in = await login(context, username, password)
+                        if not logged_in:
+                            result.error = f"Failed to login account {account_id}"
+                            self._tracker.record_error("login", result.error)
+                            return result
+                    else:
+                        result.error = f"No credentials for account {account_id}"
                         self._tracker.record_error("login", result.error)
                         return result
 
@@ -177,9 +180,11 @@ class PipelineRunner:
                 search_pipeline = SearchPipeline(
                     min_delay=self._settings.delays.search_min_seconds,
                     max_delay=self._settings.delays.search_max_seconds,
+                    block_media_resources=self._settings.search.block_media_resources,
+                    blocked_resource_types=tuple(self._settings.search.blocked_resource_types),
+                    log_network_usage=self._settings.search.log_network_usage,
                 )
                 collect_pipeline = CollectPipeline(
-                    max_follower_count=self._settings.collect.max_follower_count,
                     require_profile_pic=self._settings.collect.require_profile_pic,
                     require_bio=self._settings.collect.require_bio,
                     max_tweet_age_hours=self._settings.search.max_post_age_hours,
@@ -205,26 +210,28 @@ class PipelineRunner:
                     )
                 else:
                     # One-shot mode: open browser just for this run
+                    session_name = account_id or "default"
                     async with async_playwright() as pw:
                         session_mgr = SessionManager(
                             pw,
                             headless=self._settings.browser.headless,
                             viewport_width=self._settings.browser.viewport_width,
                             viewport_height=self._settings.browser.viewport_height,
+                            proxy_provider=self._settings.get_account_proxy,
                         )
                         try:
-                            ctx = await session_mgr.get_session("burner")
+                            ctx = await session_mgr.get_session(session_name)
                             healthy = await check_session_health(ctx)
-                            if not healthy:
-                                logged_in = await login(
-                                    ctx,
-                                    self._settings.burner_x_username,
-                                    self._settings.burner_x_password,
+                            if not healthy and account_id:
+                                username, password = self._settings.get_account_credentials(
+                                    account_id
                                 )
-                                if not logged_in:
-                                    result.error = "Failed to login"
-                                    self._tracker.record_error("login", result.error)
-                                    return result
+                                if username and password:
+                                    logged_in = await login(ctx, username, password)
+                                    if not logged_in:
+                                        result.error = f"Failed to login account {account_id}"
+                                        self._tracker.record_error("login", result.error)
+                                        return result
 
                             raw_tweets = await search_pipeline.run(
                                 search_keywords,
@@ -290,11 +297,14 @@ class PipelineRunner:
                 or self._settings.posting.enabled
             )
             if needs_content_gen and context is not None:
-                content_gen = ContentGenerator(
+                content_llm = create_llm_client_with_fallback(
+                    provider=self._settings.llm.provider,
+                    fallback_provider=self._settings.llm.fallback_provider,
                     api_key=self._settings.llm_api_key,
                     model=self._settings.llm.model,
-                    provider=self._settings.llm.provider,
+                    fallback_model=self._settings.llm.fallback_model,
                 )
+                content_gen = ContentGenerator(llm_client=content_llm)
 
             # --- Reply (if enabled) ---
             if self._settings.reply.enabled and context is not None and content_gen is not None:
@@ -378,37 +388,33 @@ class PipelineRunner:
         return result
 
 
-def _verify_startup(settings: Settings) -> list[str]:
+def _verify_startup(settings: Settings, account_id: str | None = None) -> list[str]:
     """Verify that required resources are available.
 
     Returns a list of error messages (empty if all checks pass).
     Credential checks are skipped when a persistent browser session
-    already exists on disk (manual login flow).
+    already exists on disk (manual login / cookie injection flow).
     """
     from pathlib import Path
 
     errors: list[str] = []
 
-    # API key only required for non-codex providers
-    if settings.llm.provider != "codex" and not settings.llm_api_key:
-        errors.append("LLM API key is not set (GEMINI_API_KEY in .env)")
+    # API key required only for SDK-based providers (not codex/gemini_cli)
+    if settings.llm.provider == "gemini" and not settings.gemini_api_key:
+        errors.append("GEMINI_API_KEY is not set in .env")
+    elif settings.llm.provider == "claude" and not settings.llm_api_key:
+        errors.append("API key is not set in .env for claude provider")
 
-    # Skip credential checks if a saved session exists
-    session_dir = Path(__file__).resolve().parent.parent / "data" / "sessions" / "master"
-    has_session = (session_dir / "Default" / "Cookies").exists()
-
-    if not has_session:
-        if not settings.burner_x_username:
-            errors.append("BURNER_X_USERNAME is not set")
-        if not settings.burner_x_password:
-            errors.append("BURNER_X_PASSWORD is not set")
-
-        needs_master = settings.dm.enabled or settings.nurture.enabled or settings.posting.enabled
-        if needs_master:
-            if not settings.master_x_username:
-                errors.append("MASTER_X_USERNAME is not set (required for DM/nurture/posting)")
-            if not settings.master_x_password:
-                errors.append("MASTER_X_PASSWORD is not set (required for DM/nurture/posting)")
+    # Verify persona account credentials if account_id provided
+    if account_id:
+        session_dir = (
+            Path(__file__).resolve().parent.parent / "data" / "sessions" / account_id
+        )
+        has_session = (session_dir / "Default" / "Cookies").exists()
+        if not has_session:
+            username, password = settings.get_account_credentials(account_id)
+            if not username:
+                errors.append(f"Credentials not set for account {account_id}")
 
     return errors
 
@@ -441,7 +447,7 @@ async def _async_run(args: argparse.Namespace) -> int:
 
     # Startup verification
     if not dry_run:
-        errors = _verify_startup(settings)
+        errors = _verify_startup(settings, account_id=account_id)
         if errors:
             for err in errors:
                 logger.error("startup_check_failed", error=err)
@@ -463,15 +469,17 @@ async def _async_run(args: argparse.Namespace) -> int:
         result = await runner.run_once(dry_run=True, account_id=account_id)
     else:
         # Single browser session for the entire pipeline
+        session_name = account_id or "default"
         async with async_playwright() as pw:
             session_mgr = SessionManager(
                 pw,
                 headless=settings.browser.headless,
                 viewport_width=settings.browser.viewport_width,
                 viewport_height=settings.browser.viewport_height,
+                proxy_provider=settings.get_account_proxy,
             )
             try:
-                context = await session_mgr.get_session("burner")
+                context = await session_mgr.get_session(session_name)
                 result = await runner.run_once(context=context, account_id=account_id)
             finally:
                 await session_mgr.close_all()
@@ -506,13 +514,12 @@ async def _async_daemon(args: argparse.Namespace) -> int:
     )
     logger.info("daemon_starting")
 
-    errors = _verify_startup(settings)
+    account_id = getattr(args, "account_id", None)
+    errors = _verify_startup(settings, account_id=account_id)
     if errors:
         for err in errors:
             logger.error("startup_check_failed", error=err)
         return 1
-
-    account_id = getattr(args, "account_id", None)
     await run_daemon(settings, account_id=account_id)
     return 0
 

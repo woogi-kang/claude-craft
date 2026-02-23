@@ -111,9 +111,11 @@ class TreatmentKnowledgeBase:
             Number of procedures loaded.
         """
         if json_path is None:
-            # Resolve relative to claude-craft project root
+            # Resolve relative to project root
+            from src.config import PROJECT_ROOT
+
             json_path = (
-                Path(__file__).resolve().parent.parent.parent.parent.parent
+                PROJECT_ROOT
                 / "data"
                 / "dermatology"
                 / "dermatology_procedure_details_complete.json"

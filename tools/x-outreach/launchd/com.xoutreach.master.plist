@@ -16,7 +16,7 @@
     </array>
 
     <key>WorkingDirectory</key>
-    <string>/Users/woogi/Development/claude-craft/tools/x-outreach</string>
+    <string>/Users/woogi/Development/x-outreach</string>
 
     <key>RunAtLoad</key>
     <true/>
@@ -28,10 +28,10 @@
     </dict>
 
     <key>StandardOutPath</key>
-    <string>/Users/woogi/Development/claude-craft/tools/x-outreach/logs/launchd-stdout.log</string>
+    <string>/Users/woogi/Development/x-outreach/logs/launchd-stdout.log</string>
 
     <key>StandardErrorPath</key>
-    <string>/Users/woogi/Development/claude-craft/tools/x-outreach/logs/launchd-stderr.log</string>
+    <string>/Users/woogi/Development/x-outreach/logs/launchd-stderr.log</string>
 
     <key>EnvironmentVariables</key>
     <dict>

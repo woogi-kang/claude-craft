@@ -1,0 +1,56 @@
+{
+  "country": "japan",
+  "last_updated": "2026-02-13",
+  "medical_tourism": {
+    "visitors_to_korea": {
+      "2022": 15000,
+      "2023": 160000,
+      "growth_rate": "10x+ (2022→2023)"
+    },
+    "interest_rate": "60%の日本女性が韓国美容ツアーに関心 (minfor調査)",
+    "popular_areas": [
+      {"name": "明洞 (Myeongdong)", "reason": "アクセス良好、日本語対応充実"},
+      {"name": "江南 (Gangnam)", "reason": "最新設備、美の聖地"},
+      {"name": "弘大 (Hongdae)", "reason": "トレンディ"}
+    ],
+    "typical_trip_duration": "1泊2日〜2泊3日",
+    "avg_booking_lead_time": "1ヶ月前",
+    "foreign_patient_accident_rate": "韓国人の約2.3倍 (大韓医師協会)"
+  },
+  "demographics": {
+    "primary_age_groups": {
+      "10-20代": {"priority": "効果（発色等）重視", "platform": "TikTok, Instagram"},
+      "30代": {"priority": "価格重視、コスパ中心", "platform": "Instagram, note, X"},
+      "40代+": {"priority": "リフティング、アンチエイジング", "platform": "Ameba Blog, YouTube"}
+    },
+    "gender": "圧倒的に女性。男性美容施術も増加傾向"
+  },
+  "popular_treatments_2026": [
+    {"name": "ポテンツァ (Potenza)", "rank": 1, "price_kr": "200,000-300,000ウォン"},
+    {"name": "リジュラン (Rejuran)", "rank": 2},
+    {"name": "水光注射", "rank": 3},
+    {"name": "ボトックス", "rank": 4},
+    {"name": "シミ取りレーザー", "rank": 5, "price_kr": "5,000-15,000円/回", "price_jp": "20,000-30,000円/回"},
+    {"name": "アートメイク", "rank": 6}
+  ],
+  "price_comparison": {
+    "note": "韓国は日本の1/3〜1/5程度",
+    "examples": [
+      {"treatment": "シミ取りレーザー", "korea": "5,000-15,000円", "japan": "20,000-30,000円"},
+      {"treatment": "ホクロ除去(1個)", "korea": "~1,000円", "japan": "~5,000円"}
+    ]
+  },
+  "trends_2026": [
+    "インテリジェントミニマリズム — 10段階ルーティンからマルチタスキング製品へ",
+    "自然な仕上がり — 過度な施術を避ける傾向",
+    "短期間で結果 — 旅行日程内で完了できる施術",
+    "ダウンタイムなし — 日常復帰が早い施術",
+    "ジュベルック — 2026年急浮上トレンド"
+  ],
+  "discovery_funnel": {
+    "awareness": ["Instagram influencer", "YouTube", "X (Twitter)", "TikTok", "word_of_mouth"],
+    "consideration": ["Gangnam Unni app", "Konest reviews", "LINE OpenChat", "note guides", "TRIBEAU"],
+    "booking": ["LINE official account", "Gangnam Unni app", "KakaoTalk", "aroom agent", "travel_package"],
+    "advocacy": ["Instagram post", "note/Ameba blog", "X realtime", "YouTube vlog", "口コミ広場"]
+  }
+}

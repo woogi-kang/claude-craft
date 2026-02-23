@@ -66,8 +66,7 @@ def check_python_version(min_version: tuple[int, int] = (3, 13)) -> SetupCheck:
 def check_env_file(project_root: Path | None = None) -> SetupCheck:
     """Verify that the ``.env`` file exists and contains required keys.
 
-    Required keys: ``GEMINI_API_KEY``, ``BURNER_X_USERNAME``,
-    ``BURNER_X_PASSWORD``.
+    Required keys: ``GEMINI_API_KEY`` (for non-Codex providers).
     """
     root = project_root or PROJECT_ROOT
     env_path = root / ".env"
@@ -82,8 +81,6 @@ def check_env_file(project_root: Path | None = None) -> SetupCheck:
     content = env_path.read_text(encoding="utf-8")
     required_keys = [
         "GEMINI_API_KEY",
-        "BURNER_X_USERNAME",
-        "BURNER_X_PASSWORD",
     ]
     missing = [k for k in required_keys if k not in content]
 

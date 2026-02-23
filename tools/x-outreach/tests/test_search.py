@@ -49,3 +49,19 @@ class TestSearchPipeline:
         pipeline = SearchPipeline(min_delay=5.0, max_delay=10.0)
         assert pipeline._min_delay == 5.0
         assert pipeline._max_delay == 10.0
+
+    def test_init_network_optimization_defaults(self) -> None:
+        pipeline = SearchPipeline()
+        assert pipeline._block_media_resources is False
+        assert pipeline._blocked_resource_types == {"image", "media", "font"}
+        assert pipeline._log_network_usage is False
+
+    def test_init_network_optimization_custom(self) -> None:
+        pipeline = SearchPipeline(
+            block_media_resources=True,
+            blocked_resource_types=("image", "font"),
+            log_network_usage=True,
+        )
+        assert pipeline._block_media_resources is True
+        assert pipeline._blocked_resource_types == {"image", "font"}
+        assert pipeline._log_network_usage is True

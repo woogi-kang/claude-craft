@@ -52,28 +52,34 @@ class TweetClassifier:
 
     Parameters
     ----------
-    api_key:
-        API key (unused for Codex provider).
-    model:
-        LLM model identifier.
+    llm_client:
+        Pre-configured LLM client instance.
     confidence_threshold:
         Minimum confidence to accept an LLM classification.
     domain_context:
         Treatment knowledge context string to embed in the system prompt.
+    api_key:
+        Deprecated. Use llm_client instead.
+    model:
+        Deprecated. Use llm_client instead.
     provider:
-        LLM provider name (default: ``"codex"``).
+        Deprecated. Use llm_client instead.
     """
 
     def __init__(
         self,
         *,
-        api_key: str = "",
-        model: str = "gpt-5.1-codex-mini",
+        llm_client: LLMClient | None = None,
         confidence_threshold: float = 0.7,
         domain_context: str = "",
+        api_key: str = "",
+        model: str = "gpt-5.1-codex-mini",
         provider: str = "codex",
     ) -> None:
-        self._llm: LLMClient = create_llm_client(provider, api_key, model=model)
+        if llm_client is not None:
+            self._llm: LLMClient = llm_client
+        else:
+            self._llm = create_llm_client(provider, api_key, model=model)
         self._confidence_threshold = confidence_threshold
         self._system_prompt = build_classification_system_prompt(domain_context)
 

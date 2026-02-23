@@ -767,7 +767,7 @@ wheels = [
 [[package]]
 name = "outreach-shared"
 version = "0.1.0"
-source = { editable = "../_shared" }
+source = { editable = "packages/_shared" }
 dependencies = [
     { name = "asyncpg" },
     { name = "google-genai" },
@@ -1297,7 +1297,7 @@ dev = [
 requires-dist = [
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.14" },
     { name = "nest-asyncio", specifier = ">=1.6" },
-    { name = "outreach-shared", editable = "../_shared" },
+    { name = "outreach-shared", editable = "packages/_shared" },
     { name = "playwright", specifier = ">=1.49" },
     { name = "playwright-stealth", specifier = ">=1.0.6" },
     { name = "pydantic", specifier = ">=2.9" },

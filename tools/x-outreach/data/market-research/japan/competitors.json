@@ -1,0 +1,153 @@
+{
+  "country": "japan",
+  "last_updated": "2026-02-13",
+  "competitor_categories": {
+    "booking_apps": [
+      {
+        "name": "Gangnam Unni (カンナムオンニ)",
+        "url": "https://www.gangnamunni.com/jp",
+        "type": "review_booking_app",
+        "japan_downloads": 700000,
+        "clinics": 2900,
+        "reviews": 800000,
+        "language_support": "ja",
+        "pricing_model": "free + clinic commission",
+        "strengths": ["largest_jp_user_base", "realtime_booking", "auto_translate"],
+        "weaknesses": ["fake_review_concerns", "information_overload"]
+      },
+      {
+        "name": "Babitalk (バビトーク)",
+        "url": "https://web.babitalk.com/ja",
+        "type": "review_booking_app",
+        "total_users": 9000000,
+        "reviews": 1000000,
+        "japan_launch": "2025-08-25",
+        "language_support": "ja",
+        "strengths": ["largest_kr_platform", "1min_doctor_qa_video", "offline_events"],
+        "weaknesses": ["japan_market_early_stage"]
+      },
+      {
+        "name": "YeoTi (ヨーティ)",
+        "url": "https://apps.apple.com/jp/app/yeoti/id1228558605",
+        "type": "review_booking_app",
+        "total_users": 3400000,
+        "reviews": 900000,
+        "language_support": "ja",
+        "unique_feature": "receipt_verified_reviews",
+        "strengths": ["dermatology_specialized", "equal_pricing_foreigners", "verified_reviews"],
+        "weaknesses": ["low_japan_awareness"]
+      },
+      {
+        "name": "TRIBEAU (トリビュー)",
+        "url": "https://tribeau.jp",
+        "type": "review_booking_app",
+        "downloads": 2000000,
+        "korean_clinics": 407,
+        "language_support": "ja",
+        "strengths": ["japan_largest", "sns_community", "cashback"],
+        "weaknesses": ["limited_korean_clinic_info"]
+      }
+    ],
+    "concierge_services": [
+      {
+        "name": "aroom (アルム)",
+        "url": "https://aroom.beauty",
+        "type": "concierge",
+        "clinics": 100,
+        "language_support": "ja",
+        "services": ["free_concierge", "free_interpreter", "booking_agent", "airport_transfer"],
+        "strengths": ["full_japanese_support", "onsite_staff"],
+        "weaknesses": ["limited_clinic_selection"]
+      },
+      {
+        "name": "minfor (ミンフォ)",
+        "url": "https://minfor.jp",
+        "type": "portal_concierge",
+        "affiliated_clinics": 1300,
+        "hq": "Seoul",
+        "services": ["line_consultation", "free_interpreter", "booking", "airport_escort"],
+        "strengths": ["largest_clinic_network", "comprehensive_info"],
+        "weaknesses": ["portal_not_app"]
+      },
+      {
+        "name": "ロコタビ",
+        "url": "https://locotabi.jp/korea",
+        "type": "guide_matching",
+        "services": ["personal_guide", "interpreter", "clinic_escort"],
+        "strengths": ["flexible", "personal_touch"],
+        "weaknesses": ["quality_varies", "per_guide_pricing"]
+      }
+    ],
+    "travel_agencies": [
+      {
+        "name": "HIS",
+        "url": "https://activities.his-j.com/TourList/O1/KOR/TL013/",
+        "type": "travel_agency",
+        "package_name": "美肌革命",
+        "price_range": "7-10万円 (2泊3日)",
+        "includes": ["flights", "hotel", "basic_treatments"],
+        "strengths": ["trusted_brand", "all_inclusive"],
+        "weaknesses": ["limited_clinic_choice"]
+      },
+      {
+        "name": "JTB",
+        "url": "https://www.jtb.co.jp/kaigai_opt/",
+        "type": "travel_agency",
+        "package_name": "ビューティーエスコート",
+        "price_range": "10-15万円 (2泊3日)",
+        "includes": ["dedicated_concierge", "premium_clinics", "aftercare_support"],
+        "strengths": ["premium_service", "aftercare"],
+        "weaknesses": ["expensive"]
+      },
+      {
+        "name": "三進トラベルサービス",
+        "url": "https://www.sanshin-travel.com",
+        "type": "korea_specialist_agency",
+        "next_tour": "2026-04-24~26",
+        "capacity": 30,
+        "unique": "韓国皮膚科勤務経験スタッフ同行",
+        "includes": ["skin_type_diagnosis", "personal_color_diagnosis", "treatment", "cosmetic_shopping"]
+      },
+      {
+        "name": "VELTRA",
+        "url": "https://www.veltra.com/jp/asia/korea/seoul/ctg/202278:beautyclinic/",
+        "type": "activity_platform",
+        "launch": "2024-11-20",
+        "initial_clinics": 3,
+        "strengths": ["trusted_platform", "interpreter_option"],
+        "weaknesses": ["limited_clinics"]
+      }
+    ],
+    "info_portals": [
+      {
+        "name": "Konest (コネスト)",
+        "url": "https://www.konest.com/contents/clinic_top.html",
+        "type": "travel_portal",
+        "top_review": {"clinic": "Vincent Clinic", "reviews": 6205, "rating": 4.9},
+        "strengths": ["no1_kr_travel_portal_for_jp", "reservation_center", "comprehensive"],
+        "weaknesses": ["price_transparency_low"]
+      },
+      {
+        "name": "Creatrip",
+        "url": "https://creatrip.com/ja",
+        "type": "travel_portal",
+        "strengths": ["jp_booking", "deposit_confirmation"],
+        "weaknesses": ["limited_clinic_selection"]
+      },
+      {
+        "name": "Woori Korea",
+        "url": "https://woorikorea.media",
+        "type": "media",
+        "strengths": ["trendy_content", "area_guides"],
+        "weaknesses": ["no_booking_function"]
+      },
+      {
+        "name": "Seoul Navi (ソウルナビ)",
+        "url": "https://www.seoulnavi.com/beauty/a/g31/",
+        "type": "travel_portal",
+        "registered_clinics": 3,
+        "weaknesses": ["extremely_limited_clinics"]
+      }
+    ]
+  }
+}

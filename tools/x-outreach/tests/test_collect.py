@@ -38,15 +38,13 @@ class TestCollectFilters:
         pipeline = CollectPipeline(max_tweet_age_hours=999)
         result = pipeline.run([sample_raw_tweets[0]], repo)
         assert result.stored == 1
-        assert result.rejected_followers == 0
 
-    def test_rejects_high_follower_count(self, sample_raw_tweets: list[RawTweet]) -> None:
+    def test_accepts_high_follower_count(self, sample_raw_tweets: list[RawTweet]) -> None:
         repo = _make_mock_repo()
         pipeline = CollectPipeline(max_tweet_age_hours=999)
-        # tweet_004 has 50K followers
+        # tweet_004 has 50K followers -- now accepted
         result = pipeline.run([sample_raw_tweets[3]], repo)
-        assert result.stored == 0
-        assert result.rejected_followers == 1
+        assert result.stored == 1
 
     def test_rejects_no_bio(self, sample_raw_tweets: list[RawTweet]) -> None:
         repo = _make_mock_repo()
@@ -62,13 +60,12 @@ class TestCollectFilters:
         result = pipeline.run([sample_raw_tweets[4]], repo)
         assert result.stored == 1
 
-    def test_rejects_marketing_account(self, sample_raw_tweets: list[RawTweet]) -> None:
+    def test_accepts_marketing_account(self, sample_raw_tweets: list[RawTweet]) -> None:
         repo = _make_mock_repo()
         pipeline = CollectPipeline(max_tweet_age_hours=999)
-        # tweet_003 is from clinic_official with URL + clinic keyword in bio
+        # tweet_003 is from clinic_official -- now accepted (no marketing filter)
         result = pipeline.run([sample_raw_tweets[2]], repo)
-        assert result.stored == 0
-        assert result.rejected_marketing == 1
+        assert result.stored == 1
 
     def test_rejects_no_profile_pic(self) -> None:
         repo = _make_mock_repo()
@@ -96,35 +93,11 @@ class TestCollectFilters:
         repo = _make_mock_repo()
         pipeline = CollectPipeline(max_tweet_age_hours=999)
         result = pipeline.run(sample_raw_tweets, repo)
-        # tweet_001 and tweet_002 should pass (normal users with bio)
-        # tweet_003 rejected (marketing)
-        # tweet_004 rejected (50K followers)
+        # tweet_001, tweet_002, tweet_003, tweet_004 should pass
         # tweet_005 rejected (no bio)
-        assert result.stored == 2
+        assert result.stored == 4
         assert result.total_input == 5
 
-
-class TestMarketingDetection:
-    """Test the clinic marketing account heuristic."""
-
-    def test_url_plus_keyword(self) -> None:
-        pipeline = CollectPipeline()
-        assert (
-            pipeline._is_marketing_account("江南クリニック公式 https://example.com", "clinic")
-            is True
-        )
-
-    def test_url_without_keyword(self) -> None:
-        pipeline = CollectPipeline()
-        assert pipeline._is_marketing_account("My blog https://myblog.com", "user") is False
-
-    def test_keyword_without_url(self) -> None:
-        pipeline = CollectPipeline()
-        assert pipeline._is_marketing_account("美容皮膚科で働いてます", "user") is False
-
-    def test_empty_bio(self) -> None:
-        pipeline = CollectPipeline()
-        assert pipeline._is_marketing_account("", "user") is False
 
 
 class TestUserUpsert:

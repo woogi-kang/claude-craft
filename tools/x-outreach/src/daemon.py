@@ -114,9 +114,11 @@ async def run_daemon(
             headless=settings.browser.headless,
             viewport_width=settings.browser.viewport_width,
             viewport_height=settings.browser.viewport_height,
+            proxy_provider=settings.get_account_proxy,
         )
-        context = await session_mgr.get_session("master")
-        logger.info("persistent_browser_started")
+        session_name = account_id or "default"
+        context = await session_mgr.get_session(session_name)
+        logger.info("persistent_browser_started", session=session_name)
 
         halt_mgr = HaltManager()
 

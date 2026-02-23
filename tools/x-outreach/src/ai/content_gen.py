@@ -1,9 +1,12 @@
-"""Content generation via shared LLM client (Codex CLI default).
+"""Two-phase content generation via shared LLM client (Codex CLI default).
 
-Generates personalised reply and DM content based on tweet classification,
-intent categories, and treatment knowledge. All output is in natural
-Japanese matching the master account voice. Supports optional persona
-context for account-specific voice and style.
+Phase 1 (Expert): Generates factually accurate base content using Korean
+dermatology expert knowledge (treatment data, clinic info, pricing).
+
+Phase 2 (Persona): Adapts base content to match the target persona's voice,
+tone, sentence endings, and vocabulary via a second LLM call.
+
+When no persona is provided, falls back to single-phase generation.
 """
 
 from __future__ import annotations
@@ -21,7 +24,11 @@ from outreach_shared.utils.logger import get_logger
 from src.ai.prompts import (
     CASUAL_POST_SYSTEM_PROMPT,
     DM_SYSTEM_PROMPT,
+    EXPERT_BASE_DM_PROMPT,
+    EXPERT_BASE_POST_PROMPT,
+    EXPERT_BASE_REPLY_PROMPT,
     KNOWLEDGE_POST_SYSTEM_PROMPT,
+    PERSONA_ADAPTATION_PROMPT,
     REPLY_SYSTEM_PROMPT,
 )
 
@@ -73,22 +80,81 @@ class ContentGenerator:
 
     Parameters
     ----------
+    llm_client:
+        Pre-configured LLM client instance.
     api_key:
-        API key (unused for Codex provider).
+        Deprecated. Use ``llm_client`` instead.
     model:
-        LLM model identifier.
+        Deprecated. Use ``llm_client`` instead.
     provider:
-        LLM provider name (default: ``"codex"``).
+        Deprecated. Use ``llm_client`` instead.
     """
 
     def __init__(
         self,
         *,
+        llm_client: LLMClient | None = None,
         api_key: str = "",
         model: str = "gpt-5.1-codex-mini",
         provider: str = "codex",
     ) -> None:
-        self._llm: LLMClient = create_llm_client(provider, api_key, model=model)
+        if llm_client is not None:
+            self._llm: LLMClient = llm_client
+        else:
+            self._llm = create_llm_client(provider, api_key, model=model)
+
+    async def _generate_expert_base(
+        self,
+        user_prompt: str,
+        system_prompt: str,
+        temperature: float = 0.8,
+        max_tokens: int = 200,
+    ) -> str:
+        """Generate base content using expert knowledge prompt.
+
+        Phase 1 of the two-phase pipeline: factually accurate content
+        generated without persona voice.
+        """
+        response = await self._llm.generate(
+            user_prompt,
+            system=system_prompt,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+        text = response.text.strip()
+        text = _sanitize_llm_output(text)
+        return text
+
+    async def _adapt_to_persona(
+        self,
+        base_content: str,
+        persona: PersonaContext,
+        stage: str,
+    ) -> str:
+        """Adapt expert base content to a persona's voice.
+
+        Phase 2 of the two-phase pipeline: rewrite content to match
+        the persona's tone, sentence endings, and vocabulary while
+        preserving all factual data.
+        """
+        from src.persona import build_persona_system_prompt
+
+        adaptation_prompt = PERSONA_ADAPTATION_PROMPT.format(base_content=base_content)
+        # Use the persona's system prompt layered on the adaptation instructions
+        system = build_persona_system_prompt(
+            f"Adapt the following content to your persona voice for the {stage} stage.",
+            persona,
+        )
+
+        response = await self._llm.generate(
+            adaptation_prompt,
+            system=system,
+            temperature=0.7,
+            max_tokens=300,
+        )
+        text = response.text.strip()
+        text = _sanitize_llm_output(text)
+        return text
 
     async def generate_reply(
         self,
@@ -133,23 +199,26 @@ class ContentGenerator:
             treatment_context=treatment_context,
         )
 
-        system_prompt = REPLY_SYSTEM_PROMPT
         max_chars = 280
-        if persona is not None:
-            from src.persona import build_persona_system_prompt
-
-            system_prompt = build_persona_system_prompt(REPLY_SYSTEM_PROMPT, persona)
-            max_chars = persona.stage_overrides.get("reply", {}).get("max_chars", 280)
 
         try:
-            response = await self._llm.generate(
-                user_prompt,
-                system=system_prompt,
-                temperature=0.8,
-                max_tokens=200,
-            )
-            reply_text = response.text.strip()
-            reply_text = _sanitize_llm_output(reply_text)
+            if persona is not None:
+                # Two-phase: expert base → persona adaptation
+                max_chars = persona.stage_overrides.get("reply", {}).get("max_chars", 280)
+                base_text = await self._generate_expert_base(
+                    user_prompt, EXPERT_BASE_REPLY_PROMPT, temperature=0.8, max_tokens=200,
+                )
+                reply_text = await self._adapt_to_persona(base_text, persona, "reply")
+            else:
+                # Single-phase: direct generation (no persona)
+                response = await self._llm.generate(
+                    user_prompt,
+                    system=REPLY_SYSTEM_PROMPT,
+                    temperature=0.8,
+                    max_tokens=200,
+                )
+                reply_text = response.text.strip()
+                reply_text = _sanitize_llm_output(reply_text)
 
             # Enforce X's weighted character limit (CJK = 2 each)
             reply_text = _x_truncate(reply_text, max_chars)
@@ -228,23 +297,26 @@ class ContentGenerator:
             previous_dm=previous_dm,
         )
 
-        system_prompt = DM_SYSTEM_PROMPT
         max_chars = 500
-        if persona is not None:
-            from src.persona import build_persona_system_prompt
-
-            system_prompt = build_persona_system_prompt(DM_SYSTEM_PROMPT, persona)
-            max_chars = persona.stage_overrides.get("dm", {}).get("max_chars", 500)
 
         try:
-            response = await self._llm.generate(
-                user_prompt,
-                system=system_prompt,
-                temperature=0.8,
-                max_tokens=400,
-            )
-            dm_text = response.text.strip()
-            dm_text = _sanitize_llm_output(dm_text)
+            if persona is not None:
+                # Two-phase: expert base → persona adaptation
+                max_chars = persona.stage_overrides.get("dm", {}).get("max_chars", 500)
+                base_text = await self._generate_expert_base(
+                    user_prompt, EXPERT_BASE_DM_PROMPT, temperature=0.8, max_tokens=400,
+                )
+                dm_text = await self._adapt_to_persona(base_text, persona, "dm")
+            else:
+                # Single-phase: direct generation (no persona)
+                response = await self._llm.generate(
+                    user_prompt,
+                    system=DM_SYSTEM_PROMPT,
+                    temperature=0.8,
+                    max_tokens=400,
+                )
+                dm_text = response.text.strip()
+                dm_text = _sanitize_llm_output(dm_text)
 
             # Enforce X's weighted character limit (CJK = 2 each)
             dm_text = _x_truncate(dm_text, max_chars)
@@ -364,23 +436,26 @@ class ContentGenerator:
             f"Generate one informative tweet.\n\nAvailable treatment data:\n{treatment_context}"
         )
 
-        system_prompt = KNOWLEDGE_POST_SYSTEM_PROMPT
         max_chars = 280
-        if persona is not None:
-            from src.persona import build_persona_system_prompt
-
-            system_prompt = build_persona_system_prompt(KNOWLEDGE_POST_SYSTEM_PROMPT, persona)
-            max_chars = persona.stage_overrides.get("post", {}).get("max_chars", 280)
 
         try:
-            response = await self._llm.generate(
-                user_prompt,
-                system=system_prompt,
-                temperature=0.9,
-                max_tokens=150,
-            )
-            post_text = response.text.strip()
-            post_text = _sanitize_llm_output(post_text)
+            if persona is not None:
+                # Two-phase: expert base → persona adaptation
+                max_chars = persona.stage_overrides.get("post", {}).get("max_chars", 280)
+                base_text = await self._generate_expert_base(
+                    user_prompt, EXPERT_BASE_POST_PROMPT, temperature=0.9, max_tokens=150,
+                )
+                post_text = await self._adapt_to_persona(base_text, persona, "post")
+            else:
+                # Single-phase: direct generation (no persona)
+                response = await self._llm.generate(
+                    user_prompt,
+                    system=KNOWLEDGE_POST_SYSTEM_PROMPT,
+                    temperature=0.9,
+                    max_tokens=150,
+                )
+                post_text = response.text.strip()
+                post_text = _sanitize_llm_output(post_text)
 
             post_text = _x_truncate(post_text, max_chars)
 

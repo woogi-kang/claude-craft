@@ -162,6 +162,31 @@ Generate Japanese X posts about Korean dermatology.
 
 **Content pillars**: Treatment Deep-dive, Price Comparison, Myth-busting, Clinic Tips, Seasonal/Trend
 
+**Formatting Rules (Mobile-First)**:
+- One idea per line. Use line breaks generously for mobile readability
+- First line = hook (must stop the scroll)
+- Empty line between logical blocks for breathing room
+- Hashtags on a separate final line, never inline with content
+- Never write long unbroken paragraphs (unreadable on mobile)
+- Target structure: hook line → 2-3 short content blocks → CTA/closing → hashtag line
+
+**Persona-Aware Post Generation**:
+When generating posts for the multi-persona system, adapt voice to match each persona definition at `tools/x-outreach/personas/<persona_id>.md`:
+
+| account_id | persona_id | Display Name | Voice Key |
+|------------|-----------|--------------|-----------|
+| master_a | p01_price | みく | Data-driven, calm. 어미: "〜だね", "〜が多い" |
+| master_b | p02_beginner_guide | あや | Friendly, reassuring. 어미: "〜だよ", "〜しておくと安心" |
+| master_c | p03_procedure_explainer | りこ | Neutral, logical. 어미: "〜の傾向", "〜が向きやすい" |
+| master_d | p04_risk_care | なつみ | Empathetic, careful. 어미: "それは不安だよね", "まずは落ち着いて" |
+| master_e | p05_lifestyle | ゆい | Casual, personal. 어미: "〜かも", "〜だよね", "〜って感じ" |
+
+Adaptation rules:
+1. Load persona definition to understand tone, sentence endings, emoji policy, and CTA style
+2. Select hashtags from `tools/x-outreach/personas/keyword_matrix.yaml` matching the persona's keyword_profile
+3. Maintain persona voice consistency across all posts for the same persona
+4. Each persona's emoji usage differs (0-1 for most, nearly zero for p03/p04)
+
 ## Data Access Rules
 
 **CRITICAL**: The procedure details JSON is 1.5MB (31,525 lines). NEVER read the full file.

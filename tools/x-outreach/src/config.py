@@ -7,6 +7,7 @@ non-sensitive defaults.
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 from typing import Any
 
@@ -24,6 +25,11 @@ class SearchConfig(BaseModel):
 
     keywords: list[str] = Field(default_factory=list)
     max_post_age_hours: int = 24
+    block_media_resources: bool = False
+    blocked_resource_types: list[str] = Field(
+        default_factory=lambda: ["image", "media", "font"]
+    )
+    log_network_usage: bool = False
 
 
 class ClassificationConfig(BaseModel):
@@ -44,7 +50,6 @@ class ClassificationConfig(BaseModel):
 class CollectConfig(BaseModel):
     """Collect pipeline configuration."""
 
-    max_follower_count: int = 10_000
     require_profile_pic: bool = True
     require_bio: bool = True
 
@@ -142,6 +147,8 @@ class LLMConfig(BaseModel):
 
     provider: str = "codex"
     model: str = "gpt-5.1-codex-mini"
+    fallback_provider: str = "gemini_cli"
+    fallback_model: str = "gemini-3-flash-preview"
 
 
 # ---------------------------------------------------------------------------
@@ -180,17 +187,50 @@ class Settings(BaseSettings):
     )
 
     # --- Secrets (loaded from .env only) ---
-    burner_x_username: str = ""
-    burner_x_password: str = ""
-    master_x_username: str = ""
-    master_x_password: str = ""
     gemini_api_key: str = ""  # Kept for .env backward compat (GEMINI_API_KEY)
     database_url: str = ""
     x_dm_encryption_passcode: str = ""  # 4-digit PIN for X DM encryption
 
+    # Per-persona account credentials
+    master_a_username: str = ""
+    master_a_password: str = ""
+    master_b_username: str = ""
+    master_b_password: str = ""
+    master_c_username: str = ""
+    master_c_password: str = ""
+    master_d_username: str = ""
+    master_d_password: str = ""
+    master_e_username: str = ""
+    master_e_password: str = ""
+
+    # Oxylabs Residential proxy (per-persona account mapping)
+    oxylabs_proxy_server: str = "pr.oxylabs.io:7777"
+    oxylabs_proxy_country: str = "JP"
+    oxylabs_proxy_city: str = "tokyo"
+    oxylabs_master_a_proxy_username: str = ""
+    oxylabs_master_a_proxy_password: str = ""
+    oxylabs_master_a_proxy_country: str = ""
+    oxylabs_master_a_proxy_city: str = ""
+    oxylabs_master_b_proxy_username: str = ""
+    oxylabs_master_b_proxy_password: str = ""
+    oxylabs_master_b_proxy_country: str = ""
+    oxylabs_master_b_proxy_city: str = ""
+    oxylabs_master_c_proxy_username: str = ""
+    oxylabs_master_c_proxy_password: str = ""
+    oxylabs_master_c_proxy_country: str = ""
+    oxylabs_master_c_proxy_city: str = ""
+    oxylabs_master_d_proxy_username: str = ""
+    oxylabs_master_d_proxy_password: str = ""
+    oxylabs_master_d_proxy_country: str = ""
+    oxylabs_master_d_proxy_city: str = ""
+    oxylabs_master_e_proxy_username: str = ""
+    oxylabs_master_e_proxy_password: str = ""
+    oxylabs_master_e_proxy_country: str = ""
+    oxylabs_master_e_proxy_city: str = ""
+
     @property
     def llm_api_key(self) -> str:
-        """Alias for ``gemini_api_key``, used by non-Codex providers."""
+        """Return the active LLM API key based on provider config."""
         return self.gemini_api_key
 
     @property
@@ -202,6 +242,114 @@ class Settings(BaseSettings):
         if len(code) != 4 or not code.isdigit():
             raise ValueError(f"X_DM_ENCRYPTION_PASSCODE must be exactly 4 digits, got: '{code}'")
         return list(code)
+
+    def get_account_credentials(self, account_id: str) -> tuple[str, str]:
+        """Return (username, password) for the given account_id.
+
+        Maps account_id (e.g. ``"master_a"``) to the corresponding
+        ``MASTER_A_USERNAME`` / ``MASTER_A_PASSWORD`` environment variables.
+
+        Returns empty strings if the account_id is not recognized.
+        """
+        cred_map: dict[str, tuple[str, str]] = {
+            "master_a": (self.master_a_username, self.master_a_password),
+            "master_b": (self.master_b_username, self.master_b_password),
+            "master_c": (self.master_c_username, self.master_c_password),
+            "master_d": (self.master_d_username, self.master_d_password),
+            "master_e": (self.master_e_username, self.master_e_password),
+        }
+        return cred_map.get(account_id, ("", ""))
+
+    def get_account_proxy(self, account_id: str) -> dict[str, str] | None:
+        """Return Playwright proxy settings for a specific account.
+
+        Supports per-account Oxylabs credentials for:
+        - ``master_a`` .. ``master_e``
+        """
+        proxy_map: dict[str, tuple[str, str, str, str]] = {
+            "master_a": (
+                self.oxylabs_master_a_proxy_username,
+                self.oxylabs_master_a_proxy_password,
+                self.oxylabs_master_a_proxy_country,
+                self.oxylabs_master_a_proxy_city,
+            ),
+            "master_b": (
+                self.oxylabs_master_b_proxy_username,
+                self.oxylabs_master_b_proxy_password,
+                self.oxylabs_master_b_proxy_country,
+                self.oxylabs_master_b_proxy_city,
+            ),
+            "master_c": (
+                self.oxylabs_master_c_proxy_username,
+                self.oxylabs_master_c_proxy_password,
+                self.oxylabs_master_c_proxy_country,
+                self.oxylabs_master_c_proxy_city,
+            ),
+            "master_d": (
+                self.oxylabs_master_d_proxy_username,
+                self.oxylabs_master_d_proxy_password,
+                self.oxylabs_master_d_proxy_country,
+                self.oxylabs_master_d_proxy_city,
+            ),
+            "master_e": (
+                self.oxylabs_master_e_proxy_username,
+                self.oxylabs_master_e_proxy_password,
+                self.oxylabs_master_e_proxy_country,
+                self.oxylabs_master_e_proxy_city,
+            ),
+        }
+        creds = proxy_map.get(account_id)
+        if creds is None:
+            return None
+
+        base_username, raw_password, account_country, account_city = creds
+        base_username = base_username.strip()
+        password = raw_password.strip()
+        if not base_username or not password:
+            return None
+
+        country = account_country.strip() or self.oxylabs_proxy_country
+        city = account_city.strip() or self.oxylabs_proxy_city
+        username = self._apply_oxylabs_geo_targeting(
+            base_username,
+            country=country,
+            city=city,
+        )
+        server = self._normalize_proxy_server(self.oxylabs_proxy_server)
+        return {
+            "server": server,
+            "username": username,
+            "password": password,
+        }
+
+    @staticmethod
+    def _normalize_proxy_server(server: str) -> str:
+        """Normalize proxy server to a Playwright-compatible URI."""
+        cleaned = server.strip() or "pr.oxylabs.io:7777"
+        if "://" in cleaned:
+            return cleaned
+        return f"http://{cleaned}"
+
+    @staticmethod
+    def _apply_oxylabs_geo_targeting(
+        username: str,
+        *,
+        country: str,
+        city: str,
+    ) -> str:
+        """Apply/replace ``cc`` and ``city`` targeting in Oxylabs username."""
+        targeted = re.sub(r"-cc-[A-Za-z]{2}", "", username)
+        targeted = re.sub(r"-city-[A-Za-z0-9_]+", "", targeted)
+
+        cc = country.strip().upper()
+        if cc:
+            targeted = f"{targeted}-cc-{cc}"
+
+        city_slug = city.strip().lower().replace(" ", "-")
+        if city_slug:
+            targeted = f"{targeted}-city-{city_slug}"
+
+        return targeted
 
     # --- Non-secret configuration sections ---
     search: SearchConfig = Field(default_factory=SearchConfig)

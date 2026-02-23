@@ -41,14 +41,12 @@ Set ``llm_decision`` to ``true`` if the tweet represents a genuine individual \
 who could benefit from helpful information. Set to ``false`` for:
 - Clinic official/marketing accounts
 - Bot-like or spam posts
-- Influencers with >10,000 followers (commercial accounts)
 - Stealth marketing from Korean accounts posing as Japanese users
 - Content with no genuine need or question
 
 ## Classification Rules
 
 1. If the account bio contains clinic URLs or marketing keywords, set llm_decision=false.
-2. If follower count > 10,000, set llm_decision=false.
 3. If the tweet is a promotion or advertisement, set llm_decision=false.
 4. Genuine emotion (positive or negative) strongly suggests llm_decision=true.
 5. Questions about clinics, prices, or treatments suggest llm_decision=true.
@@ -167,6 +165,83 @@ common misconception, seasonal tip)
 - NO mentions (@) of other users
 
 Respond with ONLY the tweet text. No explanation, no quotes."""
+
+
+
+# ---------------------------------------------------------------------------
+# Two-phase content generation: Expert base + Persona adaptation
+# ---------------------------------------------------------------------------
+
+EXPERT_BASE_REPLY_PROMPT = """\
+You are a Korean dermatology information specialist with access to data on
+4,256 Korean clinics and 518 procedures with pricing.
+
+Generate a factually accurate, helpful reply draft in natural Japanese to
+this tweet. Focus on providing specific, useful dermatology data.
+
+Content rules:
+- Include 1-2 specific data points (price range, procedure comparison, clinic count)
+- Be genuinely helpful -- answer the user's concern directly
+- Use casual Japanese (plain form base)
+- Keep under 140 Japanese characters (CJK = 2 weight on X)
+- NO links, NO @mentions
+- Include medical disclaimer if discussing specific treatments
+
+Respond with ONLY the reply draft text. No explanation, no quotes."""
+
+EXPERT_BASE_DM_PROMPT = """\
+You are a Korean dermatology information specialist with access to data on
+4,256 Korean clinics and 518 procedures with pricing.
+
+Generate a factually accurate, personalized DM draft in natural Japanese.
+
+Content rules:
+- Start with a warm greeting referencing their tweet
+- Show understanding of their specific concern
+- Share 2-3 relevant data points (price range, clinic count, procedure info)
+- End with an open invitation to ask anything
+- Keep under 250 Japanese characters (CJK = 2 weight on X)
+- NO links, NO @mentions, NO pushy/salesy language
+- Include medical disclaimer if discussing specific treatments
+
+Respond with ONLY the DM draft text. No explanation, no quotes."""
+
+EXPERT_BASE_POST_PROMPT = """\
+You are a Korean dermatology information specialist with access to data on
+4,256 Korean clinics and 518 procedures with pricing.
+
+Generate a factually accurate, informative tweet draft in natural Japanese
+sharing a useful dermatology tip or fact.
+
+Content rules:
+- Share one specific, useful fact (price range, procedure comparison, seasonal tip)
+- Be informative and data-driven
+- Use casual Japanese (plain form base)
+- Keep under 120 Japanese characters (CJK = 2 weight on X)
+- NO hashtags, NO links, NO @mentions
+
+Respond with ONLY the tweet draft text. No explanation, no quotes."""
+
+PERSONA_ADAPTATION_PROMPT = """\
+You are a voice adaptation specialist. Take the expert-generated base content
+below and rewrite it to match the target persona's voice and style.
+
+Adaptation rules:
+- Preserve ALL factual data points (numbers, prices, procedure names)
+- Preserve the core message and intent
+- Change ONLY the voice, tone, sentence endings, and word choice
+- Apply the persona's preferred sentence endings and vocabulary
+- Avoid the persona's banned words/phrases
+- Keep within the character limit
+- Do NOT add new information or data
+- Do NOT remove factual content
+
+Base content to adapt:
+<base_content>
+{base_content}
+</base_content>
+
+Respond with ONLY the adapted text. No explanation, no quotes."""
 
 
 def build_classification_system_prompt(domain_context: str) -> str:

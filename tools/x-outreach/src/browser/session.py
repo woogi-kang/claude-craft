@@ -6,6 +6,7 @@ and automatic re-login when sessions expire.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from pathlib import Path
 
 from outreach_shared.browser.human_sim import human_type, random_pause
@@ -34,12 +35,14 @@ class SessionManager:
         headless: bool = True,
         viewport_width: int = 1280,
         viewport_height: int = 720,
+        proxy_provider: Callable[[str], dict[str, str] | None] | None = None,
     ) -> None:
         self._playwright = playwright
         self._sessions_dir = Path(sessions_dir) if sessions_dir else _SESSIONS_DIR
         self._headless = headless
         self._viewport_width = viewport_width
         self._viewport_height = viewport_height
+        self._proxy_provider = proxy_provider
         self._contexts: dict[str, BrowserContext] = {}
 
     async def get_session(self, account_name: str) -> BrowserContext:
@@ -53,15 +56,22 @@ class SessionManager:
             return self._contexts[account_name]
 
         user_data_dir = self._sessions_dir / account_name
+        proxy = self._proxy_provider(account_name) if self._proxy_provider is not None else None
         _, context = await create_stealth_browser(
             self._playwright,
             headless=self._headless,
             user_data_dir=user_data_dir,
             viewport_width=self._viewport_width,
             viewport_height=self._viewport_height,
+            proxy=proxy,
         )
         self._contexts[account_name] = context
-        logger.info("session_created", account=account_name)
+        logger.info(
+            "session_created",
+            account=account_name,
+            proxy_enabled=proxy is not None,
+            proxy_server=proxy.get("server") if proxy else None,
+        )
         return context
 
     async def check_session_health(self, context: BrowserContext) -> bool:

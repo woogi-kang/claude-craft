@@ -1,0 +1,410 @@
+{
+  "country": "japan",
+  "last_updated": "2026-02-13",
+  "platforms": [
+    {
+      "rank": 1,
+      "name": "YouTube",
+      "url": "https://youtube.com",
+      "type": "video",
+      "score": 97,
+      "scores": {
+        "organic_reach": 5,
+        "seo_value": 5,
+        "engagement": 5,
+        "shareability": 4,
+        "target_alignment": 5,
+        "content_longevity": 5,
+        "monetization": 5
+      },
+      "user_base": "700万+ monthly active (Japan)",
+      "demographics": "10-50代, 男女",
+      "korean_derm_content_volume": "medium",
+      "best_content_format": ["vlog", "guide", "before_after", "price_comparison"],
+      "monetization_options": ["adsense", "affiliate", "sponsorship"],
+      "guide_posting_potential": "very_high",
+      "notes": "Google検索にも露出。全年齢層到達。信頼度最高。"
+    },
+    {
+      "rank": 2,
+      "name": "Instagram",
+      "url": "https://instagram.com",
+      "type": "social_media",
+      "score": 94,
+      "scores": {
+        "organic_reach": 5,
+        "seo_value": 3,
+        "engagement": 5,
+        "shareability": 5,
+        "target_alignment": 5,
+        "content_longevity": 4,
+        "monetization": 4
+      },
+      "user_base": "58.9% of women 10-60代",
+      "demographics": "20-40代女性中心",
+      "korean_derm_content_volume": "high",
+      "best_content_format": ["carousel", "reels", "before_after", "infographic"],
+      "key_hashtags": ["#渡韓美容", "#韓国皮膚科", "#韓国肌管理", "#韓国美容医療", "#韓国美容クリニック"],
+      "monetization_options": ["sponsorship", "affiliate_link", "pr_post"],
+      "guide_posting_potential": "very_high",
+      "notes": "ビューティー最適プラットフォーム。ビジュアル中心。"
+    },
+    {
+      "rank": 3,
+      "name": "note.com",
+      "url": "https://note.com",
+      "type": "blog_platform",
+      "score": 92,
+      "scores": {
+        "organic_reach": 3,
+        "seo_value": 5,
+        "engagement": 4,
+        "shareability": 3,
+        "target_alignment": 4,
+        "content_longevity": 4,
+        "monetization": 2
+      },
+      "user_base": "1000万+ active users",
+      "demographics": "20-40代",
+      "domain_authority": 96.4,
+      "korean_derm_content_volume": "medium",
+      "best_content_format": ["complete_guide", "experience_report", "cost_analysis"],
+      "monetization_options": ["paid_content", "amazon_affiliate"],
+      "guide_posting_potential": "very_high",
+      "top_article_example": "これだけ読めばOK！韓国美容皮膚科デビュー完全ガイド",
+      "notes": "ドメインパワー96.4。長文ガイド最適。有料コンテンツ可能。"
+    },
+    {
+      "rank": 4,
+      "name": "TikTok",
+      "url": "https://tiktok.com",
+      "type": "short_video",
+      "score": 88,
+      "scores": {
+        "organic_reach": 5,
+        "seo_value": 2,
+        "engagement": 5,
+        "shareability": 5,
+        "target_alignment": 4,
+        "content_longevity": 2,
+        "monetization": 4
+      },
+      "user_base": "70% of 10-20代",
+      "demographics": "10-20代 Gen Z",
+      "korean_derm_content_volume": "medium",
+      "best_content_format": ["short_tips", "before_after_timelapse", "clinic_vlog"],
+      "monetization_options": ["creator_fund", "sponsorship"],
+      "guide_posting_potential": "high",
+      "notes": "Gen Z独占。アルゴリズムバイラル最強。"
+    },
+    {
+      "rank": 5,
+      "name": "X (Twitter)",
+      "url": "https://x.com",
+      "type": "social_media",
+      "score": 85,
+      "scores": {
+        "organic_reach": 4,
+        "seo_value": 3,
+        "engagement": 5,
+        "shareability": 5,
+        "target_alignment": 4,
+        "content_longevity": 2,
+        "monetization": 3
+      },
+      "demographics": "20-40代",
+      "korean_derm_content_volume": "high",
+      "best_content_format": ["thread", "realtime_review", "tips"],
+      "key_hashtags": ["#韓国皮膚科", "#渡韓美容", "#韓国美容医療"],
+      "monetization_options": ["affiliate", "sponsorship"],
+      "guide_posting_potential": "high",
+      "caution": "2026年透明性機能で韓国発信ステルスマーケティングアカウント大量摘発。信頼性重要。",
+      "notes": "リアルタイム反応最高。リポスト拡散力。ステマ注意。"
+    },
+    {
+      "rank": 6,
+      "name": "Ameba Blog",
+      "url": "https://ameblo.jp",
+      "type": "blog_platform",
+      "score": 82,
+      "scores": {
+        "organic_reach": 4,
+        "seo_value": 3,
+        "engagement": 4,
+        "shareability": 3,
+        "target_alignment": 4,
+        "content_longevity": 3,
+        "monetization": 3
+      },
+      "user_base": "7500万 monthly",
+      "demographics": "40-50代女性中心",
+      "korean_derm_content_volume": "high",
+      "best_content_format": ["experience_report", "clinic_review", "photo_diary"],
+      "key_tags": ["#韓国美容皮膚科", "#韓国美容クリニック", "#韓国美活", "#渡韓美容"],
+      "monetization_options": ["ameba_pick", "rakuten_affiliate"],
+      "guide_posting_potential": "very_high",
+      "top_blogger": "まゆ (渡韓85回以上, 韓国美容認定コンサルタント)",
+      "notes": "40-50代女性。渡韓マニア集結地。内部コミュニティ強力。"
+    },
+    {
+      "rank": 7,
+      "name": "Gangnam Unni (カンナムオンニ)",
+      "url": "https://www.gangnamunni.com/jp",
+      "type": "app_review",
+      "score": 84,
+      "scores": {
+        "organic_reach": 4,
+        "seo_value": 4,
+        "engagement": 5,
+        "shareability": 4,
+        "target_alignment": 5,
+        "content_longevity": 5,
+        "monetization": 3
+      },
+      "user_base": "日本70万DL, グローバル500万+",
+      "demographics": "20-40代女性",
+      "registered_clinics": 2900,
+      "total_reviews": 800000,
+      "korean_derm_content_volume": "very_high",
+      "features": ["clinic_search", "booking", "review", "doctor_qa", "auto_translate"],
+      "guide_posting_potential": "high",
+      "notes": "日本No.1美容医療アプリ。韓日統合プラットフォーム。"
+    },
+    {
+      "rank": 8,
+      "name": "TRIBEAU (トリビュー)",
+      "url": "https://tribeau.jp",
+      "type": "app_review",
+      "score": 84,
+      "scores": {
+        "organic_reach": 4,
+        "seo_value": 4,
+        "engagement": 5,
+        "shareability": 4,
+        "target_alignment": 5,
+        "content_longevity": 5,
+        "monetization": 3
+      },
+      "user_base": "200万DL, 月間37万",
+      "demographics": "20-40代女性",
+      "korean_clinics_listed": 407,
+      "total_photos": 1080000,
+      "satisfaction_rate": "98%",
+      "guide_posting_potential": "high",
+      "notes": "日本最大美容医療アプリ。症例写真50万+。"
+    },
+    {
+      "rank": 9,
+      "name": "Yahoo! Chiebukuro (知恵袋)",
+      "url": "https://chiebukuro.yahoo.co.jp",
+      "type": "qa_forum",
+      "score": 80,
+      "scores": {
+        "organic_reach": 3,
+        "seo_value": 4,
+        "engagement": 4,
+        "shareability": 2,
+        "target_alignment": 4,
+        "content_longevity": 5,
+        "monetization": 1
+      },
+      "demographics": "10-40代",
+      "korean_derm_content_volume": "medium",
+      "typical_views_per_question": "1000-3000+",
+      "common_questions": [
+        "韓国の皮膚科の予約方法",
+        "韓国のシミ取り料金",
+        "日本語対応クリニック",
+        "旅行日程と施術の調整"
+      ],
+      "guide_posting_potential": "high",
+      "notes": "初心者質問活発。ベストアンサーで高い露出。"
+    },
+    {
+      "rank": 10,
+      "name": "Konest (コネスト)",
+      "url": "https://www.konest.com/contents/clinic_top.html",
+      "type": "travel_portal",
+      "score": 80,
+      "scores": {
+        "organic_reach": 3,
+        "seo_value": 4,
+        "engagement": 5,
+        "shareability": 3,
+        "target_alignment": 5,
+        "content_longevity": 5,
+        "monetization": 2
+      },
+      "demographics": "20-50代, 韓国旅行者",
+      "korean_derm_content_volume": "very_high",
+      "top_clinic_reviews": {"vincent_clinic": 6205, "rating": 4.9},
+      "features": ["clinic_search", "reservation_center", "reviews", "coupons"],
+      "guide_posting_potential": "high",
+      "notes": "日本人韓国旅行No.1ポータル。予約センター運営。"
+    },
+    {
+      "rank": 11,
+      "name": "LINE OpenChat",
+      "url": "https://openchat.line.me",
+      "type": "messaging_community",
+      "score": 79,
+      "scores": {
+        "organic_reach": 3,
+        "seo_value": 1,
+        "engagement": 5,
+        "shareability": 3,
+        "target_alignment": 5,
+        "content_longevity": 2,
+        "monetization": 1
+      },
+      "key_communities": [
+        {"name": "美女子会（美容・整形情報）", "members": 7596},
+        {"name": "鼻整形研究所", "members": 589},
+        {"name": "韓国 美容 渡韓中 大集合", "members": null}
+      ],
+      "guide_posting_potential": "high",
+      "notes": "匿名リアルタイムQ&A。渡韓中の情報交換活発。"
+    },
+    {
+      "rank": 12,
+      "name": "Pinterest",
+      "url": "https://pinterest.com",
+      "type": "visual_search",
+      "score": 78,
+      "scores": {
+        "organic_reach": 4,
+        "seo_value": 4,
+        "engagement": 3,
+        "shareability": 5,
+        "target_alignment": 4,
+        "content_longevity": 5,
+        "monetization": 3
+      },
+      "best_content_format": ["infographic", "comparison_table", "before_after"],
+      "guide_posting_potential": "medium",
+      "notes": "ビジュアル検索エンジン。長期トラフィック（6ヶ月+）。"
+    },
+    {
+      "rank": 13,
+      "name": "Hatena Blog",
+      "url": "https://hatenablog.com",
+      "type": "blog_platform",
+      "score": 76,
+      "scores": {
+        "organic_reach": 3,
+        "seo_value": 5,
+        "engagement": 4,
+        "shareability": 3,
+        "target_alignment": 4,
+        "content_longevity": 5,
+        "monetization": 5
+      },
+      "demographics": "IT/tech寄り",
+      "monetization_options": ["all_asp", "adsense"],
+      "guide_posting_potential": "medium",
+      "notes": "ASP制限なし。データ中心コンテンツ向き。初期ドメインパワー強い。"
+    },
+    {
+      "rank": 14,
+      "name": "Girls Channel (ガールズちゃんねる)",
+      "url": "https://girlschannel.net",
+      "type": "anonymous_forum",
+      "score": 72,
+      "scores": {
+        "organic_reach": 3,
+        "seo_value": 3,
+        "engagement": 5,
+        "shareability": 3,
+        "target_alignment": 4,
+        "content_longevity": 3,
+        "monetization": 0
+      },
+      "demographics": "20-50代女性",
+      "comments_per_thread": "500-1100+",
+      "guide_posting_potential": "medium",
+      "caution": "政治論争に脱線するリスクあり",
+      "notes": "高い参加率。匿名で率直。政治脱線リスク。"
+    },
+    {
+      "rank": 15,
+      "name": "Threads (Meta)",
+      "url": "https://threads.net",
+      "type": "social_media",
+      "score": 65,
+      "scores": {
+        "organic_reach": 3,
+        "seo_value": 1,
+        "engagement": 4,
+        "shareability": 4,
+        "target_alignment": 3,
+        "content_longevity": 2,
+        "monetization": 1
+      },
+      "optimal_posting_time": "21時台",
+      "guide_posting_potential": "medium",
+      "notes": "成長中。Instagram連動。SEO/収益化はまだ弱い。"
+    }
+  ],
+  "additional_platforms": [
+    {
+      "name": "Babitalk (バビトーク)",
+      "url": "https://web.babitalk.com/ja",
+      "type": "app_review",
+      "user_base": "900万+",
+      "total_reviews": 1000000,
+      "japan_launch": "2025-08-25",
+      "notes": "韓国最大。2025年8月日本語正式ローンチ。"
+    },
+    {
+      "name": "YeoTi (ヨーティ)",
+      "url": "https://apps.apple.com/jp/app/yeoti/id1228558605",
+      "type": "app_review",
+      "user_base": "340万",
+      "total_reviews": 900000,
+      "feature": "receipt_verified_reviews",
+      "notes": "皮膚科特化。領収書認証レビュー。外国人も韓国人同一料金。"
+    },
+    {
+      "name": "aroom (アルム)",
+      "url": "https://aroom.beauty",
+      "type": "concierge_service",
+      "features": ["free_concierge", "free_interpreter", "booking_agent"],
+      "notes": "全過程日本語。無料コンシェルジュ。"
+    },
+    {
+      "name": "minfor (ミンフォ)",
+      "url": "https://minfor.jp",
+      "type": "portal",
+      "affiliated_clinics": 1300,
+      "features": ["line_consultation", "free_interpreter", "booking"],
+      "notes": "ソウル本社。1300+提携クリニック。"
+    },
+    {
+      "name": "5ch 美容整形板",
+      "url": "https://rio2016.5ch.net/seikei/",
+      "type": "anonymous_forum",
+      "guide_posting_potential": "low",
+      "notes": "過度に批判的。ガイド投稿には不向き。"
+    },
+    {
+      "name": "口コミ広場",
+      "url": "https://report.clinic",
+      "type": "review_site",
+      "total_reviews": 150000,
+      "doctor_qa_responses": 73000,
+      "notes": "604名以上の医師参加。ドクター相談室あり。"
+    },
+    {
+      "name": "Creatrip",
+      "url": "https://creatrip.com/ja",
+      "type": "portal",
+      "notes": "日本語予約可能。保証金決済で予約確定。"
+    },
+    {
+      "name": "ロコタビ",
+      "url": "https://locotabi.jp/korea",
+      "type": "guide_matching",
+      "notes": "韓国在住日本人ガイドマッチング。クリニック同行可能。"
+    }
+  ]
+}
