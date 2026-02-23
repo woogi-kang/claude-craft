@@ -134,9 +134,8 @@ class ContentGenerator:
             reply_text = response.text.strip()
             reply_text = _sanitize_llm_output(reply_text)
 
-            # Enforce 280 character limit
-            if len(reply_text) > 280:
-                reply_text = reply_text[:277] + "..."
+            # Enforce X's 280 weighted character limit (CJK = 2 each)
+            reply_text = _x_truncate(reply_text, 280)
 
             # Strip any URLs that may have been generated
             reply_text = _strip_urls(reply_text)
@@ -145,7 +144,7 @@ class ContentGenerator:
                 "reply_generated",
                 username=author_username,
                 category=template_category,
-                length=len(reply_text),
+                length=x_weighted_len(reply_text),
             )
             return reply_text
 
@@ -215,9 +214,8 @@ class ContentGenerator:
             dm_text = response.text.strip()
             dm_text = _sanitize_llm_output(dm_text)
 
-            # Enforce 500 character limit
-            if len(dm_text) > 500:
-                dm_text = dm_text[:497] + "..."
+            # Enforce X's 500 weighted character limit (CJK = 2 each)
+            dm_text = _x_truncate(dm_text, 500)
 
             # Strip any URLs that may have been generated
             dm_text = _strip_urls(dm_text)
@@ -226,7 +224,7 @@ class ContentGenerator:
                 "dm_generated",
                 username=author_username,
                 category=template_category,
-                length=len(dm_text),
+                length=x_weighted_len(dm_text),
             )
             return dm_text
 
@@ -264,14 +262,13 @@ class ContentGenerator:
             post_text = response.text.strip()
             post_text = _sanitize_llm_output(post_text)
 
-            # Enforce 280 character hard limit
-            if len(post_text) > 280:
-                post_text = post_text[:277] + "..."
+            # Enforce X's 280 weighted character limit (CJK = 2 each)
+            post_text = _x_truncate(post_text, 280)
 
             # Strip any URLs that may have been generated
             post_text = _strip_urls(post_text)
 
-            logger.info("casual_post_generated", length=len(post_text))
+            logger.info("casual_post_generated", length=x_weighted_len(post_text))
             return post_text
 
         except Exception as exc:
@@ -314,12 +311,11 @@ class ContentGenerator:
             post_text = response.text.strip()
             post_text = _sanitize_llm_output(post_text)
 
-            if len(post_text) > 280:
-                post_text = post_text[:277] + "..."
+            post_text = _x_truncate(post_text, 280)
 
             post_text = _strip_urls(post_text)
 
-            logger.info("knowledge_post_generated", length=len(post_text))
+            logger.info("knowledge_post_generated", length=x_weighted_len(post_text))
             return post_text
 
         except Exception as exc:
@@ -331,12 +327,85 @@ class ContentGenerationError(Exception):
     """Raised when content generation via LLM API fails."""
 
 
+def x_weighted_len(text: str) -> int:
+    """Return X's weighted character count.
+
+    X counts CJK ideographs, kana, full-width characters, and certain
+    Unicode ranges as 2 characters each.  Latin/ASCII counts as 1.
+    """
+    count = 0
+    for ch in text:
+        cp = ord(ch)
+        # CJK Unified Ideographs, CJK Extension A/B, Kangxi Radicals,
+        # Katakana, Hiragana, Full-width forms, Hangul, CJK Symbols
+        if (
+            0x1100 <= cp <= 0x11FF  # Hangul Jamo
+            or 0x2E80 <= cp <= 0x9FFF  # CJK Radicals through CJK Unified
+            or 0x3000 <= cp <= 0x303F  # CJK Symbols & Punctuation
+            or 0x3040 <= cp <= 0x309F  # Hiragana
+            or 0x30A0 <= cp <= 0x30FF  # Katakana
+            or 0x3100 <= cp <= 0x312F  # Bopomofo
+            or 0x3130 <= cp <= 0x318F  # Hangul Compatibility Jamo
+            or 0xA960 <= cp <= 0xA97F  # Hangul Jamo Extended-A
+            or 0xAC00 <= cp <= 0xD7FF  # Hangul Syllables & Jamo Ext-B
+            or 0xF900 <= cp <= 0xFAFF  # CJK Compatibility Ideographs
+            or 0xFE30 <= cp <= 0xFE4F  # CJK Compatibility Forms
+            or 0xFF01 <= cp <= 0xFF60  # Full-width ASCII variants
+            or 0xFFE0 <= cp <= 0xFFE6  # Full-width signs
+            or 0x20000 <= cp <= 0x2FA1F  # CJK Extension B+ & Compat Supp
+        ):
+            count += 2
+        else:
+            count += 1
+    return count
+
+
+def _x_truncate(text: str, limit: int) -> str:
+    """Truncate text to fit within X's weighted character limit."""
+    if x_weighted_len(text) <= limit:
+        return text
+    # Walk forward and cut at the last position within budget
+    wt = 0
+    cut = 0
+    for i, ch in enumerate(text):
+        cp = ord(ch)
+        w = (
+            2
+            if (
+                0x1100 <= cp <= 0x11FF
+                or 0x2E80 <= cp <= 0x9FFF
+                or 0x3000 <= cp <= 0x303F
+                or 0x3040 <= cp <= 0x309F
+                or 0x30A0 <= cp <= 0x30FF
+                or 0x3100 <= cp <= 0x312F
+                or 0x3130 <= cp <= 0x318F
+                or 0xA960 <= cp <= 0xA97F
+                or 0xAC00 <= cp <= 0xD7FF
+                or 0xF900 <= cp <= 0xFAFF
+                or 0xFE30 <= cp <= 0xFE4F
+                or 0xFF01 <= cp <= 0xFF60
+                or 0xFFE0 <= cp <= 0xFFE6
+                or 0x20000 <= cp <= 0x2FA1F
+            )
+            else 1
+        )
+        if wt + w > limit - 3:  # reserve 3 for "..."
+            break
+        wt += w
+        cut = i + 1
+    return text[:cut] + "..."
+
+
 def _strip_urls(text: str) -> str:
     """Remove any URLs from the text as a safety measure.
 
     DMs must not contain links.
     """
-    return re.sub(r"https?://\S+", "", text).strip()
+    # Full URLs
+    text = re.sub(r"https?://\S+", "", text)
+    # Bare domain references like (sciencedaily.com) or example.org/path
+    text = re.sub(r"\(?[a-zA-Z0-9-]+\.[a-z]{2,}(?:\.[a-z]{2,})?(?:/\S*)?\)?", "", text)
+    return text.strip()
 
 
 def _sanitize_llm_output(text: str) -> str:

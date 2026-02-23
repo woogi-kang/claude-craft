@@ -59,6 +59,9 @@ DM_COMPOSER_INPUT = '[data-testid="dmComposerTextInput"]'
 DM_SEND_BUTTON = '[data-testid="dmComposerSendButton"]'
 DM_CONVERSATION = '[data-testid="dmConversation"]'
 
+# Profile page DM button (envelope icon on user profiles)
+PROFILE_DM_BUTTON = '[data-testid="sendDMFromProfile"]'
+
 # ---------------------------------------------------------------------------
 # DM Encryption Passcode (inline page element, NOT a modal)
 # ---------------------------------------------------------------------------

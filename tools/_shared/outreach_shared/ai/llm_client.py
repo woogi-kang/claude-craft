@@ -235,7 +235,7 @@ class CodexClient:
             " No explanations, no code blocks, no markdown formatting."
         )
 
-        cmd = ["codex", "exec"]
+        cmd = ["codex", "exec", "-c", 'model_reasoning_effort="high"']
         if self._model and self._model != "codex-default":
             cmd.extend(["-m", self._model])
         cmd.append("-")

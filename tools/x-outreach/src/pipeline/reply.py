@@ -25,8 +25,6 @@ from src.knowledge.templates import TemplateSelector
 from src.knowledge.treatments import TreatmentKnowledgeBase
 from src.pipeline.track import ActionTracker
 from src.platform.selectors import (
-    REPLY_BUTTON,
-    REPLY_SUBMIT_BUTTON,
     REPLY_TEXT_INPUT,
     detect_restriction,
 )
@@ -230,7 +228,7 @@ class ReplyPipeline:
                     tweet_id,
                     status="replied",
                     reply_content=reply_text,
-                    reply_timestamp=datetime.now(tz=UTC).isoformat(),
+                    reply_timestamp=datetime.now(tz=UTC),
                 )
                 tracker.record_reply(tweet_id, username)
                 result.replies_sent += 1
@@ -293,41 +291,57 @@ async def _post_reply_via_playwright(
         if detect_restriction(page_content):
             raise ReplyRateLimitError("Account rate-limited or restricted")
 
-        # Click the reply button on the tweet
-        reply_btn = await page.wait_for_selector(REPLY_BUTTON, timeout=10_000)
-        if reply_btn is None:
-            logger.warning("reply_button_not_found", url=tweet_url)
-            return False
-
-        await random_mouse_move(page)
-        await reply_btn.click()
-        await random_pause(2.0, 4.0)
-
-        # Type reply text
-        reply_input = await page.wait_for_selector(REPLY_TEXT_INPUT, timeout=10_000)
+        # On the tweet detail page, the inline reply composer is already
+        # visible. Click the reply textarea directly to focus it.
+        reply_input = await page.wait_for_selector(REPLY_TEXT_INPUT, timeout=15_000)
         if reply_input is None:
             logger.warning("reply_input_not_found", url=tweet_url)
             return False
 
+        await random_mouse_move(page)
         await reply_input.click()
-        await random_pause(0.5, 1.2)
+        await random_pause(1.0, 2.0)
 
-        # Type character by character with human-like delays
-        for char in reply_text:
-            delay_ms = random.randint(65, 273)
-            await page.keyboard.type(char, delay=delay_ms)
-            if random.random() < 0.08:
-                await asyncio.sleep(random.uniform(0.9, 2.6))
+        # Insert text via synthetic paste event — the most reliable method
+        # for X's Draft.js contenteditable editor. Both keyboard.type() and
+        # navigator.clipboard are unreliable in this context.
+        await page.evaluate(
+            """(text) => {
+                const el = document.querySelector('[data-testid="tweetTextarea_0"]');
+                if (!el) return;
+                el.focus();
+                const dt = new DataTransfer();
+                dt.setData('text/plain', text);
+                el.dispatchEvent(new ClipboardEvent('paste', {
+                    clipboardData: dt,
+                    bubbles: true,
+                    cancelable: true,
+                }));
+            }""",
+            reply_text,
+        )
+        await random_pause(1.5, 2.5)
 
-        await random_pause(0.7, 2.0)
-
-        # Click the reply submit button
-        submit_btn = await page.query_selector(REPLY_SUBMIT_BUTTON)
-        if submit_btn:
-            await random_mouse_move(page)
-            await random_pause(0.7, 1.4)
-            await submit_btn.click()
-            await random_pause(4.0, 7.0)
+        # Click the reply submit button via JS. On the tweet detail page
+        # there may be multiple tweetButton elements; we target the last
+        # visible one which belongs to the inline reply composer.
+        clicked = await page.evaluate(
+            """() => {
+                const btns = document.querySelectorAll('[data-testid="tweetButton"]');
+                for (let i = btns.length - 1; i >= 0; i--) {
+                    const b = btns[i];
+                    if (b.offsetParent !== null && !b.disabled) {
+                        b.click();
+                        return true;
+                    }
+                }
+                return false;
+            }"""
+        )
+        if not clicked:
+            logger.warning("reply_submit_not_clicked", url=tweet_url)
+            return False
+        await random_pause(4.0, 7.0)
 
         # Check for restriction after posting
         page_content = await page.content()

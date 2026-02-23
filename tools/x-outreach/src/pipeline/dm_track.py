@@ -71,8 +71,7 @@ class DmResponseTracker:
         bool
             ``True`` if the record was updated.
         """
-        now_iso = datetime.now(tz=UTC).isoformat()
-        self._repo.mark_dm_replied(username, replied_at=now_iso)
+        self._repo.mark_dm_replied(username, replied_at=datetime.now(tz=UTC))
 
         today = datetime.now(tz=UTC).strftime("%Y-%m-%d")
         self._repo.update_daily_stats(today, dm_responses=1)

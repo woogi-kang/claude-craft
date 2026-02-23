@@ -94,7 +94,7 @@ Voice guide:
 - Gently invite them to ask you anything: e.g. "気になることあったら気軽に聞いてね"
 - NEVER sound like a clinic marketing account or salesperson
 - Be genuinely helpful, like a knowledgeable friend
-- Keep under 280 characters
+- Keep under 140 Japanese characters (each counts as 2 on X, so 140 chars = 280 limit)
 
 Respond with ONLY the reply text. No explanation, no quotes, no prefix."""
 
@@ -112,7 +112,7 @@ Rules:
   e.g. "韓国の皮膚科のこと、なんでも聞いてね" or "気になることあればいつでもどうぞ"
 - DO NOT include any links or URLs
 - DO NOT be pushy or salesy
-- Keep under 500 characters
+- Keep under 250 Japanese characters (each counts as 2 on X, so 250 chars = 500 limit)
 - Use casual but respectful Japanese
 
 Respond with ONLY the DM text. No explanation, no quotes, no prefix."""
@@ -134,7 +134,7 @@ Topics to choose from (pick ONE randomly each time):
 
 Rules:
 - Write in casual Japanese (plain form: da-yo, da-ne, na~, kana)
-- Keep under 140 characters (shorter is better)
+- Keep under 70 Japanese characters (each counts as 2 on X, so 70 = 140 limit; shorter is better)
 - NO hashtags
 - NO links or URLs
 - NO mentions (@) of other users
@@ -161,7 +161,7 @@ common misconception, seasonal tip)
 - Gently invite questions: e.g. "気になる人いたら聞いてね" or "詳しく知りたい人はDMしてね"
 - NEVER sound like a clinic marketing account
 - Be informative but casual, like a knowledgeable friend sharing tips
-- Keep under 240 characters
+- Keep under 120 Japanese characters (each counts as 2 on X, so 120 = 240 limit)
 - NO hashtags
 - NO links or URLs
 - NO mentions (@) of other users

@@ -126,14 +126,18 @@ class TestContentGenerator:
             author_username="user_a",
             template_category="procedure",
         )
-        assert len(result) <= 280
+        from src.ai.content_gen import x_weighted_len
+
+        assert x_weighted_len(result) <= 280
         assert "参考" in result
 
     @pytest.mark.asyncio
-    async def test_reply_truncated_at_280(self, generator) -> None:
+    async def test_reply_truncated_at_280_weighted(self, generator) -> None:
         from outreach_shared.ai.llm_client import LLMResponse
 
-        long_text = "あ" * 300
+        from src.ai.content_gen import x_weighted_len
+
+        long_text = "あ" * 300  # 300 CJK chars = 600 weighted
         generator._mock_client.generate = AsyncMock(
             return_value=LLMResponse(text=long_text, model="test")
         )
@@ -142,7 +146,7 @@ class TestContentGenerator:
             author_username="user_b",
             template_category="hospital",
         )
-        assert len(result) == 280
+        assert x_weighted_len(result) <= 280
         assert result.endswith("...")
 
     @pytest.mark.asyncio
@@ -160,13 +164,17 @@ class TestContentGenerator:
             author_username="user_c",
             template_category="hospital",
         )
-        assert len(result) <= 500
+        from src.ai.content_gen import x_weighted_len
+
+        assert x_weighted_len(result) <= 500
 
     @pytest.mark.asyncio
-    async def test_dm_truncated_at_500(self, generator) -> None:
+    async def test_dm_truncated_at_500_weighted(self, generator) -> None:
         from outreach_shared.ai.llm_client import LLMResponse
 
-        long_text = "い" * 600
+        from src.ai.content_gen import x_weighted_len
+
+        long_text = "い" * 600  # 600 CJK chars = 1200 weighted
         generator._mock_client.generate = AsyncMock(
             return_value=LLMResponse(text=long_text, model="test")
         )
@@ -175,7 +183,7 @@ class TestContentGenerator:
             author_username="user_d",
             template_category="review",
         )
-        assert len(result) == 500
+        assert x_weighted_len(result) <= 500
         assert result.endswith("...")
 
     @pytest.mark.asyncio

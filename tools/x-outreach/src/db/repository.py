@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -227,7 +228,7 @@ class Repository:
 
         return self._run(_fetch())
 
-    def mark_dm_replied(self, username: str, replied_at: str) -> None:
+    def mark_dm_replied(self, username: str, replied_at: datetime) -> None:
         """Mark all sent DMs to a user as replied."""
 
         async def _mark() -> None:
@@ -320,7 +321,7 @@ class Repository:
                 self._repo.insert_outreach(
                     post_id=tweet_id,
                     user_id=username,
-                    account_id=account_id or "",
+                    account_id=account_id or "burner",
                     platform="x",
                     outreach_type=action_type,
                     message=details or "",

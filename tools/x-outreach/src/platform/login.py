@@ -99,10 +99,10 @@ async def login(
     page = context.pages[0] if context.pages else await context.new_page()
     try:
         await page.goto(LOGIN_URL, wait_until="domcontentloaded", timeout=30_000)
-        await random_pause(2.0, 4.0)
+        await random_pause(3.0, 5.0)
 
-        # Step 1: Enter username
-        username_input = await page.wait_for_selector(USERNAME_INPUT, timeout=15_000)
+        # Step 1: Enter username (X SPA may take a while to render after splash)
+        username_input = await page.wait_for_selector(USERNAME_INPUT, timeout=30_000)
         if username_input:
             await human_type(page, USERNAME_INPUT, username)
             await random_pause(0.5, 1.0)

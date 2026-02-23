@@ -32,15 +32,11 @@ from src.pipeline.track import ActionTracker
 from src.platform.selectors import (
     DM_COMPOSER_INPUT,
     DM_CONVERSATION,
-    DM_NEXT_BUTTON,
     DM_PASSCODE_INPUT,
     DM_PASSCODE_INPUT_FALLBACK,
     DM_PASSCODE_TITLE,
-    DM_SEARCH_INPUT,
-    DM_TYPEAHEAD_RESULT,
-    MESSAGES_URL,
-    NEW_DM_BUTTON,
-    NEW_DM_LINK,
+    DM_SEND_BUTTON,
+    PROFILE_DM_BUTTON,
     RESTRICTION_INDICATORS,
 )
 
@@ -274,7 +270,7 @@ class DmPipeline:
                     tweet_id,
                     status="dm_sent",
                     dm_content=dm_text,
-                    dm_timestamp=datetime.now(tz=UTC).isoformat(),
+                    dm_timestamp=datetime.now(tz=UTC),
                     dm_template_used=effective_category,
                 )
                 tracker.record_dm(username, effective_category)
@@ -342,10 +338,11 @@ async def _send_dm_via_playwright(
     *,
     settings: Settings | None = None,
 ) -> bool:
-    """Send a DM to the specified user via Playwright.
+    """Send a DM via the user's profile page message button.
 
-    Navigates to X's messaging interface, searches for the user,
-    types the message with human-like delays, and sends it.
+    Flow: Visit profile -> Click DM button -> Handle passcode if needed
+    -> Type message -> Send.  This approach is more reliable than the
+    /messages compose flow which requires NewDM_Button.
 
     Parameters
     ----------
@@ -375,78 +372,55 @@ async def _send_dm_via_playwright(
     page = context.pages[0] if context.pages else await context.new_page()
 
     try:
-        # Step 1: Navigate to messages
-        await page.goto(MESSAGES_URL, wait_until="domcontentloaded", timeout=30_000)
+        # Step 1: Navigate to user profile
+        profile_url = f"https://x.com/{username}"
+        await page.goto(profile_url, wait_until="domcontentloaded", timeout=30_000)
         await random_pause(2.0, 4.0)
-
-        # Step 1a: Handle DM encryption passcode if present
-        passcode_digits = settings.dm_passcode_digits if settings else None
-        await _handle_encryption_passcode(page, passcode_digits)
 
         # Check for rate limit / restriction indicators
         page_content = await page.content()
         if _detect_rate_limit(page_content):
             raise DmRateLimitError("Account rate-limited or restricted")
 
-        # Step 2: Click "New message" button
-        new_msg_btn = await page.wait_for_selector(NEW_DM_BUTTON, timeout=10_000)
-        if new_msg_btn is None:
-            new_msg_btn = await page.query_selector(NEW_DM_LINK)
-        if new_msg_btn:
-            await new_msg_btn.click()
-            await random_pause(1.5, 3.0)
+        # Step 2: Click the DM (envelope) button on profile
+        dm_btn = await page.query_selector(PROFILE_DM_BUTTON)
+        if dm_btn is None:
+            # DM button not visible -- user's DMs are likely closed
+            raise DmClosedError(
+                f"DM button not found on @{username}'s profile. DMs may be closed or restricted."
+            )
 
-        # Step 3: Search for username
-        search_input = await page.wait_for_selector(DM_SEARCH_INPUT, timeout=10_000)
-        if search_input is None:
-            search_input = await page.query_selector("input[placeholder]")
+        await random_mouse_move(page)
+        await dm_btn.click()
+        await random_pause(2.0, 4.0)
 
-        if search_input:
-            await search_input.click()
-            await random_pause(0.3, 0.8)
-            # Type username character by character
-            for char in username:
-                delay_ms = random.randint(65, 156)
-                await page.keyboard.type(char, delay=delay_ms)
-            await random_pause(1.5, 3.0)
+        # Step 3: Handle DM encryption passcode if present
+        passcode_digits = settings.dm_passcode_digits if settings else None
+        await _handle_encryption_passcode(page, passcode_digits)
 
-        # Step 4: Select user from results
-        user_result = await page.wait_for_selector(
-            f"{DM_TYPEAHEAD_RESULT} >> text=@{username}",
-            timeout=10_000,
-        )
-        if user_result is None:
-            raise DmClosedError(f"Cannot find user @{username} in DM search")
-
-        await user_result.click()
-        await random_pause(1.0, 2.0)
-
-        # Click Next/Start conversation button
-        next_btn = await page.query_selector(DM_NEXT_BUTTON)
-        if next_btn:
-            await next_btn.click()
-            await random_pause(1.5, 3.0)
-
-        # Step 5: Type message with human-like delays
-        msg_input = await page.wait_for_selector(DM_COMPOSER_INPUT, timeout=10_000)
+        # Step 4: Type message with human-like delays
+        msg_input = await page.wait_for_selector(DM_COMPOSER_INPUT, timeout=15_000)
         if msg_input is None:
             msg_input = await page.query_selector('[role="textbox"][data-testid]')
 
-        if msg_input:
-            await msg_input.click()
-            await random_pause(0.3, 0.8)
-            await _type_message_naturally(page, message)
-            await random_pause(0.5, 1.5)
+        if msg_input is None:
+            logger.warning("dm_composer_not_found", username=username)
+            return False
 
-        # Step 6: Send the message
-        send_btn = await page.query_selector('[data-testid="dmComposerSendButton"]')
+        await msg_input.click()
+        await random_pause(0.3, 0.8)
+        await _type_message_naturally(page, message)
+        await random_pause(0.5, 1.5)
+
+        # Step 5: Send the message
+        send_btn = await page.query_selector(DM_SEND_BUTTON)
         if send_btn:
             await random_mouse_move(page)
             await random_pause(0.5, 1.0)
             await send_btn.click()
             await random_pause(2.0, 4.0)
 
-        # Verify send success by checking for the message in conversation
+        # Verify send success by checking for the conversation view
         sent_indicator = await page.query_selector(DM_CONVERSATION)
         if sent_indicator:
             logger.info("dm_playwright_sent", username=username)
