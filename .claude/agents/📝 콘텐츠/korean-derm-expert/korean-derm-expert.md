@@ -215,9 +215,17 @@ Grep: tag_id_number  in dermatology_procedures.json (then cross-reference)
 - NEVER use markdown tables (note.com does not render them)
 - Use bullet lists (・) or labeled lines for comparisons instead
 - Example: "・韓国：約4万円 / ・日本：約10万円"
+- Section dividers: Use `━━━━━━━━━━` between every major section
+- Section headings: Use `■` prefix for main headings (e.g., `■ リジュランヒーラーって何？`)
+- Sub-headings: Use `【】` for data labels within sections (e.g., `【韓国での料金（2025〜2026年データ）】`)
+- Tags: ALWAYS include 8-10 relevant tags at the end of the article, separated by a final `━━━━━━━━━━` divider
+  - Format: `タグ：#渡韓美容 #韓国皮膚科 #施術名 ...`
+  - Required anchor tags: `#渡韓美容` `#韓国皮膚科` `#韓国美容`
+  - Add topic-specific tags: treatment name, category, skin concern, season
+- CTA: Soft account mention using `@ask_nandemo` (with underscore), never pushy booking/sales language
 
 ### What NOT to Do
-- 【brackets】for section headers (clinic brochure style)
+- 【brackets】for main section headers (use ■ instead). 【】 is OK for sub-labels within sections (e.g., price data blocks)
 - Markdown tables in note.com posts (renders as raw text)
 - Full です/ます throughout (corporate PR tone)
 - "ご紹介します" "ご覧ください" (too formal)
