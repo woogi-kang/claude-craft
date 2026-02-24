@@ -1,24 +1,24 @@
 #!/usr/bin/env python3
-"""Parallel batch crawler with isolated browser per hospital.
+"""Parallel batch crawler with isolated browser per hospital (v3).
 
-Reads hospital list from CSV, filters by criteria, and runs multiple
+Reads hospital list from place_data.csv, filters by criteria, and runs multiple
 crawl_single.py processes concurrently. Each process gets its own
 headless Chromium browser - no shared state, no conflicts.
 
 Dependencies: playwright (pip install playwright && python -m playwright install chromium)
 
 Usage:
-    # Crawl all Seoul clinics, 5 in parallel:
-    python3 crawl_batch.py --csv skin_clinics.csv --filter-city 서울 --parallel 5
+    # Crawl all Seoul clinics with homepage, 5 in parallel:
+    python3 crawl_batch.py --csv place_data.csv --filter-city 서울 --parallel 5
 
-    # Crawl specific hospital numbers:
-    python3 crawl_batch.py --csv skin_clinics.csv --numbers 123,456,789 --parallel 3
+    # Crawl specific place IDs:
+    python3 crawl_batch.py --csv place_data.csv --place-ids 20951918,12345678 --parallel 3
+
+    # Crawl by district (highest homepage count first):
+    python3 crawl_batch.py --csv place_data.csv --filter-district 서초구 --parallel 5
 
     # Crawl first 10, dry-run (show what would be crawled):
-    python3 crawl_batch.py --csv skin_clinics.csv --limit 10 --dry-run
-
-    # Random sample of 10 Seoul clinics:
-    python3 crawl_batch.py --csv skin_clinics.csv --filter-city 서울 --sample 10 --parallel 5
+    python3 crawl_batch.py --csv place_data.csv --limit 10 --dry-run
 """
 
 import argparse
@@ -36,7 +36,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from crawl_single import crawl_hospital
 from storage_manager import DB_DEFAULT, export_unified_csv, get_db
 
-CSV_SOURCE = "data/clinic-results/skin_clinics.csv"
+CSV_SOURCE = "data/clinic-results/place_data.csv"
 CSV_UNIFIED_OUTPUT = "data/clinic-results/exports/clinic_results.csv"
 
 
@@ -52,7 +52,8 @@ def load_csv(csv_path: str) -> list:
     return hospitals
 
 
-def filter_hospitals(hospitals: list, city: str = None, numbers: list = None,
+def filter_hospitals(hospitals: list, city: str = None, district: str = None,
+                     place_ids: list = None, homepage_only: bool = True,
                      skip_crawled: bool = True, db_path: str = DB_DEFAULT) -> list:
     """Filter hospital list by criteria."""
     result = hospitals
@@ -60,30 +61,41 @@ def filter_hospitals(hospitals: list, city: str = None, numbers: list = None,
     # Filter by city (address contains city name)
     if city:
         result = [h for h in result if city in (
-            h.get("소재지주소") or h.get("naver_address") or h.get("주소") or h.get("address") or ""
+            h.get("naver_address") or h.get("소재지주소") or h.get("address") or ""
         )]
 
-    # Filter by specific numbers
-    if numbers:
-        num_set = set(numbers)
-        result = [h for h in result if int(h.get("NO", h.get("no", 0))) in num_set]
+    # Filter by district (e.g., 서초구, 마포구)
+    if district:
+        result = [h for h in result if district in (
+            h.get("naver_address") or h.get("소재지주소") or h.get("address") or ""
+        )]
+
+    # Filter by specific place IDs
+    if place_ids:
+        pid_set = set(place_ids)
+        result = [h for h in result if (h.get("place_id") or "") in pid_set]
+
+    # Filter: only hospitals with homepage_url
+    if homepage_only:
+        before = len(result)
+        result = [h for h in result if (h.get("homepage_url") or "").strip()]
+        filtered = before - len(result)
+        if filtered:
+            log(f"Filtered out {filtered} hospitals without homepage_url")
 
     # Skip already-crawled hospitals
-    # success = both social+doctors → skip
-    # robots_blocked = can't crawl → skip
-    # partial/empty/failed = re-crawlable
     if skip_crawled:
         try:
             conn = get_db(db_path)
             crawled = set()
             rows = conn.execute(
-                "SELECT hospital_no FROM hospitals WHERE status IN ('success', 'robots_blocked')"
+                "SELECT place_id FROM hospitals WHERE status IN ('success', 'robots_blocked')"
             ).fetchall()
             for row in rows:
-                crawled.add(row["hospital_no"])
+                crawled.add(row["place_id"])
             conn.close()
             before = len(result)
-            result = [h for h in result if int(h.get("NO", h.get("no", 0))) not in crawled]
+            result = [h for h in result if (h.get("place_id") or "") not in crawled]
             skipped = before - len(result)
             if skipped:
                 log(f"Skipped {skipped} already-crawled hospitals (success/robots_blocked)")
@@ -93,49 +105,16 @@ def filter_hospitals(hospitals: list, city: str = None, numbers: list = None,
     return result
 
 
-# Platform domains that often block robots.txt or aren't real hospital sites
-_PLATFORM_DOMAINS = {
-    "blog.naver.com", "cafe.naver.com", "post.naver.com",
-    "facebook.com", "www.facebook.com", "m.facebook.com",
-    "instagram.com", "www.instagram.com",
-    "youtube.com", "www.youtube.com",
-    "pf.kakao.com", "open.kakao.com",
-    "twitter.com", "x.com",
-}
-
-
-def _pick_best_url(row: dict) -> str:
-    """Pick the best crawlable URL: prefer custom domain over platform URLs."""
-    naver = (row.get("naver_website") or "").strip()
-    homepage = (row.get("홈페이지") or row.get("url") or row.get("website") or "").strip()
-
-    # Check if naver_website is a platform URL
-    naver_is_platform = False
-    if naver:
-        try:
-            from urllib.parse import urlparse
-            host = urlparse(naver).netloc.lower()
-            naver_is_platform = any(host == d or host.endswith("." + d) for d in _PLATFORM_DOMAINS)
-        except Exception:
-            pass
-
-    # Priority: custom domain first, then platform URL as fallback
-    if homepage and not naver_is_platform:
-        return naver or homepage  # naver custom domain > homepage
-    if homepage:
-        return homepage  # homepage > naver platform URL
-    return naver  # fallback to naver even if platform
-
-
 def parse_hospital(row: dict) -> dict:
-    """Parse a CSV row into hospital parameters."""
+    """Parse a CSV row into hospital parameters for v3 schema."""
     return {
-        "hospital_no": int(row.get("NO", row.get("no", 0))),
-        "name": row.get("병원/약국명") or row.get("naver_name") or row.get("이름") or row.get("name") or "",
-        "url": _pick_best_url(row),
-        "address": row.get("소재지주소") or row.get("naver_address") or row.get("주소") or row.get("address") or "",
-        "phone": row.get("전화번호") or row.get("phone") or "",
-        "category": row.get("naver_category") or row.get("분류") or row.get("category") or "",
+        "place_id": row.get("place_id", ""),
+        "csv_no": int(row.get("csv_no", 0)) if row.get("csv_no") else None,
+        "name": row.get("naver_name") or row.get("name") or "",
+        "url": (row.get("homepage_url") or "").strip(),
+        "address": row.get("naver_address") or row.get("address") or "",
+        "phone": row.get("phone") or "",
+        "category": row.get("category") or "",
     }
 
 
@@ -155,31 +134,32 @@ async def run_batch(hospitals: list, db_path: str, parallel: int,
         async with semaphore:
             info = parse_hospital(hosp)
             if not info["url"]:
-                log(f"#{info['hospital_no']} Skipping - no URL")
+                log(f"[{info['place_id']}] Skipping - no URL")
                 results["errors"] += 1
-                return {"hospital_no": info["hospital_no"], "status": "failed", "reason": "no_url"}
+                return {"place_id": info["place_id"], "status": "failed", "reason": "no_url"}
 
             try:
                 result = await crawl_hospital(
-                    hospital_no=info["hospital_no"],
+                    place_id=info["place_id"],
                     name=info["name"],
                     url=info["url"],
                     db_path=db_path,
                     timeout=timeout,
                     headless=headless,
+                    csv_no=info["csv_no"],
                 )
                 status = result.get("status", "failed")
                 results[status] = results.get(status, 0) + 1
 
                 channels = len(result.get("social_channels", []))
                 doctors = len(result.get("doctors", []))
-                log(f"#{info['hospital_no']} Done: status={status} channels={channels} doctors={doctors}")
+                log(f"[{info['place_id']}] Done: status={status} channels={channels} doctors={doctors}")
                 return result
 
             except Exception as e:
                 results["errors"] += 1
-                log(f"#{info['hospital_no']} Error: {e}")
-                return {"hospital_no": info["hospital_no"], "status": "failed", "error": str(e)}
+                log(f"[{info['place_id']}] Error: {e}")
+                return {"place_id": info["place_id"], "status": "failed", "error": str(e)}
 
     log(f"Starting batch: {len(hospitals)} hospitals, {parallel} parallel workers")
     log(f"Database: {db_path}")
@@ -202,26 +182,29 @@ async def run_batch(hospitals: list, db_path: str, parallel: int,
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Parallel batch crawler with isolated browsers",
+        description="Parallel batch crawler with isolated browsers (v3)",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # All Seoul clinics, 5 parallel:
-  python3 crawl_batch.py --csv skin_clinics.csv --filter-city 서울 --parallel 5
+  # Seoul clinics with homepage, by district:
+  python3 crawl_batch.py --csv place_data.csv --filter-district 서초구 --parallel 5
 
-  # Specific hospitals:
-  python3 crawl_batch.py --csv skin_clinics.csv --numbers 123,456,789
+  # Specific place IDs:
+  python3 crawl_batch.py --csv place_data.csv --place-ids 20951918,12345678
 
   # Random sample:
-  python3 crawl_batch.py --csv skin_clinics.csv --filter-city 서울 --sample 10 --seed 42
+  python3 crawl_batch.py --csv place_data.csv --filter-city 서울 --sample 10 --seed 42
         """,
     )
-    parser.add_argument("--csv", required=True, help="Path to hospital CSV file")
+    parser.add_argument("--csv", required=True, help="Path to hospital CSV file (place_data.csv)")
     parser.add_argument("--db", default=DB_DEFAULT, help=f"SQLite DB path (default: {DB_DEFAULT})")
     parser.add_argument("--parallel", type=int, default=3, help="Max concurrent crawlers (default: 3)")
     parser.add_argument("--timeout", type=int, default=45, help="Per-page timeout seconds (default: 45)")
     parser.add_argument("--filter-city", help="Filter by city name in address (e.g., 서울)")
-    parser.add_argument("--numbers", help="Comma-separated hospital numbers to crawl")
+    parser.add_argument("--filter-district", help="Filter by district name in address (e.g., 서초구)")
+    parser.add_argument("--place-ids", help="Comma-separated place IDs to crawl")
+    parser.add_argument("--no-homepage-filter", dest="homepage_only", action="store_false",
+                        help="Include hospitals without homepage_url")
     parser.add_argument("--sample", type=int, help="Random sample N hospitals from filtered list")
     parser.add_argument("--seed", type=int, default=42, help="Random seed for --sample (default: 42)")
     parser.add_argument("--limit", type=int, help="Limit to first N hospitals")
@@ -238,14 +221,16 @@ Examples:
     hospitals = load_csv(args.csv)
     log(f"Loaded {len(hospitals)} hospitals")
 
-    numbers = None
-    if args.numbers:
-        numbers = [int(n.strip()) for n in args.numbers.split(",")]
+    place_ids = None
+    if args.place_ids:
+        place_ids = [pid.strip() for pid in args.place_ids.split(",")]
 
     hospitals = filter_hospitals(
         hospitals,
         city=args.filter_city,
-        numbers=numbers,
+        district=args.filter_district,
+        place_ids=place_ids,
+        homepage_only=args.homepage_only,
         skip_crawled=args.skip_crawled,
         db_path=args.db,
     )
@@ -275,7 +260,7 @@ Examples:
         print("\nDry run - would crawl these hospitals:\n")
         for h in hospitals:
             info = parse_hospital(h)
-            print(f"  #{info['hospital_no']:>5}  {info['name']:<20}  {info['url']}")
+            print(f"  {info['place_id']:>12}  {info['name']:<20}  {info['url']}")
         print(f"\nTotal: {len(hospitals)} hospitals, {args.parallel} parallel workers")
         sys.exit(0)
 

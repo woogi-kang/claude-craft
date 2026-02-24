@@ -24,15 +24,16 @@ def temp_db(tmp_path):
 def sample_crawl_result():
     """Factory for sample crawl result dicts."""
 
-    def _make(hospital_no=1, name="Test Hospital", status="success", **overrides):
+    def _make(place_id="20951918", name="Test Hospital", status="success", **overrides):
         base = {
-            "hospital_no": hospital_no,
+            "place_id": place_id,
+            "csv_no": None,
             "name": name,
             "url": "https://example.com",
             "final_url": "",
             "status": status,
             "cms_platform": "",
-            "schema_version": "2.0.0",
+            "schema_version": "3.0.0",
             "social_channels": [],
             "doctors": [],
             "errors": [],
@@ -54,9 +55,10 @@ def sample_doctor():
             "name_english": "",
             "role": role,
             "photo_url": "",
-            "education": [],
-            "career": [],
-            "credentials": [],
+            "profile_raw": [],
+            "page_text": "",
+            "source_url": "",
+            "screenshot_path": "",
             "branch": "",
             "branches": [],
             "extraction_source": "dom",

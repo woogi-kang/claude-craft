@@ -7,8 +7,8 @@ workflow, saves results to SQLite, and exits. Safe for parallel execution.
 Dependencies: playwright (pip install playwright && python -m playwright install chromium)
 
 Usage:
-    python3 crawl_single.py --no 123 --name "고은미인의원" --url "https://example.com"
-    python3 crawl_single.py --no 123 --name "병원" --url "https://..." --db hospitals.db --timeout 60
+    python3 crawl_single.py --place-id 20951918 --name "고은미인의원" --url "https://example.com"
+    python3 crawl_single.py --place-id 20951918 --name "병원" --url "https://..." --db hospitals.db --timeout 60
 """
 
 import argparse
@@ -34,7 +34,7 @@ from clinic_crawler.steps import (
 )
 from storage_manager import DB_DEFAULT, export_unified_csv
 
-CSV_SOURCE = "data/clinic-results/skin_clinics.csv"
+CSV_SOURCE = "data/clinic-results/place_data.csv"
 CSV_UNIFIED_OUTPUT = "data/clinic-results/exports/clinic_results.csv"
 
 # ---------------------------------------------------------------------------
@@ -42,19 +42,21 @@ CSV_UNIFIED_OUTPUT = "data/clinic-results/exports/clinic_results.csv"
 # ---------------------------------------------------------------------------
 
 
-async def crawl_hospital(hospital_no: int, name: str, url: str, db_path: str,
-                         timeout: int = 45, headless: bool = True) -> dict:
+async def crawl_hospital(place_id: str, name: str, url: str, db_path: str,
+                         timeout: int = 45, headless: bool = True,
+                         csv_no: int = None) -> dict:
     """Crawl a single hospital website with an isolated browser instance."""
     from playwright.async_api import async_playwright
 
     result = {
-        "hospital_no": hospital_no,
+        "place_id": place_id,
+        "csv_no": csv_no,
         "name": name,
         "url": url,
         "final_url": "",
         "status": "success",
         "cms_platform": "",
-        "schema_version": "2.0.0",
+        "schema_version": "3.0.0",
         "social_channels": [],
         "doctors": [],
         "errors": [],
@@ -78,7 +80,7 @@ async def crawl_hospital(hospital_no: int, name: str, url: str, db_path: str,
         page.set_default_navigation_timeout(timeout * 1000)
 
         ctx = CrawlContext(
-            hospital_no=hospital_no, name=name, url=url,
+            place_id=place_id, name=name, url=url,
             base_url="", result=result, page=page,
             context=context, browser=browser, timeout=timeout,
         )
@@ -101,7 +103,7 @@ async def crawl_hospital(hospital_no: int, name: str, url: str, db_path: str,
                 "type": "unexpected", "message": str(e)[:300],
                 "step": "unknown", "retryable": True,
             })
-            log(f"#{hospital_no} Unexpected error: {e}")
+            log(f"[{place_id}] Unexpected error: {e}")
 
         finally:
             await browser.close()
@@ -116,9 +118,10 @@ async def crawl_hospital(hospital_no: int, name: str, url: str, db_path: str,
 
 def main():
     parser = argparse.ArgumentParser(description="Crawl a single hospital with isolated browser")
-    parser.add_argument("--no", type=int, required=True, help="Hospital number")
+    parser.add_argument("--place-id", required=True, help="Naver Place ID")
     parser.add_argument("--name", required=True, help="Hospital name")
     parser.add_argument("--url", required=True, help="Hospital website URL")
+    parser.add_argument("--csv-no", type=int, help="CSV row number")
     parser.add_argument("--db", default=DB_DEFAULT, help=f"SQLite DB path (default: {DB_DEFAULT})")
     parser.add_argument("--timeout", type=int, default=45, help="Page timeout in seconds (default: 45)")
     parser.add_argument("--headed", action="store_true", help="Run with visible browser (for debugging)")
@@ -126,12 +129,13 @@ def main():
 
     result = asyncio.run(
         crawl_hospital(
-            hospital_no=args.no,
+            place_id=args.place_id,
             name=args.name,
             url=args.url,
             db_path=args.db,
             timeout=args.timeout,
             headless=not args.headed,
+            csv_no=args.csv_no,
         )
     )
 

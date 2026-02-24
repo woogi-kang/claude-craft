@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
-"""Lightweight storage manager for clinic crawl results.
+"""Lightweight storage manager for clinic crawl results (v3).
 
 Uses Python stdlib only (sqlite3, json, csv, argparse).
 No external dependencies required.
 
+Schema v3.0.0: place_id TEXT as PK, merged profile_raw_json,
+page_text, source_url, screenshot_path for doctors.
+
 Usage:
-    python storage_manager.py save --json '{"hospital_no": 6, ...}' --db hospitals.db
+    python storage_manager.py save --json '{"place_id": "20951918", ...}' --db hospitals.db
     python storage_manager.py save --json-file result.json --db hospitals.db
     python storage_manager.py export --db hospitals.db --output ./exports/
     python storage_manager.py stats --db hospitals.db
@@ -33,11 +36,12 @@ VALID_STATUSES = {
     "encoding_error", "robots_blocked",
 }
 
-DB_DEFAULT = "data/clinic-results/hospitals.db"
+DB_DEFAULT = str(Path(__file__).resolve().parent.parent.parent / "data" / "clinic-results" / "hospitals.db")
 
 SCHEMA_SQL = """
 CREATE TABLE IF NOT EXISTS hospitals (
-    hospital_no INTEGER PRIMARY KEY,
+    place_id TEXT PRIMARY KEY,
+    csv_no INTEGER,
     name TEXT NOT NULL,
     url TEXT,
     final_url TEXT,
@@ -46,7 +50,8 @@ CREATE TABLE IF NOT EXISTS hospitals (
     address TEXT,
     status TEXT DEFAULT 'pending',
     cms_platform TEXT,
-    schema_version TEXT DEFAULT '2.0.0',
+    doctor_page_exists INTEGER,
+    schema_version TEXT DEFAULT '3.0.0',
     crawled_at TEXT,
     created_at TEXT DEFAULT (datetime('now')),
     updated_at TEXT DEFAULT (datetime('now'))
@@ -54,75 +59,59 @@ CREATE TABLE IF NOT EXISTS hospitals (
 
 CREATE TABLE IF NOT EXISTS social_channels (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    hospital_no INTEGER NOT NULL,
+    place_id TEXT NOT NULL,
     platform TEXT NOT NULL,
     url TEXT NOT NULL,
     extraction_method TEXT,
     confidence REAL DEFAULT 1.0,
     status TEXT DEFAULT 'active',
+    verified_at TEXT,
     created_at TEXT DEFAULT (datetime('now')),
-    FOREIGN KEY (hospital_no) REFERENCES hospitals(hospital_no),
-    UNIQUE(hospital_no, platform, url)
+    FOREIGN KEY (place_id) REFERENCES hospitals(place_id),
+    UNIQUE(place_id, platform, url)
 );
 
 CREATE TABLE IF NOT EXISTS doctors (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    hospital_no INTEGER NOT NULL,
+    place_id TEXT NOT NULL,
     name TEXT,
     name_english TEXT,
     role TEXT DEFAULT 'specialist',
     photo_url TEXT,
-    education_json TEXT DEFAULT '[]',
-    career_json TEXT DEFAULT '[]',
-    credentials_json TEXT DEFAULT '[]',
+    profile_raw_json TEXT DEFAULT '[]',
+    page_text TEXT,
+    source_url TEXT,
+    screenshot_path TEXT,
     branch TEXT,
     branches_json TEXT DEFAULT '[]',
     extraction_source TEXT,
     ocr_source INTEGER DEFAULT 0,
+    ocr_confidence REAL DEFAULT 0.0,
     created_at TEXT DEFAULT (datetime('now')),
-    FOREIGN KEY (hospital_no) REFERENCES hospitals(hospital_no)
+    FOREIGN KEY (place_id) REFERENCES hospitals(place_id)
 );
 
 CREATE TABLE IF NOT EXISTS crawl_errors (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    hospital_no INTEGER NOT NULL,
+    place_id TEXT NOT NULL,
     error_type TEXT,
     message TEXT,
     step TEXT,
     retryable INTEGER DEFAULT 0,
+    retry_count INTEGER DEFAULT 0,
     created_at TEXT DEFAULT (datetime('now')),
-    FOREIGN KEY (hospital_no) REFERENCES hospitals(hospital_no)
+    FOREIGN KEY (place_id) REFERENCES hospitals(place_id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_hospitals_status ON hospitals(status);
 CREATE INDEX IF NOT EXISTS idx_hospitals_crawled_at ON hospitals(crawled_at);
-CREATE INDEX IF NOT EXISTS idx_social_hospital ON social_channels(hospital_no);
-CREATE INDEX IF NOT EXISTS idx_doctors_hospital ON doctors(hospital_no);
-CREATE INDEX IF NOT EXISTS idx_errors_hospital ON crawl_errors(hospital_no);
+CREATE INDEX IF NOT EXISTS idx_social_hospital ON social_channels(place_id);
+CREATE INDEX IF NOT EXISTS idx_doctors_hospital ON doctors(place_id);
+CREATE INDEX IF NOT EXISTS idx_errors_hospital ON crawl_errors(place_id);
 """
 
-# Schema migrations: version -> SQL statement
-# Applied incrementally via PRAGMA user_version tracking
-MIGRATIONS = {
-    1: "ALTER TABLE social_channels ADD COLUMN verified_at TEXT",
-    2: "ALTER TABLE doctors ADD COLUMN ocr_confidence REAL DEFAULT 0.0",
-    3: "ALTER TABLE crawl_errors ADD COLUMN retry_count INTEGER DEFAULT 0",
-    4: """CREATE TABLE IF NOT EXISTS ocr_cache (
-        image_hash TEXT PRIMARY KEY,
-        result_json TEXT NOT NULL,
-        created_at TEXT DEFAULT (datetime('now'))
-    )""",
-    5: "ALTER TABLE hospitals ADD COLUMN final_url TEXT",
-    6: "ALTER TABLE hospitals ADD COLUMN cms_platform TEXT",
-    7: "ALTER TABLE hospitals ADD COLUMN schema_version TEXT DEFAULT '2.0.0'",
-    8: "ALTER TABLE social_channels ADD COLUMN status TEXT DEFAULT 'active'",
-    9: "ALTER TABLE crawl_errors ADD COLUMN step TEXT",
-    10: "ALTER TABLE crawl_errors ADD COLUMN retryable INTEGER DEFAULT 0",
-    11: "ALTER TABLE doctors ADD COLUMN branch TEXT",
-    12: "ALTER TABLE doctors ADD COLUMN branches_json TEXT DEFAULT '[]'",
-    13: "ALTER TABLE doctors ADD COLUMN extraction_source TEXT",
-    14: "ALTER TABLE hospitals ADD COLUMN doctor_page_exists INTEGER",
-}
+# Schema migrations: fresh DB for v3, no migrations needed
+MIGRATIONS = {}
 
 
 def _run_migrations(conn: sqlite3.Connection) -> None:
@@ -205,7 +194,8 @@ def save_result(db_path: str, data: dict) -> None:
     conn = get_db(db_path)
     now = datetime.now(timezone.utc).isoformat()
 
-    hospital_no = data["hospital_no"]
+    place_id = str(data["place_id"])
+    csv_no = data.get("csv_no")
     name = _normalize(data.get("name", ""))
     url = data.get("url", "")
     category = data.get("category", "")
@@ -219,52 +209,53 @@ def save_result(db_path: str, data: dict) -> None:
     doctors = data.get("doctors", [])
     new_status = status
 
-    # Case 2 guard: Don't overwrite successful crawl with failed one that has no data
+    # Don't overwrite successful crawl with failed one that has no data
     existing = conn.execute(
-        "SELECT status, crawled_at FROM hospitals WHERE hospital_no = ?",
-        (hospital_no,),
+        "SELECT status, crawled_at FROM hospitals WHERE place_id = ?",
+        (place_id,),
     ).fetchone()
     if existing and existing["status"] == "success" and new_status == "failed":
         if not doctors and not data.get("social_channels", []):
             print(
-                f"Warning: Skipping failed overwrite of successful hospital #{hospital_no}",
+                f"Warning: Skipping failed overwrite of successful hospital {place_id}",
                 file=sys.stderr,
             )
             conn.close()
             return
 
-    # Case 1 & 3: Wrap ALL operations in a single transaction
+    # Wrap ALL operations in a single transaction
     try:
         conn.execute("BEGIN IMMEDIATE")
 
         final_url = data.get("final_url", "")
         cms_platform = data.get("cms_platform", "")
-        schema_version = data.get("schema_version", "2.0.0")
-
+        schema_version = data.get("schema_version", "3.0.0")
         doctor_page_exists = data.get("doctor_page_exists")
 
         conn.execute(
-            """INSERT INTO hospitals (hospital_no, name, url, final_url, category, phone, address, status, cms_platform, schema_version, doctor_page_exists, crawled_at, updated_at)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-               ON CONFLICT(hospital_no) DO UPDATE SET
-                 name=excluded.name, url=excluded.url, final_url=excluded.final_url,
-                 category=excluded.category, phone=excluded.phone, address=excluded.address,
+            """INSERT INTO hospitals (place_id, csv_no, name, url, final_url, category, phone, address, status, cms_platform, schema_version, doctor_page_exists, crawled_at, updated_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+               ON CONFLICT(place_id) DO UPDATE SET
+                 csv_no=excluded.csv_no, name=excluded.name, url=excluded.url,
+                 final_url=excluded.final_url, category=excluded.category,
+                 phone=excluded.phone, address=excluded.address,
                  status=excluded.status, cms_platform=excluded.cms_platform,
-                 schema_version=excluded.schema_version, doctor_page_exists=excluded.doctor_page_exists,
+                 schema_version=excluded.schema_version,
+                 doctor_page_exists=excluded.doctor_page_exists,
                  crawled_at=excluded.crawled_at, updated_at=excluded.updated_at""",
-            (hospital_no, name, url, final_url, category, phone, address, new_status, cms_platform, schema_version, doctor_page_exists, now, now),
+            (place_id, csv_no, name, url, final_url, category, phone, address, new_status, cms_platform, schema_version, doctor_page_exists, now, now),
         )
 
         # Remove old social channels then insert new
-        conn.execute("DELETE FROM social_channels WHERE hospital_no = ?", (hospital_no,))
+        conn.execute("DELETE FROM social_channels WHERE place_id = ?", (place_id,))
         for ch in data.get("social_channels", []):
             ch = _validate_channel(ch)
             conn.execute(
                 """INSERT OR IGNORE INTO social_channels
-                   (hospital_no, platform, url, extraction_method, confidence, status)
+                   (place_id, platform, url, extraction_method, confidence, status)
                    VALUES (?, ?, ?, ?, ?, ?)""",
                 (
-                    hospital_no,
+                    place_id,
                     ch.get("platform", ""),
                     ch.get("url", ""),
                     ch.get("extraction_method", ""),
@@ -273,26 +264,35 @@ def save_result(db_path: str, data: dict) -> None:
                 ),
             )
 
-        # Case 2: Always clear old doctors on re-crawl, then insert new ones
-        conn.execute("DELETE FROM doctors WHERE hospital_no = ?", (hospital_no,))
+        # Clear old doctors on re-crawl, then insert new ones
+        conn.execute("DELETE FROM doctors WHERE place_id = ?", (place_id,))
         if doctors:
             for doc in doctors:
                 doc_name = _normalize(doc.get("name", ""))
+                # Merge profile_raw from either unified or legacy format
+                profile_raw = doc.get("profile_raw") or []
+                if not profile_raw:
+                    # Fallback: combine legacy fields
+                    edu = doc.get("education") or []
+                    career = doc.get("career") or []
+                    creds = doc.get("credentials") or []
+                    profile_raw = edu + career + creds
                 conn.execute(
                     """INSERT INTO doctors
-                       (hospital_no, name, name_english, role, photo_url,
-                        education_json, career_json, credentials_json,
+                       (place_id, name, name_english, role, photo_url,
+                        profile_raw_json, page_text, source_url, screenshot_path,
                         branch, branches_json, extraction_source, ocr_source)
-                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                     (
-                        hospital_no,
+                        place_id,
                         doc_name,
                         doc.get("name_english", ""),
                         doc.get("role", ""),
                         doc.get("photo_url", ""),
-                        json.dumps(doc.get("education") or [], ensure_ascii=False),
-                        json.dumps(doc.get("career") or [], ensure_ascii=False),
-                        json.dumps(doc.get("credentials") or [], ensure_ascii=False),
+                        json.dumps(profile_raw, ensure_ascii=False),
+                        doc.get("page_text", ""),
+                        doc.get("source_url", ""),
+                        doc.get("screenshot_path", ""),
                         doc.get("branch", ""),
                         json.dumps(doc.get("branches") or [], ensure_ascii=False),
                         doc.get("extraction_source", ""),
@@ -301,31 +301,31 @@ def save_result(db_path: str, data: dict) -> None:
                 )
 
         # Clear old errors and insert new
-        conn.execute("DELETE FROM crawl_errors WHERE hospital_no = ?", (hospital_no,))
+        conn.execute("DELETE FROM crawl_errors WHERE place_id = ?", (place_id,))
         for err in data.get("errors", []):
             if isinstance(err, str):
                 conn.execute(
-                    "INSERT INTO crawl_errors (hospital_no, error_type, message, step, retryable) VALUES (?, ?, ?, ?, ?)",
-                    (hospital_no, "general", err, "", 0),
+                    "INSERT INTO crawl_errors (place_id, error_type, message, step, retryable) VALUES (?, ?, ?, ?, ?)",
+                    (place_id, "general", err, "", 0),
                 )
             elif isinstance(err, dict):
                 conn.execute(
-                    "INSERT INTO crawl_errors (hospital_no, error_type, message, step, retryable) VALUES (?, ?, ?, ?, ?)",
-                    (hospital_no, err.get("type", "general"), err.get("message", ""),
+                    "INSERT INTO crawl_errors (place_id, error_type, message, step, retryable) VALUES (?, ?, ?, ?, ?)",
+                    (place_id, err.get("type", "general"), err.get("message", ""),
                      err.get("step", ""), 1 if err.get("retryable") else 0),
                 )
             else:
                 conn.execute(
-                    "INSERT INTO crawl_errors (hospital_no, error_type, message, step, retryable) VALUES (?, ?, ?, ?, ?)",
-                    (hospital_no, "unknown", str(err), "", 0),
+                    "INSERT INTO crawl_errors (place_id, error_type, message, step, retryable) VALUES (?, ?, ?, ?, ?)",
+                    (place_id, "unknown", str(err), "", 0),
                 )
 
         conn.commit()
-        print(f"Saved hospital #{hospital_no} ({name})")
+        print(f"Saved hospital {place_id} ({name})")
 
     except Exception as e:
         conn.rollback()
-        print(f"Error: Transaction failed for hospital #{hospital_no}: {e}", file=sys.stderr)
+        print(f"Error: Transaction failed for hospital {place_id}: {e}", file=sys.stderr)
         raise
     finally:
         conn.close()
@@ -351,7 +351,7 @@ def show_stats(db_path: str) -> None:
     error_total = conn.execute("SELECT COUNT(*) FROM crawl_errors").fetchone()[0]
 
     print(f"\n{'='*50}")
-    print("  Clinic Crawl Statistics")
+    print("  Clinic Crawl Statistics (v3)")
     print(f"{'='*50}")
     print(f"\n  Hospitals: {total}")
     for row in by_status:
@@ -372,7 +372,7 @@ def show_stats(db_path: str) -> None:
     conn.close()
 
 
-def show_dashboard(db_path: str, total_target: int = 4256) -> None:
+def show_dashboard(db_path: str, total_target: int = 1012) -> None:
     """Show detailed crawl progress dashboard."""
     conn = get_db(db_path)
 
@@ -397,9 +397,9 @@ def show_dashboard(db_path: str, total_target: int = 4256) -> None:
 
     # Platform discovery rates (among successful crawls)
     platform_rates = conn.execute(
-        """SELECT sc.platform, COUNT(DISTINCT sc.hospital_no) as cnt
+        """SELECT sc.platform, COUNT(DISTINCT sc.place_id) as cnt
            FROM social_channels sc
-           JOIN hospitals h ON sc.hospital_no = h.hospital_no
+           JOIN hospitals h ON sc.place_id = h.place_id
            WHERE h.status IN ('success', 'partial')
            GROUP BY sc.platform ORDER BY cnt DESC"""
     ).fetchall()
@@ -413,14 +413,14 @@ def show_dashboard(db_path: str, total_target: int = 4256) -> None:
            GROUP BY error_type ORDER BY cnt DESC LIMIT 5"""
     ).fetchall()
 
-    # OCR stats
+    # Doctor stats
     doctor_total = conn.execute("SELECT COUNT(*) FROM doctors").fetchone()[0]
     ocr_count = conn.execute("SELECT COUNT(*) FROM doctors WHERE ocr_source = 1").fetchone()[0]
 
     progress_pct = total / total_target * 100 if total_target else 0
 
     print(f"\n{'='*55}")
-    print("  Clinic Crawl Dashboard")
+    print("  Clinic Crawl Dashboard (v3)")
     print(f"{'='*55}")
     print(f"\n  Progress: {total}/{total_target} ({progress_pct:.1f}%)")
     print(f"  Success rate: {success_rate:.0f}% ({success}/{attempted} attempted)")
@@ -447,13 +447,13 @@ def show_retry_queue(db_path: str) -> None:
     conn = get_db(db_path)
 
     rows = conn.execute(
-        """SELECT h.hospital_no, h.name, h.status, h.url, h.crawled_at,
+        """SELECT h.place_id, h.name, h.status, h.url, h.crawled_at,
                   GROUP_CONCAT(DISTINCT ce.error_type) as error_types,
                   MAX(ce.retry_count) as max_retries
            FROM hospitals h
-           LEFT JOIN crawl_errors ce ON h.hospital_no = ce.hospital_no
+           LEFT JOIN crawl_errors ce ON h.place_id = ce.place_id
            WHERE h.status IN ('partial', 'failed')
-           GROUP BY h.hospital_no
+           GROUP BY h.place_id
            ORDER BY
              CASE h.status WHEN 'partial' THEN 0 ELSE 1 END,
              COALESCE(MAX(ce.retry_count), 0) ASC,
@@ -469,7 +469,7 @@ def show_retry_queue(db_path: str) -> None:
     for row in rows:
         retries = row["max_retries"] or 0
         errors = row["error_types"] or "unknown"
-        print(f"  #{row['hospital_no']} {row['name']}")
+        print(f"  {row['place_id']} {row['name']}")
         print(f"    status={row['status']} retries={retries} errors={errors}")
         print(f"    url={row['url']}")
     print(f"{'='*55}\n")
@@ -484,7 +484,7 @@ def export_csv(db_path: str, output_dir: str, since: str = None) -> None:
     since_clause = ""
     since_params = ()
     if since:
-        since_clause = " WHERE h.updated_at >= ?"
+        since_clause = " WHERE updated_at >= ?"
         since_params = (since,)
         print(f"Incremental export: changes since {since}")
 
@@ -492,8 +492,8 @@ def export_csv(db_path: str, output_dir: str, since: str = None) -> None:
         return [_escape_csv_formula(str(v) if v is not None else "") for v in row]
 
     # Hospitals CSV
-    query = f"SELECT * FROM hospitals h{since_clause.replace('h.', '')} ORDER BY hospital_no"
-    rows = conn.execute(query.replace("h.", ""), since_params).fetchall()
+    query = f"SELECT * FROM hospitals{since_clause} ORDER BY place_id"
+    rows = conn.execute(query, since_params).fetchall()
     if rows:
         suffix = f"_since_{since.replace('-', '')}" if since else ""
         fname = f"hospitals{suffix}.csv"
@@ -507,12 +507,12 @@ def export_csv(db_path: str, output_dir: str, since: str = None) -> None:
     # Social channels CSV
     if since:
         rows = conn.execute(
-            "SELECT sc.*, h.name as hospital_name FROM social_channels sc JOIN hospitals h ON sc.hospital_no = h.hospital_no WHERE h.updated_at >= ? ORDER BY sc.hospital_no",
+            "SELECT sc.*, h.name as hospital_name FROM social_channels sc JOIN hospitals h ON sc.place_id = h.place_id WHERE h.updated_at >= ? ORDER BY sc.place_id",
             since_params,
         ).fetchall()
     else:
         rows = conn.execute(
-            "SELECT sc.*, h.name as hospital_name FROM social_channels sc JOIN hospitals h ON sc.hospital_no = h.hospital_no ORDER BY sc.hospital_no"
+            "SELECT sc.*, h.name as hospital_name FROM social_channels sc JOIN hospitals h ON sc.place_id = h.place_id ORDER BY sc.place_id"
         ).fetchall()
     if rows:
         suffix = f"_since_{since.replace('-', '')}" if since else ""
@@ -527,12 +527,12 @@ def export_csv(db_path: str, output_dir: str, since: str = None) -> None:
     # Doctors CSV
     if since:
         rows = conn.execute(
-            "SELECT d.*, h.name as hospital_name FROM doctors d JOIN hospitals h ON d.hospital_no = h.hospital_no WHERE h.updated_at >= ? ORDER BY d.hospital_no",
+            "SELECT d.*, h.name as hospital_name FROM doctors d JOIN hospitals h ON d.place_id = h.place_id WHERE h.updated_at >= ? ORDER BY d.place_id",
             since_params,
         ).fetchall()
     else:
         rows = conn.execute(
-            "SELECT d.*, h.name as hospital_name FROM doctors d JOIN hospitals h ON d.hospital_no = h.hospital_no ORDER BY d.hospital_no"
+            "SELECT d.*, h.name as hospital_name FROM doctors d JOIN hospitals h ON d.place_id = h.place_id ORDER BY d.place_id"
         ).fetchall()
     if rows:
         suffix = f"_since_{since.replace('-', '')}" if since else ""
@@ -585,7 +585,7 @@ def _normalize_platform(name: str) -> str:
 
 
 def export_unified_csv(db_path: str, csv_source: str, output_path: str) -> None:
-    """Export a single unified CSV merging original CSV + crawl DB.
+    """Export a single unified CSV merging place_data CSV + crawl DB.
 
     One row per doctor (expanded). Hospitals with no doctors get one row.
     All hospitals from csv_source are included (uncrawled = not_crawled).
@@ -598,66 +598,67 @@ def export_unified_csv(db_path: str, csv_source: str, output_path: str) -> None:
     out = Path(output_path)
     out.parent.mkdir(parents=True, exist_ok=True)
 
-    # Load original CSV (all hospitals)
+    # Load source CSV (place_data.csv with place_id)
     source_hospitals = {}
     with open(csv_source, encoding="utf-8-sig") as f:
         reader = csv_mod.DictReader(f)
         for row in reader:
             clean = {k.strip(): (v.strip() if v else "") for k, v in row.items() if k}
-            no = int(clean.get("NO", clean.get("no", 0)))
-            source_hospitals[no] = {
-                "name": clean.get("병원/약국명") or clean.get("naver_name") or "",
-                "phone": clean.get("전화번호") or "",
-                "address": clean.get("소재지주소") or clean.get("naver_address") or "",
-                "website": clean.get("naver_website") or clean.get("홈페이지") or "",
+            pid = clean.get("place_id", "")
+            if not pid:
+                continue
+            source_hospitals[pid] = {
+                "csv_no": clean.get("csv_no", ""),
+                "name": clean.get("naver_name", ""),
+                "phone": clean.get("phone", ""),
+                "address": clean.get("naver_address", ""),
+                "website": clean.get("homepage_url", ""),
             }
 
     # Load crawl results from DB
     crawled = {}
     for row in conn.execute("SELECT * FROM hospitals").fetchall():
-        crawled[row["hospital_no"]] = dict(row)
+        crawled[row["place_id"]] = dict(row)
 
     # Load social channels grouped by hospital
-    social_map = {}  # hospital_no -> {platform: url}
-    for row in conn.execute("SELECT hospital_no, platform, url FROM social_channels ORDER BY id"):
-        hno = row["hospital_no"]
+    social_map = {}  # place_id -> {platform: url}
+    for row in conn.execute("SELECT place_id, platform, url FROM social_channels ORDER BY id"):
+        pid = row["place_id"]
         platform = _normalize_platform(row["platform"])
-        if hno not in social_map:
-            social_map[hno] = {}
+        if pid not in social_map:
+            social_map[pid] = {}
         # Keep first URL per platform (de-dup)
-        if platform not in social_map[hno]:
-            social_map[hno][platform] = row["url"]
+        if platform not in social_map[pid]:
+            social_map[pid][platform] = row["url"]
 
     # Load doctors grouped by hospital
-    doctor_map = {}  # hospital_no -> [doctor_dict, ...]
-    for row in conn.execute("SELECT * FROM doctors ORDER BY hospital_no, id"):
-        hno = row["hospital_no"]
-        if hno not in doctor_map:
-            doctor_map[hno] = []
-        edu = json.loads(row["education_json"] or "[]")
-        career = json.loads(row["career_json"] or "[]")
-        creds = json.loads(row["credentials_json"] or "[]")
-        doctor_map[hno].append({
+    doctor_map = {}  # place_id -> [doctor_dict, ...]
+    for row in conn.execute("SELECT * FROM doctors ORDER BY place_id, id"):
+        pid = row["place_id"]
+        if pid not in doctor_map:
+            doctor_map[pid] = []
+        profile_raw = json.loads(row["profile_raw_json"] or "[]")
+        doctor_map[pid].append({
             "name": row["name"] or "",
             "role": row["role"] or "",
-            "education": " | ".join(edu) if edu else "",
-            "career": " | ".join(career) if career else "",
-            "credentials": " | ".join(creds) if creds else "",
+            "profile_raw": " | ".join(str(x) for x in profile_raw) if profile_raw else "",
+            "source_url": row["source_url"] or "",
+            "screenshot_path": row["screenshot_path"] or "",
             "ocr": "OCR" if row["ocr_source"] else "DOM",
         })
 
     # Build unified CSV
     headers = [
         # Identification
-        "no", "name", "status",
+        "place_id", "csv_no", "name", "status",
         # Contact
         "phone", "address",
         # Social channels (ordered)
         *[p.lower() for p in _SOCIAL_COLUMNS],
         # Doctor info (expanded)
         "doctor_count", "doctor_name", "doctor_role",
-        "doctor_education", "doctor_career", "doctor_credentials",
-        "doctor_source",
+        "doctor_profile_raw", "doctor_source_url",
+        "doctor_screenshot_path", "doctor_extraction",
         # Meta
         "website", "cms", "crawled_at",
     ]
@@ -667,21 +668,22 @@ def export_unified_csv(db_path: str, csv_source: str, output_path: str) -> None:
         writer = csv_mod.writer(f)
         writer.writerow(headers)
 
-        for hno in sorted(source_hospitals.keys()):
-            src = source_hospitals[hno]
-            crawl = crawled.get(hno, {})
-            socials = social_map.get(hno, {})
-            doctors = doctor_map.get(hno, [])
+        for pid in sorted(source_hospitals.keys()):
+            src = source_hospitals[pid]
+            crawl = crawled.get(pid, {})
+            socials = social_map.get(pid, {})
+            doctors = doctor_map.get(pid, [])
 
             # Determine status
-            if hno in crawled:
+            if pid in crawled:
                 status = crawl.get("status", "unknown")
             else:
                 status = "not_crawled"
 
             # Base row (everything except doctor fields)
             base = [
-                hno,
+                pid,
+                src["csv_no"],
                 src["name"],
                 status,
                 src["phone"],
@@ -702,9 +704,9 @@ def export_unified_csv(db_path: str, csv_source: str, output_path: str) -> None:
                         doctor_count,
                         _escape_csv_formula(doc["name"]),
                         doc["role"],
-                        _escape_csv_formula(doc["education"]),
-                        _escape_csv_formula(doc["career"]),
-                        _escape_csv_formula(doc["credentials"]),
+                        _escape_csv_formula(doc["profile_raw"]),
+                        doc["source_url"],
+                        doc["screenshot_path"],
                         doc["ocr"],
                         _escape_csv_formula(src["website"]),
                         crawl.get("cms_platform", ""),
@@ -732,7 +734,7 @@ def export_unified_csv(db_path: str, csv_source: str, output_path: str) -> None:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Clinic crawl storage manager")
+    parser = argparse.ArgumentParser(description="Clinic crawl storage manager (v3)")
     sub = parser.add_subparsers(dest="command", required=True)
 
     # save command
@@ -750,7 +752,7 @@ def main():
     # unified command (single merged CSV)
     p_unified = sub.add_parser("unified", help="Export single unified CSV (all hospitals + crawl results)")
     p_unified.add_argument("--db", default=DB_DEFAULT, help=f"SQLite DB path (default: {DB_DEFAULT})")
-    p_unified.add_argument("--csv", default="data/clinic-results/skin_clinics.csv", help="Source hospital CSV")
+    p_unified.add_argument("--csv", default="data/clinic-results/place_data.csv", help="Source hospital CSV")
     p_unified.add_argument("--output", default="data/clinic-results/exports/clinic_results.csv", help="Output CSV path")
 
     # stats command
@@ -760,7 +762,7 @@ def main():
     # dashboard command
     p_dash = sub.add_parser("dashboard", help="Show detailed crawl progress dashboard")
     p_dash.add_argument("--db", default=DB_DEFAULT, help=f"SQLite DB path (default: {DB_DEFAULT})")
-    p_dash.add_argument("--target", type=int, default=4256, help="Total target hospital count")
+    p_dash.add_argument("--target", type=int, default=1012, help="Total target hospital count")
 
     # retry-queue command
     p_retry = sub.add_parser("retry-queue", help="Show hospitals eligible for retry")
@@ -789,8 +791,8 @@ def main():
             else:
                 print("Error: --json or --json-file required", file=sys.stderr)
                 sys.exit(1)
-            if "hospital_no" not in data:
-                print("Error: 'hospital_no' is required in JSON data", file=sys.stderr)
+            if "place_id" not in data:
+                print("Error: 'place_id' is required in JSON data", file=sys.stderr)
                 sys.exit(1)
             save_result(args.db, data)
 

@@ -17,9 +17,11 @@ from typing import Any
 from urllib.parse import urljoin, urlparse
 
 from clinic_crawler.constants import (
+    DETAIL_MORE_LABELS,
     DOCTOR_PRIMARY,
     DOCTOR_SECONDARY,
     DOCTOR_SUBMENU_PARENTS,
+    SCREENSHOT_DIR,
 )
 from clinic_crawler.js_snippets import (
     JS_CHECK_ENCODING,
@@ -27,6 +29,8 @@ from clinic_crawler.js_snippets import (
     JS_DETECT_CMS,
     JS_DISMISS_POPUPS,
     JS_EXTRACT_DOCTORS,
+    JS_EXTRACT_PAGE_TEXT,
+    JS_FIND_DOCTOR_DETAIL_LINKS,
     JS_FIND_DOCTOR_MENU,
     JS_FIND_DOCTOR_SUBLINKS,
     JS_FIND_DOCTOR_TABS,
@@ -47,6 +51,7 @@ from clinic_crawler.ocr import (
     append_ocr_doctors,
     run_gemini_ocr,
 )
+from clinic_crawler.codex_validator import validate_doctors
 from clinic_crawler.url_utils import classify_url, normalize_url
 
 
@@ -54,7 +59,7 @@ from clinic_crawler.url_utils import classify_url, normalize_url
 class CrawlContext:
     """Shared state container for the crawl pipeline."""
 
-    hospital_no: int
+    place_id: str
     name: str
     url: str
     base_url: str
@@ -93,7 +98,7 @@ async def step_preflight(ctx: CrawlContext) -> bool:
         return False
 
     ctx.base_url = f"{parsed.scheme}://{parsed.netloc}"
-    log(f"#{ctx.hospital_no} Starting crawl: {ctx.url}")
+    log(f"[{ctx.place_id}] Starting crawl: {ctx.url}")
 
     try:
         robots_resp = await ctx.page.goto(
@@ -127,7 +132,7 @@ async def step_preflight(ctx: CrawlContext) -> bool:
                     "message": "robots.txt disallows all paths",
                     "step": "preflight", "retryable": False,
                 })
-                log(f"#{ctx.hospital_no} robots.txt blocks all paths")
+                log(f"[{ctx.place_id}] robots.txt blocks all paths")
                 return False
     except Exception:
         pass
@@ -145,7 +150,7 @@ async def step_navigate(ctx: CrawlContext) -> bool:
 
     Returns False if crawl should abort.
     """
-    log(f"#{ctx.hospital_no} Navigating to {ctx.url}")
+    log(f"[{ctx.place_id}] Navigating to {ctx.url}")
     try:
         await ctx.page.goto(
             ctx.url, wait_until="domcontentloaded",
@@ -169,7 +174,7 @@ async def step_navigate(ctx: CrawlContext) -> bool:
                 "type": "navigation", "message": err_msg[:200],
                 "step": "navigate", "retryable": True,
             })
-        log(f"#{ctx.hospital_no} Navigation failed: {err_msg[:100]}")
+        log(f"[{ctx.place_id}] Navigation failed: {err_msg[:100]}")
         return False
 
     # Redirect detection
@@ -177,7 +182,7 @@ async def step_navigate(ctx: CrawlContext) -> bool:
         final_url = await ctx.page.evaluate("() => window.location.href")
         if final_url and final_url != ctx.url:
             ctx.result["final_url"] = final_url
-            log(f"#{ctx.hospital_no} Redirected to {final_url}")
+            log(f"[{ctx.place_id}] Redirected to {final_url}")
     except Exception:
         pass
 
@@ -186,7 +191,7 @@ async def step_navigate(ctx: CrawlContext) -> bool:
         cms = await ctx.page.evaluate(JS_DETECT_CMS)
         if cms:
             ctx.result["cms_platform"] = cms
-            log(f"#{ctx.hospital_no} CMS: {cms}")
+            log(f"[{ctx.place_id}] CMS: {cms}")
     except Exception:
         pass
 
@@ -200,7 +205,7 @@ async def step_navigate(ctx: CrawlContext) -> bool:
                 "message": f"Garbled text ratio: {enc_info['garbledRatio']:.2%}",
                 "step": "navigate", "retryable": False,
             })
-            log(f"#{ctx.hospital_no} Encoding error detected")
+            log(f"[{ctx.place_id}] Encoding error detected")
             return False
     except Exception:
         pass
@@ -219,7 +224,7 @@ async def step_navigate(ctx: CrawlContext) -> bool:
                     "message": "Maintenance/error page detected",
                     "step": "navigate", "retryable": True,
                 })
-                log(f"#{ctx.hospital_no} Error page detected")
+                log(f"[{ctx.place_id}] Error page detected")
     except Exception:
         pass
 
@@ -229,7 +234,7 @@ async def step_navigate(ctx: CrawlContext) -> bool:
             "() => (document.body?.innerText || '').substring(0, 1000)"
         )
         if "Checking your browser" in page_text or "CAPTCHA" in page_text:
-            log(f"#{ctx.hospital_no} Anti-bot detected, waiting 15s")
+            log(f"[{ctx.place_id}] Anti-bot detected, waiting 15s")
             await ctx.page.wait_for_timeout(15000)
             page_text = await ctx.page.evaluate(
                 "() => (document.body?.innerText || '').substring(0, 1000)"
@@ -263,7 +268,7 @@ async def step_navigate(ctx: CrawlContext) -> bool:
                         best_link = link["href"]
                         break
             first_link = best_link
-            log(f"#{ctx.hospital_no} Splash page detected "
+            log(f"[{ctx.place_id}] Splash page detected "
                 f"({splash_info['totalLinks']} links, "
                 f"{splash_info['textLen']} chars), "
                 f"navigating to {first_link}")
@@ -290,13 +295,13 @@ async def step_navigate(ctx: CrawlContext) -> bool:
 
 async def step_dismiss_popups(ctx: CrawlContext) -> None:
     """Dismiss overlay popups (up to 3 attempts)."""
-    log(f"#{ctx.hospital_no} Checking for popups")
+    log(f"[{ctx.place_id}] Checking for popups")
     for attempt in range(3):
         try:
             dismissed = await ctx.page.evaluate(JS_DISMISS_POPUPS)
             if dismissed == 0:
                 break
-            log(f"#{ctx.hospital_no} Dismissed {dismissed} popup(s), "
+            log(f"[{ctx.place_id}] Dismissed {dismissed} popup(s), "
                 f"attempt {attempt + 1}")
             await ctx.page.wait_for_timeout(500)
         except Exception:
@@ -313,10 +318,10 @@ async def step_spa_wait(ctx: CrawlContext) -> None:
     try:
         text_len = await ctx.page.evaluate(JS_GET_PAGE_TEXT_LENGTH)
         if text_len < 200:
-            log(f"#{ctx.hospital_no} Minimal content ({text_len} chars), "
+            log(f"[{ctx.place_id}] Minimal content ({text_len} chars), "
                 f"waiting for SPA")
             spa_result = await ctx.page.evaluate(JS_SPA_WAIT)
-            log(f"#{ctx.hospital_no} SPA wait result: {spa_result}")
+            log(f"[{ctx.place_id}] SPA wait result: {spa_result}")
     except Exception:
         pass
 
@@ -328,14 +333,14 @@ async def step_spa_wait(ctx: CrawlContext) -> None:
 
 async def step_extract_social(ctx: CrawlContext) -> None:
     """Extract social consultation channels via multi-pass strategy."""
-    log(f"#{ctx.hospital_no} Extracting social channels")
+    log(f"[{ctx.place_id}] Extracting social channels")
     raw_channels = []
 
     # Pass 1 + 1.5 + 1.75 + 2 (static + iframe + structured + dynamic)
     try:
         channels = await ctx.page.evaluate(JS_SOCIAL_EXTRACT)
         raw_channels.extend(channels)
-        log(f"#{ctx.hospital_no} Found {len(channels)} channels "
+        log(f"[{ctx.place_id}] Found {len(channels)} channels "
             f"from main extraction")
     except Exception as e:
         ctx.result["errors"].append({
@@ -354,7 +359,7 @@ async def step_extract_social(ctx: CrawlContext) -> None:
                     "method": "window_open_intercept",
                 })
         if intercepted:
-            log(f"#{ctx.hospital_no} Intercepted {len(intercepted)} "
+            log(f"[{ctx.place_id}] Intercepted {len(intercepted)} "
                 f"window.open calls")
     except Exception:
         pass
@@ -411,7 +416,7 @@ async def step_extract_social(ctx: CrawlContext) -> None:
             if new_platform and new_platform != "NaverShortlink":
                 ch["platform"] = new_platform
                 ch["url"] = normalize_url(resolved)
-                log(f"#{ctx.hospital_no} Resolved naver.me -> "
+                log(f"[{ctx.place_id}] Resolved naver.me -> "
                     f"{new_platform}: {resolved[:80]}")
         except Exception:
             try:
@@ -423,7 +428,7 @@ async def step_extract_social(ctx: CrawlContext) -> None:
     try:
         redirect_links = await ctx.page.evaluate(JS_REDIRECT_SCAN)
         if redirect_links:
-            log(f"#{ctx.hospital_no} Found {len(redirect_links)} "
+            log(f"[{ctx.place_id}] Found {len(redirect_links)} "
                 f"internal redirect candidates")
         for rl in redirect_links[:10]:
             try:
@@ -445,7 +450,7 @@ async def step_extract_social(ctx: CrawlContext) -> None:
                             "confidence": 0.9,
                             "status": "active",
                         })
-                        log(f"#{ctx.hospital_no} Redirect resolved: "
+                        log(f"[{ctx.place_id}] Redirect resolved: "
                             f"{rl['text'][:20]} -> {platform}: "
                             f"{resolved_norm[:60]}")
             except Exception:
@@ -454,10 +459,10 @@ async def step_extract_social(ctx: CrawlContext) -> None:
                 except Exception:
                     pass
     except Exception as e:
-        log(f"#{ctx.hospital_no} Redirect scan error: "
+        log(f"[{ctx.place_id}] Redirect scan error: "
             f"{str(e)[:100]}")
 
-    log(f"#{ctx.hospital_no} Total social channels: "
+    log(f"[{ctx.place_id}] Total social channels: "
         f"{len(ctx.result['social_channels'])}")
 
 
@@ -471,7 +476,7 @@ async def step_collect_candidates(ctx: CrawlContext) -> list:
 
     Returns list of (url, source_label) tuples.
     """
-    log(f"#{ctx.hospital_no} Looking for doctor page")
+    log(f"[{ctx.place_id}] Looking for doctor page")
     candidate_urls = []
 
     # Reveal hidden submenus via hover
@@ -492,12 +497,12 @@ async def step_collect_candidates(ctx: CrawlContext) -> list:
             if href and href.startswith("http"):
                 candidate_urls.append((href, f"menu:{link['text']}"))
         if doctor_links:
-            log(f"#{ctx.hospital_no} Found {len(doctor_links)} "
+            log(f"[{ctx.place_id}] Found {len(doctor_links)} "
                 f"doctor menu link(s)")
         else:
-            log(f"#{ctx.hospital_no} No doctor menu found")
+            log(f"[{ctx.place_id}] No doctor menu found")
     except Exception as e:
-        log(f"#{ctx.hospital_no} Doctor menu search error: "
+        log(f"[{ctx.place_id}] Doctor menu search error: "
             f"{str(e)[:100]}")
 
     # Step 5b-1: Navigate to intro/about pages, scan for doctor sub-links
@@ -505,7 +510,7 @@ async def step_collect_candidates(ctx: CrawlContext) -> list:
         try:
             intro_links = await ctx.page.evaluate(JS_FIND_INTRO_LINKS)
             for link in (intro_links or []):
-                log(f"#{ctx.hospital_no} Scanning intro page: "
+                log(f"[{ctx.place_id}] Scanning intro page: "
                     f"{link['text']} -> {link['href']}")
                 try:
                     if link["href"].startswith("javascript:"):
@@ -534,7 +539,7 @@ async def step_collect_candidates(ctx: CrawlContext) -> list:
                                         "status": "active",
                                     })
                             if ctx.result["social_channels"]:
-                                log(f"#{ctx.hospital_no} Sub-page found "
+                                log(f"[{ctx.place_id}] Sub-page found "
                                     f"{len(ctx.result['social_channels'])} "
                                     f"social channels")
                         except Exception:
@@ -554,7 +559,7 @@ async def step_collect_candidates(ctx: CrawlContext) -> list:
                     (link["href"], f"intro_page:{link['text']}"),
                 )
         except Exception as e:
-            log(f"#{ctx.hospital_no} Intro page scan error: "
+            log(f"[{ctx.place_id}] Intro page scan error: "
                 f"{str(e)[:100]}")
 
     # Step 5b-2: Sitemap
@@ -592,10 +597,10 @@ async def step_collect_candidates(ctx: CrawlContext) -> list:
             seen_urls.add(normalized)
             unique_candidates.append((c_url, source))
 
-    log(f"#{ctx.hospital_no} Collected {len(unique_candidates)} "
+    log(f"[{ctx.place_id}] Collected {len(unique_candidates)} "
         f"candidate URLs:")
     for i, (c_url, source) in enumerate(unique_candidates):
-        log(f"#{ctx.hospital_no}   [{i + 1}] {source} -> {c_url}")
+        log(f"[{ctx.place_id}]   [{i + 1}] {source} -> {c_url}")
 
     return unique_candidates
 
@@ -609,7 +614,7 @@ async def _try_ai_navigation(
     ctx: CrawlContext, ocr_state: OcrState, seen_candidate_urls: set,
 ) -> None:
     """Phase 2: AI-assisted navigation discovery using Gemini."""
-    log(f"#{ctx.hospital_no} Phase 2: AI navigation discovery from main page")
+    log(f"[{ctx.place_id}] Phase 2: AI navigation discovery from main page")
     try:
         await ctx.page.goto(
             ctx.url, wait_until="domcontentloaded", timeout=15000,
@@ -617,7 +622,7 @@ async def _try_ai_navigation(
         await ctx.page.wait_for_timeout(2000)
 
         ts_nav = int(time.time())
-        nav_path = f"/tmp/clinic_nav_{ctx.hospital_no}_{ts_nav}.jpg"
+        nav_path = f"/tmp/clinic_nav_{ctx.place_id}_{ts_nav}.jpg"
         await ctx.page.screenshot(
             path=nav_path, full_page=False, type="jpeg", quality=85,
         )
@@ -642,7 +647,7 @@ async def _try_ai_navigation(
         )
 
         r_nav = subprocess.run(
-            ["gemini", "-p", nav_prompt,
+            ["gemini", "-m", "gemini-3-flash-preview", "-p", nav_prompt,
              "-y", "--include-directories", os.path.dirname(nav_path)],
             capture_output=True, text=True, timeout=90,
         )
@@ -658,13 +663,19 @@ async def _try_ai_navigation(
                             and is_plausible_korean_name(name)
                             and name not in ocr_state.seen_names):
                         ocr_state.seen_names.add(name)
+                        profile_raw = (
+                            doc.get("profile_raw")
+                            or (doc.get("education", [])
+                                + doc.get("career", [])
+                                + doc.get("credentials", []))
+                        )
                         ctx.result["doctors"].append({
                             "name": name, "name_english": "",
                             "role": doc.get("role", "specialist"),
                             "photo_url": "",
-                            "education": doc.get("education", []),
-                            "career": doc.get("career", []),
-                            "credentials": doc.get("credentials", []),
+                            "profile_raw": profile_raw,
+                            "page_text": "", "source_url": "",
+                            "screenshot_path": "",
                             "branch": "", "branches": [],
                             "extraction_source": "ai_nav",
                             "ocr_source": True,
@@ -672,13 +683,13 @@ async def _try_ai_navigation(
 
                 if ctx.result["doctors"]:
                     ctx.doctor_page_found = True
-                    log(f"#{ctx.hospital_no} AI found "
+                    log(f"[{ctx.place_id}] AI found "
                         f"{len(ctx.result['doctors'])} doctors on "
                         f"main page")
 
                 if not ctx.result["doctors"]:
                     ai_paths = nav_data.get("suggested_paths", [])
-                    log(f"#{ctx.hospital_no} AI suggested "
+                    log(f"[{ctx.place_id}] AI suggested "
                         f"{len(ai_paths)} paths: {ai_paths}")
 
                     for ai_path in ai_paths[:3]:
@@ -689,7 +700,7 @@ async def _try_ai_navigation(
                             if ai_url.rstrip("/") in seen_candidate_urls:
                                 continue
 
-                            log(f"#{ctx.hospital_no} Trying AI "
+                            log(f"[{ctx.place_id}] Trying AI "
                                 f"suggestion: {ai_path} -> {ai_url}")
                             await ctx.page.goto(
                                 ai_url,
@@ -718,7 +729,7 @@ async def _try_ai_navigation(
                                     ctx.result["doctors"] = valid_doctors
                                     ctx.doctor_page_found = True
                                     log(
-                                        f"#{ctx.hospital_no} AI path "
+                                        f"[{ctx.place_id}] AI path "
                                         f"DOM: {len(valid_doctors)} "
                                         f"valid / {len(doctors)} total",
                                     )
@@ -727,7 +738,7 @@ async def _try_ai_navigation(
                             ts_ai = int(time.time())
                             ai_ss = (
                                 f"/tmp/clinic_ai_"
-                                f"{ctx.hospital_no}_{ts_ai}.jpg"
+                                f"{ctx.place_id}_{ts_ai}.jpg"
                             )
                             await ctx.page.evaluate(
                                 "window.scrollTo(0, 0)",
@@ -751,20 +762,20 @@ async def _try_ai_navigation(
                             if ctx.result["doctors"]:
                                 ctx.doctor_page_found = True
                                 log(
-                                    f"#{ctx.hospital_no} AI path OCR: "
+                                    f"[{ctx.place_id}] AI path OCR: "
                                     f"{len(ctx.result['doctors'])} "
                                     f"doctors",
                                 )
                                 break
                         except Exception as e:
-                            log(f"#{ctx.hospital_no} AI path error: "
+                            log(f"[{ctx.place_id}] AI path error: "
                                 f"{str(e)[:100]}")
                             continue
 
     except subprocess.TimeoutExpired:
-        log(f"#{ctx.hospital_no} AI navigation timeout")
+        log(f"[{ctx.place_id}] AI navigation timeout")
     except Exception as e:
-        log(f"#{ctx.hospital_no} AI navigation error: {str(e)[:100]}")
+        log(f"[{ctx.place_id}] AI navigation error: {str(e)[:100]}")
 
 
 # ---------------------------------------------------------------------------
@@ -781,17 +792,19 @@ async def step_extract_doctors(
     """
     ocr_state = OcrState()
 
+    # Track best result across ALL candidates (don't stop at first match)
+    best_doctors = []       # doctors list from best candidate so far
+    best_valid_count = 0    # number of doctors with real credentials
+    best_source = ""        # source label of best candidate
+
     try:
         for cand_idx, (cand_url, cand_source) in enumerate(candidates):
-            if ctx.result["doctors"]:
-                break
-
-            log(f"#{ctx.hospital_no} Trying candidate "
+            log(f"[{ctx.place_id}] Trying candidate "
                 f"{cand_idx + 1}/{len(candidates)}: {cand_source}")
 
             # Skip javascript: URLs (can't navigate to them)
             if cand_url.startswith("javascript:"):
-                log(f"#{ctx.hospital_no} Skipping javascript: URL")
+                log(f"[{ctx.place_id}] Skipping javascript: URL")
                 continue
 
             # Navigate to candidate
@@ -801,7 +814,7 @@ async def step_extract_doctors(
                 )
                 await ctx.page.wait_for_timeout(1500)
             except Exception as e:
-                log(f"#{ctx.hospital_no} Navigation failed for "
+                log(f"[{ctx.place_id}] Navigation failed for "
                     f"{cand_url}: {str(e)[:100]}")
                 continue
 
@@ -823,11 +836,19 @@ async def step_extract_doctors(
                             tab_text, exact=True,
                         ).first.click(timeout=3000)
                         await ctx.page.wait_for_timeout(1000)
-                        log(f"#{ctx.hospital_no} Clicked tab: {tab_text}")
+                        log(f"[{ctx.place_id}] Clicked tab: {tab_text}")
                     except Exception:
                         pass
             except Exception:
                 pass
+
+            # Capture page text and source URL for this candidate
+            try:
+                cand_page_text = await ctx.page.evaluate(JS_EXTRACT_PAGE_TEXT)
+                cand_source_url = await ctx.page.evaluate("() => window.location.href")
+            except Exception:
+                cand_page_text = ""
+                cand_source_url = cand_url
 
             # DOM extraction
             try:
@@ -844,25 +865,54 @@ async def step_extract_doctors(
                             if is_plausible_korean_name(d.get("name", ""))
                         ]
                         if valid_doctors:
-                            ctx.result["doctors"] = valid_doctors
-                            ctx.doctor_page_found = True
-                            log(f"#{ctx.hospital_no} DOM: "
-                                f"{len(valid_doctors)} valid / "
-                                f"{len(doctors)} total from "
-                                f"{cand_source}")
-                            break
+                            # Codex CLI validation: filter noise, check real credentials
+                            validated, any_valid = validate_doctors(
+                                valid_doctors, ctx.place_id,
+                            )
+                            if validated:
+                                for d in validated:
+                                    d["page_text"] = cand_page_text
+                                    d["source_url"] = cand_source_url
+                                # Count doctors with actual credentials
+                                cred_count = sum(
+                                    1 for d in validated
+                                    if d.get("profile_raw")
+                                )
+                                log(f"[{ctx.place_id}] DOM: "
+                                    f"{len(validated)} doctors, "
+                                    f"{cred_count} with credentials "
+                                    f"from {cand_source}")
+                                # Track best result across all candidates
+                                if cred_count > best_valid_count:
+                                    best_doctors = validated
+                                    best_valid_count = cred_count
+                                    best_source = cand_source
+                                elif (cred_count == best_valid_count
+                                      and len(validated) > len(best_doctors)):
+                                    best_doctors = validated
+                                    best_source = cand_source
+                                # If ALL doctors have credentials, no need to search more
+                                if cred_count == len(validated) and cred_count > 0:
+                                    log(f"[{ctx.place_id}] All {cred_count} "
+                                        f"doctors have credentials, "
+                                        f"accepting from {cand_source}")
+                                    break
+                                # Otherwise keep searching
+                                continue
+                            else:
+                                need_ocr = True
                         else:
-                            log(f"#{ctx.hospital_no} DOM: "
+                            log(f"[{ctx.place_id}] DOM: "
                                 f"{len(doctors)} entries but 0 valid "
                                 f"names from {cand_source}, "
                                 f"falling back to OCR")
                             need_ocr = True
                     else:
-                        log(f"#{ctx.hospital_no} DOM: 0 doctors "
+                        log(f"[{ctx.place_id}] DOM: 0 doctors "
                             f"from {cand_source}")
                         need_ocr = True
                 else:
-                    log(f"#{ctx.hospital_no} Image-based page: "
+                    log(f"[{ctx.place_id}] Image-based page: "
                         f"{cand_source}")
 
                 if need_ocr:
@@ -882,7 +932,7 @@ async def step_extract_doctors(
                     ts = int(time.time())
                     fullpage_path = (
                         f"/tmp/clinic_crawl_"
-                        f"{ctx.hospital_no}_{ts}.jpg"
+                        f"{ctx.place_id}_{ts}.jpg"
                     )
                     await ctx.page.evaluate("window.scrollTo(0, 0)")
                     await ctx.page.wait_for_timeout(300)
@@ -895,7 +945,7 @@ async def step_extract_doctors(
 
                     # Tier B: one OCR attempt per candidate
                     try:
-                        log(f"#{ctx.hospital_no} OCR Tier B on "
+                        log(f"[{ctx.place_id}] OCR Tier B on "
                             f"{cand_source}")
                         prompt_b = OCR_PROMPT_TEMPLATE.replace(
                             "{path}", fullpage_path,
@@ -903,38 +953,56 @@ async def step_extract_doctors(
                         doctors_raw = run_gemini_ocr(
                             prompt_b, fullpage_path,
                         )
+                        ocr_doctors_tmp = []
+                        ocr_seen_tmp = set(ocr_state.seen_names)
                         added = append_ocr_doctors(
-                            doctors_raw, ocr_state.seen_names,
-                            ctx.result["doctors"],
+                            doctors_raw, ocr_seen_tmp,
+                            ocr_doctors_tmp,
                         )
-                        if ctx.result["doctors"]:
-                            ctx.doctor_page_found = True
-                            log(f"#{ctx.hospital_no} OCR: {added} "
-                                f"doctors from {cand_source}")
-                            break
+                        if ocr_doctors_tmp:
+                            cred_count = sum(
+                                1 for d in ocr_doctors_tmp
+                                if d.get("profile_raw")
+                            )
+                            log(f"[{ctx.place_id}] OCR: {added} "
+                                f"doctors, {cred_count} with "
+                                f"credentials from {cand_source}")
+                            if cred_count > best_valid_count:
+                                best_doctors = ocr_doctors_tmp
+                                best_valid_count = cred_count
+                                best_source = f"ocr:{cand_source}"
+                                ocr_state.seen_names = ocr_seen_tmp
                         else:
-                            log(f"#{ctx.hospital_no} OCR: 0 doctors "
+                            log(f"[{ctx.place_id}] OCR: 0 doctors "
                                 f"from {cand_source}")
                     except subprocess.TimeoutExpired:
-                        log(f"#{ctx.hospital_no} OCR timeout on "
+                        log(f"[{ctx.place_id}] OCR timeout on "
                             f"{cand_source}, trying next candidate")
                     except FileNotFoundError:
-                        log(f"#{ctx.hospital_no} Gemini CLI "
+                        log(f"[{ctx.place_id}] Gemini CLI "
                             f"not installed")
                         break
 
             except Exception as e:
-                log(f"#{ctx.hospital_no} Extraction error on "
+                log(f"[{ctx.place_id}] Extraction error on "
                     f"{cand_source}: {str(e)[:100]}")
+
+        # Accept best result found across all candidates
+        if best_doctors:
+            ctx.result["doctors"] = best_doctors
+            ctx.doctor_page_found = True
+            log(f"[{ctx.place_id}] Best result: {len(best_doctors)} "
+                f"doctors ({best_valid_count} with credentials) "
+                f"from {best_source}")
 
         # After ALL candidates exhausted - final OCR fallback
         if not ctx.result["doctors"] and ocr_state.last_screenshot_path:
-            log(f"#{ctx.hospital_no} All {len(candidates)} candidates "
+            log(f"[{ctx.place_id}] All {len(candidates)} candidates "
                 f"returned 0. Final OCR attempt.")
 
             # Tier B retry on last screenshot
             try:
-                log(f"#{ctx.hospital_no} OCR Tier B retry on last page")
+                log(f"[{ctx.place_id}] OCR Tier B retry on last page")
                 prompt_retry = OCR_PROMPT_TEMPLATE.replace(
                     "{path}", ocr_state.last_screenshot_path,
                 )
@@ -965,7 +1033,7 @@ async def step_extract_doctors(
                         await ctx.page.wait_for_timeout(300)
                         chunk_path = (
                             f"/tmp/clinic_crawl_"
-                            f"{ctx.hospital_no}"
+                            f"{ctx.place_id}"
                             f"_{int(time.time())}_{i}.jpg"
                         )
                         await ctx.page.screenshot(
@@ -975,7 +1043,7 @@ async def step_extract_doctors(
                         chunk_paths.append(chunk_path)
                         if len(chunk_paths) >= 8:
                             break
-                    log(f"#{ctx.hospital_no} OCR Tier C: "
+                    log(f"[{ctx.place_id}] OCR Tier C: "
                         f"{len(chunk_paths)} viewport chunks")
                 except Exception:
                     pass
@@ -997,7 +1065,7 @@ async def step_extract_doctors(
 
             if ctx.result["doctors"]:
                 ctx.doctor_page_found = True
-                log(f"#{ctx.hospital_no} Final OCR: "
+                log(f"[{ctx.place_id}] Final OCR: "
                     f"{len(ctx.result['doctors'])} doctors found")
 
         # Phase 2: AI-assisted navigation discovery
@@ -1009,36 +1077,37 @@ async def step_extract_doctors(
                 ctx, ocr_state, seen_candidate_urls,
             )
 
+        # Persist screenshots to permanent directory
+        _persist_screenshots(ctx, ocr_state)
+
         # Save screenshot if all methods exhausted
         if not ctx.result["doctors"] and ocr_state.last_screenshot_path:
-            save_dir = os.path.join(
-                os.path.dirname(
-                    os.path.dirname(
-                        os.path.dirname(
-                            os.path.dirname(os.path.abspath(__file__))
-                        )
-                    )
-                ),
-                "data", "clinic-results", "screenshots",
-            )
-            os.makedirs(save_dir, exist_ok=True)
-            save_path = os.path.join(
-                save_dir, f"{ctx.hospital_no}_doctors.jpg",
-            )
-            shutil.copy2(ocr_state.last_screenshot_path, save_path)
-            log(f"#{ctx.hospital_no} All methods exhausted. "
-                f"Screenshot saved: {save_path}")
+            log(f"[{ctx.place_id}] All methods exhausted. "
+                f"Screenshot saved for review.")
             ctx.result["errors"].append({
                 "type": "all_methods_exhausted",
                 "message": (
                     f"Rule-based ({len(candidates)} candidates) + "
-                    f"AI navigation all failed. "
-                    f"Screenshot: {save_path}"
+                    f"AI navigation all failed."
                 ),
                 "step": "doctor_extract", "retryable": True,
             })
 
-        log(f"#{ctx.hospital_no} Doctor extraction complete: "
+        # Deduplicate doctors by name within same hospital
+        if ctx.result["doctors"]:
+            seen_dedup = set()
+            unique_docs = []
+            for doc in ctx.result["doctors"]:
+                dname = doc.get("name", "")
+                if dname and dname not in seen_dedup:
+                    seen_dedup.add(dname)
+                    unique_docs.append(doc)
+            if len(unique_docs) < len(ctx.result["doctors"]):
+                log(f"[{ctx.place_id}] Deduplicated: "
+                    f"{len(ctx.result['doctors'])} -> {len(unique_docs)}")
+            ctx.result["doctors"] = unique_docs
+
+        log(f"[{ctx.place_id}] Doctor extraction complete: "
             f"{len(ctx.result['doctors'])} doctors")
 
     except Exception as e:
@@ -1047,11 +1116,41 @@ async def step_extract_doctors(
             "step": "doctor_extract", "retryable": True,
         })
     finally:
+        # Clean up temp screenshots that were NOT persisted
         for sp in ocr_state.temp_screenshots:
+            if not sp.startswith("/tmp/"):
+                continue
             try:
                 os.remove(sp)
             except OSError:
                 pass
+
+
+# ---------------------------------------------------------------------------
+# Step 7: Determine Final Status
+# ---------------------------------------------------------------------------
+
+
+def _persist_screenshots(ctx: CrawlContext, ocr_state: OcrState) -> None:
+    """Copy screenshots from /tmp to permanent storage and attach paths to doctors."""
+    project_root = os.path.dirname(
+        os.path.dirname(
+            os.path.dirname(os.path.abspath(__file__))
+        )
+    )
+    save_dir = os.path.join(project_root, SCREENSHOT_DIR)
+    os.makedirs(save_dir, exist_ok=True)
+
+    # Persist the last screenshot (main doctor page)
+    if ocr_state.last_screenshot_path and os.path.exists(ocr_state.last_screenshot_path):
+        save_path = os.path.join(
+            save_dir, f"{ctx.place_id}_doctors.jpg",
+        )
+        shutil.copy2(ocr_state.last_screenshot_path, save_path)
+        # Attach screenshot_path to all doctors that don't have one
+        for doc in ctx.result["doctors"]:
+            if not doc.get("screenshot_path"):
+                doc["screenshot_path"] = save_path
 
 
 # ---------------------------------------------------------------------------
@@ -1096,16 +1195,16 @@ def step_save_results(result: dict, db_path: str) -> None:
     """Save crawl results to SQLite database."""
     from storage_manager import save_result
 
-    hospital_no = result["hospital_no"]
-    log(f"#{hospital_no} Saving results (status={result['status']}, "
+    place_id = result["place_id"]
+    log(f"[{place_id}] Saving results (status={result['status']}, "
         f"channels={len(result['social_channels'])}, "
         f"doctors={len(result['doctors'])})")
     try:
         save_result(db_path, result)
-        log(f"#{hospital_no} Saved to {db_path}")
+        log(f"[{place_id}] Saved to {db_path}")
     except Exception as e:
         result["errors"].append({
             "type": "storage_error", "message": str(e)[:200],
             "step": "save", "retryable": True,
         })
-        log(f"#{hospital_no} Storage error: {e}")
+        log(f"[{place_id}] Storage error: {e}")

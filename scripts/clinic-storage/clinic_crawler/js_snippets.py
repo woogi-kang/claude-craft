@@ -495,35 +495,60 @@ JS_EXTRACT_DOCTORS = """
             }
         }
 
+        const profileSet = new Set();
+        const noiseRe = /진료시간|진료안내|Copyright|사업자등록|ALL RIGHTS|TEL\\s*:|FAX\\s*:|오시는\\s*길|예약문의|상담전화|찾아오시|개인정보|이용약관|네이버|블로그|인스타|카카오|클리닉\\s*소개|병원\\s*소개|의원\\s*소개|상호명\\s*:|대표자\\s*:|주소\\s*:|의료진을\\s*소개|^\\d{2,3}-\\d{3,4}-\\d{4}$/;
+        function addProfile(text) {
+            const t = (typeof text === 'string' ? text : '').trim();
+            if (!t || t.length <= 2 || t.length >= 100 || noiseRe.test(t) || profileSet.has(t)) return;
+            profileSet.add(t);
+        }
+
+        // Section-heading extraction: find headings like 약력, 학력, 경력 and collect following content
+        const sectionRe = /^(약력|학력|경력|이력|프로필|자격|학회|수상|주요경력|주요학력|Education|Career|Credentials|Profile)$/;
+        const headings = card.querySelectorAll('h1, h2, h3, h4, h5, h6, dt, th, strong, b, .tit, [class*="tit"], [class*="head"]');
+        for (const heading of headings) {
+            const hText = (heading.textContent || '').trim().replace(/[:\\s]/g, '');
+            if (!sectionRe.test(hText)) continue;
+            let sib = heading.nextElementSibling;
+            if (!sib) { const par = heading.parentElement; sib = par ? par.nextElementSibling : null; }
+            if (sib) {
+                const items = sib.querySelectorAll('li, p, span, dd, div');
+                if (items.length > 0) {
+                    items.forEach(item => addProfile(item.textContent));
+                } else {
+                    const dt = (sib.textContent || '').trim();
+                    dt.split(/[\\n\\r]|[ㆍ·•]/).forEach(s => addProfile(s));
+                }
+            }
+        }
+
+        // Generic list extraction - only add items matching known profile patterns (no catch-all)
+        const profileRe = /대학|학위|졸업|수료|학사|석사|박사|의학전문대|병원|의원|클리닉|근무|전공의|수련|센터|前|전임|과장|외래|파견|연구원|펠로우|fellow|교수|조교수|부교수|강사|정회원|학회|자격|인증|협회|전문의|수상|학술|논문|저서|특허/;
         const lists = card.querySelectorAll('ul, ol, .career, .credentials, .history, [class*="career"], [class*="credential"]');
-        const credentials = [], education = [], career = [];
         lists.forEach(list => {
             const items = list.querySelectorAll('li, p, span, dd');
             items.forEach(item => {
                 const text = item.textContent.trim();
-                if (!text || text.length > 100) return;
-                if (/대학|학위|졸업|수료|학사|석사|박사|의학전문대/.test(text)) education.push(text);
-                else if (/병원|클리닉|근무|전공의|수련|센터/.test(text)) career.push(text);
-                else if (/정회원|학회|자격|인증|협회|전문의/.test(text)) credentials.push(text);
-                else career.push(text);
+                if (text && text.length <= 100 && profileRe.test(text)) addProfile(text);
             });
         });
 
-        return { name, name_english: '', role, photo_url: photo, education, career, credentials, branch: '', branches: [], extraction_source: source, ocr_source: false };
+        return { name, name_english: '', role, photo_url: photo, profile_raw: [...profileSet], branch: '', branches: [], extraction_source: source, ocr_source: false };
     }
 
     // ─── Text context extraction helper ───
+    const ctxNoiseRe = /진료시간|진료안내|Copyright|사업자등록|ALL RIGHTS|TEL\\s*:|FAX\\s*:|오시는\\s*길|예약문의|상담전화|찾아오시|개인정보|이용약관|네이버|블로그|인스타|카카오|상호명\\s*:|대표자\\s*:|주소\\s*:|의료진을\\s*소개/;
+    const ctxProfileRe = /대학|학위|졸업|수료|학사|석사|박사|의학전문대|병원|의원|클리닉|근무|전공의|수련|센터|前|전임|과장|외래|파견|연구원|펠로우|fellow|교수|조교수|부교수|강사|정회원|학회|자격|인증|협회|전문의|수상|학술|논문|저서|특허/;
     function extractContext(name, allText) {
         const idx = allText.indexOf(name);
         const ctx = allText.substring(Math.max(0, idx - 100), Math.min(allText.length, idx + 800));
         const lines = ctx.split(/\\n/).map(l => l.trim()).filter(l => l.length > 3 && l.length < 100);
-        const education = [], career = [], credentials = [];
+        const items = new Set();
         for (const line of lines) {
-            if (/대학|학위|졸업|수료|학사|석사|박사|의학전문대/.test(line)) education.push(line.replace(/^[ㆍ·•\\-\\s]+/, ''));
-            else if (/병원|클리닉|근무|전공의|수련|센터/.test(line)) career.push(line.replace(/^[ㆍ·•\\-\\s]+/, ''));
-            else if (/정회원|학회|자격|인증|협회|전문의/.test(line)) credentials.push(line.replace(/^[ㆍ·•\\-\\s]+/, ''));
+            if (ctxNoiseRe.test(line)) continue;
+            if (ctxProfileRe.test(line)) items.add(line.replace(/^[ㆍ·•\\-\\s]+/, ''));
         }
-        return { education, career, credentials };
+        return { profile_raw: [...items] };
     }
 
     // ═════════════════════════════════════════════════════
@@ -652,12 +677,10 @@ JS_EXTRACT_DOCTORS = """
         if (merged.has(doc.name)) {
             const ex = merged.get(doc.name);
             if (!ex.photo_url && doc.photo_url) ex.photo_url = doc.photo_url;
-            for (const e of (doc.education || [])) { if (!ex.education.includes(e)) ex.education.push(e); }
-            for (const c of (doc.career || [])) { if (!ex.career.includes(c)) ex.career.push(c); }
-            for (const c of (doc.credentials || [])) { if (!ex.credentials.includes(c)) ex.credentials.push(c); }
+            for (const item of (doc.profile_raw || [])) { if (!ex.profile_raw.includes(item)) ex.profile_raw.push(item); }
             if (ex.extraction_source === 'dom_text' && doc.extraction_source === 'dom') ex.extraction_source = 'dom';
         } else {
-            merged.set(doc.name, { ...doc, education: [...(doc.education||[])], career: [...(doc.career||[])], credentials: [...(doc.credentials||[])] });
+            merged.set(doc.name, { ...doc, profile_raw: [...(doc.profile_raw||[])] });
         }
     }
 
@@ -837,5 +860,75 @@ JS_FIND_DOCTOR_TABS = """
         })
         .map(t => (t.textContent || '').trim())
         .slice(0, 5);
+}
+"""
+
+JS_EXTRACT_PAGE_TEXT = """
+() => (document.body?.innerText || '').substring(0, 50000)
+"""
+
+JS_FIND_DOCTOR_DETAIL_LINKS = """
+(moreLabels) => {
+    const results = [];
+    const seen = new Set();
+
+    // Strategy 1: Clickable doctor cards/profiles (links wrapping doctor info)
+    const doctorContainers = document.querySelectorAll(
+        '[class*="doctor"] a, [class*="staff"] a, [class*="team"] a, ' +
+        '.doctor-card a, .staff-card a, .member-card a, ' +
+        'a[href*="doctor"], a[href*="staff"], a[href*="team"]'
+    );
+    for (const a of doctorContainers) {
+        const href = a.href || a.getAttribute('href') || '';
+        if (!href || href === '#' || href.startsWith('javascript:') || seen.has(href)) continue;
+        const text = (a.textContent || '').trim();
+        if (text.length < 2 || text.length > 200) continue;
+        seen.add(href);
+        results.push({type: 'profile_link', href, text: text.substring(0, 50)});
+    }
+
+    // Strategy 2: "More" / "View Detail" buttons
+    const allClickables = document.querySelectorAll('a, button, [role="button"], span[onclick]');
+    for (const el of allClickables) {
+        const text = (el.textContent || '').trim();
+        const matched = moreLabels.some(label => text.includes(label));
+        if (!matched) continue;
+        const href = el.href || el.getAttribute('href') || '';
+        const key = href || text;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        results.push({
+            type: 'more_button',
+            href: href || '',
+            text: text.substring(0, 50),
+            isButton: el.tagName === 'BUTTON' || el.getAttribute('role') === 'button',
+            selector: el.tagName.toLowerCase() +
+                (el.id ? '#' + el.id : '') +
+                (el.className ? '.' + el.className.split(' ')[0] : ''),
+        });
+    }
+
+    // Strategy 3: Clickable images/cards within doctor sections
+    const doctorSections = document.querySelectorAll(
+        '[class*="doctor"], [class*="staff"], [class*="team"], ' +
+        '[class*="intro"], [class*="member"]'
+    );
+    for (const section of doctorSections) {
+        section.querySelectorAll('a[href]').forEach(a => {
+            const href = a.href || '';
+            if (!href || href === '#' || seen.has(href)) return;
+            const hasImg = a.querySelector('img') !== null;
+            const hasName = /[가-힣]{2,3}/.test(a.textContent || '');
+            if (hasImg || hasName) {
+                seen.add(href);
+                results.push({
+                    type: 'card_link', href,
+                    text: (a.textContent || '').trim().substring(0, 50),
+                });
+            }
+        });
+    }
+
+    return results.slice(0, 20);
 }
 """

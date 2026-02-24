@@ -66,3 +66,13 @@ NON_NAME_WORDS = {"대표원", "원대표", "부대표", "병원장"}
 NON_NAME_GIVEN = {"대표", "원장", "부장", "과장", "실장", "팀장", "소개", "안내"}
 
 ROLE_RE = re.compile(r"^(.+?)\s+(원장|대표원장|부원장|전문의|의사|레지던트|인턴)$")
+
+# Detail page navigation: labels for "more" / "view detail" buttons
+DETAIL_MORE_LABELS = [
+    "더보기", "자세히보기", "자세히 보기", "상세보기", "상세 보기",
+    "프로필 보기", "프로필보기", "View More", "View Detail", "More",
+    "약력 보기", "경력 보기", "이력 보기",
+]
+
+# Screenshot persistence directory (relative to project root)
+SCREENSHOT_DIR = "data/clinic-results/screenshots"

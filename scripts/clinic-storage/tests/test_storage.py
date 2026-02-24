@@ -51,11 +51,19 @@ class TestGetDb:
         assert "crawl_errors" in tables
         conn.close()
 
-    def test_migrations_applied(self, tmp_path):
+    def test_schema_version_3(self, tmp_path):
         db_path = str(tmp_path / "test.db")
         conn = get_db(db_path)
-        version = conn.execute("PRAGMA user_version").fetchone()[0]
-        assert version >= 1
+        # Check place_id column exists
+        cols = [r["name"] for r in conn.execute("PRAGMA table_info(hospitals)").fetchall()]
+        assert "place_id" in cols
+        assert "csv_no" in cols
+        # Check doctors has profile_raw_json
+        doc_cols = [r["name"] for r in conn.execute("PRAGMA table_info(doctors)").fetchall()]
+        assert "profile_raw_json" in doc_cols
+        assert "page_text" in doc_cols
+        assert "source_url" in doc_cols
+        assert "screenshot_path" in doc_cols
         conn.close()
 
 
@@ -125,11 +133,9 @@ class TestValidateChannelUrl:
         assert _validate_channel_url("010-1234-5678", "Phone") is True
 
     def test_valid_phone_international(self):
-        # +82 must be followed by digits directly (no separator after country code)
         assert _validate_channel_url("+821012345678", "Phone") is True
 
     def test_invalid_phone_international_with_separator_after_code(self):
-        # Separator right after +82 is not accepted by the regex
         assert _validate_channel_url("+82-10-1234-5678", "Phone") is False
 
     def test_invalid_phone(self):
@@ -202,111 +208,129 @@ class TestNormalizePlatform:
 
 class TestSaveResult:
     def test_insert_new_hospital(self, temp_db, sample_crawl_result):
-        data = sample_crawl_result(hospital_no=100, name="Test Clinic")
+        data = sample_crawl_result(place_id="100", name="Test Clinic")
         save_result(temp_db, data)
 
         conn = get_db(temp_db)
-        row = conn.execute("SELECT * FROM hospitals WHERE hospital_no=100").fetchone()
+        row = conn.execute("SELECT * FROM hospitals WHERE place_id='100'").fetchone()
         assert row is not None
         assert row["name"] == "Test Clinic"
         assert row["status"] == "success"
         conn.close()
 
     def test_upsert_existing_hospital(self, temp_db, sample_crawl_result):
-        save_result(temp_db, sample_crawl_result(hospital_no=200, name="First"))
-        save_result(temp_db, sample_crawl_result(hospital_no=200, name="Updated"))
+        save_result(temp_db, sample_crawl_result(place_id="200", name="First"))
+        save_result(temp_db, sample_crawl_result(place_id="200", name="Updated"))
 
         conn = get_db(temp_db)
-        row = conn.execute("SELECT * FROM hospitals WHERE hospital_no=200").fetchone()
+        row = conn.execute("SELECT * FROM hospitals WHERE place_id='200'").fetchone()
         assert row["name"] == "Updated"
         conn.close()
 
     def test_skip_failed_overwrite_of_success(self, temp_db, sample_crawl_result):
-        save_result(temp_db, sample_crawl_result(hospital_no=300, status="success"))
-        save_result(temp_db, sample_crawl_result(hospital_no=300, status="failed"))
+        save_result(temp_db, sample_crawl_result(place_id="300", status="success"))
+        save_result(temp_db, sample_crawl_result(place_id="300", status="failed"))
 
         conn = get_db(temp_db)
-        row = conn.execute("SELECT * FROM hospitals WHERE hospital_no=300").fetchone()
+        row = conn.execute("SELECT * FROM hospitals WHERE place_id='300'").fetchone()
         assert row["status"] == "success"  # not overwritten
         conn.close()
 
     def test_saves_social_channels(self, temp_db, sample_crawl_result, sample_channel):
         data = sample_crawl_result(
-            hospital_no=400,
+            place_id="400",
             social_channels=[sample_channel(platform="KakaoTalk", url="https://pf.kakao.com/_test")],
         )
         save_result(temp_db, data)
 
         conn = get_db(temp_db)
-        channels = conn.execute("SELECT * FROM social_channels WHERE hospital_no=400").fetchall()
+        channels = conn.execute("SELECT * FROM social_channels WHERE place_id='400'").fetchall()
         assert len(channels) == 1
         assert channels[0]["platform"] == "KakaoTalk"
         conn.close()
 
     def test_saves_doctors(self, temp_db, sample_crawl_result, sample_doctor):
         data = sample_crawl_result(
-            hospital_no=500,
+            place_id="500",
             doctors=[sample_doctor(name="김상우", role="대표원장")],
         )
         save_result(temp_db, data)
 
         conn = get_db(temp_db)
-        doctors = conn.execute("SELECT * FROM doctors WHERE hospital_no=500").fetchall()
+        doctors = conn.execute("SELECT * FROM doctors WHERE place_id='500'").fetchall()
         assert len(doctors) == 1
         assert doctors[0]["name"] == "김상우"
         conn.close()
 
-    def test_saves_errors_as_string(self, temp_db, sample_crawl_result):
-        data = sample_crawl_result(hospital_no=600, errors=["Timeout occurred"])
+    def test_saves_profile_raw_json(self, temp_db, sample_crawl_result, sample_doctor):
+        data = sample_crawl_result(
+            place_id="501",
+            doctors=[sample_doctor(
+                name="박지연",
+                profile_raw=["서울대학교 의과대학 졸업", "삼성서울병원 피부과 전공의"],
+            )],
+        )
         save_result(temp_db, data)
 
         conn = get_db(temp_db)
-        errors = conn.execute("SELECT * FROM crawl_errors WHERE hospital_no=600").fetchall()
+        doc = conn.execute("SELECT * FROM doctors WHERE place_id='501'").fetchone()
+        import json
+        profile = json.loads(doc["profile_raw_json"])
+        assert len(profile) == 2
+        assert "서울대학교" in profile[0]
+        conn.close()
+
+    def test_saves_errors_as_string(self, temp_db, sample_crawl_result):
+        data = sample_crawl_result(place_id="600", errors=["Timeout occurred"])
+        save_result(temp_db, data)
+
+        conn = get_db(temp_db)
+        errors = conn.execute("SELECT * FROM crawl_errors WHERE place_id='600'").fetchall()
         assert len(errors) == 1
         assert errors[0]["message"] == "Timeout occurred"
         conn.close()
 
     def test_saves_errors_as_dict(self, temp_db, sample_crawl_result):
         data = sample_crawl_result(
-            hospital_no=700,
+            place_id="700",
             errors=[{"type": "navigation", "message": "DNS failed", "step": "step1", "retryable": True}],
         )
         save_result(temp_db, data)
 
         conn = get_db(temp_db)
-        errors = conn.execute("SELECT * FROM crawl_errors WHERE hospital_no=700").fetchall()
+        errors = conn.execute("SELECT * FROM crawl_errors WHERE place_id='700'").fetchall()
         assert errors[0]["error_type"] == "navigation"
         assert errors[0]["retryable"] == 1
         conn.close()
 
     def test_replaces_channels_on_recrawl(self, temp_db, sample_crawl_result, sample_channel):
         save_result(temp_db, sample_crawl_result(
-            hospital_no=800,
+            place_id="800",
             social_channels=[sample_channel(platform="KakaoTalk")],
         ))
         save_result(temp_db, sample_crawl_result(
-            hospital_no=800,
+            place_id="800",
             social_channels=[sample_channel(platform="NaverTalk", url="https://talk.naver.com/ct/test")],
         ))
 
         conn = get_db(temp_db)
-        channels = conn.execute("SELECT * FROM social_channels WHERE hospital_no=800").fetchall()
+        channels = conn.execute("SELECT * FROM social_channels WHERE place_id='800'").fetchall()
         assert len(channels) == 1
         assert channels[0]["platform"] == "NaverTalk"
         conn.close()
 
     def test_replaces_doctors_on_recrawl(self, temp_db, sample_crawl_result, sample_doctor):
         save_result(temp_db, sample_crawl_result(
-            hospital_no=900,
+            place_id="900",
             doctors=[sample_doctor(name="김상우")],
         ))
         save_result(temp_db, sample_crawl_result(
-            hospital_no=900,
+            place_id="900",
             doctors=[sample_doctor(name="이지연")],
         ))
 
         conn = get_db(temp_db)
-        doctors = conn.execute("SELECT * FROM doctors WHERE hospital_no=900").fetchall()
+        doctors = conn.execute("SELECT * FROM doctors WHERE place_id='900'").fetchall()
         assert len(doctors) == 1
         assert doctors[0]["name"] == "이지연"
         conn.close()
@@ -319,7 +343,7 @@ class TestSaveResult:
 class TestExportCsv:
     def test_produces_csv_files(self, temp_db, sample_crawl_result, sample_channel, sample_doctor, tmp_path):
         save_result(temp_db, sample_crawl_result(
-            hospital_no=1000,
+            place_id="1000",
             social_channels=[sample_channel()],
             doctors=[sample_doctor()],
         ))

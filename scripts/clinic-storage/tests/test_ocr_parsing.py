@@ -105,7 +105,7 @@ class TestAppendOcrDoctors:
         assert added == 2
         assert len(result) == 2
 
-    def test_preserves_education_career(self):
+    def test_merges_legacy_fields_into_profile_raw(self):
         seen = set()
         result = []
         _append_ocr_doctors([{
@@ -114,6 +114,7 @@ class TestAppendOcrDoctors:
             "career": ["강남피부과 근무"],
             "credentials": ["대한피부과학회 정회원"],
         }], seen, result)
-        assert result[0]["education"] == ["서울대학교 의학과"]
-        assert result[0]["career"] == ["강남피부과 근무"]
-        assert result[0]["credentials"] == ["대한피부과학회 정회원"]
+        # Legacy edu/career/credentials merged into profile_raw
+        assert "서울대학교 의학과" in result[0]["profile_raw"]
+        assert "강남피부과 근무" in result[0]["profile_raw"]
+        assert "대한피부과학회 정회원" in result[0]["profile_raw"]
