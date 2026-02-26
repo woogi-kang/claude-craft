@@ -1,6 +1,6 @@
 # Data Models
 
-JSON schema definitions for crawl results. Schema version: 2.0.0.
+JSON schema definitions for crawl results. Schema version: 3.0.0.
 
 ## HospitalCrawlResult
 
@@ -8,7 +8,7 @@ Top-level result object returned by the agent after crawling one hospital.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| schema_version | string | no | Schema version (default: "2.0.0") |
+| schema_version | string | no | Schema version (default: "3.0.0") |
 | hospital_no | int | yes | Unique hospital identifier from CSV |
 | name | string | yes | Hospital name (Unicode NFC normalized) |
 | url | string | yes | Crawled URL |
@@ -60,9 +60,7 @@ dom_static, dom_dynamic, floating_element, iframe, structured_data, widget_sdk, 
 | name_english | string | no | English name if available |
 | role | string | no | Korean role: 원장, 대표원장, 부원장, 전문의, 의사, 레지던트, 인턴 |
 | photo_url | string | no | Profile photo URL (img src or background-image) |
-| education | array[string] | no | Education history (split from combined strings) |
-| career | array[string] | no | Career history (split from combined strings) |
-| credentials | array[string] | no | Certifications, memberships |
+| profile_raw | array[string] | no | Merged education, career, credentials (v3 unified format) |
 | branch | string | no | Branch name for multi-branch sites |
 | branches | array[string] | no | Multiple branches if doctor works at several |
 | extraction_source | string | no | "doctor_page", "main_page", "profile_page", "sitemap" |

@@ -55,6 +55,86 @@ from clinic_crawler.codex_validator import validate_doctors
 from clinic_crawler.url_utils import classify_url, normalize_url
 
 
+_MAX_CREDENTIALS = 25  # A single doctor rarely has >25 real credentials
+
+
+def _dedup_cross_contaminated(doctors: list, place_id: str) -> list:
+    """Remove cross-contaminated profile_raw where multiple doctors share >50% items.
+
+    Uses symmetric overlap: checks against the smaller of the two profiles.
+    Order-dependent: earlier doctors in the list keep their profiles.
+    Also caps per-doctor credential count to detect contamination.
+    Mutates doctor dicts in-place.
+    """
+    if len(doctors) < 2:
+        return doctors
+    _THRESHOLD = 0.5
+    for i, d in enumerate(doctors):
+        raw_i = set(d.get("profile_raw") or [])
+        if len(raw_i) < 3:
+            continue
+        for j in range(i + 1, len(doctors)):
+            d2 = doctors[j]
+            raw_j = set(d2.get("profile_raw") or [])
+            if len(raw_j) < 3:
+                continue
+            overlap = raw_i & raw_j
+            min_size = min(len(raw_i), len(raw_j))
+            if len(overlap) > min_size * _THRESHOLD:
+                d2["profile_raw"] = [x for x in (d2.get("profile_raw") or []) if x not in overlap]
+                log(f"[{place_id}] Dedup: removed {len(overlap)} shared items from {d2.get('name', '?')}")
+
+    # Cap: truncate abnormally long credential lists (cross-contamination residue)
+    for d in doctors:
+        raw = d.get("profile_raw") or []
+        if len(raw) > _MAX_CREDENTIALS:
+            log(f"[{place_id}] Cap: {d.get('name', '?')} had {len(raw)} items, "
+                f"truncated to {_MAX_CREDENTIALS}")
+            d["profile_raw"] = raw[:_MAX_CREDENTIALS]
+
+    return doctors
+
+
+def _filter_by_branch(doctors: list, hospital_name: str, place_id: str) -> list:
+    """Filter doctors by branch for chain hospitals.
+
+    Only applies when doctors have explicit branch labels (populated by JS
+    extraction's branch detection). If no branch labels exist, returns all
+    doctors unchanged.
+    """
+    if not doctors:
+        return doctors
+
+    # Check if any doctor has branch labels
+    has_branches = any(d.get("branches") for d in doctors)
+    if not has_branches:
+        return doctors
+
+    # Extract branch keyword from hospital name (e.g. "밴스의원 구로" → "구로")
+    import re
+    branch_match = re.search(r"([가-힣0-9]+?)(?:점|역)?$", hospital_name.strip())
+    if not branch_match:
+        return doctors
+    branch_keyword = branch_match.group(1)
+
+    # Filter: keep doctors whose branches contain the keyword
+    filtered = []
+    for d in doctors:
+        branches = d.get("branches") or []
+        if not branches:
+            # Doctor without branch label on a chain page — keep (could be main branch)
+            filtered.append(d)
+            continue
+        if any(branch_keyword in b for b in branches):
+            filtered.append(d)
+
+    if filtered and len(filtered) < len(doctors):
+        log(f"[{place_id}] Branch filter: kept {len(filtered)}/{len(doctors)} "
+            f"doctors for branch '{branch_keyword}'")
+
+    return filtered if filtered else doctors
+
+
 @dataclass
 class CrawlContext:
     """Shared state container for the crawl pipeline."""
@@ -867,9 +947,11 @@ async def step_extract_doctors(
                         if valid_doctors:
                             # Codex CLI validation: filter noise, check real credentials
                             validated, any_valid = validate_doctors(
-                                valid_doctors, ctx.place_id,
+                                valid_doctors, ctx.place_id, ctx.name,
                             )
                             if validated:
+                                validated = _dedup_cross_contaminated(validated, ctx.place_id)
+                                validated = _filter_by_branch(validated, ctx.name, ctx.place_id)
                                 for d in validated:
                                     d["page_text"] = cand_page_text
                                     d["source_url"] = cand_source_url
@@ -1092,6 +1174,24 @@ async def step_extract_doctors(
                 ),
                 "step": "doctor_extract", "retryable": True,
             })
+
+        # Codex validation on final doctors (covers all paths: DOM, OCR, AI)
+        # DOM path already validates inside the candidate loop, but OCR
+        # fallback paths (Tier B retry, Tier C, AI navigation) skip it.
+        # Running once here ensures uniform quality regardless of source.
+        if ctx.result["doctors"]:
+            has_ocr = any(
+                d.get("ocr_source") for d in ctx.result["doctors"]
+            )
+            if has_ocr:
+                validated_final, any_valid = validate_doctors(
+                    ctx.result["doctors"], ctx.place_id, ctx.name,
+                )
+                if validated_final:
+                    validated_final = _dedup_cross_contaminated(
+                        validated_final, ctx.place_id,
+                    )
+                    ctx.result["doctors"] = validated_final
 
         # Deduplicate doctors by name within same hospital
         if ctx.result["doctors"]:

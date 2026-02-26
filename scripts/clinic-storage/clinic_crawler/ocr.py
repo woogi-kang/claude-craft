@@ -5,8 +5,8 @@ import os
 import re
 import subprocess
 
-# Gemini model for OCR and AI navigation
-GEMINI_MODEL = "gemini-3-flash-preview"
+# Gemini model for OCR and AI navigation (configurable via env var)
+GEMINI_MODEL = os.environ.get("CLINIC_GEMINI_MODEL", "gemini-3-flash-preview")
 
 # Prompt template for Gemini OCR doctor extraction
 OCR_PROMPT_TEMPLATE = (

@@ -7,6 +7,11 @@ from clinic_crawler.constants import (
     NON_NAME_WORDS,
 )
 
+# Korean particles that never end a person's name
+# Only include particles that are essentially impossible as name endings
+# Excluded: 은(가은,하은), 서(민서,예서), 이, 가, 도, 의 — valid in real names
+_TRAILING_PARTICLES = set("을를는며")
+
 
 def is_plausible_korean_name(name: str) -> bool:
     """Check if a string is plausibly a Korean person's name."""
@@ -24,5 +29,12 @@ def is_plausible_korean_name(name: str) -> bool:
     if name[1:] in NON_NAME_SUFFIXES:
         return False
     if name[1:] in NON_NAME_GIVEN:
+        return False
+    # 3+ char names ending with a particle are almost certainly not names
+    # (e.g. "고객을", "진료를", "한분한" is caught by NON_NAME_WORDS)
+    if len(name) >= 3 and name[-1] in _TRAILING_PARTICLES:
+        return False
+    # Branch names ending in 점/본점 (e.g. 강남점, 강남본점, 서울점)
+    if name.endswith("점"):
         return False
     return True

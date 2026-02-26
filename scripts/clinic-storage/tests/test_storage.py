@@ -135,8 +135,8 @@ class TestValidateChannelUrl:
     def test_valid_phone_international(self):
         assert _validate_channel_url("+821012345678", "Phone") is True
 
-    def test_invalid_phone_international_with_separator_after_code(self):
-        assert _validate_channel_url("+82-10-1234-5678", "Phone") is False
+    def test_valid_phone_international_with_separator_after_code(self):
+        assert _validate_channel_url("+82-10-1234-5678", "Phone") is True
 
     def test_invalid_phone(self):
         assert _validate_channel_url("not-a-phone", "Phone") is False

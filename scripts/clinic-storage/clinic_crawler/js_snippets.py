@@ -537,11 +537,13 @@ JS_EXTRACT_DOCTORS = """
     }
 
     // ─── Text context extraction helper ───
-    const ctxNoiseRe = /진료시간|진료안내|Copyright|사업자등록|ALL RIGHTS|TEL\\s*:|FAX\\s*:|오시는\\s*길|예약문의|상담전화|찾아오시|개인정보|이용약관|네이버|블로그|인스타|카카오|상호명\\s*:|대표자\\s*:|주소\\s*:|의료진을\\s*소개/;
+    const ctxNoiseRe = /진료시간|진료안내|Copyright|사업자등록|ALL RIGHTS|TEL\\s*:|FAX\\s*:|오시는\\s*길|예약문의|상담전화|찾아오시|개인정보|이용약관|네이버|블로그|인스타|카카오|상호명\\s*:|대표자\\s*:|주소\\s*:|의료진을\\s*소개|\\d+년\\s*(경력|이상|노하우)|시술노하우|만족도|최선을|고객님|환자분|마음으로|정성을/;
     const ctxProfileRe = /대학|학위|졸업|수료|학사|석사|박사|의학전문대|병원|의원|클리닉|근무|전공의|수련|센터|前|전임|과장|외래|파견|연구원|펠로우|fellow|교수|조교수|부교수|강사|정회원|학회|자격|인증|협회|전문의|수상|학술|논문|저서|특허/;
-    function extractContext(name, allText) {
-        const idx = allText.indexOf(name);
-        const ctx = allText.substring(Math.max(0, idx - 100), Math.min(allText.length, idx + 800));
+    function extractContext(name, allText, endBound, startPos) {
+        const idx = startPos != null ? startPos : allText.indexOf(name);
+        if (idx === -1) return { profile_raw: [] };
+        const end = endBound != null ? Math.min(endBound, idx + 800) : idx + 800;
+        const ctx = allText.substring(idx, Math.min(allText.length, end));
         const lines = ctx.split(/\\n/).map(l => l.trim()).filter(l => l.length > 3 && l.length < 100);
         const items = new Set();
         for (const line of lines) {
@@ -610,37 +612,39 @@ JS_EXTRACT_DOCTORS = """
         const seen3 = new Set();
         const MAX = 20;
 
-        // Pattern A: name + role (e.g. "김상우 대표원장")
+        // First pass: collect all name positions for boundary calculation
+        const namePositions = [];
         const nameRoleRe = /([가-힣]{2,3})\\s*(대표원장|부원장|원장|전문의|의사)/g;
         let m;
-        while ((m = nameRoleRe.exec(allText)) !== null && s3.length < MAX) {
+        while ((m = nameRoleRe.exec(allText)) !== null) {
             const name = m[1].trim();
-            const role = m[2];
-            if (seen3.has(name) || !isPlausibleName(name)) continue;
-            seen3.add(name);
-            const ctx = extractContext(name, allText);
-            s3.push({ name, name_english: '', role, photo_url: '', ...ctx, branch: '', branches: [], extraction_source: 'dom_text', ocr_source: false });
+            if (!isPlausibleName(name) || namePositions.some(n => n.name === name)) continue;
+            namePositions.push({ name, role: m[2], pos: m.index, matchStr: name });
         }
-
-        // Pattern B: role + name (e.g. "대표원장 김상우")
         const roleNameRe = /(대표원장|부원장|원장|전문의|의사)\\s+([가-힣]{2,3})/g;
-        while ((m = roleNameRe.exec(allText)) !== null && s3.length < MAX) {
-            const role = m[1];
+        while ((m = roleNameRe.exec(allText)) !== null) {
             const name = m[2].trim();
-            if (seen3.has(name) || !isPlausibleName(name)) continue;
-            seen3.add(name);
-            const ctx = extractContext(name, allText);
-            s3.push({ name, name_english: '', role, photo_url: '', ...ctx, branch: '', branches: [], extraction_source: 'dom_text', ocr_source: false });
+            if (!isPlausibleName(name) || namePositions.some(n => n.name === name)) continue;
+            const namePos = m.index + m[0].indexOf(name);
+            namePositions.push({ name, role: m[1], pos: namePos, matchStr: name });
+        }
+        const spacedNameRoleRe = /([가-힣])\\s([가-힣])\\s?([가-힣])?\\s*(대표원장|부원장|원장|전문의|의사)/g;
+        while ((m = spacedNameRoleRe.exec(allText)) !== null) {
+            const name = (m[1] + m[2] + (m[3] || '')).trim();
+            if (!isPlausibleName(name) || namePositions.some(n => n.name === name)) continue;
+            namePositions.push({ name, role: m[4], pos: m.index, matchStr: m[0] });
         }
 
-        // Pattern C: spaced Korean name + role (e.g. "서 인 예 대표원장")
-        const spacedNameRoleRe = /([가-힣])\\s([가-힣])\\s?([가-힣])?\\s*(대표원장|부원장|원장|전문의|의사)/g;
-        while ((m = spacedNameRoleRe.exec(allText)) !== null && s3.length < MAX) {
-            const name = (m[1] + m[2] + (m[3] || '')).trim();
-            const role = m[4];
-            if (seen3.has(name) || !isPlausibleName(name)) continue;
+        // Sort by text position to determine boundaries
+        namePositions.sort((a, b) => a.pos - b.pos);
+
+        // Second pass: extract context with next-name boundary and actual position
+        for (let i = 0; i < namePositions.length && s3.length < MAX; i++) {
+            const { name, role, pos, matchStr } = namePositions[i];
+            if (seen3.has(name)) continue;
             seen3.add(name);
-            const ctx = extractContext(m[0], allText);
+            const endBound = (i + 1 < namePositions.length) ? namePositions[i + 1].pos : undefined;
+            const ctx = extractContext(matchStr, allText, endBound, pos);
             s3.push({ name, name_english: '', role, photo_url: '', ...ctx, branch: '', branches: [], extraction_source: 'dom_text', ocr_source: false });
         }
     }
@@ -649,7 +653,11 @@ JS_EXTRACT_DOCTORS = """
     const s4 = [];
     {
         const seen4 = new Set();
+        const allText4 = document.body.innerText || '';
         const headings = document.querySelectorAll('h1, h2, h3, h4, h5, strong, b, .title, [class*="name"]');
+
+        // First pass: collect candidates with text positions
+        const candidates = [];
         for (const el of headings) {
             const text = (el.textContent || '').trim();
             if (text.length < 2 || text.length > 4) continue;
@@ -665,9 +673,26 @@ JS_EXTRACT_DOCTORS = """
             let photo = '';
             const img = parent?.querySelector('img');
             if (img) photo = img.src || img.getAttribute('data-src') || '';
-            const allText4 = document.body.innerText || '';
-            const ctx = extractContext(text, allText4);
-            s4.push({ name: text, name_english: '', role, photo_url: photo, ...ctx, branch: '', branches: [], extraction_source: 'dom_heading', ocr_source: false });
+            // Search for name+role together (handles space-separated), then name+newline+role
+            const roleCtx = text + (roleMatch ? ' ' + roleMatch[0] : '');
+            let pos = allText4.indexOf(roleCtx);
+            if (pos === -1 && roleMatch) {
+                pos = allText4.indexOf(text + '\\n' + roleMatch[0]);
+            }
+            // No bare indexOf fallback — skip if position not found (avoids cross-contamination)
+            if (pos === -1) continue;
+            candidates.push({ name: text, role, photo, pos });
+        }
+
+        // Sort by text position for boundary calculation (all pos >= 0 guaranteed)
+        candidates.sort((a, b) => a.pos - b.pos);
+
+        // Second pass: extract with next-name boundary and actual position
+        for (let i = 0; i < candidates.length; i++) {
+            const { name, role, photo, pos } = candidates[i];
+            const endBound = (i + 1 < candidates.length) ? candidates[i + 1].pos : undefined;
+            const ctx = extractContext(name, allText4, endBound, pos);
+            s4.push({ name, name_english: '', role, photo_url: photo, ...ctx, branch: '', branches: [], extraction_source: 'dom_heading', ocr_source: false });
         }
     }
 
@@ -689,6 +714,36 @@ JS_EXTRACT_DOCTORS = """
     for (const d of s2) mergeDoc(d);
     for (const d of s3) mergeDoc(d);
     for (const d of s4) mergeDoc(d);
+
+    // ── Post-merge: detect branch labels for chain hospitals ──
+    // Scan page text for "X점" labels appearing directly before doctor names
+    const pageText = document.body.innerText || '';
+    const allBranches = new Set();
+    const branchMap = new Map();
+    for (const [name] of merged) {
+        let idx = pageText.indexOf(name);
+        while (idx !== -1) {
+            const before = pageText.substring(Math.max(0, idx - 30), idx).trim();
+            const lines = before.split('\\n');
+            const lastLine = lines[lines.length - 1]?.trim() || '';
+            if (lastLine.length >= 2 && lastLine.length <= 8 && lastLine.endsWith('점') && /^[가-힣0-9]+점$/.test(lastLine)) {
+                if (!branchMap.has(name)) branchMap.set(name, new Set());
+                branchMap.get(name).add(lastLine);
+                allBranches.add(lastLine);
+            }
+            idx = pageText.indexOf(name, idx + name.length);
+        }
+    }
+    // Only apply if 2+ different branches detected (confirms chain hospital directory)
+    if (allBranches.size >= 2) {
+        for (const [name, doc] of merged) {
+            const branches = branchMap.get(name);
+            if (branches) {
+                doc.branches = [...branches];
+                doc.branch = branches.values().next().value;
+            }
+        }
+    }
 
     return Array.from(merged.values());
 }

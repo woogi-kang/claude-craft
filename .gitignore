@@ -157,3 +157,9 @@ secret-key-*
 .moai/temp/
 .claude/plans/
 mcp.json
+
+# Claude Code worktrees (auto-managed)
+.claude/worktrees/
+
+# Clinic crawler temp files
+scripts/clinic-storage/data/

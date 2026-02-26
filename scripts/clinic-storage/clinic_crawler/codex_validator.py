@@ -1,25 +1,31 @@
 """Codex CLI-based doctor profile validator.
 
-Calls `codex exec` with gpt-5.1-codex-mini to filter noise from
-extracted profile_raw arrays and judge whether a page actually
-contains real doctor credential information.
+Calls `codex exec` with gpt-5.3-codex to filter noise from
+extracted profile_raw arrays, judge whether a page actually
+contains real doctor credential information, and filter doctors
+by branch for chain hospitals.
 """
 
 import json
+import os
 import subprocess
 import tempfile
+from collections import defaultdict
 from pathlib import Path
 
 from .log import log
 
-# Codex CLI settings
-CODEX_MODEL = "gpt-5.1-codex-mini"
-CODEX_REASONING = "low"
-CODEX_TIMEOUT = 60  # seconds
+# Codex CLI settings (configurable via env vars)
+CODEX_MODEL = os.environ.get("CLINIC_CODEX_MODEL", "gpt-5.3-codex-spark")
+CODEX_REASONING = os.environ.get("CLINIC_CODEX_REASONING", "xhigh")
+CODEX_TIMEOUT = int(os.environ.get("CLINIC_CODEX_TIMEOUT", "120"))
 
 VALIDATE_PROMPT = """\
 You are a Korean dermatology clinic data validator.
 Read {input_path}.
+
+Hospital name: {hospital_name}
+
 For each doctor object, filter profile_raw to keep ONLY actual professional credentials:
 - Education: 학력, 졸업, 석사, 박사, 대학, 수료
 - Career: 경력, 원장, 근무, 전공의, 수련, 과장, 교수, 연구원
@@ -29,20 +35,54 @@ Remove ALL noise: generic service names (피부과 진료, 레이저 클리닉, 
 marketing text, navigation, footer, intro sentences, addresses, phone numbers,
 hospital descriptions, treatment descriptions.
 
+NAME VALIDATION:
+Check if each "name" is a real Korean person name (2-4 Korean syllables, surname + given name).
+Set is_valid=false for names that are:
+- Brand names (e.g. 차앤유, 유튜브)
+- Common words (e.g. 고객, 안녕하)
+- Sentence fragments or truncated words
+- Duplicate/truncated versions of another doctor's name (e.g. 김석 when 김석준 exists)
+
+CREDENTIAL DEDUP:
+If multiple doctors share the EXACT SAME credential list, only the first is likely real.
+Mark duplicates as is_valid=false.
+
+CROSS-CONTAMINATION DETECTION:
+If a single doctor has credentials from MULTIPLE different people (different universities,
+different hospital careers that cannot belong to one person), the profile_raw is contaminated.
+Signs of cross-contamination:
+- Multiple different university graduations (e.g. 한양대 졸업 AND 서울대 졸업 AND 고려대 졸업)
+- Multiple "전문의 수료" from different hospitals
+- Credential count exceeding 20 items for a single doctor
+When detected, keep ONLY the credentials that logically belong to ONE person (the first
+coherent group), and discard the rest.
+
+BRANCH FILTERING (chain hospitals):
+This rule applies ONLY when the input data contains an EXPLICIT "branches" array
+with branch location labels (e.g. ["구로점", "강남점"]) on individual doctors.
+Do NOT infer branch information from credentials, career history, or hospital names.
+For example, "(전) 블리비의원 강남역점 원장" is a CAREER ITEM, not a branch tag.
+If no doctor in the input has a non-empty "branches" array, treat this as a
+single-location clinic and keep ALL doctors — do not filter by branch.
+If explicit branch tags exist, extract the branch name from the hospital name
+and keep only doctors whose "branches" array contains a matching branch.
+
 Write result as JSON to {output_path} in this exact format:
-[{{"name":"...","valid_items":[...],"is_valid":true/false}}]
+[{{"name":"...","valid_items":[...],"is_valid":true/false,"branch":"..."}}]
 
 is_valid=true ONLY if 2+ meaningful credential items exist.
+"branch" is optional — include only if a branch tag was detected.
 Output ONLY the JSON file, no other files or explanations.\
 """
 
 
-def validate_doctors(doctors: list, place_id: str) -> tuple[list, bool]:
+def validate_doctors(doctors: list, place_id: str, hospital_name: str = "") -> tuple[list, bool]:
     """Validate extracted doctors via Codex CLI.
 
     Args:
         doctors: List of doctor dicts with profile_raw arrays.
         place_id: Hospital identifier for logging.
+        hospital_name: Hospital name for chain branch filtering.
 
     Returns:
         (filtered_doctors, any_valid): Doctors with cleaned profile_raw,
@@ -57,10 +97,12 @@ def validate_doctors(doctors: list, place_id: str) -> tuple[list, bool]:
         for d in doctors
     ]
 
-    # Skip validation if all profile_raw are empty
+    # Skip validation if all profile_raw are empty — return empty to trigger OCR fallback
     if all(len(d["profile_raw"]) == 0 for d in input_data):
-        return doctors, False
+        return [], False
 
+    input_path = None
+    output_path = None
     try:
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".json", prefix="codex_in_", delete=False, dir="/tmp"
@@ -68,9 +110,14 @@ def validate_doctors(doctors: list, place_id: str) -> tuple[list, bool]:
             json.dump(input_data, f_in, ensure_ascii=False)
             input_path = f_in.name
 
-        output_path = input_path.replace("codex_in_", "codex_out_")
+        output_path = input_path.replace("codex_in_", "codex_out_", 1)
 
-        prompt = VALIDATE_PROMPT.format(input_path=input_path, output_path=output_path)
+        safe_name = (hospital_name or "Unknown").replace("{", "").replace("}", "")
+        prompt = VALIDATE_PROMPT.format(
+            input_path=input_path,
+            output_path=output_path,
+            hospital_name=safe_name,
+        )
 
         result = subprocess.run(
             [
@@ -90,52 +137,61 @@ def validate_doctors(doctors: list, place_id: str) -> tuple[list, bool]:
 
         if result.returncode != 0:
             log(f"[{place_id}] Codex validator error: {result.stderr[:200]}")
-            return doctors, True  # On error, pass through
+            return [], False
 
         # Read validation result
         out_path = Path(output_path)
         if not out_path.exists():
             log(f"[{place_id}] Codex output not found at {output_path}")
-            return doctors, True
+            return [], False
 
         with open(out_path, encoding="utf-8") as f:
             validated = json.load(f)
 
-        # Build lookup by name
-        valid_map = {}
-        any_valid = False
-        for v in validated:
-            name = v.get("name", "")
-            valid_map[name] = v
-            if v.get("is_valid", False):
-                any_valid = True
+        # Validate output structure
+        if not isinstance(validated, list):
+            log(f"[{place_id}] Codex returned non-list JSON, skipping")
+            return [], False
 
-        # Apply validation results to original doctors
-        filtered = []
-        for doc in doctors:
-            name = doc.get("name", "")
-            v = valid_map.get(name)
-            if v and v.get("is_valid", False):
-                doc["profile_raw"] = v.get("valid_items", doc.get("profile_raw", []))
-                filtered.append(doc)
-            elif v and not v.get("is_valid", False):
-                # Keep doctor but mark empty profile
-                doc["profile_raw"] = v.get("valid_items", [])
-                filtered.append(doc)
+        # Merge by index when lengths match (safer than name-based lookup)
+        if len(validated) == len(doctors):
+            filtered = []
+            for doc, v in zip(doctors, validated):
+                if v.get("is_valid", False):
+                    doc["profile_raw"] = v.get("valid_items", doc.get("profile_raw", []))
+                    if v.get("branch"):
+                        doc["branch"] = v["branch"]
+                    filtered.append(doc)
+        else:
+            # Fallback: name-based lookup with collision handling
+            valid_map = defaultdict(list)
+            for v in validated:
+                valid_map[v.get("name", "")].append(v)
+
+            filtered = []
+            for doc in doctors:
+                name = doc.get("name", "")
+                entries = valid_map.get(name, [])
+                v = entries.pop(0) if entries else None
+                if v and v.get("is_valid", False):
+                    doc["profile_raw"] = v.get("valid_items", doc.get("profile_raw", []))
+                    if v.get("branch"):
+                        doc["branch"] = v["branch"]
+                    filtered.append(doc)
 
         valid_count = sum(1 for v in validated if v.get("is_valid", False))
         log(f"[{place_id}] Codex validated: {valid_count}/{len(doctors)} doctors have real credentials")
 
-        # Cleanup temp files
-        Path(input_path).unlink(missing_ok=True)
-        out_path.unlink(missing_ok=True)
-
-        # any_valid = True if we have doctors (Codex cleans profile, not reject page)
         return filtered, len(filtered) > 0
 
     except subprocess.TimeoutExpired:
-        log(f"[{place_id}] Codex validator timeout ({CODEX_TIMEOUT}s)")
-        return doctors, True  # Timeout = pass through
+        log(f"[{place_id}] Codex validator timeout ({CODEX_TIMEOUT}s) — falling back to OCR")
+        return [], False
     except Exception as e:
         log(f"[{place_id}] Codex validator exception: {e}")
-        return doctors, True  # On error, pass through
+        return [], False
+    finally:
+        if input_path:
+            Path(input_path).unlink(missing_ok=True)
+        if output_path:
+            Path(output_path).unlink(missing_ok=True)

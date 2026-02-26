@@ -32,7 +32,7 @@ Self-contained Korean skin clinic website crawler for extracting social consulta
 2. **Popup Handling**: Always dismiss popups (including cookie consent, widget overlays) before interaction
 3. **Six-Pass Social Extraction**: static DOM -> iframe -> structured data -> dynamic JS -> scroll -> QR/images -> validation
 4. **Chain Optimization**: Reuse selectors across same-domain branches
-5. **Structured Output**: Return JSON matching data-models schema v2.0.0
+5. **Structured Output**: Return JSON matching data-models schema v3.0.0
 6. **Graceful Degradation**: Extract what's available, never crash on a single site
 7. **OCR Chain**: Use Gemini CLI → macOS Vision → Tesseract for image-based doctor pages (auto-fallback)
 8. **Persistent Storage**: Atomic transactions to SQLite + CSV-safe export
@@ -157,10 +157,10 @@ rm -f /tmp/crawl_result_{no}.json
 
 ### Step 7: Return Structured Results
 
-Return JSON matching `references/shared/data-models.md` schema v2.0.0:
+Return JSON matching `references/shared/data-models.md` schema v3.0.0:
 - schema_version, hospital_no, name, url, final_url, status, cms_platform
 - social_channels (platform, url, extraction_method, confidence, status)
-- doctors (name, role, credentials, education, career, branch, branches, extraction_source, ocr_source)
+- doctors (name, role, profile_raw, branch, branches, extraction_source, ocr_source)
 - errors (type, message, step, retryable)
 
 ---
@@ -194,17 +194,17 @@ For parallel batch processing, use the standalone Python crawler scripts. Each p
 ```bash
 # Crawl 10 random Seoul clinics, 5 in parallel:
 python3 scripts/clinic-storage/crawl_batch.py \
-  --csv data/clinic-results/skin_clinics.csv \
+  --csv data/clinic-results/place_data.csv \
   --filter-city 서울 --sample 10 --parallel 5
 
-# Crawl specific hospitals:
+# Crawl specific place IDs:
 python3 scripts/clinic-storage/crawl_batch.py \
-  --csv data/clinic-results/skin_clinics.csv \
-  --numbers 123,456,789 --parallel 3
+  --csv data/clinic-results/place_data.csv \
+  --place-ids 20951918,12345678 --parallel 3
 
 # Single hospital with isolated browser:
 python3 scripts/clinic-storage/crawl_single.py \
-  --no 123 --name "고은미인의원" --url "https://www.goeunmiin.co.kr/"
+  --place-id 20951918 --name "고은미인의원" --url "https://www.goeunmiin.co.kr/"
 ```
 
 Key features:

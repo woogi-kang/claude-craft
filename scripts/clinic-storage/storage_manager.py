@@ -157,7 +157,7 @@ def _escape_csv_formula(value: str) -> str:
 
 
 _KOREAN_PHONE_RE = re.compile(
-    r"^(\+82|0)\d{1,2}[-\s.]?\d{3,4}[-\s.]?\d{4}$"
+    r"^(\+82[-\s.]?|0)\d{1,2}[-\s.]?\d{3,4}[-\s.]?\d{4}$"
 )
 _VALID_URL_SCHEMES = ("http://", "https://", "tel:", "sms:", "kakao://", "line://", "weixin://")
 
