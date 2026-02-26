@@ -87,15 +87,16 @@ async def crawl_hospital(place_id: str, name: str, url: str, db_path: str,
 
         try:
             if not await step_preflight(ctx):
-                return result
-            if not await step_navigate(ctx):
-                return result
-            await step_dismiss_popups(ctx)
-            await step_spa_wait(ctx)
-            await step_extract_social(ctx)
-            candidates = await step_collect_candidates(ctx)
-            await step_extract_doctors(ctx, candidates)
-            step_determine_status(ctx)
+                pass  # skip crawl, still save result below
+            elif not await step_navigate(ctx):
+                pass  # skip crawl, still save result below
+            else:
+                await step_dismiss_popups(ctx)
+                await step_spa_wait(ctx)
+                await step_extract_social(ctx)
+                candidates = await step_collect_candidates(ctx)
+                await step_extract_doctors(ctx, candidates)
+                step_determine_status(ctx)
 
         except Exception as e:
             result["status"] = "failed"
