@@ -533,7 +533,18 @@ JS_EXTRACT_DOCTORS = """
             });
         });
 
-        return { name, name_english: '', role, photo_url: photo, profile_raw: [...profileSet], branch: '', branches: [], extraction_source: source, ocr_source: false };
+        // Detect branch label within card (e.g. badge "강남점", "홍대입구점")
+        let branchLabel = '';
+        const branchWalker = document.createTreeWalker(card, NodeFilter.SHOW_TEXT, null);
+        while (branchWalker.nextNode()) {
+            const t = branchWalker.currentNode.textContent.trim();
+            if (t.length >= 2 && t.length <= 10 && /^[가-힣0-9]+점$/.test(t) && t !== name) {
+                branchLabel = t;
+                break;
+            }
+        }
+
+        return { name, name_english: '', role, photo_url: photo, profile_raw: [...profileSet], branch: branchLabel, branches: branchLabel ? [branchLabel] : [], extraction_source: source, ocr_source: false };
     }
 
     // ─── Text context extraction helper ───
@@ -716,21 +727,53 @@ JS_EXTRACT_DOCTORS = """
     for (const d of s4) mergeDoc(d);
 
     // ── Post-merge: detect branch labels for chain hospitals ──
-    // Scan page text for "X점" labels appearing directly before doctor names
+    // Three strategies: card-level badge, "X점" before name, "[location] 대표원장" after name
     const pageText = document.body?.innerText || '';
     const allBranches = new Set();
     const branchMap = new Map();
-    for (const [name] of merged) {
+    const roleRe = /^([가-힣0-9A-Z]{1,10})\\s+(대표원장|부원장|원장|전문의|specialist)/;
+
+    for (const [name, doc] of merged) {
+        // Strategy A: card-level detection already found a branch
+        if (doc.branch) {
+            if (!branchMap.has(name)) branchMap.set(name, new Set());
+            branchMap.get(name).add(doc.branch);
+            allBranches.add(doc.branch);
+            continue;
+        }
+
         let idx = pageText.indexOf(name);
         while (idx !== -1) {
-            const before = pageText.substring(Math.max(0, idx - 30), idx).trim();
+            let found = false;
+
+            // Strategy B: "X점" badge before name (wider window, all lines)
+            const before = pageText.substring(Math.max(0, idx - 150), idx).trim();
             const lines = before.split('\\n');
-            const lastLine = lines[lines.length - 1]?.trim() || '';
-            if (lastLine.length >= 2 && lastLine.length <= 8 && lastLine.endsWith('점') && /^[가-힣0-9]+점$/.test(lastLine)) {
-                if (!branchMap.has(name)) branchMap.set(name, new Set());
-                branchMap.get(name).add(lastLine);
-                allBranches.add(lastLine);
+            for (let li = lines.length - 1; li >= 0; li--) {
+                const line = lines[li]?.trim() || '';
+                if (line.length >= 2 && line.length <= 10 && /^[가-힣0-9]+점$/.test(line)) {
+                    if (!branchMap.has(name)) branchMap.set(name, new Set());
+                    branchMap.get(name).add(line);
+                    allBranches.add(line);
+                    found = true;
+                    break;
+                }
             }
+
+            // Strategy C: "[location] 대표원장/원장" role text after name
+            if (!found) {
+                const after = pageText.substring(idx + name.length, Math.min(idx + name.length + 60, pageText.length)).trim();
+                const afterLines = after.split('\\n');
+                const firstLine = afterLines[0]?.trim() || '';
+                const roleMatch = firstLine.match(roleRe);
+                if (roleMatch) {
+                    const branchName = roleMatch[1];
+                    if (!branchMap.has(name)) branchMap.set(name, new Set());
+                    branchMap.get(name).add(branchName);
+                    allBranches.add(branchName);
+                }
+            }
+
             idx = pageText.indexOf(name, idx + name.length);
         }
     }

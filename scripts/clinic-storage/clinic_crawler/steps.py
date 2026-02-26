@@ -6,6 +6,7 @@ Extracted from crawl_hospital() in crawl_single.py during Phase 3 refactoring.
 
 from __future__ import annotations
 
+import asyncio
 import json
 import os
 import re
@@ -52,6 +53,11 @@ from clinic_crawler.ocr import (
     run_gemini_ocr,
 )
 from clinic_crawler.codex_validator import validate_doctors
+from clinic_crawler.google_drive import (
+    is_drive_enabled,
+    keep_local_copy_after_upload,
+    upload_screenshot,
+)
 from clinic_crawler.url_utils import classify_url, normalize_url
 
 
@@ -117,13 +123,19 @@ def _filter_by_branch(doctors: list, hospital_name: str, place_id: str) -> list:
         return doctors
     branch_keyword = branch_match.group(1)
 
+    # If majority of doctors have branch labels, unlabeled ones are likely
+    # company-wide staff, not branch-specific — exclude them.
+    labeled_count = sum(1 for d in doctors if d.get("branches"))
+    label_ratio = labeled_count / len(doctors) if doctors else 0
+    keep_unlabeled = label_ratio < 0.5  # keep only when less than half are labeled
+
     # Filter: keep doctors whose branches contain the keyword
     filtered = []
     for d in doctors:
         branches = d.get("branches") or []
         if not branches:
-            # Doctor without branch label on a chain page — keep (could be main branch)
-            filtered.append(d)
+            if keep_unlabeled:
+                filtered.append(d)
             continue
         if any(branch_keyword in b for b in branches):
             filtered.append(d)
@@ -1159,8 +1171,8 @@ async def step_extract_doctors(
                 ctx, ocr_state, seen_candidate_urls,
             )
 
-        # Persist screenshots to permanent directory
-        _persist_screenshots(ctx, ocr_state)
+        # Persist screenshots to permanent storage
+        await _persist_screenshots(ctx, ocr_state)
 
         # Save screenshot if all methods exhausted
         if not ctx.result["doctors"] and ocr_state.last_screenshot_path:
@@ -1231,8 +1243,8 @@ async def step_extract_doctors(
 # ---------------------------------------------------------------------------
 
 
-def _persist_screenshots(ctx: CrawlContext, ocr_state: OcrState) -> None:
-    """Copy screenshots from /tmp to permanent storage and attach paths to doctors."""
+async def _persist_screenshots(ctx: CrawlContext, ocr_state: OcrState) -> None:
+    """Copy screenshots and upload to Drive without blocking the event loop."""
     project_root = os.path.dirname(
         os.path.dirname(
             os.path.dirname(os.path.abspath(__file__))
@@ -1246,11 +1258,37 @@ def _persist_screenshots(ctx: CrawlContext, ocr_state: OcrState) -> None:
         save_path = os.path.join(
             save_dir, f"{ctx.place_id}_doctors.jpg",
         )
-        shutil.copy2(ocr_state.last_screenshot_path, save_path)
+        await asyncio.to_thread(shutil.copy2, ocr_state.last_screenshot_path, save_path)
+        stored_ref = save_path
+        upload_succeeded = False
+
+        if is_drive_enabled():
+            try:
+                uploaded = await asyncio.to_thread(
+                    upload_screenshot, save_path, ctx.place_id
+                )
+                stored_ref = uploaded.url
+                upload_succeeded = True
+                log(f"[{ctx.place_id}] Uploaded screenshot to Google Drive: {uploaded.file_id}")
+            except Exception as e:
+                log(f"[{ctx.place_id}] Drive upload failed, fallback to local path: {str(e)[:120]}")
+                ctx.result["errors"].append({
+                    "type": "screenshot_upload",
+                    "message": str(e)[:200],
+                    "step": "doctor_extract", "retryable": True,
+                })
+
+        if upload_succeeded and is_drive_enabled() and not keep_local_copy_after_upload():
+            try:
+                await asyncio.to_thread(os.remove, save_path)
+                log(f"[{ctx.place_id}] Removed local screenshot after Drive upload")
+            except OSError as e:
+                log(f"[{ctx.place_id}] Local screenshot cleanup failed: {str(e)[:120]}")
+
         # Attach screenshot_path to all doctors that don't have one
         for doc in ctx.result["doctors"]:
             if not doc.get("screenshot_path"):
-                doc["screenshot_path"] = save_path
+                doc["screenshot_path"] = stored_ref
 
 
 # ---------------------------------------------------------------------------
