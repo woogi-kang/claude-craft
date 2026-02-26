@@ -165,7 +165,7 @@ JS_SOCIAL_EXTRACT = """
     });
 
     // Korean phone numbers in page text (Pass 4)
-    const bodyText = document.body.innerText || '';
+    const bodyText = document.body?.innerText || '';
     const phoneMatches = bodyText.match(/(?:0\\d{1,2})[-.\\s]?\\d{3,4}[-.\\s]?\\d{4}/g);
     if (phoneMatches) {
         // Only add first 3 unique phones (avoid noise)
@@ -295,7 +295,7 @@ JS_DETECT_CMS = """
 
 JS_CHECK_ENCODING = """
 () => {
-    const text = document.body.innerText || '';
+    const text = document.body?.innerText || '';
     const garbledCount = (text.match(/[\\ufffd]/g) || []).length;
     const ratio = garbledCount / Math.max(text.length, 1);
     return { charset: document.characterSet, garbledRatio: ratio, textLength: text.length };
@@ -608,7 +608,7 @@ JS_EXTRACT_DOCTORS = """
     // ── Strategy 3: Text-based scan (forward + reverse patterns) ──
     const s3 = [];
     {
-        const allText = document.body.innerText || '';
+        const allText = document.body?.innerText || '';
         const seen3 = new Set();
         const MAX = 20;
 
@@ -653,7 +653,7 @@ JS_EXTRACT_DOCTORS = """
     const s4 = [];
     {
         const seen4 = new Set();
-        const allText4 = document.body.innerText || '';
+        const allText4 = document.body?.innerText || '';
         const headings = document.querySelectorAll('h1, h2, h3, h4, h5, strong, b, .title, [class*="name"]');
 
         // First pass: collect candidates with text positions
@@ -717,7 +717,7 @@ JS_EXTRACT_DOCTORS = """
 
     // ── Post-merge: detect branch labels for chain hospitals ──
     // Scan page text for "X점" labels appearing directly before doctor names
-    const pageText = document.body.innerText || '';
+    const pageText = document.body?.innerText || '';
     const allBranches = new Set();
     const branchMap = new Map();
     for (const [name] of merged) {
