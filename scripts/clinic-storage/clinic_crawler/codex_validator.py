@@ -13,6 +13,8 @@ import tempfile
 from collections import defaultdict
 from pathlib import Path
 
+from .constants import DOCTOR_ROLES_KEEP
+from .korean_name import is_plausible_korean_name
 from .log import log
 
 # Codex CLI settings (configurable via env vars)
@@ -25,6 +27,8 @@ You are a Korean dermatology clinic data validator.
 Read {input_path}.
 
 Hospital name: {hospital_name}
+
+Each doctor object has: "name", "role" (medical title), and "profile_raw" (credential list).
 
 For each doctor object, filter profile_raw to keep ONLY actual professional credentials:
 - Education: 학력, 졸업, 석사, 박사, 대학, 수료
@@ -70,7 +74,18 @@ and keep only doctors whose "branches" array contains a matching branch.
 Write result as JSON to {output_path} in this exact format:
 [{{"name":"...","valid_items":[...],"is_valid":true/false,"branch":"..."}}]
 
-is_valid=true ONLY if 2+ meaningful credential items exist.
+is_valid RULES (check the "role" field in the input):
+- true if the name is a real Korean person name AND the "role" field contains
+  a medical title (원장, 대표원장, 부원장, 전문의, 의사, specialist)
+- true if the name is valid AND 2+ meaningful credential items exist
+- false if the name is not a real Korean person name (brand, word fragment, etc.)
+- false if no medical role in "role" field AND fewer than 2 credentials
+
+IMPORTANT: In Korean clinics, it is NORMAL for non-lead doctors to have only
+name + role without detailed credentials. Only the head doctor (대표원장)
+typically lists full education/career history. A doctor with name="정진이"
+and role="원장" but empty profile_raw is VALID — do NOT reject them.
+
 "branch" is optional — include only if a branch tag was detected.
 Output ONLY the JSON file, no other files or explanations.\
 """
@@ -181,8 +196,25 @@ def validate_doctors(doctors: list, place_id: str, hospital_name: str = "") -> t
                         doc["branch"] = v["branch"]
                     filtered.append(doc)
 
+        # Recover doctors with valid Korean name + medical role that Codex
+        # wrongly rejected (LLM inconsistency — same input pattern gets
+        # different is_valid results across doctors).
+        filtered_keys = {(d.get("name", ""), d.get("role", "")) for d in filtered}
+        recovered = 0
+        for doc in doctors:
+            name = doc.get("name", "")
+            role = doc.get("role", "")
+            if (name, role) in filtered_keys:
+                continue
+            if is_plausible_korean_name(name) and role in DOCTOR_ROLES_KEEP:
+                doc["profile_raw"] = []
+                filtered.append(doc)
+                recovered += 1
+
         valid_count = sum(1 for v in validated if v.get("is_valid", False))
         log(f"[{place_id}] Codex validated: {valid_count}/{len(doctors)} doctors have real credentials")
+        if recovered:
+            log(f"[{place_id}] Recovered {recovered} doctors with valid name+role rejected by Codex")
 
         return filtered, len(filtered) > 0
 
@@ -193,7 +225,10 @@ def validate_doctors(doctors: list, place_id: str, hospital_name: str = "") -> t
         log(f"[{place_id}] Codex validator exception: {e}")
         return [], False
     finally:
-        if input_path:
-            Path(input_path).unlink(missing_ok=True)
-        if output_path:
-            Path(output_path).unlink(missing_ok=True)
+        # Keep temp files for debugging (last run only)
+        for old in Path("/tmp").glob("codex_debug_*.json"):
+            old.unlink(missing_ok=True)
+        if input_path and Path(input_path).exists():
+            Path(input_path).rename(f"/tmp/codex_debug_in_{place_id}.json")
+        if output_path and Path(output_path).exists():
+            Path(output_path).rename(f"/tmp/codex_debug_out_{place_id}.json")
