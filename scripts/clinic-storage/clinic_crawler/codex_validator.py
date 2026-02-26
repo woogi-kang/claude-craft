@@ -97,9 +97,11 @@ def validate_doctors(doctors: list, place_id: str, hospital_name: str = "") -> t
         for d in doctors
     ]
 
-    # Skip validation if all profile_raw are empty — return empty to trigger OCR fallback
+    # If all profile_raw are empty, skip Codex but keep doctors with valid
+    # name+role as "no_credentials" — OCR fallback will be attempted too,
+    # and the best result (more credentials) wins in step_extract_doctors.
     if all(len(d["profile_raw"]) == 0 for d in input_data):
-        return [], False
+        return doctors, False
 
     input_path = None
     output_path = None

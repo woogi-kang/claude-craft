@@ -42,6 +42,7 @@ DOCTOR_SECONDARY = [
     "원장님", "대표원장", "의료팀", "진료진", "진료 안내",
     "클리닉 소개", "Staff", "Team", "About Us",
     "병원소개", "병원 소개", "About Umi", "About TheHill",
+    "ABOUT Dr", "Dr.", "대표원장 소개",
 ]
 DOCTOR_SUBMENU_PARENTS = [
     "병원 소개", "병원소개", "클리닉 소개", "소개", "병원 안내", "클리닉 안내",

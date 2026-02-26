@@ -27,7 +27,9 @@ from clinic_crawler.constants import (
 from clinic_crawler.js_snippets import (
     JS_CHECK_ENCODING,
     JS_CHECK_IMAGE_BASED,
+    JS_CLICK_BRANCH_AND_GET_DOCTOR,
     JS_DETECT_CMS,
+    JS_DETECT_FRAMES,
     JS_DISMISS_POPUPS,
     JS_EXTRACT_DOCTORS,
     JS_EXTRACT_PAGE_TEXT,
@@ -37,6 +39,7 @@ from clinic_crawler.js_snippets import (
     JS_FIND_DOCTOR_TABS,
     JS_FIND_INTRO_LINKS,
     JS_GET_PAGE_TEXT_LENGTH,
+    JS_OPEN_MOBILE_MENUS,
     JS_REDIRECT_SCAN,
     JS_REVEAL_SUBMENUS,
     JS_SCROLL_TRIGGER,
@@ -145,6 +148,23 @@ def _filter_by_branch(doctors: list, hospital_name: str, place_id: str) -> list:
             f"doctors for branch '{branch_keyword}'")
 
     return filtered if filtered else doctors
+
+
+def _extract_branch_name(hospital_name: str) -> str | None:
+    """Extract branch indicator from hospital name.
+
+    Examples:
+        '바로그의원 강남' -> '강남'
+        '콜나움의원 강남' -> '강남'
+        '뷰티라운지의원 강남점' -> '강남'
+    """
+    m = re.search(
+        r"(?:의원|병원|클리닉|센터)\s+(.{1,6}?)(?:점|본점)?$",
+        hospital_name,
+    )
+    if m:
+        return m.group(1)
+    return None
 
 
 @dataclass
@@ -578,6 +598,15 @@ async def step_collect_candidates(ctx: CrawlContext) -> list:
     except Exception:
         pass
 
+    # Open mobile menu drawers (hamburger, bottom nav "메뉴", etc.)
+    try:
+        opened = await ctx.page.evaluate(JS_OPEN_MOBILE_MENUS)
+        if opened:
+            await ctx.page.wait_for_timeout(1000)
+            log(f"[{ctx.place_id}] Opened {opened} mobile menu toggle(s)")
+    except Exception:
+        pass
+
     # Step 5a: Collect doctor menu links
     try:
         doctor_links = await ctx.page.evaluate(
@@ -676,6 +705,87 @@ async def step_collect_candidates(ctx: CrawlContext) -> list:
                 candidate_urls.append((doc_url, f"sitemap:{pattern}"))
     except Exception:
         pass
+
+    # Step 5-iframe: Handle frame-based sites (e.g. 뉴케이의원)
+    # When the main page has very little text and uses frames/iframes,
+    # navigate into the frame content and re-scan for doctor menu links.
+    if not candidate_urls:
+        try:
+            await ctx.page.goto(
+                ctx.url, wait_until="domcontentloaded", timeout=15000,
+            )
+            frame_info = await ctx.page.evaluate(JS_DETECT_FRAMES)
+            if (frame_info["bodyTextLength"] < 200
+                    and frame_info["frameCount"] > 0):
+                log(f"[{ctx.place_id}] Frame-based site detected "
+                    f"({frame_info['frameCount']} frames, "
+                    f"{frame_info['bodyTextLength']} chars)")
+                for frame_src in frame_info["frameSrcs"][:3]:
+                    abs_url = urljoin(ctx.url, frame_src)
+                    try:
+                        await ctx.page.goto(
+                            abs_url, wait_until="domcontentloaded",
+                            timeout=15000,
+                        )
+                        await ctx.page.wait_for_timeout(2000)
+
+                        # Check for nested frames (up to 1 level deep)
+                        inner = await ctx.page.evaluate(JS_DETECT_FRAMES)
+                        if (inner["bodyTextLength"] < 200
+                                and inner["frameCount"] > 0):
+                            for inner_src in inner["frameSrcs"][:3]:
+                                inner_abs = urljoin(abs_url, inner_src)
+                                try:
+                                    await ctx.page.goto(
+                                        inner_abs,
+                                        wait_until="domcontentloaded",
+                                        timeout=10000,
+                                    )
+                                    await ctx.page.wait_for_timeout(1500)
+                                    txt_len = await ctx.page.evaluate(
+                                        JS_GET_PAGE_TEXT_LENGTH,
+                                    )
+                                    if txt_len > 200:
+                                        abs_url = inner_abs
+                                        break
+                                except Exception:
+                                    pass
+
+                        # Re-run menu detection from frame content
+                        doctor_links = await ctx.page.evaluate(
+                            JS_FIND_DOCTOR_MENU,
+                            [DOCTOR_PRIMARY, DOCTOR_SECONDARY,
+                             DOCTOR_SUBMENU_PARENTS],
+                        )
+                        for link in (doctor_links or []):
+                            href = link.get("href", "")
+                            if href and href.startswith("http"):
+                                candidate_urls.append(
+                                    (href, f"frame_menu:{link['text']}"),
+                                )
+                            elif href:
+                                resolved = urljoin(abs_url, href)
+                                candidate_urls.append(
+                                    (resolved, f"frame_menu:{link['text']}"),
+                                )
+                        if doctor_links:
+                            log(f"[{ctx.place_id}] Found "
+                                f"{len(doctor_links)} doctor link(s) "
+                                f"in frame")
+
+                        # Add frame content page itself as candidate
+                        current = await ctx.page.evaluate(
+                            "() => window.location.href",
+                        )
+                        candidate_urls.append(
+                            (current, "frame_content"),
+                        )
+                        if doctor_links:
+                            break
+                    except Exception:
+                        pass
+        except Exception:
+            pass
 
     # Step 5c: Main page as last resort
     candidate_urls.append((ctx.url, "main_page"))
@@ -888,6 +998,7 @@ async def step_extract_doctors(
     best_doctors = []       # doctors list from best candidate so far
     best_valid_count = 0    # number of doctors with real credentials
     best_source = ""        # source label of best candidate
+    branch_attempted = False  # prevent infinite branch-click loops
 
     try:
         for cand_idx, (cand_url, cand_source) in enumerate(candidates):
@@ -961,37 +1072,41 @@ async def step_extract_doctors(
                             validated, any_valid = validate_doctors(
                                 valid_doctors, ctx.place_id, ctx.name,
                             )
-                            if validated:
-                                validated = _dedup_cross_contaminated(validated, ctx.place_id)
-                                validated = _filter_by_branch(validated, ctx.name, ctx.place_id)
-                                for d in validated:
+                            # Use Codex-validated list if available,
+                            # otherwise fall back to raw DOM doctors
+                            dom_result = validated if validated else valid_doctors
+                            dom_result = _dedup_cross_contaminated(dom_result, ctx.place_id)
+                            dom_result = _filter_by_branch(dom_result, ctx.name, ctx.place_id)
+                            if dom_result:
+                                for d in dom_result:
                                     d["page_text"] = cand_page_text
                                     d["source_url"] = cand_source_url
                                 # Count doctors with actual credentials
                                 cred_count = sum(
-                                    1 for d in validated
+                                    1 for d in dom_result
                                     if d.get("profile_raw")
                                 )
                                 log(f"[{ctx.place_id}] DOM: "
-                                    f"{len(validated)} doctors, "
+                                    f"{len(dom_result)} doctors, "
                                     f"{cred_count} with credentials "
                                     f"from {cand_source}")
                                 # Track best result across all candidates
                                 if cred_count > best_valid_count:
-                                    best_doctors = validated
+                                    best_doctors = dom_result
                                     best_valid_count = cred_count
-                                    best_source = cand_source
+                                    best_source = f"dom:{cand_source}"
                                 elif (cred_count == best_valid_count
-                                      and len(validated) > len(best_doctors)):
-                                    best_doctors = validated
-                                    best_source = cand_source
+                                      and len(dom_result) > len(best_doctors)):
+                                    best_doctors = dom_result
+                                    best_source = f"dom:{cand_source}"
                                 # If ALL doctors have credentials, no need to search more
-                                if cred_count == len(validated) and cred_count > 0:
+                                if cred_count == len(dom_result) and cred_count > 0:
                                     log(f"[{ctx.place_id}] All {cred_count} "
                                         f"doctors have credentials, "
                                         f"accepting from {cand_source}")
                                     break
-                                # Otherwise keep searching
+                                # Otherwise keep searching (OCR may find credentials)
+                                need_ocr = True
                                 continue
                             else:
                                 need_ocr = True
@@ -1008,6 +1123,31 @@ async def step_extract_doctors(
                 else:
                     log(f"[{ctx.place_id}] Image-based page: "
                         f"{cand_source}")
+
+                # Branch selector: for chain hospitals, click matching
+                # branch and follow doctor sub-link (e.g. 바로그의원)
+                if need_ocr and not best_doctors and not branch_attempted:
+                    branch_name = _extract_branch_name(ctx.name)
+                    if branch_name:
+                        try:
+                            result = await ctx.page.evaluate(
+                                JS_CLICK_BRANCH_AND_GET_DOCTOR,
+                                branch_name,
+                            )
+                            if result and result.get("href"):
+                                branch_attempted = True
+                                branch_url = result["href"]
+                                log(f"[{ctx.place_id}] Clicked branch "
+                                    f"selector: {result['clicked']}")
+                                log(f"[{ctx.place_id}] Found branch "
+                                    f"doctor page: {branch_url}")
+                                candidates.append(
+                                    (branch_url,
+                                     f"branch:{cand_source}"),
+                                )
+                                continue  # skip OCR, process branch URL next
+                        except Exception:
+                            pass
 
                 if need_ocr:
                     # Scroll to load lazy images
@@ -1196,6 +1336,7 @@ async def step_extract_doctors(
                 d.get("ocr_source") for d in ctx.result["doctors"]
             )
             if has_ocr:
+                original_count = len(ctx.result["doctors"])
                 validated_final, any_valid = validate_doctors(
                     ctx.result["doctors"], ctx.place_id, ctx.name,
                 )
@@ -1203,7 +1344,15 @@ async def step_extract_doctors(
                     validated_final = _dedup_cross_contaminated(
                         validated_final, ctx.place_id,
                     )
-                    ctx.result["doctors"] = validated_final
+                    # Only replace if Codex kept a reasonable proportion;
+                    # otherwise keep the original OCR list (e.g. chain
+                    # hospitals where doctors lack detailed credentials).
+                    if len(validated_final) >= original_count * 0.4:
+                        ctx.result["doctors"] = validated_final
+                    else:
+                        log(f"[{ctx.place_id}] Codex too aggressive: "
+                            f"kept {len(validated_final)}/{original_count}"
+                            f", using original list")
 
         # Deduplicate doctors by name within same hospital
         if ctx.result["doctors"]:
@@ -1245,9 +1394,13 @@ async def step_extract_doctors(
 
 async def _persist_screenshots(ctx: CrawlContext, ocr_state: OcrState) -> None:
     """Copy screenshots and upload to Drive without blocking the event loop."""
+    # steps.py is at scripts/clinic-storage/clinic_crawler/steps.py
+    # Need 4 levels up to reach project root (claude-craft/)
     project_root = os.path.dirname(
         os.path.dirname(
-            os.path.dirname(os.path.abspath(__file__))
+            os.path.dirname(
+                os.path.dirname(os.path.abspath(__file__))
+            )
         )
     )
     save_dir = os.path.join(project_root, SCREENSHOT_DIR)

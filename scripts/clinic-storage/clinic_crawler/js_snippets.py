@@ -306,7 +306,7 @@ JS_FIND_DOCTOR_MENU = """
 ([primaryLabels, secondaryLabels, submenuParents]) => {
     const allLinks = Array.from(document.querySelectorAll('nav a, header a, .menu a, .gnb a, .lnb a, [class*="nav"] a, [class*="menu"] a, a'));
     const results = [];
-    const doctorUrlRe = /\\/doctor|\\/staff|\\/team|\\/의료진|\\/원장|\\/전문의|about.*(?:doctor|team|staff)/i;
+    const doctorUrlRe = /\\/doctor|\\/staff|\\/team|\\/의료진|\\/원장|\\/전문의|\\/dr[a-z]|about.*(?:doctor|team|staff)/i;
     const genericUrlRe = /^\\/(?:about|introduce|clinic|소개|병원)(?:[#?/]|$)/i;
 
     for (const a of allLinks) {
@@ -913,6 +913,124 @@ JS_REVEAL_SUBMENUS = """
         li.dispatchEvent(new MouseEvent('mouseenter', {bubbles: true}));
         li.dispatchEvent(new MouseEvent('mouseover', {bubbles: true}));
     });
+}
+"""
+
+JS_OPEN_MOBILE_MENUS = """
+() => {
+    // Detect and click mobile menu toggles (hamburger, bottom nav "메뉴", etc.)
+    // to reveal hidden navigation drawers that contain doctor page links.
+    const candidates = [];
+
+    // 1. Buttons with menu-related text
+    document.querySelectorAll('button, [role="button"]').forEach(el => {
+        const text = (el.textContent || '').trim();
+        if (text.length <= 10 && /^(메뉴|Menu|MENU)$/i.test(text)) {
+            candidates.push({el, score: 10});
+        }
+    });
+
+    // 2. Hamburger icon buttons (common class patterns)
+    const hamSelectors = [
+        'button[class*="hamburger"]', 'button[class*="toggle"]',
+        'button[class*="nav-open"]', 'button[class*="menu-btn"]',
+        'button[class*="mobile"]', '[class*="hamburger"]',
+        'button[aria-label*="menu" i]', 'button[aria-label*="Menu" i]',
+        'button[title*="Menu" i]',
+    ];
+    for (const sel of hamSelectors) {
+        document.querySelectorAll(sel).forEach(el => {
+            if (el.offsetParent !== null) candidates.push({el, score: 5});
+        });
+    }
+
+    // 3. Buttons that only contain an img/svg (likely icon-only hamburger)
+    document.querySelectorAll('button').forEach(el => {
+        const text = (el.textContent || '').trim();
+        if (text.length <= 3 && (el.querySelector('img, svg'))) {
+            const rect = el.getBoundingClientRect();
+            if (rect.width > 20 && rect.width < 80 && el.offsetParent !== null) {
+                candidates.push({el, score: 2});
+            }
+        }
+    });
+
+    // Deduplicate and click top candidates (max 2)
+    const clicked = new Set();
+    candidates.sort((a, b) => b.score - a.score);
+    let count = 0;
+    for (const {el} of candidates) {
+        if (clicked.has(el) || count >= 2) continue;
+        clicked.add(el);
+        try { el.click(); count++; } catch {}
+    }
+    return count;
+}
+"""
+
+JS_DETECT_FRAMES = """
+() => {
+    const bodyText = (document.body?.innerText || '').trim();
+    const frames = [];
+    document.querySelectorAll('frame, iframe').forEach(f => {
+        const src = f.src || f.getAttribute('src') || '';
+        if (src && src !== 'about:blank' && !src.startsWith('javascript:')) {
+            frames.push(src);
+        }
+    });
+    return {
+        bodyTextLength: bodyText.length,
+        isFrameset: !!document.querySelector('frameset'),
+        frameCount: frames.length,
+        frameSrcs: frames.slice(0, 5)
+    };
+}
+"""
+
+JS_CLICK_BRANCH_AND_GET_DOCTOR = """
+(branchName) => {
+    // On a branch selector page, find and click the matching branch element,
+    // then return the doctor sub-link URL from the revealed dropdown.
+    // Returns {clicked, href} or null.
+    const docKw = ['의료진', '원장', '전문의', 'doctor', 'staff', 'team'];
+    const els = document.querySelectorAll('li > div, li > span, li > a, button, [role="button"]');
+    let clickedEl = null;
+    for (const el of els) {
+        const text = (el.textContent || '').trim();
+        if (text.length > 1 && text.length < 30 && text.includes(branchName)) {
+            try { el.click(); } catch {}
+            clickedEl = el;
+            break;
+        }
+    }
+    if (!clickedEl) return null;
+
+    // Look for doctor sub-links scoped to the clicked element's parent list item
+    const parentLi = clickedEl.closest('li');
+    if (parentLi) {
+        const subLinks = parentLi.querySelectorAll('ul a, .sub a, .submenu a, .depth2 a');
+        for (const a of subLinks) {
+            const text = (a.textContent || '').trim().toLowerCase();
+            if (docKw.some(k => text.includes(k))) {
+                return {clicked: clickedEl.textContent.trim(), href: a.href || a.getAttribute('href') || ''};
+            }
+        }
+    }
+
+    // Fallback: check all visible doctor-text links, excluding the current page
+    const curPath = window.location.pathname;
+    for (const a of document.querySelectorAll('a[href]')) {
+        const text = (a.textContent || '').trim().toLowerCase();
+        const href = a.href || '';
+        if (text.length < 20 && a.offsetParent !== null
+            && docKw.some(k => text.includes(k))) {
+            try {
+                const path = new URL(href).pathname;
+                if (path !== curPath) return {clicked: clickedEl.textContent.trim(), href};
+            } catch {}
+        }
+    }
+    return null;
 }
 """
 
