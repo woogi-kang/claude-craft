@@ -440,7 +440,9 @@ JS_EXTRACT_DOCTORS = """
         '우아성', '박훤함', '마인피', '하나이',
         // Location names (chain hospital branches)
         '강남', '천호', '하남', '구리', '강서', '송파', '구로',
-        '연신내', '왕십리',
+        '연신내', '왕십리', '홍대', '노원', '목동', '잠실',
+        '신촌', '합정', '마포', '성수', '건대', '이대',
+        '원노원', '마취통', '전화번',
     ]);
 
     function isPlausibleName(name) {
@@ -623,6 +625,17 @@ JS_EXTRACT_DOCTORS = """
         const seen3 = new Set();
         const MAX = 20;
 
+        // Career reference filter: "전 [X] 원장" means "former director of [X]"
+        // The [X] part (clinic/location name) should NOT be extracted as a doctor name.
+        function isCareerReference(pos) {
+            const start = Math.max(0, pos - 80);
+            const lookback = allText.substring(start, pos);
+            const lastNL = lookback.lastIndexOf('\\n');
+            const sameLine = lastNL === -1 ? lookback : lookback.substring(lastNL + 1);
+            // "전 " preceded by line-start, whitespace, or bullet = "former"
+            return /(^|[\\s(·•\\-])전\\s/.test(sameLine) || /前\\s/.test(sameLine);
+        }
+
         // First pass: collect all name positions for boundary calculation
         const namePositions = [];
         const nameRoleRe = /([가-힣]{2,3})\\s*(대표원장|부원장|원장|전문의|의사)/g;
@@ -630,6 +643,7 @@ JS_EXTRACT_DOCTORS = """
         while ((m = nameRoleRe.exec(allText)) !== null) {
             const name = m[1].trim();
             if (!isPlausibleName(name) || namePositions.some(n => n.name === name)) continue;
+            if (isCareerReference(m.index)) continue;
             namePositions.push({ name, role: m[2], pos: m.index, matchStr: name });
         }
         const roleNameRe = /(대표원장|부원장|원장|전문의|의사)\\s+([가-힣]{2,3})/g;
@@ -643,6 +657,7 @@ JS_EXTRACT_DOCTORS = """
         while ((m = spacedNameRoleRe.exec(allText)) !== null) {
             const name = (m[1] + m[2] + (m[3] || '')).trim();
             if (!isPlausibleName(name) || namePositions.some(n => n.name === name)) continue;
+            if (isCareerReference(m.index)) continue;
             namePositions.push({ name, role: m[4], pos: m.index, matchStr: m[0] });
         }
 

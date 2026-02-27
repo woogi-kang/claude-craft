@@ -101,6 +101,33 @@ class TestIsPlausibleKoreanName:
     def test_given_안내(self):
         assert _is_plausible_korean_name("이안내") is False
 
+    # -- Invalid: location names misidentified as person names --
+    def test_location_홍대(self):
+        assert _is_plausible_korean_name("홍대") is False
+
+    def test_location_노원(self):
+        assert _is_plausible_korean_name("노원") is False
+
+    def test_location_성수(self):
+        assert _is_plausible_korean_name("성수") is False
+
+    def test_location_원노원(self):
+        assert _is_plausible_korean_name("원노원") is False
+
+    # -- Invalid: OCR/text noise --
+    def test_noise_마취통(self):
+        assert _is_plausible_korean_name("마취통") is False
+
+    def test_noise_장없이(self):
+        assert _is_plausible_korean_name("장없이") is False
+
+    # -- Valid: real names that look like locations --
+    def test_valid_name_성수진(self):
+        assert _is_plausible_korean_name("성수진") is True
+
+    def test_valid_name_홍대영(self):
+        assert _is_plausible_korean_name("홍대영") is True
+
     # -- None input --
     def test_none_rejected(self):
         assert _is_plausible_korean_name(None) is False

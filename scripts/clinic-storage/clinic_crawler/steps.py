@@ -1336,7 +1336,6 @@ async def step_extract_doctors(
                 d.get("ocr_source") for d in ctx.result["doctors"]
             )
             if has_ocr:
-                original_count = len(ctx.result["doctors"])
                 validated_final, any_valid = validate_doctors(
                     ctx.result["doctors"], ctx.place_id, ctx.name,
                 )
@@ -1344,15 +1343,7 @@ async def step_extract_doctors(
                     validated_final = _dedup_cross_contaminated(
                         validated_final, ctx.place_id,
                     )
-                    # Only replace if Codex kept a reasonable proportion;
-                    # otherwise keep the original OCR list (e.g. chain
-                    # hospitals where doctors lack detailed credentials).
-                    if len(validated_final) >= original_count * 0.4:
-                        ctx.result["doctors"] = validated_final
-                    else:
-                        log(f"[{ctx.place_id}] Codex too aggressive: "
-                            f"kept {len(validated_final)}/{original_count}"
-                            f", using original list")
+                    ctx.result["doctors"] = validated_final
 
         # Deduplicate doctors by name within same hospital
         if ctx.result["doctors"]:

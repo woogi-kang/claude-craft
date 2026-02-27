@@ -64,6 +64,8 @@ NON_NAME_SUFFIXES = {
     # Particles that appear at end of 3-char strings (e.g. "고객을", "한분한")
     "객을", "분한", "료진", "원을", "문의", "내용", "상담", "예약", "진료",
     "비용", "안내", "소개", "정보", "후기", "리뷰", "사진", "영상",
+    # OCR noise suffixes
+    "없이", "취통",
 }
 NON_NAME_WORDS = {
     "대표원", "원대표", "부대표", "병원장",
@@ -76,6 +78,11 @@ NON_NAME_WORDS = {
     "이벤트", "공지사", "문의하", "예약하", "진료시", "오시는",
     "강남점", "서울점", "부산점", "대전점", "인천점",
     "구로점", "잠실점", "홍대점", "명동점", "신사점",
+    # Location names misidentified as person names
+    "홍대", "노원", "목동", "잠실", "신촌", "합정", "마포",
+    "성수", "건대", "이대", "원노원",
+    # OCR/text noise that passes surname check
+    "마취통", "장없이", "전화번",
 }
 # Title/role suffixes that are NOT given names (e.g. 정대표 = 정 + 대표)
 NON_NAME_GIVEN = {"대표", "원장", "부장", "과장", "실장", "팀장", "소개", "안내", "의원"}
