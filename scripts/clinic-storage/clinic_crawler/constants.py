@@ -51,7 +51,11 @@ DOCTOR_SUBMENU_PARENTS = [
 # Regex pattern: "{hospital_name_fragment} 소개" as submenu parent
 SUBMENU_PARENT_INTRO_RE = re.compile(r".{1,10}\s*소개$")
 
-DOCTOR_ROLES_KEEP = {"원장", "대표원장", "부원장", "전문의", "의사", "레지던트", "인턴"}
+DOCTOR_ROLES_KEEP = {
+    "원장", "대표원장", "부원장", "전문의", "의사", "레지던트", "인턴",
+    # Compound roles (prefix + base role)
+    "수석원장", "교육원장", "진료원장", "총괄원장", "지도전문의",
+}
 DOCTOR_ROLES_EXCLUDE = {"간호사", "간호조무사", "피부관리사", "상담사", "코디네이터", "스텝", "직원"}
 
 # Korean name validation - top ~60 surnames covering 99%+ of population
@@ -66,6 +70,8 @@ NON_NAME_SUFFIXES = {
     "비용", "안내", "소개", "정보", "후기", "리뷰", "사진", "영상",
     # OCR noise suffixes
     "없이", "취통",
+    # Round 2: adjective suffix
+    "적은",
 }
 NON_NAME_WORDS = {
     "대표원", "원대표", "부대표", "병원장",
@@ -83,11 +89,19 @@ NON_NAME_WORDS = {
     "성수", "건대", "이대", "원노원",
     # OCR/text noise that passes surname check
     "마취통", "장없이", "전화번",
+    # Round 2: marketing/brand/location false positives
+    "오랜", "성장한", "유픽", "서초", "지도",
 }
 # Title/role suffixes that are NOT given names (e.g. 정대표 = 정 + 대표)
-NON_NAME_GIVEN = {"대표", "원장", "부장", "과장", "실장", "팀장", "소개", "안내", "의원"}
+NON_NAME_GIVEN = {
+    "대표", "원장", "부장", "과장", "실장", "팀장", "소개", "안내", "의원",
+    # Round 2: compound role fragments (e.g. "원수석" from "수석원장")
+    "수석", "교육", "미국", "진료", "총괄", "연구", "센터",
+}
 
-ROLE_RE = re.compile(r"^(.+?)\s+(원장|대표원장|부원장|전문의|의사|레지던트|인턴)$")
+ROLE_RE = re.compile(
+    r"^(.+?)\s+(수석원장|교육원장|진료원장|총괄원장|대표원장|부원장|원장|지도전문의|전문의|의사|레지던트|인턴)$"
+)
 
 # Detail page navigation: labels for "more" / "view detail" buttons
 DETAIL_MORE_LABELS = [

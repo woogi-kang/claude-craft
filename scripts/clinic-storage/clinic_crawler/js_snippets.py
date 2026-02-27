@@ -415,7 +415,7 @@ JS_FIND_DOCTOR_MENU = """
 
 JS_EXTRACT_DOCTORS = """
 () => {
-    const rolePattern = /원장|대표원장|부원장|전문의|의사|레지던트|인턴/;
+    const rolePattern = /수석원장|교육원장|진료원장|총괄원장|대표원장|부원장|원장|지도전문의|전문의|의사|레지던트|인턴/;
     const excludeRoles = ['간호사', '간호조무사', '피부관리사', '상담사', '코디네이터', '스텝', '직원'];
 
     // ─── Shared name-validation filters ───
@@ -443,6 +443,13 @@ JS_EXTRACT_DOCTORS = """
         '연신내', '왕십리', '홍대', '노원', '목동', '잠실',
         '신촌', '합정', '마포', '성수', '건대', '이대',
         '원노원', '마취통', '전화번',
+        // Round 2 false positives
+        '오랜', '서초', '지도', '유픽', '성장한',
+    ]);
+    // Given-name parts that are role titles or non-name words (checked as name[1:] for 3-char names)
+    const nonNameGiven = new Set([
+        '대표', '원장', '부장', '과장', '실장', '팀장', '소개', '안내', '의원',
+        '수석', '교육', '미국', '진료', '총괄', '연구', '센터',
     ]);
 
     function isPlausibleName(name) {
@@ -451,6 +458,8 @@ JS_EXTRACT_DOCTORS = """
         if (nonNameWords.some(s => name.includes(s))) return false;
         if (nonNameExact.has(name)) return false;
         if (!surnames.has(name[0])) return false;
+        // Reject 3-char names where given-name part is a role/title (e.g. "원수석" from "수석원장")
+        if (name.length === 3 && nonNameGiven.has(name.substring(1))) return false;
         // Reject truncated words (e.g. "경희의" from "경희의료원", "연세대" from "연세대학교")
         if (name.length === 3 && /[의과에적대는여]$/.test(name)) return false;
         // Reject garbled role prefix (e.g. "원장유" from "원장 유동...")
@@ -466,11 +475,11 @@ JS_EXTRACT_DOCTORS = """
 
         let role = 'specialist';
         // Forward: name + role (e.g. "김상우 대표원장")
-        const fwd = name.match(/^(.+?)\\s*(원장|대표원장|부원장|전문의|의사|레지던트|인턴)$/);
+        const fwd = name.match(/^(.+?)\\s*(수석원장|교육원장|진료원장|총괄원장|대표원장|부원장|원장|지도전문의|전문의|의사|레지던트|인턴)$/);
         if (fwd) { name = fwd[1].trim(); role = fwd[2]; }
         // Reverse: role + name (e.g. "대표원장 김상우")
         if (role === 'specialist') {
-            const rev = name.match(/^(대표원장|부원장|원장|전문의|의사)\\s+(.+)$/);
+            const rev = name.match(/^(수석원장|교육원장|진료원장|총괄원장|대표원장|부원장|원장|지도전문의|전문의|의사)\\s+(.+)$/);
             if (rev) { role = rev[1]; name = rev[2].trim(); }
         }
 
@@ -638,7 +647,7 @@ JS_EXTRACT_DOCTORS = """
 
         // First pass: collect all name positions for boundary calculation
         const namePositions = [];
-        const nameRoleRe = /([가-힣]{2,3})\\s*(대표원장|부원장|원장|전문의|의사)/g;
+        const nameRoleRe = /([가-힣]{2,3})\\s*(수석원장|교육원장|진료원장|총괄원장|대표원장|부원장|원장|지도전문의|전문의|의사)/g;
         let m;
         while ((m = nameRoleRe.exec(allText)) !== null) {
             const name = m[1].trim();
@@ -646,14 +655,14 @@ JS_EXTRACT_DOCTORS = """
             if (isCareerReference(m.index)) continue;
             namePositions.push({ name, role: m[2], pos: m.index, matchStr: name });
         }
-        const roleNameRe = /(대표원장|부원장|원장|전문의|의사)\\s+([가-힣]{2,3})/g;
+        const roleNameRe = /(수석원장|교육원장|진료원장|총괄원장|대표원장|부원장|원장|지도전문의|전문의|의사)\\s+([가-힣]{2,3})/g;
         while ((m = roleNameRe.exec(allText)) !== null) {
             const name = m[2].trim();
             if (!isPlausibleName(name) || namePositions.some(n => n.name === name)) continue;
             const namePos = m.index + m[0].indexOf(name);
             namePositions.push({ name, role: m[1], pos: namePos, matchStr: name });
         }
-        const spacedNameRoleRe = /([가-힣])\\s([가-힣])\\s?([가-힣])?\\s*(대표원장|부원장|원장|전문의|의사)/g;
+        const spacedNameRoleRe = /([가-힣])\\s([가-힣])\\s?([가-힣])?\\s*(수석원장|교육원장|진료원장|총괄원장|대표원장|부원장|원장|지도전문의|전문의|의사)/g;
         while ((m = spacedNameRoleRe.exec(allText)) !== null) {
             const name = (m[1] + m[2] + (m[3] || '')).trim();
             if (!isPlausibleName(name) || namePositions.some(n => n.name === name)) continue;
@@ -694,7 +703,7 @@ JS_EXTRACT_DOCTORS = """
             if (seen4.has(text)) continue;
             seen4.add(text);
             let role = 'specialist';
-            const roleMatch = context.match(/(대표원장|부원장|원장|전문의|의사)/);
+            const roleMatch = context.match(/(수석원장|교육원장|진료원장|총괄원장|대표원장|부원장|원장|지도전문의|전문의|의사)/);
             if (roleMatch) role = roleMatch[1];
             let photo = '';
             const img = parent?.querySelector('img');

@@ -128,6 +128,48 @@ class TestIsPlausibleKoreanName:
     def test_valid_name_홍대영(self):
         assert _is_plausible_korean_name("홍대영") is True
 
+    # -- Round 2: compound role fragments as given names --
+    def test_given_수석(self):
+        assert _is_plausible_korean_name("원수석") is False
+
+    def test_given_교육(self):
+        assert _is_plausible_korean_name("원교육") is False
+
+    def test_given_미국(self):
+        assert _is_plausible_korean_name("원미국") is False
+
+    def test_given_진료(self):
+        assert _is_plausible_korean_name("장진료") is False
+
+    def test_given_총괄(self):
+        assert _is_plausible_korean_name("김총괄") is False
+
+    def test_given_연구(self):
+        assert _is_plausible_korean_name("이연구") is False
+
+    def test_given_센터(self):
+        assert _is_plausible_korean_name("박센터") is False
+
+    # -- Round 2: marketing/brand/location false positives --
+    def test_noise_오랜(self):
+        assert _is_plausible_korean_name("오랜") is False
+
+    def test_noise_성장한(self):
+        assert _is_plausible_korean_name("성장한") is False
+
+    def test_noise_유픽(self):
+        assert _is_plausible_korean_name("유픽") is False
+
+    def test_location_서초(self):
+        assert _is_plausible_korean_name("서초") is False
+
+    def test_noise_지도(self):
+        assert _is_plausible_korean_name("지도") is False
+
+    # -- Round 2: adjective suffix --
+    def test_suffix_적은(self):
+        assert _is_plausible_korean_name("이적은") is False
+
     # -- None input --
     def test_none_rejected(self):
         assert _is_plausible_korean_name(None) is False
