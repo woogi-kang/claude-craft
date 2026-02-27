@@ -445,11 +445,16 @@ JS_EXTRACT_DOCTORS = """
         '원노원', '마취통', '전화번',
         // Round 2 false positives
         '오랜', '서초', '지도', '유픽', '성장한',
+        // Round 3: nouns, verbs, UI labels, honorifics, location/brand fragments
+        '신뢰', '전체', '원부', '강북삼', '오직', '고객님', '구분',
+        '연세청', '원신사', '신사', '주시면', '구주', '지여',
     ]);
     // Given-name parts that are role titles or non-name words (checked as name[1:] for 3-char names)
     const nonNameGiven = new Set([
         '대표', '원장', '부장', '과장', '실장', '팀장', '소개', '안내', '의원',
         '수석', '교육', '미국', '진료', '총괄', '연구', '센터',
+        // Round 3: location names from career text (e.g. "원신사" from "전) 신사 의원 원장")
+        '서초', '신사',
     ]);
 
     function isPlausibleName(name) {

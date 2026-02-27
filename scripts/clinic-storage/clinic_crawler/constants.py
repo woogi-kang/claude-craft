@@ -72,6 +72,8 @@ NON_NAME_SUFFIXES = {
     "없이", "취통",
     # Round 2: adjective suffix
     "적은",
+    # Round 3: verb/honorific/hospital-name suffixes
+    "시면", "객님", "북삼",
 }
 NON_NAME_WORDS = {
     "대표원", "원대표", "부대표", "병원장",
@@ -91,12 +93,17 @@ NON_NAME_WORDS = {
     "마취통", "장없이", "전화번",
     # Round 2: marketing/brand/location false positives
     "오랜", "성장한", "유픽", "서초", "지도",
+    # Round 3: nouns, verbs, UI labels, honorifics, location/brand fragments
+    "신뢰", "전체", "원부", "강북삼", "오직", "고객님", "구분",
+    "연세청", "원신사", "신사", "주시면", "구주", "지여",
 }
 # Title/role suffixes that are NOT given names (e.g. 정대표 = 정 + 대표)
 NON_NAME_GIVEN = {
     "대표", "원장", "부장", "과장", "실장", "팀장", "소개", "안내", "의원",
     # Round 2: compound role fragments (e.g. "원수석" from "수석원장")
     "수석", "교육", "미국", "진료", "총괄", "연구", "센터",
+    # Round 3: location names in career text (e.g. "원신사" from "전) 신사 ○○의원 원장")
+    "서초", "신사",
 }
 
 ROLE_RE = re.compile(

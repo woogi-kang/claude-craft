@@ -170,6 +170,53 @@ class TestIsPlausibleKoreanName:
     def test_suffix_적은(self):
         assert _is_plausible_korean_name("이적은") is False
 
+    # -- Round 3: verb forms, nouns, UI labels, honorifics --
+    def test_verb_주시면(self):
+        assert _is_plausible_korean_name("주시면") is False
+
+    def test_noun_신뢰(self):
+        assert _is_plausible_korean_name("신뢰") is False
+
+    def test_label_전체(self):
+        assert _is_plausible_korean_name("전체") is False
+
+    def test_label_구분(self):
+        assert _is_plausible_korean_name("구분") is False
+
+    def test_adverb_오직(self):
+        assert _is_plausible_korean_name("오직") is False
+
+    def test_honorific_고객님(self):
+        assert _is_plausible_korean_name("고객님") is False
+
+    def test_career_원신사(self):
+        assert _is_plausible_korean_name("원신사") is False
+
+    def test_career_원부(self):
+        assert _is_plausible_korean_name("원부") is False
+
+    def test_hospital_강북삼(self):
+        assert _is_plausible_korean_name("강북삼") is False
+
+    def test_brand_연세청(self):
+        assert _is_plausible_korean_name("연세청") is False
+
+    def test_location_신사(self):
+        assert _is_plausible_korean_name("신사") is False
+
+    def test_noise_구주(self):
+        assert _is_plausible_korean_name("구주") is False
+
+    def test_noise_지여(self):
+        assert _is_plausible_korean_name("지여") is False
+
+    # -- Round 3: given-name blocklist for location names --
+    def test_given_서초(self):
+        assert _is_plausible_korean_name("원서초") is False
+
+    def test_given_신사(self):
+        assert _is_plausible_korean_name("장신사") is False
+
     # -- None input --
     def test_none_rejected(self):
         assert _is_plausible_korean_name(None) is False
