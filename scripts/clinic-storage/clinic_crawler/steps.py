@@ -12,6 +12,7 @@ import os
 import re
 import shutil
 import subprocess
+import tempfile
 import time
 from dataclasses import dataclass, field
 from typing import Any
@@ -56,6 +57,7 @@ from clinic_crawler.ocr import (
     run_gemini_ocr,
 )
 from clinic_crawler.codex_validator import validate_doctors
+from clinic_crawler.llm_verifier import verify_doctors_with_llm
 from clinic_crawler.google_drive import (
     is_drive_enabled,
     keep_local_copy_after_upload,
@@ -65,6 +67,7 @@ from clinic_crawler.url_utils import classify_url, normalize_url
 
 
 _MAX_CREDENTIALS = 25  # A single doctor rarely has >25 real credentials
+_CHAIN_CAP = 20        # Max doctors per clinic; above this = cross-branch contamination
 
 
 def _dedup_cross_contaminated(doctors: list, place_id: str) -> list:
@@ -1068,6 +1071,23 @@ async def step_extract_doctors(
                             if is_plausible_korean_name(d.get("name", ""))
                         ]
                         if valid_doctors:
+                            # LLM verification: screenshot + candidates → Gemini
+                            verify_ss = tempfile.mktemp(
+                                suffix=".jpg", prefix="verify_",
+                            )
+                            try:
+                                await ctx.page.screenshot(
+                                    path=verify_ss, full_page=True,
+                                    type="jpeg", quality=60,
+                                )
+                                valid_doctors = verify_doctors_with_llm(
+                                    valid_doctors, verify_ss, ctx.place_id,
+                                )
+                                ocr_state.temp_screenshots.append(verify_ss)
+                            except Exception as e:
+                                log(f"[{ctx.place_id}] LLM verify screenshot "
+                                    f"error: {e}")
+                        if valid_doctors:
                             # Codex CLI validation: filter noise, check real credentials
                             validated, any_valid = validate_doctors(
                                 valid_doctors, ctx.place_id, ctx.name,
@@ -1091,7 +1111,13 @@ async def step_extract_doctors(
                                     f"{cred_count} with credentials "
                                     f"from {cand_source}")
                                 # Track best result across all candidates
-                                if cred_count > best_valid_count:
+                                # Skip results exceeding chain cap (cross-branch)
+                                if len(dom_result) > _CHAIN_CAP:
+                                    log(f"[{ctx.place_id}] Skipping "
+                                        f"{cand_source}: {len(dom_result)} "
+                                        f"doctors exceeds chain cap "
+                                        f"{_CHAIN_CAP}")
+                                elif cred_count > best_valid_count:
                                     best_doctors = dom_result
                                     best_valid_count = cred_count
                                     best_source = f"dom:{cand_source}"
@@ -1201,7 +1227,12 @@ async def step_extract_doctors(
                             log(f"[{ctx.place_id}] OCR: {added} "
                                 f"doctors, {cred_count} with "
                                 f"credentials from {cand_source}")
-                            if cred_count > best_valid_count:
+                            if len(ocr_doctors_tmp) > _CHAIN_CAP:
+                                log(f"[{ctx.place_id}] Skipping "
+                                    f"OCR {cand_source}: "
+                                    f"{len(ocr_doctors_tmp)} doctors "
+                                    f"exceeds chain cap {_CHAIN_CAP}")
+                            elif cred_count > best_valid_count:
                                 best_doctors = ocr_doctors_tmp
                                 best_valid_count = cred_count
                                 best_source = f"ocr:{cand_source}"
@@ -1358,6 +1389,23 @@ async def step_extract_doctors(
                 log(f"[{ctx.place_id}] Deduplicated: "
                     f"{len(ctx.result['doctors'])} -> {len(unique_docs)}")
             ctx.result["doctors"] = unique_docs
+
+        # Chain hospital cap: if >_CHAIN_CAP doctors after all filtering,
+        # likely cross-branch contamination — flag and truncate
+        if len(ctx.result["doctors"]) > _CHAIN_CAP:
+            log(f"[{ctx.place_id}] Chain cap: {len(ctx.result['doctors'])} "
+                f"doctors exceeds {_CHAIN_CAP}, likely cross-branch "
+                f"contamination. Clearing doctor list.")
+            ctx.result["errors"].append({
+                "type": "chain_contamination",
+                "message": (
+                    f"Extracted {len(ctx.result['doctors'])} doctors, "
+                    f"exceeds chain cap {_CHAIN_CAP}. "
+                    f"Likely cross-branch data."
+                ),
+                "step": "doctor_extract", "retryable": False,
+            })
+            ctx.result["doctors"] = []
 
         log(f"[{ctx.place_id}] Doctor extraction complete: "
             f"{len(ctx.result['doctors'])} doctors")

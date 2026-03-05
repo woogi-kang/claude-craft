@@ -2,7 +2,35 @@
 
 Each constant is a string containing a JavaScript function body.
 These are used by both MCP mode (Mode 1) and Python Playwright mode (Mode 2).
+
+Name-validation constants (surnames, blocklists, role patterns) are injected
+from clinic_crawler.constants via {{PLACEHOLDER}} template markers to maintain
+a single source of truth in Python.
 """
+
+import json
+
+from clinic_crawler.constants import (
+    KOREAN_SURNAMES,
+    NON_NAME_GIVEN,
+    NON_NAME_SUBSTRINGS,
+    NON_NAME_WORDS,
+    ROLE_EXTRACT_STR,
+    ROLE_PATTERN_STR,
+)
+
+
+def _build_js(template: str) -> str:
+    """Replace {{PLACEHOLDER}} markers with values from constants.py."""
+    return (
+        template
+        .replace("{{ROLE_PATTERN}}", ROLE_PATTERN_STR)
+        .replace("{{ROLE_EXTRACT}}", ROLE_EXTRACT_STR)
+        .replace("{{SURNAMES}}", "".join(sorted(KOREAN_SURNAMES)))
+        .replace("{{NON_NAME_EXACT_JSON}}", json.dumps(sorted(NON_NAME_WORDS), ensure_ascii=False))
+        .replace("{{NON_NAME_GIVEN_JSON}}", json.dumps(sorted(NON_NAME_GIVEN), ensure_ascii=False))
+        .replace("{{NON_NAME_SUBSTRINGS_JSON}}", json.dumps(sorted(NON_NAME_SUBSTRINGS), ensure_ascii=False))
+    )
 
 JS_SOCIAL_EXTRACT = """
 () => {
@@ -413,52 +441,23 @@ JS_FIND_DOCTOR_MENU = """
 }
 """
 
-JS_EXTRACT_DOCTORS = """
+_JS_EXTRACT_DOCTORS_TEMPLATE = """
 () => {
-    const rolePattern = /수석원장|교육원장|진료원장|총괄원장|대표원장|부원장|원장|지도전문의|전문의|의사|레지던트|인턴/;
+    const rolePattern = /{{ROLE_PATTERN}}/;
+    const roleExtractRe = new RegExp('{{ROLE_EXTRACT}}');
     const excludeRoles = ['간호사', '간호조무사', '피부관리사', '상담사', '코디네이터', '스텝', '직원'];
 
-    // ─── Shared name-validation filters ───
-    const nonNameWords = [
-        '병원', '의원', '클리닉', '외과', '내과', '의과', '센터',
-        '학회', '학교', '대학', '약국', '닥터', '학과', '피부',
-        '점', '위원', '회원', '전문가', '구매', '상식', '활동',
-        '협력', '총괄', '증서', '인후과', '의료', '연구',
-        '서울', '인터', '채용', '공지', '조회', '철산',
-        '미용', '홍보', '오늘', '강사', '소개', '마사',
-    ];
-    const surnames = new Set(
-        '김이박최정강조윤장임한오서신권황안송류전홍유고문양손배백허남심노하곽성차주우구민진지엄채원천방공현함변추도소석선설마길연위표명기반왕금옥육인맹제모탁국여어은편빈예봉경태피감복'.split('')
-    );
-    const nonNameExact = new Set([
-        '대표', '멤버', '보유', '대한', '의학', '교육', '운영', '학력',
-        '소개', '경력', '인사', '선생', '안내', '예약', '진료',
-        '진단', '보험', '도입', '경험', '인증', '소속',
-        // Common non-name words that pass surname check
-        '원장', '전담', '기기', '최신', '어떤', '최애', '주요',
-        '안과', '여의사', '주름', '노하우', '원소개', '이퓨어',
-        '우아성', '박훤함', '마인피', '하나이',
-        // Location names (chain hospital branches)
-        '강남', '천호', '하남', '구리', '강서', '송파', '구로',
-        '연신내', '왕십리', '홍대', '노원', '목동', '잠실',
-        '신촌', '합정', '마포', '성수', '건대', '이대',
-        '원노원', '마취통', '전화번',
-        // Round 2 false positives
-        '오랜', '서초', '지도', '유픽', '성장한',
-        // Round 3: nouns, verbs, UI labels, honorifics, location/brand fragments
-        '신뢰', '전체', '원부', '강북삼', '오직', '고객님', '구분',
-        '연세청', '원신사', '신사', '주시면', '구주', '지여',
-    ]);
-    // Given-name parts that are role titles or non-name words (checked as name[1:] for 3-char names)
-    const nonNameGiven = new Set([
-        '대표', '원장', '부장', '과장', '실장', '팀장', '소개', '안내', '의원',
-        '수석', '교육', '미국', '진료', '총괄', '연구', '센터',
-        // Round 3: location names from career text (e.g. "원신사" from "전) 신사 의원 원장")
-        '서초', '신사',
-    ]);
+    // ─── Shared name-validation filters (injected from constants.py) ───
+    const nonNameWords = {{NON_NAME_SUBSTRINGS_JSON}};
+    const surnames = new Set('{{SURNAMES}}'.split(''));
+    const nonNameExact = new Set({{NON_NAME_EXACT_JSON}});
+    const nonNameGiven = new Set({{NON_NAME_GIVEN_JSON}});
+
+    // Profile credential pattern (shared by card extraction and context extraction)
+    const profileRe = /대학|학위|졸업|수료|학사|석사|박사|의학전문대|병원|의원|클리닉|근무|전공의|수련|센터|前|전임|과장|외래|파견|연구원|펠로우|fellow|교수|조교수|부교수|강사|정회원|학회|자격|인증|협회|전문의|수상|학술|논문|저서|특허/;
 
     function isPlausibleName(name) {
-        if (!name || name.length < 2 || name.length > 3) return false;
+        if (!name || name.length < 2 || name.length > 4) return false;
         if (excludeRoles.some(r => name.includes(r))) return false;
         if (nonNameWords.some(s => name.includes(s))) return false;
         if (nonNameExact.has(name)) return false;
@@ -480,11 +479,11 @@ JS_EXTRACT_DOCTORS = """
 
         let role = 'specialist';
         // Forward: name + role (e.g. "김상우 대표원장")
-        const fwd = name.match(/^(.+?)\\s*(수석원장|교육원장|진료원장|총괄원장|대표원장|부원장|원장|지도전문의|전문의|의사|레지던트|인턴)$/);
+        const fwd = name.match(new RegExp('^(.+?)\\\\s*(' + rolePattern.source + ')$'));
         if (fwd) { name = fwd[1].trim(); role = fwd[2]; }
         // Reverse: role + name (e.g. "대표원장 김상우")
         if (role === 'specialist') {
-            const rev = name.match(/^(수석원장|교육원장|진료원장|총괄원장|대표원장|부원장|원장|지도전문의|전문의|의사)\\s+(.+)$/);
+            const rev = name.match(new RegExp('^(' + roleExtractRe.source + ')\\\\s+(.+)$'));
             if (rev) { role = rev[1]; name = rev[2].trim(); }
         }
 
@@ -539,7 +538,6 @@ JS_EXTRACT_DOCTORS = """
         }
 
         // Generic list extraction - only add items matching known profile patterns (no catch-all)
-        const profileRe = /대학|학위|졸업|수료|학사|석사|박사|의학전문대|병원|의원|클리닉|근무|전공의|수련|센터|前|전임|과장|외래|파견|연구원|펠로우|fellow|교수|조교수|부교수|강사|정회원|학회|자격|인증|협회|전문의|수상|학술|논문|저서|특허/;
         const lists = card.querySelectorAll('ul, ol, .career, .credentials, .history, [class*="career"], [class*="credential"]');
         lists.forEach(list => {
             const items = list.querySelectorAll('li, p, span, dd');
@@ -565,7 +563,6 @@ JS_EXTRACT_DOCTORS = """
 
     // ─── Text context extraction helper ───
     const ctxNoiseRe = /진료시간|진료안내|Copyright|사업자등록|ALL RIGHTS|TEL\\s*:|FAX\\s*:|오시는\\s*길|예약문의|상담전화|찾아오시|개인정보|이용약관|네이버|블로그|인스타|카카오|상호명\\s*:|대표자\\s*:|주소\\s*:|의료진을\\s*소개|\\d+년\\s*(경력|이상|노하우)|시술노하우|만족도|최선을|고객님|환자분|마음으로|정성을/;
-    const ctxProfileRe = /대학|학위|졸업|수료|학사|석사|박사|의학전문대|병원|의원|클리닉|근무|전공의|수련|센터|前|전임|과장|외래|파견|연구원|펠로우|fellow|교수|조교수|부교수|강사|정회원|학회|자격|인증|협회|전문의|수상|학술|논문|저서|특허/;
     function extractContext(name, allText, endBound, startPos) {
         const idx = startPos != null ? startPos : allText.indexOf(name);
         if (idx === -1) return { profile_raw: [] };
@@ -575,7 +572,7 @@ JS_EXTRACT_DOCTORS = """
         const items = new Set();
         for (const line of lines) {
             if (ctxNoiseRe.test(line)) continue;
-            if (ctxProfileRe.test(line)) items.add(line.replace(/^[ㆍ·•\\-\\s]+/, ''));
+            if (profileRe.test(line)) items.add(line.replace(/^[ㆍ·•\\-\\s]+/, ''));
         }
         return { profile_raw: [...items] };
     }
@@ -652,7 +649,7 @@ JS_EXTRACT_DOCTORS = """
 
         // First pass: collect all name positions for boundary calculation
         const namePositions = [];
-        const nameRoleRe = /([가-힣]{2,3})\\s*(수석원장|교육원장|진료원장|총괄원장|대표원장|부원장|원장|지도전문의|전문의|의사)/g;
+        const nameRoleRe = new RegExp('([가-힣]{2,4})\\\\s*(' + roleExtractRe.source + ')', 'g');
         let m;
         while ((m = nameRoleRe.exec(allText)) !== null) {
             const name = m[1].trim();
@@ -660,14 +657,14 @@ JS_EXTRACT_DOCTORS = """
             if (isCareerReference(m.index)) continue;
             namePositions.push({ name, role: m[2], pos: m.index, matchStr: name });
         }
-        const roleNameRe = /(수석원장|교육원장|진료원장|총괄원장|대표원장|부원장|원장|지도전문의|전문의|의사)\\s+([가-힣]{2,3})/g;
+        const roleNameRe = new RegExp('(' + roleExtractRe.source + ')\\\\s+([가-힣]{2,4})', 'g');
         while ((m = roleNameRe.exec(allText)) !== null) {
             const name = m[2].trim();
             if (!isPlausibleName(name) || namePositions.some(n => n.name === name)) continue;
             const namePos = m.index + m[0].indexOf(name);
             namePositions.push({ name, role: m[1], pos: namePos, matchStr: name });
         }
-        const spacedNameRoleRe = /([가-힣])\\s([가-힣])\\s?([가-힣])?\\s*(수석원장|교육원장|진료원장|총괄원장|대표원장|부원장|원장|지도전문의|전문의|의사)/g;
+        const spacedNameRoleRe = new RegExp('([가-힣])\\\\s([가-힣])\\\\s?([가-힣])?\\\\s*(' + roleExtractRe.source + ')', 'g');
         while ((m = spacedNameRoleRe.exec(allText)) !== null) {
             const name = (m[1] + m[2] + (m[3] || '')).trim();
             if (!isPlausibleName(name) || namePositions.some(n => n.name === name)) continue;
@@ -708,7 +705,7 @@ JS_EXTRACT_DOCTORS = """
             if (seen4.has(text)) continue;
             seen4.add(text);
             let role = 'specialist';
-            const roleMatch = context.match(/(수석원장|교육원장|진료원장|총괄원장|대표원장|부원장|원장|지도전문의|전문의|의사)/);
+            const roleMatch = context.match(roleExtractRe);
             if (roleMatch) role = roleMatch[1];
             let photo = '';
             const img = parent?.querySelector('img');
@@ -821,6 +818,8 @@ JS_EXTRACT_DOCTORS = """
 }
 """
 
+JS_EXTRACT_DOCTORS = _build_js(_JS_EXTRACT_DOCTORS_TEMPLATE)
+
 JS_CHECK_IMAGE_BASED = """
 () => {
     // Count text nodes with doctor-related content
@@ -830,7 +829,7 @@ JS_CHECK_IMAGE_BASED = """
     const textNodes = [];
     while (walker.nextNode()) {
         const text = walker.currentNode.textContent.trim();
-        if (text.length >= 2 && /원장|대표원장|부원장|전문의|의사|학력|경력|약력|자격|졸업|수료|대학원|대학교|정회원|학회|인턴|레지던트|수련|피부과/.test(text)) {
+        if (text.length >= 2 && /수석원장|교육원장|진료원장|총괄원장|대표원장|부원장|원장|지도전문의|전문의|의사|학력|경력|약력|자격|졸업|수료|대학원|대학교|정회원|학회|인턴|레지던트|수련|피부과/.test(text)) {
             textNodes.push(text);
         }
     }
