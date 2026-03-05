@@ -163,3 +163,6 @@ mcp.json
 
 # Clinic crawler temp files
 scripts/clinic-storage/data/
+data/clinic-results/screenshots/
+data/clinic-results/exports/old_snapshot_round*.json
+data/clinic-results/exports/validation_report_*.md
