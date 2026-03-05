@@ -1,6 +1,6 @@
 """Codex CLI-based doctor profile validator.
 
-Calls `codex exec` with gpt-5.3-codex to filter noise from
+Calls `codex exec` with gpt-5.2 to filter noise from
 extracted profile_raw arrays, judge whether a page actually
 contains real doctor credential information, and filter doctors
 by branch for chain hospitals.
@@ -18,7 +18,7 @@ from .korean_name import is_plausible_korean_name
 from .log import log
 
 # Codex CLI settings (configurable via env vars)
-CODEX_MODEL = os.environ.get("CLINIC_CODEX_MODEL", "gpt-5.3-codex-spark")
+CODEX_MODEL = os.environ.get("CLINIC_CODEX_MODEL", "gpt-5.2")
 CODEX_REASONING = os.environ.get("CLINIC_CODEX_REASONING", "xhigh")
 CODEX_TIMEOUT = int(os.environ.get("CLINIC_CODEX_TIMEOUT", "120"))
 
