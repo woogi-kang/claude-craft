@@ -1,7 +1,7 @@
-"""LLM-based doctor verification using Gemini Flash.
+"""LLM-based doctor verification using Codex CLI (GPT-5.2).
 
 After DOM extraction generates candidate doctors, this module sends the
-candidate list + page screenshot to Gemini for visual verification.
+candidate list + page screenshot to Codex for visual verification.
 The LLM sees the actual page and confirms which names are real doctors
 vs. noise (navigation text, marketing copy, credential fragments).
 
@@ -17,8 +17,9 @@ import tempfile
 
 from .log import log
 
-GEMINI_MODEL = os.environ.get("CLINIC_GEMINI_MODEL", "gemini-3-flash-preview")
-GEMINI_TIMEOUT = int(os.environ.get("CLINIC_GEMINI_VERIFY_TIMEOUT", "60"))
+CODEX_MODEL = os.environ.get("CLINIC_CODEX_MODEL", "gpt-5.2")
+CODEX_REASONING = os.environ.get("CLINIC_CODEX_REASONING", "xhigh")
+CODEX_TIMEOUT = int(os.environ.get("CLINIC_CODEX_VERIFY_TIMEOUT", "120"))
 
 VERIFY_PROMPT = """\
 You are a Korean dermatology clinic data validator.
@@ -55,7 +56,7 @@ def verify_doctors_with_llm(
     screenshot_path: str,
     place_id: str,
 ) -> list:
-    """Verify DOM-extracted doctor candidates using Gemini Flash + screenshot.
+    """Verify DOM-extracted doctor candidates using Codex CLI (GPT-5.2) + screenshot.
 
     Args:
         candidates: List of doctor dicts from DOM extraction.
@@ -84,15 +85,17 @@ def verify_doctors_with_llm(
     )
 
     try:
-        image_dir = os.path.dirname(screenshot_path)
         result = subprocess.run(
-            ["gemini", "-m", GEMINI_MODEL, "-p", prompt,
-             "-y", "--include-directories", image_dir],
-            capture_output=True, text=True, timeout=GEMINI_TIMEOUT,
+            ["codex", "exec",
+             "-m", CODEX_MODEL,
+             "-c", f'model_reasoning_effort="{CODEX_REASONING}"',
+             "-i", screenshot_path,
+             prompt],
+            capture_output=True, text=True, timeout=CODEX_TIMEOUT,
         )
 
         if result.returncode != 0:
-            log(f"[{place_id}] LLM verify: Gemini error, keeping all candidates")
+            log(f"[{place_id}] LLM verify: Codex error, keeping all candidates")
             return candidates
 
         verified = _parse_verification(result.stdout)
@@ -145,7 +148,7 @@ def verify_doctors_with_llm(
         return filtered
 
     except subprocess.TimeoutExpired:
-        log(f"[{place_id}] LLM verify: timeout ({GEMINI_TIMEOUT}s), "
+        log(f"[{place_id}] LLM verify: timeout ({CODEX_TIMEOUT}s), "
             f"keeping all candidates")
         return candidates
     except Exception as e:
@@ -154,7 +157,7 @@ def verify_doctors_with_llm(
 
 
 def _parse_verification(text: str) -> list:
-    """Parse JSON array from Gemini verification output."""
+    """Parse JSON array from Codex verification output."""
     if not text or not text.strip():
         return []
 
