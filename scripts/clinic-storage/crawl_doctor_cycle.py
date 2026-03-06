@@ -133,6 +133,7 @@ Workflow:
     parser.add_argument("--reset", action="store_true", help="Reset DB and pre-populate from CSV")
     parser.add_argument("--no-retry", action="store_true", help="Skip auto-retry of suspicious hospitals")
     parser.add_argument("--recrawl", help="Comma-separated place IDs to force re-crawl")
+    parser.add_argument("--district", help="Filter by district (e.g. 강남구, 서초구)")
     parser.add_argument("--dry-run", action="store_true", help="Preview next batch without crawling")
     parser.add_argument("--export-only", action="store_true", help="Only export CSV, no crawling")
     args = parser.parse_args()
@@ -187,6 +188,14 @@ Workflow:
         log("Exporting flat CSV...")
         export_unified_csv(args.db, args.csv, CSV_OUTPUT)
         sys.exit(0)
+
+    # Filter by district if specified
+    if args.district:
+        all_hospitals = [
+            h for h in all_hospitals
+            if args.district in (h.get("sggu", "") or h.get("address", ""))
+        ]
+        log(f"Filtered to {args.district}: {len(all_hospitals)} hospitals")
 
     # Normal batch mode: filter out already-crawled
     hospitals = filter_hospitals(
