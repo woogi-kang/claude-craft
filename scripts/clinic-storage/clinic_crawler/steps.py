@@ -709,6 +709,78 @@ async def step_collect_candidates(ctx: CrawlContext) -> list:
     except Exception:
         pass
 
+    # Step 5b-3: URL pattern probing (for image-based nav sites)
+    # Try common doctor page URL patterns when menu scanning found nothing.
+    if not candidate_urls:
+        log(f"[{ctx.place_id}] No menu links found, trying URL pattern probing")
+        probe_paths = [
+            # Korean patterns (most specific first)
+            "/의료진", "/원장소개", "/전문의", "/의료진소개",
+            # Common CMS patterns
+            "/info/won.php", "/info/doctor.php",
+            "/sub.html?pageCode=2",
+            "/doctor", "/staff",
+            "/introduce/doctor", "/about/doctor",
+            # Korean hospital CMS patterns
+            "/kor/info/won.php", "/kor/sub/doctor",
+            "/bbs/content.php?co_id=doctor",
+            "/sub/doctor", "/sub/staff",
+        ]
+        # Track text lengths to detect catch-all routing (SPA/WordPress)
+        probe_text_lens = []
+        probe_hits = []
+        main_url_norm = ctx.url.rstrip("/")
+        _JS_HAS_DOCTOR_CONTENT = (
+            "() => /원장|전문의|의료진|의사|대표원장|부원장|피부과|director|doctor|staff|physician/i"
+            ".test(document.body?.innerText || '')"
+        )
+        for probe_path in probe_paths:
+            if len(probe_hits) >= 3:
+                break  # Max 3 probe candidates
+            try:
+                probe_url = urljoin(ctx.base_url + "/", probe_path)
+                resp = await ctx.page.goto(
+                    probe_url, wait_until="domcontentloaded", timeout=8000,
+                )
+                if resp and resp.status == 200:
+                    final_url = ctx.page.url.rstrip("/")
+                    # Skip if redirected back to main page
+                    if final_url == main_url_norm:
+                        continue
+                    # Skip if final URL already seen
+                    if final_url in {u.rstrip("/") for u, _ in probe_hits}:
+                        continue
+                    text_len = await ctx.page.evaluate(
+                        "() => (document.body?.innerText || '').length",
+                    )
+                    if text_len < 100:
+                        continue
+                    # Detect catch-all routing: if 3+ probes return
+                    # same text length, it's a SPA returning same page
+                    probe_text_lens.append(text_len)
+                    if len(probe_text_lens) >= 3:
+                        avg = sum(probe_text_lens) / len(probe_text_lens)
+                        if all(abs(tl - avg) < avg * 0.1
+                               for tl in probe_text_lens):
+                            log(f"[{ctx.place_id}] Probe: catch-all "
+                                f"routing detected (all ~{int(avg)} "
+                                f"chars), stopping")
+                            probe_hits.clear()
+                            break
+                    # Check if page has doctor-related content
+                    has_doctor = await ctx.page.evaluate(
+                        _JS_HAS_DOCTOR_CONTENT,
+                    )
+                    if has_doctor:
+                        probe_hits.append(
+                            (probe_url, f"probe:{probe_path}"),
+                        )
+                        log(f"[{ctx.place_id}] Probe hit: {probe_path} "
+                            f"({text_len} chars, doctor content found)")
+            except Exception:
+                pass
+        candidate_urls.extend(probe_hits)
+
     # Step 5-iframe: Handle frame-based sites (e.g. 뉴케이의원)
     # When the main page has very little text and uses frames/iframes,
     # navigate into the frame content and re-scan for doctor menu links.

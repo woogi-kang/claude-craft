@@ -33,7 +33,7 @@ VALID_PLATFORMS = {
 VALID_STATUSES = {
     "success", "partial", "failed", "archived",
     "requires_manual", "age_restricted", "unsupported",
-    "encoding_error", "robots_blocked",
+    "encoding_error", "robots_blocked", "empty", "needs_review",
 }
 
 DB_DEFAULT = str(Path(__file__).resolve().parent.parent.parent / "data" / "clinic-results" / "hospitals.db")
@@ -48,6 +48,11 @@ CREATE TABLE IF NOT EXISTS hospitals (
     category TEXT,
     phone TEXT,
     address TEXT,
+    sido TEXT,
+    sggu TEXT,
+    dong TEXT,
+    region TEXT,
+    chain_group TEXT,
     status TEXT DEFAULT 'pending',
     cms_platform TEXT,
     doctor_page_exists INTEGER,
@@ -201,6 +206,11 @@ def save_result(db_path: str, data: dict) -> None:
     category = data.get("category", "")
     phone = data.get("phone", "")
     address = _normalize(data.get("address", ""))
+    sido = data.get("sido", "")
+    sggu = data.get("sggu", "")
+    dong = data.get("dong", "")
+    region = data.get("region", "")
+    chain_group = data.get("chain_group", "")
     status = data.get("status", "success")
     if status not in VALID_STATUSES:
         print(f"Warning: Unknown status '{status}', defaulting to 'partial'", file=sys.stderr)
@@ -233,17 +243,27 @@ def save_result(db_path: str, data: dict) -> None:
         doctor_page_exists = data.get("doctor_page_exists")
 
         conn.execute(
-            """INSERT INTO hospitals (place_id, csv_no, name, url, final_url, category, phone, address, status, cms_platform, schema_version, doctor_page_exists, crawled_at, updated_at)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """INSERT INTO hospitals (place_id, csv_no, name, url, final_url, category, phone, address,
+                 sido, sggu, dong, region, chain_group,
+                 status, cms_platform, schema_version, doctor_page_exists, crawled_at, updated_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                ON CONFLICT(place_id) DO UPDATE SET
                  csv_no=excluded.csv_no, name=excluded.name, url=excluded.url,
                  final_url=excluded.final_url, category=excluded.category,
-                 phone=excluded.phone, address=excluded.address,
+                 phone=excluded.phone,
+                 address=COALESCE(NULLIF(excluded.address,''), hospitals.address),
+                 sido=COALESCE(NULLIF(excluded.sido,''), hospitals.sido),
+                 sggu=COALESCE(NULLIF(excluded.sggu,''), hospitals.sggu),
+                 dong=COALESCE(NULLIF(excluded.dong,''), hospitals.dong),
+                 region=COALESCE(NULLIF(excluded.region,''), hospitals.region),
+                 chain_group=COALESCE(NULLIF(excluded.chain_group,''), hospitals.chain_group),
                  status=excluded.status, cms_platform=excluded.cms_platform,
                  schema_version=excluded.schema_version,
                  doctor_page_exists=excluded.doctor_page_exists,
                  crawled_at=excluded.crawled_at, updated_at=excluded.updated_at""",
-            (place_id, csv_no, name, url, final_url, category, phone, address, new_status, cms_platform, schema_version, doctor_page_exists, now, now),
+            (place_id, csv_no, name, url, final_url, category, phone, address,
+             sido, sggu, dong, region, chain_group,
+             new_status, cms_platform, schema_version, doctor_page_exists, now, now),
         )
 
         # Remove old social channels then insert new
@@ -330,6 +350,61 @@ def save_result(db_path: str, data: dict) -> None:
     finally:
         conn.close()
 
+
+def reset_db(db_path: str) -> None:
+    """Drop all tables and recreate with current schema, then vacuum."""
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    try:
+        conn.execute("DROP TABLE IF EXISTS crawl_errors")
+        conn.execute("DROP TABLE IF EXISTS doctors")
+        conn.execute("DROP TABLE IF EXISTS social_channels")
+        conn.execute("DROP TABLE IF EXISTS hospitals")
+        conn.commit()
+        conn.executescript(SCHEMA_SQL)
+        conn.execute("VACUUM")
+        print(f"Database reset: all tables dropped and recreated -> {db_path}")
+    finally:
+        conn.close()
+
+
+def prepopulate_hospitals(db_path: str, csv_path: str) -> int:
+    """Pre-populate hospitals table from hospitals_with_address.csv.
+
+    Inserts rows with status='pending' so the crawl pipeline knows what to process.
+    Returns the number of rows inserted.
+    """
+    conn = get_db(db_path)
+    count = 0
+    with open(csv_path, encoding="utf-8-sig") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            clean = {k.strip(): (v.strip() if v else "") for k, v in row.items() if k}
+            place_id = clean.get("naver_place_id", "")
+            if not place_id:
+                continue
+            conn.execute(
+                """INSERT OR IGNORE INTO hospitals
+                   (place_id, csv_no, name, url, address, sido, sggu, dong, region, chain_group, status)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')""",
+                (
+                    place_id,
+                    clean.get("id", ""),
+                    clean.get("name", ""),
+                    clean.get("website", ""),
+                    clean.get("address", ""),
+                    clean.get("sido", ""),
+                    clean.get("sggu", ""),
+                    clean.get("dong", ""),
+                    clean.get("region", ""),
+                    clean.get("chain_group", ""),
+                ),
+            )
+            count += 1
+    conn.commit()
+    conn.close()
+    print(f"Pre-populated {count} hospitals from {csv_path}")
+    return count
 
 
 def show_stats(db_path: str) -> None:
@@ -585,12 +660,13 @@ def _normalize_platform(name: str) -> str:
 
 
 def export_unified_csv(db_path: str, csv_source: str, output_path: str) -> None:
-    """Export a single unified CSV merging place_data CSV + crawl DB.
+    """Export a single unified CSV: one row per hospital (flat).
 
-    One row per doctor (expanded). Hospitals with no doctors get one row.
-    All hospitals from csv_source are included (uncrawled = not_crawled).
+    Doctor info is aggregated per hospital (count, names, details, has_credentials).
+    All hospitals from the DB are included; csv_source provides fallback data.
+    Address columns (sido, sggu, dong) are included for area filtering.
 
-    Column order: identification -> contact -> social channels -> doctor -> meta
+    Column order: identification -> address -> social channels -> doctor aggregate -> meta
     """
     import csv as csv_mod
 
@@ -598,24 +674,29 @@ def export_unified_csv(db_path: str, csv_source: str, output_path: str) -> None:
     out = Path(output_path)
     out.parent.mkdir(parents=True, exist_ok=True)
 
-    # Load source CSV (place_data.csv with place_id)
+    # Load source CSV for fallback data
     source_hospitals = {}
     with open(csv_source, encoding="utf-8-sig") as f:
         reader = csv_mod.DictReader(f)
         for row in reader:
             clean = {k.strip(): (v.strip() if v else "") for k, v in row.items() if k}
-            pid = clean.get("place_id", "")
+            pid = clean.get("naver_place_id", "") or clean.get("place_id", "")
             if not pid:
                 continue
             source_hospitals[pid] = {
-                "csv_no": clean.get("csv_no", ""),
-                "name": clean.get("naver_name", ""),
+                "csv_no": clean.get("id", "") or clean.get("csv_no", ""),
+                "name": clean.get("name", "") or clean.get("naver_name", ""),
                 "phone": clean.get("phone", ""),
-                "address": clean.get("naver_address", ""),
-                "website": clean.get("homepage_url", ""),
+                "address": clean.get("address", "") or clean.get("naver_address", ""),
+                "website": clean.get("website", "") or clean.get("homepage_url", ""),
+                "sido": clean.get("sido", ""),
+                "sggu": clean.get("sggu", ""),
+                "dong": clean.get("dong", ""),
+                "region": clean.get("region", ""),
+                "chain_group": clean.get("chain_group", ""),
             }
 
-    # Load crawl results from DB
+    # Load all hospitals from DB
     crawled = {}
     for row in conn.execute("SELECT * FROM hospitals").fetchall():
         crawled[row["place_id"]] = dict(row)
@@ -627,7 +708,6 @@ def export_unified_csv(db_path: str, csv_source: str, output_path: str) -> None:
         platform = _normalize_platform(row["platform"])
         if pid not in social_map:
             social_map[pid] = {}
-        # Keep first URL per platform (de-dup)
         if platform not in social_map[pid]:
             social_map[pid][platform] = row["url"]
 
@@ -641,24 +721,22 @@ def export_unified_csv(db_path: str, csv_source: str, output_path: str) -> None:
         doctor_map[pid].append({
             "name": row["name"] or "",
             "role": row["role"] or "",
-            "profile_raw": " | ".join(str(x) for x in profile_raw) if profile_raw else "",
-            "source_url": row["source_url"] or "",
-            "screenshot_path": row["screenshot_path"] or "",
-            "ocr": "OCR" if row["ocr_source"] else "DOM",
+            "profile_raw": profile_raw,
         })
 
-    # Build unified CSV
+    # Merge all place_ids from both sources
+    all_pids = set(source_hospitals.keys()) | set(crawled.keys())
+
+    # Build flat CSV headers
     headers = [
         # Identification
         "place_id", "csv_no", "name", "status",
-        # Contact
-        "phone", "address",
+        # Address
+        "address", "sido", "sggu", "dong", "region", "chain_group",
         # Social channels (ordered)
         *[p.lower() for p in _SOCIAL_COLUMNS],
-        # Doctor info (expanded)
-        "doctor_count", "doctor_name", "doctor_role",
-        "doctor_profile_raw", "doctor_source_url",
-        "doctor_screenshot_path", "doctor_extraction",
+        # Doctor info (aggregated)
+        "doctor_count", "doctor_names", "doctor_details", "has_credentials",
         # Meta
         "website", "cms", "crawled_at",
     ]
@@ -668,69 +746,67 @@ def export_unified_csv(db_path: str, csv_source: str, output_path: str) -> None:
         writer = csv_mod.writer(f)
         writer.writerow(headers)
 
-        for pid in sorted(source_hospitals.keys()):
-            src = source_hospitals[pid]
+        for pid in sorted(all_pids):
+            src = source_hospitals.get(pid, {})
             crawl = crawled.get(pid, {})
             socials = social_map.get(pid, {})
             doctors = doctor_map.get(pid, [])
 
             # Determine status
-            if pid in crawled:
-                status = crawl.get("status", "unknown")
-            else:
-                status = "not_crawled"
+            status = crawl.get("status", "not_crawled")
 
-            # Base row (everything except doctor fields)
-            base = [
-                pid,
-                src["csv_no"],
-                src["name"],
-                status,
-                src["phone"],
-                src["address"],
+            # Use DB values first, fallback to source CSV
+            name = crawl.get("name") or src.get("name", "")
+            csv_no = crawl.get("csv_no") or src.get("csv_no", "")
+            address = crawl.get("address") or src.get("address", "")
+            sido = crawl.get("sido") or src.get("sido", "")
+            sggu = crawl.get("sggu") or src.get("sggu", "")
+            dong = crawl.get("dong") or src.get("dong", "")
+            region_val = crawl.get("region") or src.get("region", "")
+            chain_group = crawl.get("chain_group") or src.get("chain_group", "")
+            website = crawl.get("url") or src.get("website", "")
+
+            row = [
+                pid, csv_no, name, status,
+                address, sido, sggu, dong, region_val, chain_group,
             ]
 
             # Social columns in order
             for platform in _SOCIAL_COLUMNS:
                 url = socials.get(platform, "")
-                base.append(_escape_csv_formula(url))
+                row.append(_escape_csv_formula(url))
 
+            # Aggregate doctor info
             doctor_count = len(doctors)
+            doctor_names = ", ".join(d["name"] for d in doctors if d["name"])
+            doctor_details = "; ".join(
+                f"{d['name']}({d['role']})" if d["role"] else d["name"]
+                for d in doctors if d["name"]
+            )
+            has_creds = "N"
+            for d in doctors:
+                if d["profile_raw"] and len(d["profile_raw"]) >= 2:
+                    has_creds = "Y"
+                    break
 
-            if doctors:
-                # Expanded: one row per doctor
-                for doc in doctors:
-                    row = base + [
-                        doctor_count,
-                        _escape_csv_formula(doc["name"]),
-                        doc["role"],
-                        _escape_csv_formula(doc["profile_raw"]),
-                        doc["source_url"],
-                        doc["screenshot_path"],
-                        doc["ocr"],
-                        _escape_csv_formula(src["website"]),
-                        crawl.get("cms_platform", ""),
-                        crawl.get("crawled_at", ""),
-                    ]
-                    writer.writerow(row)
-                    rows_written += 1
-            else:
-                # Single row, empty doctor fields
-                row = base + [
-                    doctor_count, "", "", "", "", "", "",
-                    _escape_csv_formula(src["website"]),
-                    crawl.get("cms_platform", ""),
-                    crawl.get("crawled_at", ""),
-                ]
-                writer.writerow(row)
-                rows_written += 1
+            row.extend([
+                doctor_count,
+                _escape_csv_formula(doctor_names),
+                _escape_csv_formula(doctor_details),
+                has_creds,
+                _escape_csv_formula(website),
+                crawl.get("cms_platform", ""),
+                crawl.get("crawled_at", ""),
+            ])
+
+            writer.writerow(row)
+            rows_written += 1
 
     conn.close()
-    total_hospitals = len(source_hospitals)
-    crawled_count = len(crawled)
     total_doctors = sum(len(d) for d in doctor_map.values())
+    crawled_count = sum(1 for c in crawled.values() if c.get("status") != "pending")
     print(f"Exported unified CSV -> {out}")
-    print(f"  {rows_written} rows ({total_hospitals} hospitals, {crawled_count} crawled, {total_doctors} doctors)")
+    print(f"  {rows_written} hospitals ({crawled_count} crawled, {total_doctors} doctors)")
 
 
 def main():
@@ -752,7 +828,7 @@ def main():
     # unified command (single merged CSV)
     p_unified = sub.add_parser("unified", help="Export single unified CSV (all hospitals + crawl results)")
     p_unified.add_argument("--db", default=DB_DEFAULT, help=f"SQLite DB path (default: {DB_DEFAULT})")
-    p_unified.add_argument("--csv", default="data/clinic-results/place_data.csv", help="Source hospital CSV")
+    p_unified.add_argument("--csv", default="data/clinic-results/hospitals_with_address.csv", help="Source hospital CSV")
     p_unified.add_argument("--output", default="data/clinic-results/exports/clinic_results.csv", help="Output CSV path")
 
     # stats command

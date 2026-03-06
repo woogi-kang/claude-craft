@@ -34,7 +34,7 @@ from clinic_crawler.steps import (
 )
 from storage_manager import DB_DEFAULT, export_unified_csv
 
-CSV_SOURCE = "data/clinic-results/place_data.csv"
+CSV_SOURCE = "data/clinic-results/hospitals_with_address.csv"
 CSV_UNIFIED_OUTPUT = "data/clinic-results/exports/clinic_results.csv"
 
 # ---------------------------------------------------------------------------
@@ -44,7 +44,9 @@ CSV_UNIFIED_OUTPUT = "data/clinic-results/exports/clinic_results.csv"
 
 async def crawl_hospital(place_id: str, name: str, url: str, db_path: str,
                          timeout: int = 45, headless: bool = True,
-                         csv_no: int = None) -> dict:
+                         csv_no: int = None,
+                         sido: str = "", sggu: str = "", dong: str = "",
+                         region: str = "", chain_group: str = "") -> dict:
     """Crawl a single hospital website with an isolated browser instance."""
     from playwright.async_api import async_playwright
 
@@ -61,6 +63,11 @@ async def crawl_hospital(place_id: str, name: str, url: str, db_path: str,
         "doctors": [],
         "errors": [],
         "doctor_page_exists": None,
+        "sido": sido,
+        "sggu": sggu,
+        "dong": dong,
+        "region": region,
+        "chain_group": chain_group,
     }
 
     async with async_playwright() as pw:

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Parallel batch crawler with isolated browser per hospital (v3).
 
-Reads hospital list from place_data.csv, filters by criteria, and runs multiple
+Reads hospital list from hospitals_with_address.csv, filters by criteria, and runs multiple
 crawl_single.py processes concurrently. Each process gets its own
 headless Chromium browser - no shared state, no conflicts.
 
@@ -9,16 +9,16 @@ Dependencies: playwright (pip install playwright && python -m playwright install
 
 Usage:
     # Crawl all Seoul clinics with homepage, 5 in parallel:
-    python3 crawl_batch.py --csv place_data.csv --filter-city 서울 --parallel 5
+    python3 crawl_batch.py --csv hospitals_with_address.csv --filter-city 서울 --parallel 5
 
     # Crawl specific place IDs:
-    python3 crawl_batch.py --csv place_data.csv --place-ids 20951918,12345678 --parallel 3
+    python3 crawl_batch.py --csv hospitals_with_address.csv --place-ids 20951918,12345678 --parallel 3
 
     # Crawl by district (highest homepage count first):
-    python3 crawl_batch.py --csv place_data.csv --filter-district 서초구 --parallel 5
+    python3 crawl_batch.py --csv hospitals_with_address.csv --filter-district 서초구 --parallel 5
 
     # Crawl first 10, dry-run (show what would be crawled):
-    python3 crawl_batch.py --csv place_data.csv --limit 10 --dry-run
+    python3 crawl_batch.py --csv hospitals_with_address.csv --limit 10 --dry-run
 """
 
 import argparse
@@ -36,7 +36,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from crawl_single import crawl_hospital
 from storage_manager import DB_DEFAULT, export_unified_csv, get_db
 
-CSV_SOURCE = "data/clinic-results/place_data.csv"
+CSV_SOURCE = "data/clinic-results/hospitals_with_address.csv"
 CSV_UNIFIED_OUTPUT = "data/clinic-results/exports/clinic_results.csv"
 
 
@@ -50,6 +50,11 @@ def load_csv(csv_path: str) -> list:
             clean = {k.strip(): v.strip() for k, v in row.items() if k}
             hospitals.append(clean)
     return hospitals
+
+
+def _get_pid(h: dict) -> str:
+    """Get place_id from a CSV row, supporting both old and new column names."""
+    return h.get("naver_place_id") or h.get("place_id") or ""
 
 
 def filter_hospitals(hospitals: list, city: str = None, district: str = None,
@@ -73,15 +78,15 @@ def filter_hospitals(hospitals: list, city: str = None, district: str = None,
     # Filter by specific place IDs
     if place_ids:
         pid_set = set(place_ids)
-        result = [h for h in result if (h.get("place_id") or "") in pid_set]
+        result = [h for h in result if _get_pid(h) in pid_set]
 
-    # Filter: only hospitals with homepage_url
+    # Filter: only hospitals with a website URL
     if homepage_only:
         before = len(result)
-        result = [h for h in result if (h.get("homepage_url") or "").strip()]
+        result = [h for h in result if (h.get("website") or h.get("homepage_url") or "").strip()]
         filtered = before - len(result)
         if filtered:
-            log(f"Filtered out {filtered} hospitals without homepage_url")
+            log(f"Filtered out {filtered} hospitals without website URL")
 
     # Skip already-crawled hospitals
     if skip_crawled:
@@ -95,7 +100,7 @@ def filter_hospitals(hospitals: list, city: str = None, district: str = None,
                 crawled.add(row["place_id"])
             conn.close()
             before = len(result)
-            result = [h for h in result if (h.get("place_id") or "") not in crawled]
+            result = [h for h in result if _get_pid(h) not in crawled]
             skipped = before - len(result)
             if skipped:
                 log(f"Skipped {skipped} already-crawled hospitals (success/robots_blocked)")
@@ -106,15 +111,24 @@ def filter_hospitals(hospitals: list, city: str = None, district: str = None,
 
 
 def parse_hospital(row: dict) -> dict:
-    """Parse a CSV row into hospital parameters for v3 schema."""
+    """Parse a CSV row into hospital parameters for v3 schema.
+
+    Supports both old format (place_id, csv_no, naver_name, homepage_url)
+    and new format (naver_place_id, id, name, website) with address fields.
+    """
     return {
-        "place_id": row.get("place_id", ""),
-        "csv_no": int(row.get("csv_no", 0)) if row.get("csv_no") else None,
-        "name": row.get("naver_name") or row.get("name") or "",
-        "url": (row.get("homepage_url") or "").strip(),
-        "address": row.get("naver_address") or row.get("address") or "",
+        "place_id": row.get("naver_place_id") or row.get("place_id", ""),
+        "csv_no": int(row.get("id") or row.get("csv_no") or 0) or None,
+        "name": row.get("name") or row.get("naver_name") or "",
+        "url": (row.get("website") or row.get("homepage_url") or "").strip(),
+        "address": row.get("address") or row.get("naver_address") or "",
         "phone": row.get("phone") or "",
         "category": row.get("category") or "",
+        "sido": row.get("sido", ""),
+        "sggu": row.get("sggu", ""),
+        "dong": row.get("dong", ""),
+        "region": row.get("region", ""),
+        "chain_group": row.get("chain_group", ""),
     }
 
 
@@ -147,6 +161,11 @@ async def run_batch(hospitals: list, db_path: str, parallel: int,
                     timeout=timeout,
                     headless=headless,
                     csv_no=info["csv_no"],
+                    sido=info.get("sido", ""),
+                    sggu=info.get("sggu", ""),
+                    dong=info.get("dong", ""),
+                    region=info.get("region", ""),
+                    chain_group=info.get("chain_group", ""),
                 )
                 status = result.get("status", "failed")
                 results[status] = results.get(status, 0) + 1
@@ -187,16 +206,16 @@ def main():
         epilog="""
 Examples:
   # Seoul clinics with homepage, by district:
-  python3 crawl_batch.py --csv place_data.csv --filter-district 서초구 --parallel 5
+  python3 crawl_batch.py --csv hospitals_with_address.csv --filter-district 서초구 --parallel 5
 
   # Specific place IDs:
-  python3 crawl_batch.py --csv place_data.csv --place-ids 20951918,12345678
+  python3 crawl_batch.py --csv hospitals_with_address.csv --place-ids 20951918,12345678
 
   # Random sample:
-  python3 crawl_batch.py --csv place_data.csv --filter-city 서울 --sample 10 --seed 42
+  python3 crawl_batch.py --csv hospitals_with_address.csv --filter-city 서울 --sample 10 --seed 42
         """,
     )
-    parser.add_argument("--csv", required=True, help="Path to hospital CSV file (place_data.csv)")
+    parser.add_argument("--csv", required=True, help="Path to hospital CSV file (hospitals_with_address.csv)")
     parser.add_argument("--db", default=DB_DEFAULT, help=f"SQLite DB path (default: {DB_DEFAULT})")
     parser.add_argument("--parallel", type=int, default=3, help="Max concurrent crawlers (default: 3)")
     parser.add_argument("--timeout", type=int, default=45, help="Per-page timeout seconds (default: 45)")

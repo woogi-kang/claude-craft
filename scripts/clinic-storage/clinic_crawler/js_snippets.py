@@ -562,7 +562,9 @@ _JS_EXTRACT_DOCTORS_TEMPLATE = """
     }
 
     // ─── Text context extraction helper ───
-    const ctxNoiseRe = /진료시간|진료안내|Copyright|사업자등록|ALL RIGHTS|TEL\\s*:|FAX\\s*:|오시는\\s*길|예약문의|상담전화|찾아오시|개인정보|이용약관|네이버|블로그|인스타|카카오|상호명\\s*:|대표자\\s*:|주소\\s*:|의료진을\\s*소개|\\d+년\\s*(경력|이상|노하우)|시술노하우|만족도|최선을|고객님|환자분|마음으로|정성을/;
+    const ctxNoiseRe = /진료시간|진료안내|Copyright|©|사업자등록|ALL RIGHTS|TEL\\s*:|FAX\\s*:|오시는\\s*길|예약문의|상담전화|찾아오시|개인정보|이용약관|네이버|블로그|인스타|카카오|상호명\\s*:|대표자\\s*:|주소\\s*:|의료진을\\s*소개|\\d+년\\s*(경력|이상|노하우)|시술노하우|만족도|최선을|고객님|환자분|마음으로|정성을|전화번호|사업자|대표이사|통신판매|이메일무단|관리자|로그인|주차안내|약도|예약하기|상담하기|바로가기|홈페이지/;
+    // Footer boundary patterns: stop extracting when we hit footer content
+    const footerBoundaryRe = /^(주소\\s*[:：]|사업자\\s*(등록\\s*)?번호|대표\\s*(자|이사)\\s*[:：]|Copyright|©|TEL\\s*[:：]|전화\\s*[:：]|\\d{2,3}[-)]\\s*\\d{3,4}[-]\\s*\\d{4}|서울|경기|인천|부산|대구|광주|대전|울산|세종|강원|충북|충남|전북|전남|경북|경남|제주)/;
     function extractContext(name, allText, endBound, startPos) {
         const idx = startPos != null ? startPos : allText.indexOf(name);
         if (idx === -1) return { profile_raw: [] };
@@ -571,6 +573,8 @@ _JS_EXTRACT_DOCTORS_TEMPLATE = """
         const lines = ctx.split(/\\n/).map(l => l.trim()).filter(l => l.length > 3 && l.length < 100);
         const items = new Set();
         for (const line of lines) {
+            // Stop at footer boundary (address, business info, copyright)
+            if (footerBoundaryRe.test(line)) break;
             if (ctxNoiseRe.test(line)) continue;
             if (profileRe.test(line)) items.add(line.replace(/^[ㆍ·•\\-\\s]+/, ''));
         }
