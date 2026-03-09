@@ -33,6 +33,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 # Import the crawl function directly for in-process parallel execution
+from clinic_crawler.log import batch_log as log  # noqa: E402
 from crawl_single import crawl_hospital
 from storage_manager import DB_DEFAULT, export_unified_csv, get_db
 
@@ -132,9 +133,6 @@ def parse_hospital(row: dict) -> dict:
     }
 
 
-def log(msg: str) -> None:
-    ts = datetime.now().strftime("%H:%M:%S")
-    print(f"[{ts}] {msg}", file=sys.stderr, flush=True)
 
 
 async def run_batch(hospitals: list, db_path: str, parallel: int,

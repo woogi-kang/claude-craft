@@ -1,10 +1,12 @@
-"""Tests for OCR parsing helpers: parse_ocr_json, append_ocr_doctors."""
+"""Tests for OCR parsing helpers: parse_ocr_json, append_ocr_doctors, run_gemini_ocr."""
 
+import subprocess
 import sys
 from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from clinic_crawler.ocr import append_ocr_doctors, parse_ocr_json
+from clinic_crawler.ocr import append_ocr_doctors, parse_ocr_json, run_gemini_ocr
 
 
 class TestParseOcrJson:
@@ -21,12 +23,24 @@ class TestParseOcrJson:
         assert len(result) == 1
         assert result[0]["name"] == "이지연"
 
+    # -- Strategy 1b: Markdown code fence with nested doctors key --
+    def test_json_in_code_fence_with_doctors_key(self):
+        text = '```json\n{"doctors": [{"name": "김상우", "role": "원장"}]}\n```'
+        result = parse_ocr_json(text)
+        assert len(result) == 1
+        assert result[0]["name"] == "김상우"
+
     # -- Strategy 2: Raw JSON array --
     def test_raw_json_array(self):
         text = '[{"name": "박서준", "role": "전문의"}]'
         result = parse_ocr_json(text)
         assert len(result) == 1
         assert result[0]["role"] == "전문의"
+
+    def test_bare_json_object_with_doctors_key(self):
+        text = '{"doctors": [{"name": "최민지"}]}'
+        result = parse_ocr_json(text)
+        assert len(result) == 1
 
     def test_json_with_surrounding_text(self):
         text = 'Here are the results:\n[{"name": "최민지"}]\nEnd of results.'
@@ -54,6 +68,9 @@ class TestParseOcrJson:
         assert parse_ocr_json("   \n  ") == []
 
     # -- Malformed JSON --
+    def test_no_json_content(self):
+        assert parse_ocr_json("This is just plain text with no JSON.") == []
+
     def test_invalid_json_returns_empty(self):
         assert parse_ocr_json("not json at all") == []
 
@@ -63,6 +80,23 @@ class TestParseOcrJson:
         result = parse_ocr_json(text)
         # May recover first item or empty depending on parse
         assert isinstance(result, list)
+
+    def test_malformed_code_fence_falls_through(self):
+        # Strategy 1 matches code fence but JSON inside is invalid;
+        # the second array outside the fence is not inside a fence,
+        # so Strategy 2 picks it up as shortest JSON array
+        text = '```json\n[{broken json}]\n```'
+        result = parse_ocr_json(text)
+        # Code fence match fails JSON parse, falls through to Strategy 2
+        # but no valid array outside fence → empty
+        assert result == []
+
+    def test_strategy3_greedy_shrink(self):
+        # Only Strategy 3 can parse this (shortest match fails)
+        text = '[{"name": "A"}] extra text [{"name": "B"}]'
+        result = parse_ocr_json(text)
+        assert isinstance(result, list)
+        assert len(result) >= 1
 
     # -- Profile data --
     def test_preserves_profile_raw(self):
@@ -164,3 +198,32 @@ class TestAppendOcrDoctors:
         result = []
         append_ocr_doctors(doctors_raw, seen, result)
         assert result[0]["role"] == "specialist"
+
+
+class TestRunGeminiOcr:
+    def test_successful_ocr(self, tmp_path):
+        image = tmp_path / "page.jpg"
+        image.write_bytes(b"fake jpg")
+
+        mock_result = MagicMock()
+        mock_result.returncode = 0
+        mock_result.stdout = '[{"name": "김상우", "role": "원장"}]'
+
+        with patch("clinic_crawler.ocr.subprocess.run", return_value=mock_result):
+            result = run_gemini_ocr("extract doctors", str(image))
+
+        assert len(result) == 1
+        assert result[0]["name"] == "김상우"
+
+    def test_failed_ocr_returns_empty(self, tmp_path):
+        image = tmp_path / "page.jpg"
+        image.write_bytes(b"fake jpg")
+
+        mock_result = MagicMock()
+        mock_result.returncode = 1
+        mock_result.stderr = "Error"
+
+        with patch("clinic_crawler.ocr.subprocess.run", return_value=mock_result):
+            result = run_gemini_ocr("extract doctors", str(image))
+
+        assert result == []

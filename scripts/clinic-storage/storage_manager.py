@@ -27,7 +27,8 @@ from pathlib import Path
 VALID_PLATFORMS = {
     "KakaoTalk", "NaverTalk", "NaverShortlink", "Line", "WeChat", "WhatsApp",
     "Telegram", "FacebookMessenger", "Instagram", "YouTube",
-    "NaverBlog", "NaverCafe", "NaverBooking", "NaverMap", "Facebook", "Phone", "SMS",
+    "NaverBlog", "NaverCafe", "NaverBooking", "NaverMap", "Facebook",
+    "Phone", "SMS", "OnlineConsultation",
 }
 
 VALID_STATUSES = {
@@ -113,9 +114,17 @@ CREATE INDEX IF NOT EXISTS idx_hospitals_crawled_at ON hospitals(crawled_at);
 CREATE INDEX IF NOT EXISTS idx_social_hospital ON social_channels(place_id);
 CREATE INDEX IF NOT EXISTS idx_doctors_hospital ON doctors(place_id);
 CREATE INDEX IF NOT EXISTS idx_errors_hospital ON crawl_errors(place_id);
+
+CREATE TABLE IF NOT EXISTS ocr_cache (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    image_hash TEXT UNIQUE NOT NULL,
+    result_json TEXT NOT NULL,
+    created_at TEXT DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_ocr_cache_hash ON ocr_cache(image_hash);
 """
 
-# Schema migrations: fresh DB for v3, no migrations needed
+# Schema migrations: ocr_cache is now in SCHEMA_SQL (CREATE IF NOT EXISTS).
 MIGRATIONS = {}
 
 

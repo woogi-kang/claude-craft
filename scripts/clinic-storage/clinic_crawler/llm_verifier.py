@@ -1,4 +1,4 @@
-"""LLM-based doctor verification using Codex CLI (GPT-5.2).
+"""LLM-based doctor verification using Codex CLI.
 
 After DOM extraction generates candidate doctors, this module sends the
 candidate list + page screenshot to Codex for visual verification.
@@ -19,7 +19,11 @@ from .log import log
 
 CODEX_MODEL = os.environ.get("CLINIC_CODEX_MODEL", "gpt-5.2")
 CODEX_REASONING = os.environ.get("CLINIC_CODEX_REASONING", "xhigh")
-CODEX_TIMEOUT = int(os.environ.get("CLINIC_CODEX_VERIFY_TIMEOUT", "120"))
+CODEX_TIMEOUT = int(
+    os.environ.get("CLINIC_CODEX_TIMEOUT")
+    or os.environ.get("CLINIC_CODEX_VERIFY_TIMEOUT")
+    or "120"
+)
 
 VERIFY_PROMPT = """\
 You are a Korean dermatology clinic data validator.
@@ -52,11 +56,11 @@ If unsure, set is_valid=false.
 
 
 def verify_doctors_with_llm(
-    candidates: list,
+    candidates: list[dict],
     screenshot_path: str,
     place_id: str,
-) -> list:
-    """Verify DOM-extracted doctor candidates using Codex CLI (GPT-5.2) + screenshot.
+) -> list[dict]:
+    """Verify DOM-extracted doctor candidates using Codex CLI + screenshot.
 
     Args:
         candidates: List of doctor dicts from DOM extraction.
@@ -156,7 +160,7 @@ def verify_doctors_with_llm(
         return candidates
 
 
-def _parse_verification(text: str) -> list:
+def _parse_verification(text: str) -> list[dict]:
     """Parse JSON array from Codex verification output."""
     if not text or not text.strip():
         return []

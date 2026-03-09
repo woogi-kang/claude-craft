@@ -12,7 +12,10 @@ from storage_manager import (
     VALID_STATUSES,
     _escape_csv_formula,
     _normalize,
+    _normalize_platform,
+    _validate_channel,
     _validate_channel_url,
+    export_csv,
     get_db,
     save_result,
     show_stats,
@@ -81,6 +84,22 @@ class TestGetDb:
             conn = get_db(db)
             assert Path(db).exists()
             conn.close()
+
+    def test_schema_version_3(self):
+        db = _temp_db()
+        conn = get_db(db)
+        # Check place_id column exists
+        cols = [r["name"] for r in conn.execute("PRAGMA table_info(hospitals)").fetchall()]
+        assert "place_id" in cols
+        assert "csv_no" in cols
+        # Check doctors has profile_raw_json
+        doc_cols = [r["name"] for r in conn.execute("PRAGMA table_info(doctors)").fetchall()]
+        assert "profile_raw_json" in doc_cols
+        assert "page_text" in doc_cols
+        assert "source_url" in doc_cols
+        assert "screenshot_path" in doc_cols
+        conn.close()
+        Path(db).unlink(missing_ok=True)
 
 
 # ===========================================================================
@@ -197,6 +216,51 @@ class TestSaveResult:
         conn.close()
         Path(db).unlink(missing_ok=True)
 
+    def test_saves_profile_raw_json(self):
+        db = _temp_db()
+        data = _sample_result(doctors=[{
+            "name": "박지연",
+            "role": "전문의",
+            "profile_raw": ["서울대학교 의과대학 졸업", "삼성서울병원 피부과 전공의"],
+        }])
+        save_result(db, data)
+        conn = get_db(db)
+        doc = conn.execute("SELECT * FROM doctors WHERE place_id = '99999999'").fetchone()
+        profile = json.loads(doc["profile_raw_json"])
+        assert len(profile) == 2
+        assert "서울대학교" in profile[0]
+        conn.close()
+        Path(db).unlink(missing_ok=True)
+
+    def test_saves_errors_as_dict(self):
+        db = _temp_db()
+        data = _sample_result(
+            place_id="700",
+            errors=[{"type": "navigation", "message": "DNS failed", "step": "step1", "retryable": True}],
+        )
+        save_result(db, data)
+        conn = get_db(db)
+        errors = conn.execute("SELECT * FROM crawl_errors WHERE place_id='700'").fetchall()
+        assert errors[0]["error_type"] == "navigation"
+        assert errors[0]["retryable"] == 1
+        conn.close()
+        Path(db).unlink(missing_ok=True)
+
+    def test_replaces_doctors_on_recrawl(self):
+        db = _temp_db()
+        save_result(db, _sample_result(
+            doctors=[{"name": "김상우", "role": "원장"}],
+        ))
+        save_result(db, _sample_result(
+            doctors=[{"name": "이지연", "role": "부원장"}],
+        ))
+        conn = get_db(db)
+        doctors = conn.execute("SELECT * FROM doctors WHERE place_id='99999999'").fetchall()
+        assert len(doctors) == 1
+        assert doctors[0]["name"] == "이지연"
+        conn.close()
+        Path(db).unlink(missing_ok=True)
+
     def test_saves_doctor_with_legacy_fields(self):
         db = _temp_db()
         data = _sample_result(doctors=[{
@@ -234,6 +298,9 @@ class TestNormalize:
     def test_none_returns_none(self):
         assert _normalize(None) is None
 
+    def test_ascii_unchanged(self):
+        assert _normalize("hello") == "hello"
+
 
 class TestEscapeCsvFormula:
     def test_escapes_equals(self):
@@ -253,6 +320,9 @@ class TestEscapeCsvFormula:
 
     def test_empty_string(self):
         assert _escape_csv_formula("") == ""
+
+    def test_non_string_unchanged(self):
+        assert _escape_csv_formula(123) == 123
 
 
 class TestValidateChannelUrl:
@@ -274,8 +344,97 @@ class TestValidateChannelUrl:
     def test_empty_url(self):
         assert _validate_channel_url("", "KakaoTalk") is False
 
+    def test_valid_http(self):
+        assert _validate_channel_url("http://example.com", "NaverBlog") is True
+
+    def test_valid_phone_no_prefix(self):
+        assert _validate_channel_url("010-1234-5678", "Phone") is True
+
+    def test_valid_phone_international(self):
+        assert _validate_channel_url("+821012345678", "Phone") is True
+
+    def test_valid_phone_international_with_separator(self):
+        assert _validate_channel_url("+82-10-1234-5678", "Phone") is True
+
+    def test_invalid_sms(self):
+        assert _validate_channel_url("https://example.com", "SMS") is False
+
+    def test_kakao_deep_link(self):
+        assert _validate_channel_url("kakao://channel/chat", "KakaoTalk") is True
+
     def test_invalid_scheme(self):
         assert _validate_channel_url("ftp://example.com", "Instagram") is False
+
+
+# ===========================================================================
+# _validate_channel
+# ===========================================================================
+
+class TestValidateChannel:
+    def test_valid_channel_passthrough(self):
+        ch = {"platform": "KakaoTalk", "url": "https://pf.kakao.com/_test", "confidence": 0.9}
+        result = _validate_channel(ch)
+        assert result["confidence"] == 0.9
+
+    def test_clamps_confidence_above_1(self):
+        ch = {"platform": "KakaoTalk", "url": "https://pf.kakao.com/_test", "confidence": 1.5}
+        result = _validate_channel(ch)
+        assert result["confidence"] == 1.0
+
+    def test_clamps_confidence_below_0(self):
+        ch = {"platform": "KakaoTalk", "url": "https://pf.kakao.com/_test", "confidence": -0.5}
+        result = _validate_channel(ch)
+        assert result["confidence"] == 0.0
+
+
+# ===========================================================================
+# _normalize_platform
+# ===========================================================================
+
+class TestNormalizePlatform:
+    def test_kakao_lowercase(self):
+        assert _normalize_platform("kakao") == "KakaoTalk"
+
+    def test_kakaotalk_lowercase(self):
+        assert _normalize_platform("kakaotalk") == "KakaoTalk"
+
+    def test_naver_blog(self):
+        assert _normalize_platform("naver_blog") == "NaverBlog"
+
+    def test_instagram(self):
+        assert _normalize_platform("instagram") == "Instagram"
+
+    def test_youtube(self):
+        assert _normalize_platform("youtube") == "YouTube"
+
+    def test_unknown_passthrough(self):
+        assert _normalize_platform("UnknownPlatform") == "UnknownPlatform"
+
+    def test_phone(self):
+        assert _normalize_platform("phone") == "Phone"
+
+
+# ===========================================================================
+# export_csv
+# ===========================================================================
+
+class TestExportCsv:
+    def test_produces_csv_files(self):
+        db = _temp_db()
+        save_result(db, _sample_result(
+            social_channels=[
+                {"platform": "KakaoTalk", "url": "https://pf.kakao.com/_test"},
+            ],
+            doctors=[
+                {"name": "김상우", "role": "원장", "profile_raw": ["서울대 졸업"]},
+            ],
+        ))
+        with tempfile.TemporaryDirectory() as output_dir:
+            export_csv(db, output_dir)
+            assert (Path(output_dir) / "hospitals.csv").exists()
+            assert (Path(output_dir) / "social_channels.csv").exists()
+            assert (Path(output_dir) / "doctors.csv").exists()
+        Path(db).unlink(missing_ok=True)
 
 
 # ===========================================================================
@@ -287,6 +446,9 @@ class TestValidConstants:
         expected = {"KakaoTalk", "NaverTalk", "Instagram", "YouTube",
                     "Phone", "SMS", "Line", "WhatsApp", "WeChat"}
         assert expected.issubset(VALID_PLATFORMS)
+
+    def test_online_consultation_in_valid_platforms(self):
+        assert "OnlineConsultation" in VALID_PLATFORMS
 
     def test_valid_statuses_complete(self):
         expected = {"success", "partial", "failed", "archived",

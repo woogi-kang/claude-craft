@@ -18,6 +18,10 @@ gdrive = [
     "google-api-python-client>=2.0",
     "google-auth>=2.0",
 ]
+# LLM verification requires external CLI tools (not Python packages):
+#   codex CLI: npm install -g @openai/codex
+#   gemini CLI: npm install -g @anthropic-ai/gemini (or brew install gemini)
+# Configure models via env vars: CLINIC_CODEX_MODEL, CLINIC_GEMINI_MODEL
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -43,8 +47,8 @@ ignore_missing_imports = true
 
 [tool.coverage.run]
 source = ["clinic_crawler"]
-omit = ["tests/*", "clinic_crawler/steps.py", "clinic_crawler/js_snippets.py"]
+omit = ["tests/*", "clinic_crawler/steps.py", "clinic_crawler/google_drive.py"]
 
 [tool.coverage.report]
 show_missing = true
-fail_under = 70
+fail_under = 85

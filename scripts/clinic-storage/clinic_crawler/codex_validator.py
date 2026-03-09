@@ -1,6 +1,6 @@
 """Codex CLI-based doctor profile validator.
 
-Calls `codex exec` with gpt-5.2 to filter noise from
+Calls `codex exec` to filter noise from
 extracted profile_raw arrays, judge whether a page actually
 contains real doctor credential information, and filter doctors
 by branch for chain hospitals.
@@ -91,7 +91,7 @@ Output ONLY the JSON file, no other files or explanations.\
 """
 
 
-def validate_doctors(doctors: list, place_id: str, hospital_name: str = "") -> tuple[list, bool]:
+def validate_doctors(doctors: list[dict], place_id: str, hospital_name: str = "") -> tuple[list[dict], bool]:
     """Validate extracted doctors via Codex CLI.
 
     Args:
@@ -225,10 +225,15 @@ def validate_doctors(doctors: list, place_id: str, hospital_name: str = "") -> t
         log(f"[{place_id}] Codex validator exception: {e}")
         return [], False
     finally:
-        # Keep temp files for debugging (last run only)
-        for old in Path("/tmp").glob("codex_debug_*.json"):
-            old.unlink(missing_ok=True)
-        if input_path and Path(input_path).exists():
-            Path(input_path).rename(f"/tmp/codex_debug_in_{place_id}.json")
-        if output_path and Path(output_path).exists():
-            Path(output_path).rename(f"/tmp/codex_debug_out_{place_id}.json")
+        keep_debug = os.environ.get("CLINIC_CODEX_KEEP_DEBUG", "").lower() in ("1", "true", "yes")
+        if keep_debug:
+            for old in Path("/tmp").glob("codex_debug_*.json"):
+                old.unlink(missing_ok=True)
+            if input_path and Path(input_path).exists():
+                Path(input_path).rename(f"/tmp/codex_debug_in_{place_id}.json")
+            if output_path and Path(output_path).exists():
+                Path(output_path).rename(f"/tmp/codex_debug_out_{place_id}.json")
+        else:
+            for p in [input_path, output_path]:
+                if p:
+                    Path(p).unlink(missing_ok=True)
