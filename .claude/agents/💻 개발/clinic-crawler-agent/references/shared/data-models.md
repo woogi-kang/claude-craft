@@ -9,7 +9,8 @@ Top-level result object returned by the agent after crawling one hospital.
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | schema_version | string | no | Schema version (default: "3.0.0") |
-| hospital_no | int | yes | Unique hospital identifier from CSV |
+| place_id | string | yes | Naver Place ID (primary key, e.g., "20951918") |
+| csv_no | int | no | Row number from source CSV |
 | name | string | yes | Hospital name (Unicode NFC normalized) |
 | url | string | yes | Crawled URL |
 | final_url | string | no | Final URL after redirects (if different from url) |
@@ -33,8 +34,10 @@ Top-level result object returned by the agent after crawling one hospital.
 | requires_manual | CAPTCHA/login required | Never |
 | age_restricted | 19+ verification needed | Never |
 | unsupported | Flash/ActiveX content | Never |
-| encoding_error | Garbled text (>10% corruption) | Never |
-| robots_blocked | Blocked by robots.txt | Never |
+| empty | No content found | After 30 days |
+| needs_review | Auto-retry suspicious results | Immediate (auto) |
+| encoding_error | Character encoding issue | After 30 days |
+| robots_blocked | robots.txt disallows crawling | Never |
 
 ## SocialChannel
 
@@ -47,7 +50,7 @@ Top-level result object returned by the agent after crawling one hospital.
 | status | string | no | "active" (default) or "dead" |
 
 ### Platform Enum
-KakaoTalk, NaverTalk, NaverBooking, Line, WeChat, WhatsApp, Telegram, FacebookMessenger, Instagram, YouTube, NaverBlog, Facebook, Phone, SMS
+KakaoTalk, NaverTalk, NaverShortlink, NaverBooking, NaverMap, NaverCafe, Line, WeChat, WhatsApp, Telegram, FacebookMessenger, Instagram, YouTube, NaverBlog, Facebook, Phone, SMS, OnlineConsultation
 
 ### Extraction Methods
 dom_static, dom_dynamic, floating_element, iframe, structured_data, widget_sdk, scroll_triggered, qr_decode, deep_link, ocr, phone_text, shadow_dom, window_open_intercept, css_pseudo, websocket_widget

@@ -27,7 +27,7 @@ python3 scripts/clinic-storage/crawl_batch.py \
 # Specific hospitals, 3 parallel:
 python3 scripts/clinic-storage/crawl_batch.py \
   --csv data/clinic-results/skin_clinics.csv \
-  --numbers 6,15,28 --parallel 3
+  --place-ids 20951918,1721660349,12345678 --parallel 3
 
 # All Seoul clinics (skip already-crawled):
 python3 scripts/clinic-storage/crawl_batch.py \
@@ -46,10 +46,46 @@ Each hospital gets its own headless Chromium browser. No shared state, no confli
 
 ```bash
 python3 scripts/clinic-storage/crawl_single.py \
-  --no 6 --name "고은미인의원" --url "http://www.goeunmiin.co.kr/"
+  --place-id 20951918 --name "고은미인의원" --url "http://www.goeunmiin.co.kr/"
 ```
 
 Options: `--timeout 60`, `--headed` (show browser for debugging), `--db path/to/db`
+
+### Mode 3: Quality-Assessed Crawl Cycle (crawl_doctor_cycle.py)
+
+Best for: production runs with automatic quality assessment and retry logic.
+
+```bash
+# Full reset + crawl:
+python3 scripts/clinic-storage/crawl_doctor_cycle.py \
+  --csv data/clinic-results/hospitals_with_address.csv --reset
+
+# Continue from checkpoint:
+python3 scripts/clinic-storage/crawl_doctor_cycle.py \
+  --csv data/clinic-results/hospitals_with_address.csv
+
+# Filter by district:
+python3 scripts/clinic-storage/crawl_doctor_cycle.py \
+  --csv data/clinic-results/hospitals_with_address.csv --district 강남구
+
+# Dry run:
+python3 scripts/clinic-storage/crawl_doctor_cycle.py \
+  --csv data/clinic-results/hospitals_with_address.csv --dry-run
+
+# Force re-crawl specific hospitals:
+python3 scripts/clinic-storage/crawl_doctor_cycle.py \
+  --csv data/clinic-results/hospitals_with_address.csv --recrawl 20951918,1721660349
+```
+
+### Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| CLINIC_CODEX_MODEL | gpt-5.2 | Codex CLI model |
+| CLINIC_CODEX_REASONING | xhigh | Reasoning effort |
+| CLINIC_CODEX_TIMEOUT | 120 | Codex timeout seconds |
+| CLINIC_CODEX_KEEP_DEBUG | (off) | Keep debug temp files |
+| CLINIC_GEMINI_MODEL | gemini-3-flash-preview | Gemini OCR model |
 
 ## What Gets Extracted
 
@@ -126,5 +162,5 @@ python -m playwright install chromium
 ```bash
 # Run single hospital with visible browser:
 python3 scripts/clinic-storage/crawl_single.py \
-  --no 123 --name "Test" --url "https://example.com" --headed
+  --place-id 20951918 --name "Test" --url "https://example.com" --headed
 ```

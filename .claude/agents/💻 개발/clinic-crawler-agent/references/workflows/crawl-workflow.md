@@ -36,9 +36,9 @@ Rollback rules:
   - If `Crawl-delay` directive exists: apply delay between requests (min 1s, max 30s)
   - If robots.txt returns 404 or empty: proceed normally (no restrictions)
   - Cache robots.txt per domain (reuse for chain hospital siblings)
-- **Duplicate check**: Query DB for existing hospital_no
+- **Duplicate check**: Query DB for existing place_id
   ```bash
-  python3 -c "import sqlite3; c=sqlite3.connect('data/clinic-results/hospitals.db'); r=c.execute('SELECT status, crawled_at FROM hospitals WHERE hospital_no=?',({no},)).fetchone(); print(r)"
+  python3 -c "import sqlite3; c=sqlite3.connect('data/clinic-results/hospitals.db'); r=c.execute('SELECT status, crawled_at FROM hospitals WHERE place_id=?',({no},)).fetchone(); print(r)"
   ```
   - If exists with status "success" and crawled within 7 days: skip (return cached)
   - If exists with status "archived", "requires_manual", "age_restricted", "unsupported", "encoding_error", or "robots_blocked": skip
@@ -46,7 +46,7 @@ Rollback rules:
   - If not exists: proceed
 - **Domain variant check**: Normalize domain (strip .co.kr/.kr/.com) to detect duplicate crawls of same hospital at different TLDs
 - **Batch checkpoint**: If running in batch mode, check `batch-{id}.jsonl` to skip already-completed hospitals
-- Prepare result structure: hospital_no, name, url, social_channels, doctors, errors
+- Prepare result structure: place_id, name, url, social_channels, doctors, errors
 
 ## Step 1: Navigate and Resolve
 

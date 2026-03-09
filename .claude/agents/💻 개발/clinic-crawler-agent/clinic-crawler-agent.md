@@ -49,6 +49,7 @@ Self-contained Korean skin clinic website crawler for extracting social consulta
 | **Gemini CLI** | `gemini -p "Read the image file at <path>..." -y` for OCR (MUST convert PNG to JPEG first via `sips`) |
 | **Storage Script** | `python3 scripts/clinic-storage/storage_manager.py` for SQLite + CSV |
 | **Bash** | Execute Gemini CLI and storage script |
+| **Codex CLI** | `codex exec` for doctor profile validation and visual verification |
 | **Read** | Load reference patterns on demand from references/ |
 
 ---
@@ -70,6 +71,7 @@ Load these on demand using the Read tool when needed:
 | `references/shared/error-handling.md` | When errors occur |
 | `references/shared/troubleshooting.md` | For diagnosing common issues |
 | `references/shared/benchmarks.md` | For performance expectations |
+| `references/workflows/llm-verification.md` | Before LLM-based doctor verification |
 
 ---
 
@@ -158,7 +160,7 @@ rm -f /tmp/crawl_result_{no}.json
 ### Step 7: Return Structured Results
 
 Return JSON matching `references/shared/data-models.md` schema v3.0.0:
-- schema_version, hospital_no, name, url, final_url, status, cms_platform
+- schema_version, place_id, name, url, final_url, status, cms_platform
 - social_channels (platform, url, extraction_method, confidence, status)
 - doctors (name, role, profile_raw, branch, branches, extraction_source, ocr_source)
 - errors (type, message, step, retryable)
@@ -170,7 +172,7 @@ Return JSON matching `references/shared/data-models.md` schema v3.0.0:
 The agent is invoked by MoAI orchestrator with a specific hospital record:
 
 ```
-Use the clinic-crawler-agent to crawl hospital #123 (고은미인의원) at https://www.goeunmiin.co.kr/
+Use the clinic-crawler-agent to crawl place_id=20951918 (고은미인의원) at https://www.goeunmiin.co.kr/
 Extract social consultation channels and doctor information.
 Save results to data/clinic-results/hospitals.db
 ```
@@ -182,7 +184,7 @@ Save results to data/clinic-results/hospitals.db
 The agent uses Playwright MCP tools for single-hospital crawls where LLM intelligence is needed for edge cases (complex popups, unusual layouts, manual review).
 
 ```
-Use the clinic-crawler-agent to crawl hospital #123 (고은미인의원) at https://www.goeunmiin.co.kr/
+Use the clinic-crawler-agent to crawl place_id=20951918 (고은미인의원) at https://www.goeunmiin.co.kr/
 ```
 
 **Limitation**: Playwright MCP shares a single browser instance. Do NOT run multiple agents in parallel using this mode.
@@ -223,6 +225,24 @@ Key features:
 | Bulk crawl (10+ hospitals) | Mode 2 (Batch) | True browser isolation, throughput |
 | Failed hospital retry | Mode 1 (MCP) | LLM can diagnose specific issues |
 | Full dataset crawl (4000+) | Mode 2 (Batch) | Automated, parallel, resilient |
+| Production with QA | Mode 3 (Cycle) | Quality assessment + auto-retry |
+
+### Mode 3: Quality-Assessed Cycle (crawl_doctor_cycle.py)
+
+For production runs with automatic quality assessment and retry logic.
+
+```bash
+python3 scripts/clinic-storage/crawl_doctor_cycle.py \
+  --csv data/clinic-results/hospitals_with_address.csv \
+  --district 강남구 --parallel 5
+```
+
+Key features:
+- Automatic quality assessment (good/suspicious/failed classification)
+- Auto-retry of suspicious hospitals (0 doctors or no credentials)
+- Marks unresolved hospitals as `needs_review`
+- Exports unified CSV after each batch
+- `--district` filter for area-specific crawling
 
 ## Error Handling
 

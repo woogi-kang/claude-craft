@@ -16,7 +16,7 @@ No external dependencies required (Python stdlib only: sqlite3, json, csv, argpa
 
 ```bash
 python scripts/clinic-storage/storage_manager.py save \
-  --json '{"hospital_no": 6, "name": "...", "social_channels": [...], "doctors": [...]}' \
+  --json '{"place_id": "20951918", "csv_no": 6, "name": "...", "social_channels": [...], "doctors": [...]}' \
   --db data/clinic-results/hospitals.db
 ```
 
@@ -53,7 +53,8 @@ The save command expects JSON matching this structure:
 
 ```json
 {
-  "hospital_no": 6,
+  "place_id": "20951918",
+  "csv_no": 6,
   "name": "Hospital Name",
   "url": "https://example.com",
   "category": "custom_domain",
@@ -73,9 +74,7 @@ The save command expects JSON matching this structure:
       "name": "Doctor Name",
       "role": "director",
       "photo_url": "https://...",
-      "education": ["edu1", "edu2"],
-      "career": ["career1"],
-      "credentials": ["cred1"],
+      "profile_raw": ["credential 1", "credential 2"],
       "ocr_source": false
     }
   ],
@@ -90,6 +89,8 @@ python scripts/clinic-storage/storage_manager.py dashboard \
   --db data/clinic-results/hospitals.db \
   --target 4256
 ```
+
+Note: `--target 4256` reflects the total hospitals in source CSV.
 
 Shows: progress %, success rate, today's crawls, status breakdown, platform discovery rates, recent failure patterns.
 
@@ -115,9 +116,9 @@ Exports only hospitals changed since the given date. Files suffixed with `_since
 
 ## SQLite Schema
 
-- `hospitals` - One row per hospital (hospital_no PK)
-- `social_channels` - One row per channel (unique by hospital_no + platform + url)
-- `doctors` - One row per doctor (education/career/credentials as JSON arrays)
+- `hospitals` - One row per hospital (place_id TEXT PRIMARY KEY)
+- `social_channels` - One row per channel (unique by place_id + platform + url)
+- `doctors` - One row per doctor (profile_raw_json as single merged JSON array)
 - `crawl_errors` - Error log
 - `ocr_cache` - Image hash to OCR result cache (30-day TTL)
 
@@ -130,4 +131,4 @@ Current migrations:
 - v1: `social_channels.verified_at` column
 - v2: `doctors.ocr_confidence` column
 - v3: `crawl_errors.retry_count` column
-- v4: `ocr_cache` table
+- v4: `ocr_cache` table (now part of the base schema via `CREATE TABLE IF NOT EXISTS`)

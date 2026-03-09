@@ -79,17 +79,6 @@ if (hasInputField || hasAuthIframe) return 'TYPE_B_REAL_AUTH';
 else return 'TYPE_A_INFORMATIONAL';
 ```
 
-## Strategy 6: Google Maps Embedded Info (Priority 6)
-
-Extract contact info from embedded Google Maps iframes:
-
-Detection: `iframe[src*="google.com/maps"]`
-Action:
-- Parse iframe `src` URL for `!1s` place identifier
-- Check surrounding DOM elements for phone/address text
-- Look for `<a href="tel:">` links near the maps iframe
-- Record phone numbers with `extraction_method: "maps_embed"`
-
 ## Cookie Suppression
 
 Set cookies before page load to prevent popups:

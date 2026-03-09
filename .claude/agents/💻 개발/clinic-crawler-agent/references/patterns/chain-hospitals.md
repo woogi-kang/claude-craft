@@ -34,3 +34,26 @@ Known chain hospital domains with branch counts and optimization strategy.
 
 A domain is considered a chain when 3+ hospitals share the same base domain.
 Use `tldextract` or manual domain parsing to group hospitals by domain.
+
+## Discovering New Chains
+
+Query the database to find candidate chains:
+```sql
+SELECT
+  REPLACE(REPLACE(url, 'https://', ''), 'http://', '') AS base_domain,
+  COUNT(*) AS branch_count
+FROM hospitals
+WHERE url IS NOT NULL
+GROUP BY base_domain
+HAVING branch_count >= 3
+ORDER BY branch_count DESC;
+```
+
+Verify by checking 2-3 branches for shared CMS structure and CSS selectors.
+
+## Adding a New Chain
+
+1. Add a row to the Known Chains table: domain, branch count, URL pattern (subdomain/path), notes
+2. Crawl one sample branch and record working CSS selectors
+3. Verify selectors on 2-3 sibling branches
+4. Note any chain-specific issues (non-standard menus, custom SDKs)

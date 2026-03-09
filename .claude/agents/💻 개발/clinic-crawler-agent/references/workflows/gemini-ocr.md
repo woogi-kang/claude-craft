@@ -375,5 +375,5 @@ Keep screenshots only if OCR failed (for manual review or re-attempt).
 - **Low contrast screenshot**: Detect via PIL variance check (<500), enhance contrast 1.5x before OCR
 - **Long page (exceeds viewport)**: Take multiple viewport screenshots, OCR each separately, merge results
 - **Partial/garbled OCR result**: Validate name >= 2 Korean characters, no truncation markers (digits, jamo)
-- **Screenshot filename collision**: Use timestamp + hospital_no in filename to prevent batch collisions
+- **Screenshot filename collision**: Use timestamp + place_id in filename to prevent batch collisions
 - **Corrupted screenshot (<1KB)**: Re-take screenshot once, skip OCR if still corrupt

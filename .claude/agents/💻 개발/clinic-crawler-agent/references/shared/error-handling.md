@@ -95,7 +95,7 @@ Error recovery patterns for clinic crawling.
 | Invalid JSON structure | Log validation error, save raw text |
 | Shell escaping issue | Use --json-file instead of --json |
 | Disk full | Alert user, stop crawl |
-| Duplicate hospital_no | Update existing record (UPSERT) |
+| Duplicate place_id | Update existing record (UPSERT) |
 | Failed overwrite of success | Skip save if new status=failed with no data |
 | Unicode NFC/NFD mismatch | Normalize all text to NFC before storage |
 | CSV injection in export | Escape formula prefixes (=, +, -, @) |

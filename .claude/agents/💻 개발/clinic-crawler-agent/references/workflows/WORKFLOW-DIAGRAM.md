@@ -87,7 +87,7 @@ flowchart TD
 ### Step 0: Pre-flight Check
 
 ```
-hospital_no --> Query DB
+place_id --> Query DB
                   |
         +---------+---------+
         |         |         |
@@ -250,7 +250,7 @@ Return structured result
 
 | Decision | Options | Criteria |
 |----------|---------|----------|
-| Duplicate? | skip / re-crawl / new | DB lookup by hospital_no + age |
+| Duplicate? | skip / re-crawl / new | DB lookup by place_id + age |
 | URL valid? | proceed / fail | http/https scheme present |
 | Redirected? | record final_url / continue | window.location.href differs |
 | Wrong language? | navigate to /ko/ / continue | URL path or html lang check |

@@ -267,3 +267,15 @@ For each extracted URL:
 4. **Platform classify**: Match normalized URL to platform patterns above
 5. **Dead link detection**: If URL returns immediate redirect to error page or generic domain, mark as `"status": "dead"`
 6. **Korean phone extraction**: Scan page text for phone patterns not in `<a>` tags
+
+## Maps Embed Extraction
+
+Extract contact info from embedded Google Maps iframes (`extraction_method: "maps_embed"`).
+
+Detection: `iframe[src*="google.com/maps"]` or `iframe[src*="maps.google"]`
+
+Strategy:
+- Parse iframe `src` URL for `!1s` place identifier
+- Check surrounding DOM elements for phone/address text
+- Look for `<a href="tel:">` links near the maps iframe
+- Record phone numbers with `extraction_method: "maps_embed"`
