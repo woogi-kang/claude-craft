@@ -1,205 +1,100 @@
 #!/bin/bash
 
-# claude-craft installer v3.0
-# MoAI-ADK: 37 Agents, 303 Skills, Hooks, Rules
-#
-# This script sets up Claude Code customizations from .claude/ directory
-#
-# Usage:
-#   ./scripts/install.sh          # Default: symbolic links
-#   ./scripts/install.sh --link   # Symbolic links (for development)
-#   ./scripts/install.sh --copy   # Copy files (for standalone install)
-#   ./scripts/install.sh --export # Create distribution package
-
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 CLAUDE_SRC="$PROJECT_DIR/.claude"
 CLAUDE_DEST="$HOME/.claude"
-
 MODE="${1:---link}"
 
-# Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
 CYAN='\033[0;36m'
 NC='\033[0m'
 BOLD='\033[1m'
 
-echo ""
-echo -e "${CYAN}╔═══════════════════════════════════════════════════════════╗${NC}"
-echo -e "${CYAN}║${NC}  ${BOLD}Claude Craft Installer v3.0${NC}                             ${CYAN}║${NC}"
-echo -e "${CYAN}║${NC}     MoAI-ADK: 37 Agents, 303 Skills                        ${CYAN}║${NC}"
-echo -e "${CYAN}╚═══════════════════════════════════════════════════════════╝${NC}"
-echo ""
+print_banner() {
+    echo ""
+    echo -e "${CYAN}╔═══════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}║${NC}  ${BOLD}Claude Craft Installer${NC}                                 ${CYAN}║${NC}"
+    echo -e "${CYAN}║${NC}     Domain agents, skills, commands, status line         ${CYAN}║${NC}"
+    echo -e "${CYAN}╚═══════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+}
 
-# Validate source directory
-if [ ! -d "$CLAUDE_SRC" ]; then
-    echo -e "${RED}Error:${NC} .claude/ directory not found in $PROJECT_DIR"
-    exit 1
-fi
-
-# Ensure ~/.claude exists
-mkdir -p "$CLAUDE_DEST"
-
-# Component installation function
-install_component() {
+install_dir_component() {
     local step="$1"
     local total="$2"
     local name="$3"
-    local src_path="$4"
-    local dest_path="$5"
-    local mode="$6"
+    local src="$4"
+    local dest="$5"
+    local install_mode="$6"
     local count_pattern="$7"
-    local count_name="$8"
 
-    echo -e "[${step}/${total}] Installing ${name}..."
+    echo "[${step}/${total}] Installing ${name}..."
 
-    if [ -d "$src_path" ] && [ "$(ls -A $src_path 2>/dev/null)" ]; then
-        rm -rf "$dest_path" 2>/dev/null || true
+    if [ ! -d "$src" ] || [ -z "$(ls -A "$src" 2>/dev/null)" ]; then
+        echo -e "      ${YELLOW}Skipped${NC} (not found)"
+        return
+    fi
 
-        if [ "$mode" = "copy" ]; then
-            cp -r "$src_path" "$dest_path"
-            echo -e "      ${GREEN}✓${NC} Copied to $dest_path"
-        else
-            ln -sf "$src_path" "$dest_path"
-            echo -e "      ${GREEN}✓${NC} Linked to $dest_path"
-        fi
-
-        if [ -n "$count_pattern" ]; then
-            local count=$(find "$src_path" -name "$count_pattern" 2>/dev/null | wc -l | tr -d ' ')
-            echo -e "        → $count $count_name"
-        fi
+    rm -rf "$dest" 2>/dev/null || true
+    if [ "$install_mode" = "copy" ]; then
+        cp -R "$src" "$dest"
+        echo -e "      ${GREEN}✓${NC} Copied to $dest"
     else
-        echo -e "      ${YELLOW}⚠${NC} Skipped (not found)"
+        ln -s "$src" "$dest"
+        echo -e "      ${GREEN}✓${NC} Linked to $dest"
+    fi
+
+    if [ -n "$count_pattern" ]; then
+        local count
+        count=$(find "$src" -name "$count_pattern" 2>/dev/null | wc -l | tr -d ' ')
+        echo "        → $count items"
     fi
 }
 
-case "$MODE" in
-    --link|-l)
-        echo -e "Mode: ${CYAN}Symbolic Links${NC} (development)"
-        echo ""
-        INSTALL_MODE="link"
+export_package() {
+    local dist_dir="$PROJECT_DIR/dist"
+    local package_name="claude-craft-$(date +%Y%m%d).zip"
+    local files=(
+        "CLAUDE.md"
+        "README.md"
+        "docs/install.sh"
+        "scripts/install.sh"
+        ".claude/statusline.py"
+        ".claude/settings.json"
+    )
 
-        # 1. Install statusline.py (always copy for execution)
-        echo "[1/7] Installing statusline.py..."
-        if [ -f "$CLAUDE_SRC/statusline.py" ]; then
-            cp "$CLAUDE_SRC/statusline.py" "$CLAUDE_DEST/"
-            chmod +x "$CLAUDE_DEST/statusline.py"
-            echo -e "      ${GREEN}✓${NC} Copied to $CLAUDE_DEST/statusline.py"
-        fi
+    [ -d "$PROJECT_DIR/.claude/agents" ] && files+=(".claude/agents")
+    [ -d "$PROJECT_DIR/.claude/skills" ] && files+=(".claude/skills")
+    [ -d "$PROJECT_DIR/.claude/hooks" ] && files+=(".claude/hooks")
+    [ -d "$PROJECT_DIR/.claude/commands" ] && files+=(".claude/commands")
 
-        # 2-7. Link directories
-        install_component 2 7 "agents" "$CLAUDE_SRC/agents" "$CLAUDE_DEST/agents" "link" "*.md" "agents"
-        install_component 3 7 "skills" "$CLAUDE_SRC/skills" "$CLAUDE_DEST/skills" "link" "SKILL.md" "skills"
-        install_component 4 7 "hooks" "$CLAUDE_SRC/hooks" "$CLAUDE_DEST/hooks" "link" "" ""
-        install_component 5 7 "rules" "$CLAUDE_SRC/rules" "$CLAUDE_DEST/rules" "link" "*.md" "rules"
-        install_component 6 7 "commands" "$CLAUDE_SRC/commands" "$CLAUDE_DEST/commands" "link" "*.md" "commands"
-        install_component 7 7 "output-styles" "$CLAUDE_SRC/output-styles" "$CLAUDE_DEST/output-styles" "link" "*.md" "output styles"
-        ;;
-
-    --copy|-c)
-        echo -e "Mode: ${CYAN}Copy Files${NC} (standalone install)"
-        echo ""
-        INSTALL_MODE="copy"
-
-        # 1. Install statusline.py
-        echo "[1/7] Installing statusline.py..."
-        if [ -f "$CLAUDE_SRC/statusline.py" ]; then
-            cp "$CLAUDE_SRC/statusline.py" "$CLAUDE_DEST/"
-            chmod +x "$CLAUDE_DEST/statusline.py"
-            echo -e "      ${GREEN}✓${NC} Copied to $CLAUDE_DEST/statusline.py"
-        fi
-
-        # 2-7. Copy directories
-        install_component 2 7 "agents" "$CLAUDE_SRC/agents" "$CLAUDE_DEST/agents" "copy" "*.md" "agents"
-        install_component 3 7 "skills" "$CLAUDE_SRC/skills" "$CLAUDE_DEST/skills" "copy" "SKILL.md" "skills"
-        install_component 4 7 "hooks" "$CLAUDE_SRC/hooks" "$CLAUDE_DEST/hooks" "copy" "" ""
-        install_component 5 7 "rules" "$CLAUDE_SRC/rules" "$CLAUDE_DEST/rules" "copy" "*.md" "rules"
-        install_component 6 7 "commands" "$CLAUDE_SRC/commands" "$CLAUDE_DEST/commands" "copy" "*.md" "commands"
-        install_component 7 7 "output-styles" "$CLAUDE_SRC/output-styles" "$CLAUDE_DEST/output-styles" "copy" "*.md" "output styles"
-        ;;
-
-    --export|-e)
-        echo -e "Mode: ${CYAN}Export Distribution Package${NC}"
-        echo ""
-
-        DIST_DIR="$PROJECT_DIR/dist"
-        mkdir -p "$DIST_DIR"
-
-        TIMESTAMP=$(date +%Y%m%d)
-        PACKAGE_NAME="claude-craft-$TIMESTAMP.zip"
-
-        echo "Creating distribution package..."
+    mkdir -p "$dist_dir"
+    (
         cd "$PROJECT_DIR"
-
-        # Create zip with all necessary files
-        zip -r "$DIST_DIR/$PACKAGE_NAME" \
-            .claude/ \
-            .moai/ \
-            CLAUDE.md \
-            README.md \
-            scripts/install.sh \
+        zip -r "$dist_dir/$package_name" "${files[@]}" \
             -x "*.DS_Store" \
             -x "*/__pycache__/*" \
             -x "*.pyc"
+    )
 
-        echo ""
-        echo -e "${GREEN}Package created:${NC} $DIST_DIR/$PACKAGE_NAME"
-        echo ""
-        echo "To install on another machine:"
-        echo "  1. unzip $PACKAGE_NAME"
-        echo "  2. cd claude-craft-*"
-        echo "  3. ./scripts/install.sh --copy"
-        exit 0
-        ;;
+    echo ""
+    echo -e "${GREEN}Package created:${NC} $dist_dir/$package_name"
+}
 
-    --help|-h)
-        echo "Usage: $0 [OPTIONS]"
-        echo ""
-        echo "Options:"
-        echo "  --link, -l    Create symbolic links (default, for development)"
-        echo "  --copy, -c    Copy files (for standalone installation)"
-        echo "  --export, -e  Create distribution zip package"
-        echo "  --help, -h    Show this help message"
-        echo ""
-        echo "Components installed:"
-        echo "  • agents/       37 AI agents (MoAI + Domain)"
-        echo "  • skills/       303 skills (52 MoAI + 251 Domain)"
-        echo "  • hooks/        Automation scripts"
-        echo "  • rules/        16 language rules + workflows"
-        echo "  • commands/     Slash commands"
-        echo "  • output-styles/ Alfred, Yoda, R2D2 styles"
-        echo "  • statusline.py Real-time cost tracking"
-        exit 0
-        ;;
+create_default_settings() {
+    local settings_file="$CLAUDE_DEST/settings.json"
 
-    *)
-        echo -e "${RED}Unknown option:${NC} $MODE"
-        echo "Use --help for usage information"
-        exit 1
-        ;;
-esac
-
-# Configure settings.json
-echo ""
-echo "Checking settings.json..."
-SETTINGS_FILE="$CLAUDE_DEST/settings.json"
-
-if [ -f "$SETTINGS_FILE" ]; then
-    echo -e "  ${GREEN}✓${NC} settings.json exists (preserving)"
-
-    if grep -q "statusLine" "$SETTINGS_FILE"; then
-        echo -e "    → statusLine already configured"
-    else
-        echo -e "    ${YELLOW}⚠${NC} Add statusLine config manually if needed"
+    if [ -f "$settings_file" ]; then
+        echo -e "  ${GREEN}✓${NC} settings.json exists (preserving)"
+        return
     fi
-else
-    echo "  Creating default settings.json..."
-    cat > "$SETTINGS_FILE" << 'EOF'
+
+    cat > "$settings_file" << 'EOF'
 {
   "statusLine": {
     "type": "command",
@@ -207,31 +102,71 @@ else
   }
 }
 EOF
-    echo -e "  ${GREEN}✓${NC} Created $SETTINGS_FILE"
+    echo -e "  ${GREEN}✓${NC} Created $settings_file"
+}
+
+print_banner
+
+if [ ! -d "$CLAUDE_SRC" ]; then
+    echo -e "${RED}Error:${NC} $CLAUDE_SRC not found"
+    exit 1
 fi
 
-# Summary
+mkdir -p "$CLAUDE_DEST"
+
+case "$MODE" in
+    --link|-l)
+        install_mode="link"
+        ;;
+    --copy|-c)
+        install_mode="copy"
+        ;;
+    --export|-e)
+        export_package
+        exit 0
+        ;;
+    --help|-h)
+        echo "Usage: $0 [OPTIONS]"
+        echo ""
+        echo "Options:"
+        echo "  --link, -l    Install with symbolic links"
+        echo "  --copy, -c    Install by copying files"
+        echo "  --export, -e  Create distribution zip package"
+        echo "  --help, -h    Show this help message"
+        exit 0
+        ;;
+    *)
+        echo -e "${RED}Unknown option:${NC} $MODE"
+        exit 1
+        ;;
+esac
+
+echo "[1/5] Installing statusline.py..."
+cp "$CLAUDE_SRC/statusline.py" "$CLAUDE_DEST/"
+chmod +x "$CLAUDE_DEST/statusline.py"
+echo -e "      ${GREEN}✓${NC} Copied to $CLAUDE_DEST/statusline.py"
+
+install_dir_component 2 5 "agents" "$CLAUDE_SRC/agents" "$CLAUDE_DEST/agents" "$install_mode" "*.md"
+install_dir_component 3 5 "skills" "$CLAUDE_SRC/skills" "$CLAUDE_DEST/skills" "$install_mode" "SKILL.md"
+install_dir_component 4 5 "hooks" "$CLAUDE_SRC/hooks" "$CLAUDE_DEST/hooks" "$install_mode" ""
+install_dir_component 5 5 "commands" "$CLAUDE_SRC/commands" "$CLAUDE_DEST/commands" "$install_mode" "*.md"
+
+echo ""
+echo "Checking settings.json..."
+create_default_settings
+
 echo ""
 echo -e "${GREEN}╔═══════════════════════════════════════════════════════════╗${NC}"
 echo -e "${GREEN}║${NC}  ${BOLD}✓ Installation Complete!${NC}                                ${GREEN}║${NC}"
 echo -e "${GREEN}╚═══════════════════════════════════════════════════════════╝${NC}"
 echo ""
-echo -e "${BOLD}Installed Components:${NC}"
-echo "  • agents/       37 AI agents (MoAI + Domain)"
-echo "  • skills/       303 skills (52 MoAI + 251 Domain)"
-echo "  • hooks/        Automation scripts"
-echo "  • rules/        16 language rules + workflows"
-echo "  • commands/     Slash commands"
-echo "  • output-styles/ Alfred, Yoda, R2D2 styles"
-echo "  • statusline.py Real-time cost tracking"
+echo "Installed Components:"
+echo "  • statusline.py"
+echo "  • agents/"
+echo "  • skills/"
+echo "  • hooks/"
+echo "  • commands/"
 echo ""
-echo -e "${BOLD}Paths:${NC}"
-echo -e "  Source:  ${CYAN}$CLAUDE_SRC${NC}"
-echo -e "  Target:  ${CYAN}$CLAUDE_DEST${NC}"
-echo -e "  Mode:    ${CYAN}$INSTALL_MODE${NC}"
-echo ""
-echo -e "${BOLD}Next steps:${NC}"
+echo "Next steps:"
 echo "  1. Restart Claude Code to apply changes"
-echo -e "  2. Try ${CYAN}\"Hello, build me a FastAPI server\"${NC}"
-echo -e "  3. Or use ${CYAN}/moai plan \"your feature\"${NC}"
-echo ""
+echo "  2. Confirm the status line appears"

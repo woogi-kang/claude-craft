@@ -65,7 +65,7 @@ env/
 *.egg
 api-key-*
 # Python Cache & Bytecode
-# MoAI-ADK Package Distribution .gitignore
+# Claude Craft .gitignore
 .directory
 .DocumentRevisions-V100
 *_token=*
@@ -146,7 +146,6 @@ ehthumbs.db
 .env/
 out/
 .claude/skills/*/secrets/
-.moai-backups/
 coverage.json
 .next/
 secret-key-*
@@ -154,7 +153,6 @@ secret-key-*
 *_backup_*/
 *.pem
 # IDE & Editors
-.moai/temp/
 .claude/plans/
 mcp.json
 
