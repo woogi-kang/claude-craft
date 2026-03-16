@@ -20,9 +20,10 @@
 
 ### SaaS 전환 기술 스택
 - **Vercel Pro** — 호스팅/배포, 서버리스, 커스텀 도메인
-- **Supabase Pro** — DB (PostgreSQL), Auth, Realtime (방명록), Storage (이미지/Guest Snap)
+- **Supabase Pro** — DB (PostgreSQL), Auth, Realtime (방명록), Storage (갤러리/AI 이미지)
+- **Cloudflare R2** — Guest Snap 전용 (하객 사진/영상 대량 업로드, egress 0원)
 - **Gemini 3.0 Flash** — AI 커스터마이징 API (저비용 고효율)
-- Firebase/Google Drive **제거** → Supabase로 통합
+- Firebase/Google Drive **제거** → Supabase + R2로 대체
 
 ### 핵심 기능
 - **13개 섹션**: Hero, 인사말, 커플소개, 인터뷰, 갤러리, 웨딩정보, 위치, 계좌, 방명록, Guest Snap, 공유, 영상, 푸터
@@ -193,8 +194,9 @@
 |------|------|------|
 | Vercel Pro | 2만원 | 호스팅/배포 |
 | Supabase Pro | 3만원 | DB + Auth + Realtime + Storage |
+| Cloudflare R2 | 0.5~2만원 | Guest Snap 전용 (저장 $0.015/GB, egress 0원) |
 | Gemini Flash API (텍스트+이미지) | 0.5~2만원 | 텍스트 ~50원, 이미지 ~92원/회 |
-| **인프라 소계** | **~7만원** | Firebase/R2 불필요, Supabase 통합 |
+| **인프라 소계** | **~8만원** | Supabase(DB/Auth/갤러리) + R2(Guest Snap) + Gemini |
 | 마케팅 (선택) | 0~40만원 | 초기 커뮤니티/입소문만이면 0원 |
 | PG 수수료 (3.5%) | 3.4만원 | 필수 (결제 시 자동 차감) |
 | VAT (10%) | 8.9만원 | 필수 (간이과세 시 경감 가능) |
@@ -210,7 +212,8 @@
 
 **Phase 1 — Self-Serve MVP (6-8주)**
 - `constants.ts` → Supabase DB + Row-Level Security
-- Firebase → Supabase Realtime (방명록), Supabase Storage (이미지/Guest Snap)
+- Firebase → Supabase Realtime (방명록), Supabase Storage (갤러리/AI 이미지)
+- Google Drive → Cloudflare R2 (Guest Snap — 하객 사진/영상 대량 업로드)
 - 슬러그 기반 동적 라우팅 (`/invitation/{slug}`)
 - 블록 에디터 MVP (섹션 드래그앤드롭 + 기본 레이아웃 편집)
 - 2-3개 테마 (botanical, modern, glitch)

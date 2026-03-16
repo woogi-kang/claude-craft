@@ -148,9 +148,10 @@ AI 크레딧으로 스타일/디자인 수정을 원하는 만큼 적용.
 | 항목 | 비용 | 비고 |
 |------|------|------|
 | Vercel Pro | 2만원 | 호스팅/배포 |
-| Supabase Pro | 3만원 | DB + Auth + Realtime + Storage 통합 |
+| Supabase Pro | 3만원 | DB + Auth + Realtime + Storage (갤러리/AI이미지) |
+| Cloudflare R2 | 0.5~2만원 | Guest Snap 전용 (하객 사진/영상, egress 0원) |
 | Gemini Flash API (텍스트+이미지) | 0.5~2만원 | 텍스트 ~50원, 이미지 ~92원/회 |
-| **인프라 소계** | **~7만원** | Firebase 제거, Supabase 통합 |
+| **인프라 소계** | **~8만원** | Supabase + R2 + Gemini |
 | 메타/인스타 광고 | 20~30만원 | |
 | 콘텐츠 | 10만원 | 블로그, 릴스 |
 | **마케팅 소계** | **~40만원** | |
@@ -229,4 +230,4 @@ AI 크레딧으로 스타일/디자인 수정을 원하는 만큼 적용.
 
 *전략 유형: 단일 가격 + AI 블록 에디터, 저리스크, 시장 검증*
 *핵심 차별점: 4.9만원 올인원 + AI 커스터마이징 (Gemini Flash) + 블록 에디터 자유도*
-*인프라: Vercel Pro + Supabase Pro 2개로 단순화 (Firebase 제거)*
+*인프라: Vercel Pro + Supabase Pro + Cloudflare R2 (Firebase/Google Drive 제거)*
