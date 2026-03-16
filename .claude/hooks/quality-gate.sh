@@ -3,10 +3,9 @@
 # Auto-runs linters/formatters on edited files
 # Triggered by PostToolUse for Edit|Write tools
 
-set -e
-INPUT=$(cat)
+INPUT=$(cat) || exit 0
 
-FILE=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
+FILE=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null) || exit 0
 [ -z "$FILE" ] && exit 0
 [ ! -f "$FILE" ] && exit 0
 
@@ -31,7 +30,7 @@ case "$EXT" in
     fi
     ;;
   ts|tsx|js|jsx)
-    if command -v npx &>/dev/null && [ -f "$(dirname "$FILE")/node_modules/.bin/biome" ] 2>/dev/null || npx biome --version &>/dev/null 2>&1; then
+    if [ -f "$(git rev-parse --show-toplevel 2>/dev/null)/node_modules/.bin/biome" ] 2>/dev/null; then
       npx biome check --write "$FILE" 2>>"$LOG" || true
       echo "$TIMESTAMP [js/ts] biome: $FILE" >> "$LOG"
     elif command -v npx &>/dev/null; then

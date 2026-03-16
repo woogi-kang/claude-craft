@@ -5,13 +5,10 @@
 # Triggered by PostToolUse events (configured in settings.json)
 # Reads JSON from stdin per Claude Code hooks spec
 
-set -e
-
-INPUT=$(cat)
+INPUT=$(cat) || exit 0
 
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // "unknown"')
-TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // "unknown"')
+TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // "unknown"' 2>/dev/null) || exit 0
 
 LOG_DIR="$(cd "$(dirname "$0")/.." && pwd)/logs"
 LOG_FILE="$LOG_DIR/usage.jsonl"
@@ -23,7 +20,7 @@ case "$TOOL_NAME" in
     TYPE=$(echo "$INPUT" | jq -r '.tool_input.subagent_type // "general-purpose"')
     jq -n \
       --arg ts "$TIMESTAMP" \
-      --arg sid "$SESSION_ID" \
+      --arg sid "unknown" \
       --arg tool "agent" \
       --arg name "$NAME" \
       --arg subtype "$TYPE" \
@@ -35,7 +32,7 @@ case "$TOOL_NAME" in
     ARGS=$(echo "$INPUT" | jq -r '.tool_input.args // ""')
     jq -n \
       --arg ts "$TIMESTAMP" \
-      --arg sid "$SESSION_ID" \
+      --arg sid "unknown" \
       --arg tool "skill" \
       --arg name "$NAME" \
       --arg args "$ARGS" \

@@ -2,21 +2,20 @@
 # Claude Code Hook: Git Push Guard
 # Warns before git push to remote (PreToolUse for Bash)
 
-set -e
-INPUT=$(cat)
+INPUT=$(cat) || exit 0
 
-COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty')
+COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null) || exit 0
 [ -z "$COMMAND" ] && exit 0
 
 # Only intercept git push commands
 case "$COMMAND" in
-  *"git push"*|*"git push "*) ;;
+  *"git push"*) ;;
   *) exit 0 ;;
 esac
 
 # Check for force push (extra dangerous)
 case "$COMMAND" in
-  *"--force"*|*"-f "*)
+  *"--force"*|*" -f "*|*" -f")
     echo '{"decision":"block","reason":"Force push detected. This is destructive and may overwrite remote history. Please confirm with the user first."}'
     exit 0
     ;;

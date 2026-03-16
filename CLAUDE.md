@@ -8,24 +8,23 @@ Claude Code, Gemini CLI, Codex CLI, OpenCode에서 동일한 에이전트/스킬
 ```
 .claude/agents/    # 도메인 에이전트 정의
 .claude/skills/    # 스킬 원본 (Single Source of Truth)
-.claude/commands/  # 슬래시 커맨드 (commit, review, today, financial-report)
-.claude/hooks/     # 라이프사이클 훅
+.claude/commands/  # 슬래시 커맨드 (16개)
+.claude/hooks/     # 라이프사이클 훅 (usage-tracker, quality-gate, git-push-guard)
+.claude/rules/     # 모듈형 규칙 (common, python, typescript)
 .agents/skills/    # → .claude/skills/ symlink (Gemini, Codex, OpenCode 공용)
-data/              # 비즈니스 데이터 (피부과, 시장조사)
-tools/             # 운영 도구 (clinic-consult, x-outreach)
-scripts/           # 유틸리티 스크립트
-work-social/       # 소셜 미디어 전략/초안
+contexts/          # 행동 모드 (dev, research, review, plan)
+scripts/           # 유틸리티 스크립트 (검증, 카탈로그, 오케스트레이션)
+docs/              # 프로젝트 문서 (YYMMDD- prefix)
 ```
 
-## 도메인 에이전트 (8개 카테고리)
+## 도메인 에이전트 (7개 카테고리)
 
 | 카테고리 | 영역 |
 |----------|------|
-| 💻 개발 | FastAPI, Flutter, Next.js, Figma 변환, 크롤러, TDD |
+| 💻 개발 | FastAPI, Flutter, Next.js, Figma 변환, TDD, 빌드에러, 리팩토링 |
 | 🎯 기획 | 디스커버리, 전략, 실행, GTM, 데이터 분석 (75개 스킬) |
 | 🎨 디자인 | 프론트엔드 UI/UX 디자인 시스템 |
 | 📝 콘텐츠 | PPT, 소셜 미디어, 기술 블로그, 이모티콘 |
-| 📣 마케팅 | 마케팅 전략, SEO, X 아웃리치 |
 | ⚖️ 법무 | 계약 검토, 법인 운영 |
 | 💰 재무 | 결제 자동화, 재무 보고 |
 | 🔍 리뷰 | 코드/아키텍처/보안/콘텐츠/디자인 멀티 리뷰 |
@@ -43,6 +42,10 @@ work-social/       # 소셜 미디어 전략/초안
 ## 작업 원칙
 
 - 사용자 응답은 현재 대화 언어를 따릅니다.
+- 서로 독립적인 조회 작업은 병렬 실행을 우선합니다.
+- 도메인 에이전트와 스킬을 적극 활용합니다.
+- 코드 변경 시 기존 패턴과 컨벤션을 따릅니다.
+- 보안 민감 정보(API 키, 시크릿)는 절대 커밋하지 않습니다.
 
 ## Rules
 

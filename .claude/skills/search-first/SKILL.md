@@ -38,7 +38,7 @@ cat docs/skill-catalog.md | grep "keyword"
 ### 2. 패키지 레지스트리 확인
 | 스택 | 레지스트리 | 확인 방법 |
 |------|-----------|----------|
-| Python | PyPI | `pip search` 또는 pypi.org 검색 |
+| Python | PyPI | pypi.org 검색 또는 `pip index versions <package>` |
 | Node.js | npm | `npm search` 또는 npmjs.com 검색 |
 | Flutter | pub.dev | pub.dev 검색 |
 
