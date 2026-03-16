@@ -43,13 +43,23 @@ work-social/       # 소셜 미디어 전략/초안
 ## 작업 원칙
 
 - 사용자 응답은 현재 대화 언어를 따릅니다.
-- 서로 독립적인 조회 작업은 병렬 실행을 우선합니다.
-- 도메인 에이전트와 스킬을 적극 활용합니다.
-- 코드 변경 시 기존 패턴과 컨벤션을 따릅니다.
-- 보안 민감 정보(API 키, 시크릿)는 절대 커밋하지 않습니다.
 
-## 파일 네이밍 컨벤션
+## Rules
 
-- `docs/` 디렉토리에 문서 생성 시 파일명 앞에 **날짜 prefix**를 붙입니다.
-  - 형식: `YYMMDD-문서명.md` (예: `260316-liff-integration-guide.md`)
-  - 날짜는 생성일 기준이며, 6자리 숫자를 사용합니다.
+프로젝트 규칙은 `.claude/rules/`에 모듈형으로 관리됩니다:
+
+```
+.claude/rules/
+├── common/          # 공통 규칙
+│   ├── coding-style.md
+│   ├── git-workflow.md
+│   ├── agent-orchestration.md
+│   ├── testing.md
+│   └── file-naming.md
+├── python/          # Python 전용
+│   └── coding-style.md
+└── typescript/      # TypeScript 전용
+    └── coding-style.md
+```
+
+상세 규칙은 각 파일을 참조하세요.
