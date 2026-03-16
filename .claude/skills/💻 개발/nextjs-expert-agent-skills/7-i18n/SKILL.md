@@ -1,3 +1,11 @@
+---
+name: i18n
+description: |
+  next-intl을 사용하여 다국어 지원을 설정합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Internationalization (i18n) Skill
 
 next-intl을 사용하여 다국어 지원을 설정합니다.

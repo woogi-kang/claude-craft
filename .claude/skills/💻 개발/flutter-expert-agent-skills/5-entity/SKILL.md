@@ -1,3 +1,11 @@
+---
+name: entity
+description: |
+  Freezed 기반 Domain Entity를 생성합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Entity Skill
 
 Freezed 기반 Domain Entity를 생성합니다.

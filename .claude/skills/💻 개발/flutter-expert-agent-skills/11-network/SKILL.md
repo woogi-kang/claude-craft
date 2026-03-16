@@ -1,3 +1,11 @@
+---
+name: network
+description: |
+  Dio + Retrofit 기반 네트워크 레이어를 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Network Skill
 
 Dio + Retrofit 기반 네트워크 레이어를 구현합니다.

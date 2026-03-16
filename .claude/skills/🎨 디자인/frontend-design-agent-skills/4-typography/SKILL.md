@@ -1,3 +1,11 @@
+---
+name: typography
+description: |
+  프로젝트의 디자인 방향에 맞는 타이포그래피 시스템을 구성합니다.
+metadata:
+  category: "🎨 디자인"
+  version: "1.0.0"
+---
 # Typography Skill
 
 프로젝트의 디자인 방향에 맞는 타이포그래피 시스템을 구성합니다.

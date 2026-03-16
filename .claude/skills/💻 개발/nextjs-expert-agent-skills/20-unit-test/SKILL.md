@@ -1,3 +1,11 @@
+---
+name: unit-test
+description: |
+  Vitest를 사용하여 단위 테스트를 작성합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Unit Test Skill
 
 Vitest를 사용하여 단위 테스트를 작성합니다.

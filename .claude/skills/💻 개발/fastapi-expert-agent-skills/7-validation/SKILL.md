@@ -1,3 +1,11 @@
+---
+name: validation
+description: |
+  Pydantic V2 validators 및 커스텀 검증 패턴을 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Validation Skill
 
 Pydantic V2 validators 및 커스텀 검증 패턴을 구현합니다.

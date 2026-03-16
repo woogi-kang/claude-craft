@@ -1,3 +1,11 @@
+---
+name: docker
+description: |
+  멀티스테이지 빌드, Docker Compose 구성을 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Docker Skill
 
 멀티스테이지 빌드, Docker Compose 구성을 구현합니다.

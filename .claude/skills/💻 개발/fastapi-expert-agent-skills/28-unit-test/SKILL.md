@@ -1,3 +1,11 @@
+---
+name: unit-test
+description: |
+  pytest를 활용한 유닛 테스트를 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Unit Test Skill
 
 pytest를 활용한 유닛 테스트를 구현합니다.

@@ -1,3 +1,11 @@
+---
+name: seo
+description: |
+  Next.js 애플리케이션 SEO를 최적화합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # SEO Skill
 
 Next.js 애플리케이션 SEO를 최적화합니다.

@@ -1,3 +1,11 @@
+---
+name: crud-operations
+description: |
+  Generic CRUD, pagination, filtering, sorting을 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # CRUD Operations Skill
 
 Generic CRUD, pagination, filtering, sorting을 구현합니다.

@@ -1,3 +1,11 @@
+---
+name: e2e-test
+description: |
+  Playwright, Docker를 활용한 End-to-End 테스트를 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # E2E Test Skill
 
 Playwright, Docker를 활용한 End-to-End 테스트를 구현합니다.

@@ -1,3 +1,11 @@
+---
+name: http-client
+description: |
+  httpx async client, retry, timeout 패턴을 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # HTTP Client Skill
 
 httpx async client, retry, timeout 패턴을 구현합니다.

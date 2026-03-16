@@ -1,3 +1,11 @@
+---
+name: unit-test
+description: |
+  Unit Test를 작성합니다 (Repository, UseCase, Notifier).
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Unit Test Skill
 
 Unit Test를 작성합니다 (Repository, UseCase, Notifier).

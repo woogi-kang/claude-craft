@@ -1,3 +1,11 @@
+---
+name: state
+description: |
+  Zustand를 사용하여 클라이언트 상태를 관리합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # State Management Skill
 
 Zustand를 사용하여 클라이언트 상태를 관리합니다.

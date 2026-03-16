@@ -1,3 +1,11 @@
+---
+name: repository-pattern
+description: |
+  Repository 추상화 및 Unit of Work 패턴을 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Repository Pattern Skill
 
 Repository 추상화 및 Unit of Work 패턴을 구현합니다.

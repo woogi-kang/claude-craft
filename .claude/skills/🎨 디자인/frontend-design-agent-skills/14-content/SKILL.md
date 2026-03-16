@@ -1,3 +1,11 @@
+---
+name: content
+description: |
+  콘텐츠 및 에디토리얼 페이지 디자인을 위한 종합 스킬입니다.
+metadata:
+  category: "🎨 디자인"
+  version: "1.0.0"
+---
 # Content Page Design Skill
 
 콘텐츠 및 에디토리얼 페이지 디자인을 위한 종합 스킬입니다.

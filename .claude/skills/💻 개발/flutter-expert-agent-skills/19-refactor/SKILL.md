@@ -1,3 +1,11 @@
+---
+name: refactor
+description: |
+  코드 리팩토링을 수행합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Refactor Skill
 
 코드 리팩토링을 수행합니다.

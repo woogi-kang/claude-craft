@@ -1,3 +1,11 @@
+---
+name: di-container
+description: |
+  Dependency Injection 패턴을 설정합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # DI Container Skill
 
 Dependency Injection 패턴을 설정합니다.

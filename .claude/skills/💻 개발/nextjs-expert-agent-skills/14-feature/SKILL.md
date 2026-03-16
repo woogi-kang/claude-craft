@@ -1,3 +1,11 @@
+---
+name: feature
+description: |
+  Feature 기반 모듈을 생성합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Feature Skill
 
 Feature 기반 모듈을 생성합니다.

@@ -1,3 +1,12 @@
+---
+name: interactions
+description: |
+  마이크로 인터랙션 및 애니메이션 디자인 스킬입니다.
+  Framer Motion 기반 hover, tap, focus, loading, scroll 애니메이션을 구현합니다.
+metadata:
+  category: "🎨 디자인"
+  version: "1.0.0"
+---
 # Interactions Skill
 
 마이크로 인터랙션 및 애니메이션 디자인 스킬입니다.

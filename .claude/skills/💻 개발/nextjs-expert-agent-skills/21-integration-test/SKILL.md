@@ -1,3 +1,11 @@
+---
+name: integration-test
+description: |
+  컴포넌트 통합 테스트를 작성합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Integration Test Skill
 
 컴포넌트 통합 테스트를 작성합니다.

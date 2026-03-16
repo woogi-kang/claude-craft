@@ -1,3 +1,11 @@
+---
+name: authentication
+description: |
+  OAuth2 Password flow, JWT access/refresh 토큰을 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Authentication Skill
 
 OAuth2 Password flow, JWT access/refresh 토큰을 구현합니다.

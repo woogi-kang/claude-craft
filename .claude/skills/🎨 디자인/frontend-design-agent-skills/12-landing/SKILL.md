@@ -1,3 +1,11 @@
+---
+name: landing
+description: |
+  랜딩 페이지 디자인 및 구성을 위한 종합 스킬입니다.
+metadata:
+  category: "🎨 디자인"
+  version: "1.0.0"
+---
 # Landing Page Design Skill
 
 랜딩 페이지 디자인 및 구성을 위한 종합 스킬입니다.

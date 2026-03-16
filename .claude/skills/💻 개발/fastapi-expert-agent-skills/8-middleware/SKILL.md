@@ -1,3 +1,11 @@
+---
+name: middleware
+description: |
+  CORS, Request logging, Timing 등 미들웨어를 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Middleware Skill
 
 CORS, Request logging, Timing 등 미들웨어를 구현합니다.

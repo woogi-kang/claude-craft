@@ -1,3 +1,11 @@
+---
+name: rate-limiting
+description: |
+  SlowAPI, Token Bucket, 분산 Rate Limiting을 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Rate Limiting Skill
 
 SlowAPI, Token Bucket, 분산 Rate Limiting을 구현합니다.

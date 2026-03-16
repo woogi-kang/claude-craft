@@ -1,3 +1,11 @@
+---
+name: background-tasks
+description: |
+  Celery, ARQ, FastAPI BackgroundTasks를 활용한 비동기 작업을 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Background Tasks Skill
 
 Celery, ARQ, FastAPI BackgroundTasks를 활용한 비동기 작업을 구현합니다.

@@ -1,3 +1,11 @@
+---
+name: logging
+description: |
+  Talker 로깅 시스템을 설정합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Logging Skill
 
 Talker 로깅 시스템을 설정합니다.

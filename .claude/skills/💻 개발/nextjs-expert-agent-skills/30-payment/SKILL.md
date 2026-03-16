@@ -1,3 +1,11 @@
+---
+name: payment
+description: |
+  Stripe를 사용하여 결제 기능을 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Payment Skill
 
 Stripe를 사용하여 결제 기능을 구현합니다.

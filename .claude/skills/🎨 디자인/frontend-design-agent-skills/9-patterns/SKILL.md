@@ -1,3 +1,12 @@
+---
+name: patterns
+description: |
+  복합 UI 패턴 (Molecules, Organisms) 설계 및 구현 스킬입니다.
+  Atomic Design의 조합 단계로, 재사용 가능한 복합 컴포넌트를 제공합니다.
+metadata:
+  category: "🎨 디자인"
+  version: "1.0.0"
+---
 # Patterns Skill
 
 복합 UI 패턴 (Molecules, Organisms) 설계 및 구현 스킬입니다.

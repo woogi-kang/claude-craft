@@ -1,3 +1,11 @@
+---
+name: feature-implementation
+description: |
+  Clean Architecture 기반 피처 구현 패턴을 제공합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Feature Implementation Skill
 
 Clean Architecture 기반 피처 구현 패턴을 제공합니다.

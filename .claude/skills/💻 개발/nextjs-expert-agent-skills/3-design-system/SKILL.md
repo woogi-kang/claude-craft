@@ -1,3 +1,11 @@
+---
+name: design-system
+description: |
+  shadcn/ui + Tailwind CSS v4 기반 디자인 시스템을 구성합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Design System Skill
 
 shadcn/ui + Tailwind CSS v4 기반 디자인 시스템을 구성합니다.

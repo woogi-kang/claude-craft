@@ -1,3 +1,11 @@
+---
+name: motion
+description: |
+  프로젝트의 애니메이션 시스템과 모션 언어를 구성합니다.
+metadata:
+  category: "🎨 디자인"
+  version: "1.0.0"
+---
 # Motion Skill
 
 프로젝트의 애니메이션 시스템과 모션 언어를 구성합니다.

@@ -1,3 +1,11 @@
+---
+name: pagination
+description: |
+  Offset 및 Cursor 기반 페이지네이션을 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Pagination Skill
 
 Offset 및 Cursor 기반 페이지네이션을 구현합니다.

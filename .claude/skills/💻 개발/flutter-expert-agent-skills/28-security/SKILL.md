@@ -1,3 +1,11 @@
+---
+name: security
+description: |
+  앱 보안 설정 및 보안 베스트 프랙티스를 적용합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Security Skill
 
 앱 보안 설정 및 보안 베스트 프랙티스를 적용합니다.

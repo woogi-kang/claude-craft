@@ -1,3 +1,11 @@
+---
+name: flavor
+description: |
+  Flutter 프로젝트의 환경별 빌드 구성 (dev, staging, prod)을 설정합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Flavor Skill
 
 Flutter 프로젝트의 환경별 빌드 구성 (dev, staging, prod)을 설정합니다.

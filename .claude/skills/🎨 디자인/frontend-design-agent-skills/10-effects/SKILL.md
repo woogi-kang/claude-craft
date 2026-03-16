@@ -1,3 +1,12 @@
+---
+name: effects
+description: |
+  시각적 효과 및 배경 디자인 스킬입니다.
+  모던 웹 디자인의 Gradient Mesh, Glassmorphism, Neumorphism 등을 구현합니다.
+metadata:
+  category: "🎨 디자인"
+  version: "1.0.0"
+---
 # Effects Skill
 
 시각적 효과 및 배경 디자인 스킬입니다.

@@ -1,3 +1,11 @@
+---
+name: supabase
+description: |
+  Flutter 프로젝트에 Supabase 백엔드 서비스를 설정하고 통합합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Supabase Skill
 
 Flutter 프로젝트에 Supabase 백엔드 서비스를 설정하고 통합합니다.

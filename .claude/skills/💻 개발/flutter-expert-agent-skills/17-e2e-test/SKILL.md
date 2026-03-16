@@ -1,3 +1,11 @@
+---
+name: e2e-test
+description: |
+  Patrol을 사용한 E2E 통합 테스트를 작성합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # E2E Test Skill
 
 Patrol을 사용한 E2E 통합 테스트를 작성합니다.

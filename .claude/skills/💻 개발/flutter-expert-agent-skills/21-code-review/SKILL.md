@@ -1,3 +1,11 @@
+---
+name: code-review
+description: |
+  코드 리뷰 및 품질 검증을 수행합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Code Review Skill
 
 코드 리뷰 및 품질 검증을 수행합니다.

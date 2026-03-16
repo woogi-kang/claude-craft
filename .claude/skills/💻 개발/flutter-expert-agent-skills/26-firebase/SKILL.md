@@ -1,3 +1,11 @@
+---
+name: firebase
+description: |
+  Flutter 프로젝트에 Firebase 서비스를 설정하고 통합합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Firebase Skill
 
 Flutter 프로젝트에 Firebase 서비스를 설정하고 통합합니다.

@@ -1,3 +1,11 @@
+---
+name: security-hardening
+description: |
+  HTTPS, 입력 검증, SQL Injection 방지 등 보안 강화를 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Security Hardening Skill
 
 HTTPS, 입력 검증, SQL Injection 방지 등 보안 강화를 구현합니다.

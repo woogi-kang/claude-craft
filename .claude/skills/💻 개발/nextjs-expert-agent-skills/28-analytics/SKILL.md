@@ -1,3 +1,11 @@
+---
+name: analytics
+description: |
+  Google Analytics 4와 Vercel Analytics를 설정합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Analytics Skill
 
 Google Analytics 4와 Vercel Analytics를 설정합니다.

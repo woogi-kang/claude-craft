@@ -1,3 +1,11 @@
+---
+name: color
+description: |
+  프로젝트의 디자인 방향에 맞는 색상 팔레트와 테마 시스템을 구성합니다.
+metadata:
+  category: "🎨 디자인"
+  version: "1.0.0"
+---
 # Color Skill
 
 프로젝트의 디자인 방향에 맞는 색상 팔레트와 테마 시스템을 구성합니다.

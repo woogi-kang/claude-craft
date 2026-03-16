@@ -1,3 +1,11 @@
+---
+name: authorization
+description: |
+  RBAC (Role-Based Access Control), Scopes, Permissions를 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Authorization Skill
 
 RBAC (Role-Based Access Control), Scopes, Permissions를 구현합니다.

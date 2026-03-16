@@ -1,3 +1,11 @@
+---
+name: middleware
+description: |
+  Next.js Edge Middleware를 설정합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Middleware Skill
 
 Next.js Edge Middleware를 설정합니다.

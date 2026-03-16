@@ -1,3 +1,11 @@
+---
+name: email
+description: |
+  Resend와 React Email을 사용하여 이메일을 발송합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Email Skill
 
 Resend와 React Email을 사용하여 이메일을 발송합니다.

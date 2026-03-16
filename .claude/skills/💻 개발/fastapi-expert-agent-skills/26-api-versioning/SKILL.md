@@ -1,3 +1,11 @@
+---
+name: api-versioning
+description: |
+  URL Path, Header 기반 API 버저닝 전략을 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # API Versioning Skill
 
 URL Path, Header 기반 API 버저닝 전략을 구현합니다.

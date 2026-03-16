@@ -1,3 +1,11 @@
+---
+name: environment
+description: |
+  Pydantic Settings를 사용한 환경 변수 및 다중 환경 설정을 구성합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Environment Skill
 
 Pydantic Settings를 사용한 환경 변수 및 다중 환경 설정을 구성합니다.

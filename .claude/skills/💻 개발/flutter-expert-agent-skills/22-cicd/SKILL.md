@@ -1,3 +1,11 @@
+---
+name: cicd
+description: |
+  GitHub Actions 기반 Flutter CI/CD 파이프라인을 구성합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # CI/CD Skill
 
 GitHub Actions 기반 Flutter CI/CD 파이프라인을 구성합니다.

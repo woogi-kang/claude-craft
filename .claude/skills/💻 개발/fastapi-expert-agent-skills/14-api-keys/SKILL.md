@@ -1,3 +1,11 @@
+---
+name: api-keys
+description: |
+  API Key 인증 및 웹훅 서명 검증을 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # API Keys Skill
 
 API Key 인증 및 웹훅 서명 검증을 구현합니다.

@@ -1,3 +1,11 @@
+---
+name: performance
+description: |
+  Next.js 애플리케이션 성능을 최적화합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Performance Skill
 
 Next.js 애플리케이션 성능을 최적화합니다.

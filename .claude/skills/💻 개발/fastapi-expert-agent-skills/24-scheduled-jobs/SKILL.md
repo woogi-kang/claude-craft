@@ -1,3 +1,11 @@
+---
+name: scheduled-jobs
+description: |
+  APScheduler, Celery Beat를 활용한 정기 작업 스케줄링을 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Scheduled Jobs Skill
 
 APScheduler, Celery Beat를 활용한 정기 작업 스케줄링을 구현합니다.

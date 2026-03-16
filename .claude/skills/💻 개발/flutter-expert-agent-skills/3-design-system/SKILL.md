@@ -1,3 +1,11 @@
+---
+name: design-system
+description: |
+  Atomic Design 기반 디자인 시스템을 구축합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Design System Skill
 
 Atomic Design 기반 디자인 시스템을 구축합니다.

@@ -1,3 +1,11 @@
+---
+name: database-setup
+description: |
+  SQLAlchemy 2.0 async + Alembic 마이그레이션을 설정합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Database Setup Skill
 
 SQLAlchemy 2.0 async + Alembic 마이그레이션을 설정합니다.

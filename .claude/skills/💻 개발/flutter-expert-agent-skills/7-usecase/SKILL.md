@@ -1,3 +1,11 @@
+---
+name: usecase
+description: |
+  UseCase/Interactor를 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # UseCase Skill
 
 UseCase/Interactor를 구현합니다.

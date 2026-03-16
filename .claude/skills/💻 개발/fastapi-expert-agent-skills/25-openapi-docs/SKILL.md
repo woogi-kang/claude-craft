@@ -1,3 +1,11 @@
+---
+name: openapi-docs
+description: |
+  Swagger UI, ReDoc을 활용한 API 문서화를 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # OpenAPI Documentation Skill
 
 Swagger UI, ReDoc을 활용한 API 문서화를 구현합니다.

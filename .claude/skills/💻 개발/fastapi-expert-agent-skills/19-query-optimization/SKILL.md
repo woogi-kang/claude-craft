@@ -1,3 +1,11 @@
+---
+name: query-optimization
+description: |
+  N+1 문제 방지, 인덱싱, EXPLAIN 분석을 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Query Optimization Skill
 
 N+1 문제 방지, 인덱싱, EXPLAIN 분석을 구현합니다.

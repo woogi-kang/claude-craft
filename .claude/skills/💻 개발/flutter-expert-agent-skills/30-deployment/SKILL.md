@@ -1,3 +1,11 @@
+---
+name: deployment
+description: |
+  Fastlane을 활용한 자동 배포 파이프라인을 구성합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Deployment Skill
 
 Fastlane을 활용한 자동 배포 파이프라인을 구성합니다.

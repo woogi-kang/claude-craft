@@ -1,3 +1,11 @@
+---
+name: performance
+description: |
+  API 성능 최적화, 프로파일링, 캐싱 전략을 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Performance Skill
 
 API 성능 최적화, 프로파일링, 캐싱 전략을 구현합니다.

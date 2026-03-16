@@ -1,3 +1,11 @@
+---
+name: platform-channel
+description: |
+  Pigeon 기반 네이티브 플랫폼 통신을 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Platform Channel Skill
 
 Pigeon 기반 네이티브 플랫폼 통신을 구현합니다.

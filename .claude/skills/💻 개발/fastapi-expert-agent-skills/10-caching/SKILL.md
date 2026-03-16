@@ -1,3 +1,11 @@
+---
+name: caching
+description: |
+  Redis 캐싱 및 fastapi-cache2 패턴을 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Caching Skill
 
 Redis 캐싱 및 fastapi-cache2 패턴을 구현합니다.

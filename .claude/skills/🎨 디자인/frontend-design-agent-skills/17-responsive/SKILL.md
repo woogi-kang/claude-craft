@@ -1,3 +1,11 @@
+---
+name: responsive
+description: |
+  반응형 디자인 검증 및 최적화를 위한 종합 가이드입니다.
+metadata:
+  category: "🎨 디자인"
+  version: "1.0.0"
+---
 # Responsive Design Skill
 
 반응형 디자인 검증 및 최적화를 위한 종합 가이드입니다.

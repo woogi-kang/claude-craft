@@ -1,3 +1,11 @@
+---
+name: schema
+description: |
+  Zod를 사용하여 타입 안전한 스키마를 정의합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Schema Skill
 
 Zod를 사용하여 타입 안전한 스키마를 정의합니다.

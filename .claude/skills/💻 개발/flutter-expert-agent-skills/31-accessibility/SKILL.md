@@ -1,3 +1,11 @@
+---
+name: accessibility
+description: |
+  앱 접근성(a11y) 설정 및 베스트 프랙티스를 적용합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Accessibility Skill
 
 앱 접근성(a11y) 설정 및 베스트 프랙티스를 적용합니다.

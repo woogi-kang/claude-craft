@@ -1,3 +1,11 @@
+---
+name: error-handling
+description: |
+  예외 처리 및 HTTP Exception handlers를 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Error Handling Skill
 
 예외 처리 및 HTTP Exception handlers를 구현합니다.

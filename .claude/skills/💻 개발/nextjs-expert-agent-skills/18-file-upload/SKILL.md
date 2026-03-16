@@ -1,3 +1,11 @@
+---
+name: file-upload
+description: |
+  파일 업로드 기능을 구현합니다 (Vercel Blob, S3, Cloudflare R2).
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # File Upload Skill
 
 파일 업로드 기능을 구현합니다 (Vercel Blob, S3, Cloudflare R2).

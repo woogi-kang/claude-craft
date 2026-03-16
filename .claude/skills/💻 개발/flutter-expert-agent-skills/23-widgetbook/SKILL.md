@@ -1,3 +1,11 @@
+---
+name: widgetbook
+description: |
+  Widgetbook을 사용한 컴포넌트 카탈로그 및 디자인 시스템 문서화를 구성합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Widgetbook Skill
 
 Widgetbook을 사용한 컴포넌트 카탈로그 및 디자인 시스템 문서화를 구성합니다.

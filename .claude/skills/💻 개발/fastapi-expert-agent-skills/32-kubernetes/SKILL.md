@@ -1,3 +1,11 @@
+---
+name: kubernetes
+description: |
+  Kubernetes 배포 설정, Helm 차트를 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Kubernetes Skill
 
 Kubernetes 배포 설정, Helm 차트를 구현합니다.

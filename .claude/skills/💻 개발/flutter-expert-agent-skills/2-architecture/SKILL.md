@@ -1,3 +1,11 @@
+---
+name: architecture
+description: |
+  Clean Architecture 기반 프로젝트 구조를 설계합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Architecture Skill
 
 Clean Architecture 기반 프로젝트 구조를 설계합니다.

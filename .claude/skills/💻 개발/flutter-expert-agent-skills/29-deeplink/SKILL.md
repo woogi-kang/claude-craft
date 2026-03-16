@@ -1,3 +1,11 @@
+---
+name: deeplink
+description: |
+  딥링크 및 유니버셜 링크 설정을 구성합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Deep Link Skill
 
 딥링크 및 유니버셜 링크 설정을 구성합니다.

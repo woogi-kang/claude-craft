@@ -1,3 +1,11 @@
+---
+name: realtime
+description: |
+  실시간 기능을 구현합니다 (Server-Sent Events, WebSocket, Pusher).
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Realtime Skill
 
 실시간 기능을 구현합니다 (Server-Sent Events, WebSocket, Pusher).

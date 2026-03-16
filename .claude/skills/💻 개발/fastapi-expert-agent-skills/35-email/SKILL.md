@@ -1,3 +1,11 @@
+---
+name: email
+description: |
+  이메일 발송, 템플릿 관리, SMTP/SendGrid/Resend 연동을 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Email Skill
 
 이메일 발송, 템플릿 관리, SMTP/SendGrid/Resend 연동을 구현합니다.

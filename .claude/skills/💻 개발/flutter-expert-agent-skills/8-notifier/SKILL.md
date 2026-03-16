@@ -1,3 +1,11 @@
+---
+name: notifier
+description: |
+  Riverpod 3 Notifier를 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Notifier Skill
 
 Riverpod 3 Notifier를 구현합니다.

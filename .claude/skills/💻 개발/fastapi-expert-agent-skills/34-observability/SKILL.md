@@ -1,3 +1,11 @@
+---
+name: observability
+description: |
+  로깅, 메트릭, 트레이싱 기반 관측성을 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Observability Skill
 
 로깅, 메트릭, 트레이싱 기반 관측성을 구현합니다.

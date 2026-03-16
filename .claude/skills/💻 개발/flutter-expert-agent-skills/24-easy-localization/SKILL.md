@@ -1,3 +1,11 @@
+---
+name: easy-localization
+description: |
+  easy_localization 패키지를 사용한 다국어 지원(국제화)을 구성합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # l10n (Localization) Skill
 
 easy_localization 패키지를 사용한 다국어 지원(국제화)을 구성합니다.

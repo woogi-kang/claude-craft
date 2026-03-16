@@ -1,3 +1,11 @@
+---
+name: relationships
+description: |
+  1:N, N:M 관계 및 eager/lazy loading을 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Relationships Skill
 
 1:N, N:M 관계 및 eager/lazy loading을 구현합니다.

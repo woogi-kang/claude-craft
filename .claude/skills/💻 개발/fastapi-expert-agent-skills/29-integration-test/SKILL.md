@@ -1,3 +1,11 @@
+---
+name: integration-test
+description: |
+  실제 데이터베이스와 연동한 통합 테스트를 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Integration Test Skill
 
 실제 데이터베이스와 연동한 통합 테스트를 구현합니다.

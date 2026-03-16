@@ -1,3 +1,11 @@
+---
+name: repository
+description: |
+  Repository 패턴을 구현합니다 (Interface + Implementation).
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Repository Skill
 
 Repository 패턴을 구현합니다 (Interface + Implementation).

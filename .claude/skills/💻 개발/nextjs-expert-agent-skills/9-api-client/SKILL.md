@@ -1,3 +1,11 @@
+---
+name: api-client
+description: |
+  TanStack Query를 사용하여 데이터 fetching 및 캐싱을 설정합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # API Client Skill
 
 TanStack Query를 사용하여 데이터 fetching 및 캐싱을 설정합니다.

@@ -1,3 +1,11 @@
+---
+name: feature-design
+description: |
+  Feature 단위 도메인 설계를 수행합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Feature Design Skill
 
 Feature 단위 도메인 설계를 수행합니다.

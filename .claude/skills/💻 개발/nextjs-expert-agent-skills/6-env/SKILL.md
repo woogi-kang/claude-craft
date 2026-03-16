@@ -1,3 +1,11 @@
+---
+name: env
+description: |
+  T3 Env를 사용하여 타입 안전한 환경 변수를 설정합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Environment Variables Skill
 
 T3 Env를 사용하여 타입 안전한 환경 변수를 설정합니다.

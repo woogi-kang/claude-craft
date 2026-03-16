@@ -1,3 +1,11 @@
+---
+name: visual-test
+description: |
+  시각적 회귀 테스트와 Storybook을 설정합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Visual Test Skill
 
 시각적 회귀 테스트와 Storybook을 설정합니다.

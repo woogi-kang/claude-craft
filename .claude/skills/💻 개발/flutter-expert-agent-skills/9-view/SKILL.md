@@ -1,3 +1,11 @@
+---
+name: view
+description: |
+  Atomic Design 기반 UI Widget/Page를 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # View Skill
 
 Atomic Design 기반 UI Widget/Page를 구현합니다.

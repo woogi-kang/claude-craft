@@ -1,3 +1,11 @@
+---
+name: dashboard
+description: |
+  대시보드 및 SaaS 관리자 UI 디자인을 위한 종합 스킬입니다.
+metadata:
+  category: "🎨 디자인"
+  version: "1.0.0"
+---
 # Dashboard Design Skill
 
 대시보드 및 SaaS 관리자 UI 디자인을 위한 종합 스킬입니다.

@@ -1,3 +1,11 @@
+---
+name: response-design
+description: |
+  일관된 API 응답 형식 및 에러 처리를 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Response Design Skill
 
 일관된 API 응답 형식 및 에러 처리를 구현합니다.

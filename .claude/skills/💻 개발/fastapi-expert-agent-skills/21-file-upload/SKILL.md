@@ -1,3 +1,11 @@
+---
+name: file-upload
+description: |
+  파일 업로드, S3 연동, 이미지 처리를 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # File Upload Skill
 
 파일 업로드, S3 연동, 이미지 처리를 구현합니다.

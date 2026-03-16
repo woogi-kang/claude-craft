@@ -1,3 +1,11 @@
+---
+name: accessibility
+description: |
+  웹 접근성(a11y) 검증 및 WCAG 2.2 준수를 위한 종합 가이드입니다.
+metadata:
+  category: "🎨 디자인"
+  version: "1.0.0"
+---
 # Accessibility Skill
 
 웹 접근성(a11y) 검증 및 WCAG 2.2 준수를 위한 종합 가이드입니다.

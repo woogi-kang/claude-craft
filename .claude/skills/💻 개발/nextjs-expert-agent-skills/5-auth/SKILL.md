@@ -1,3 +1,11 @@
+---
+name: auth
+description: |
+  인증 시스템을 설정합니다 (Auth.js v5 또는 Clerk).
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Auth Skill
 
 인증 시스템을 설정합니다 (Auth.js v5 또는 Clerk).

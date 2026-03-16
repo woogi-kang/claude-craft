@@ -1,3 +1,11 @@
+---
+name: mobile
+description: |
+  모바일 퍼스트 디자인 및 앱 같은 웹 경험을 위한 종합 스킬입니다.
+metadata:
+  category: "🎨 디자인"
+  version: "1.0.0"
+---
 # Mobile-First Design Skill
 
 모바일 퍼스트 디자인 및 앱 같은 웹 경험을 위한 종합 스킬입니다.

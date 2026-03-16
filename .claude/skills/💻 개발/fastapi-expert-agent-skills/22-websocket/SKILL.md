@@ -1,3 +1,11 @@
+---
+name: websocket
+description: |
+  실시간 통신, WebSocket 연결 관리를 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # WebSocket Skill
 
 실시간 통신, WebSocket 연결 관리를 구현합니다.

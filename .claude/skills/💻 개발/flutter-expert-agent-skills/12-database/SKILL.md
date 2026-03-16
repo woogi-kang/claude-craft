@@ -1,3 +1,11 @@
+---
+name: database
+description: |
+  Drift 로컬 데이터베이스를 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Database Skill
 
 Drift 로컬 데이터베이스를 구현합니다.

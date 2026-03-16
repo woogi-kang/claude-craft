@@ -1,3 +1,11 @@
+---
+name: cicd
+description: |
+  GitHub Actions와 Vercel을 사용하여 CI/CD를 설정합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # CI/CD Skill
 
 GitHub Actions와 Vercel을 사용하여 CI/CD를 설정합니다.

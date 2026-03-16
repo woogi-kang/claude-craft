@@ -1,3 +1,11 @@
+---
+name: performance
+description: |
+  성능 최적화를 분석하고 적용합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Performance Skill
 
 성능 최적화를 분석하고 적용합니다.

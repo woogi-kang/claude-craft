@@ -1,3 +1,11 @@
+---
+name: monorepo
+description: |
+  Turborepo를 사용하여 모노레포를 설정합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Monorepo Skill
 
 Turborepo를 사용하여 모노레포를 설정합니다.

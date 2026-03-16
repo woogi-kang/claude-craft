@@ -1,3 +1,11 @@
+---
+name: e2e-test
+description: |
+  Playwright를 사용하여 E2E 테스트를 작성합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # E2E Test Skill
 
 Playwright를 사용하여 E2E 테스트를 작성합니다.

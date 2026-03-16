@@ -1,3 +1,11 @@
+---
+name: routing
+description: |
+  GoRouter 라우팅을 설정합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Routing Skill
 
 GoRouter 라우팅을 설정합니다.

@@ -1,3 +1,11 @@
+---
+name: routing
+description: |
+  Next.js App Router 기반 라우팅을 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Routing Skill
 
 Next.js App Router 기반 라우팅을 구현합니다.

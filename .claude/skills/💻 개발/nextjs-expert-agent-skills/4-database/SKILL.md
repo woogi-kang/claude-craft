@@ -1,3 +1,11 @@
+---
+name: database
+description: |
+  Drizzle ORM + PostgreSQL 데이터베이스를 설정합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Database Skill
 
 Drizzle ORM + PostgreSQL 데이터베이스를 설정합니다.

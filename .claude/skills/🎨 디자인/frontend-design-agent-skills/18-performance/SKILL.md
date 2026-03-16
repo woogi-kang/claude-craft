@@ -1,3 +1,11 @@
+---
+name: performance
+description: |
+  프론트엔드 성능 최적화 및 Core Web Vitals 달성을 위한 종합 가이드입니다.
+metadata:
+  category: "🎨 디자인"
+  version: "1.0.0"
+---
 # Performance Skill
 
 프론트엔드 성능 최적화 및 Core Web Vitals 달성을 위한 종합 가이드입니다.

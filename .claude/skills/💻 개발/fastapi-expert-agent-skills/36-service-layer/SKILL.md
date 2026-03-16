@@ -1,3 +1,11 @@
+---
+name: service-layer
+description: |
+  Clean Architecture의 Application Service 레이어 패턴을 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Service Layer Skill
 
 Clean Architecture의 Application Service 레이어 패턴을 구현합니다.

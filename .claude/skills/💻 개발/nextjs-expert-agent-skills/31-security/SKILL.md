@@ -1,3 +1,11 @@
+---
+name: security
+description: |
+  보안 기능을 구현합니다 (Rate Limiting, CSRF, 입력 검증).
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Security Skill
 
 보안 기능을 구현합니다 (Rate Limiting, CSRF, 입력 검증).

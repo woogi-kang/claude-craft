@@ -1,3 +1,11 @@
+---
+name: golden-test
+description: |
+  Golden Test (시각적 회귀 테스트)를 작성합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Golden Test Skill
 
 Golden Test (시각적 회귀 테스트)를 작성합니다.

@@ -1,3 +1,12 @@
+---
+name: primitives
+description: |
+  Primitive UI 컴포넌트 (Atoms) 설계 및 구현 스킬입니다.
+  shadcn/ui 기반으로 커스터마이징된 기본 빌딩 블록을 제공합니다.
+metadata:
+  category: "🎨 디자인"
+  version: "1.0.0"
+---
 # Primitives Skill
 
 Primitive UI 컴포넌트 (Atoms) 설계 및 구현 스킬입니다.

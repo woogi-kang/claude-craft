@@ -1,3 +1,11 @@
+---
+name: widget-test
+description: |
+  Widget Test를 작성합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Widget Test Skill
 
 Widget Test를 작성합니다.

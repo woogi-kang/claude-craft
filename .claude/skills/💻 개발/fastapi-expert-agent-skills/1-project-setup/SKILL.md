@@ -1,3 +1,11 @@
+---
+name: project-setup
+description: |
+  FastAPI 프로젝트 초기 설정 및 의존성 구성을 수행합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Project Setup Skill
 
 FastAPI 프로젝트 초기 설정 및 의존성 구성을 수행합니다.

@@ -1,3 +1,11 @@
+---
+name: form
+description: |
+  React Hook Form + Zod를 사용하여 폼을 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Form Skill
 
 React Hook Form + Zod를 사용하여 폼을 구현합니다.

@@ -1,3 +1,11 @@
+---
+name: error-handling
+description: |
+  Error Boundary와 Sentry를 사용하여 에러를 처리합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Error Handling Skill
 
 Error Boundary와 Sentry를 사용하여 에러를 처리합니다.

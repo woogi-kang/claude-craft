@@ -1,3 +1,11 @@
+---
+name: server-action
+description: |
+  next-safe-action을 사용하여 타입 안전한 Server Actions를 구현합니다.
+metadata:
+  category: "💻 개발"
+  version: "1.0.0"
+---
 # Server Action Skill
 
 next-safe-action을 사용하여 타입 안전한 Server Actions를 구현합니다.
