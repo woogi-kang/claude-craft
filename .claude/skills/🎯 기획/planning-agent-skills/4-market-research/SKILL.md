@@ -1,478 +1,90 @@
 ---
-name: plan-market-research
-description: |
-  시장 규모, 트렌드, 성장성을 분석하는 스킬.
-  TAM/SAM/SOM, 시장 트렌드를 체계적으로 정리합니다.
-triggers:
-  - "시장 조사"
-  - "시장 규모"
-  - "TAM SAM SOM"
-  - "시장 분석"
-input:
-  - 서비스 카테고리
-  - 타겟 지역
-  - discovery 문서들
-output:
-  - 02-research/market-research.md
+name: market-sizing
+description: "Estimate market size using TAM, SAM, and SOM with top-down and bottom-up approaches. Use when sizing a market opportunity, estimating addressable market, preparing for investor pitches, or evaluating market entry."
 ---
 
-# Market Research Skill
+# Estimate Market Size (TAM, SAM, SOM)
 
-서비스의 시장 기회와 규모를 분석합니다.
-투자자, 팀, 의사결정자를 설득할 수 있는 데이터 기반 시장 분석을 제공합니다.
+## Purpose
+Estimate the Total Addressable Market (TAM), Serviceable Addressable Market (SAM), and Serviceable Obtainable Market (SOM) for a product. Includes both top-down and bottom-up estimation approaches, growth projections, and key assumptions to validate.
 
-## 핵심 프레임워크
+## Instructions
 
-### TAM/SAM/SOM 분석
+You are a strategic market analyst specializing in market sizing, opportunity assessment, and growth forecasting.
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                                                                  │
-│     ┌───────────────────────────────────────────────────┐       │
-│     │                    TAM                             │       │
-│     │            Total Addressable Market                │       │
-│     │              (전체 시장 규모)                        │       │
-│     │                                                    │       │
-│     │    ┌────────────────────────────────────┐         │       │
-│     │    │              SAM                    │         │       │
-│     │    │    Serviceable Addressable Market   │         │       │
-│     │    │         (유효 시장 규모)              │         │       │
-│     │    │                                     │         │       │
-│     │    │    ┌────────────────────┐          │         │       │
-│     │    │    │        SOM         │          │         │       │
-│     │    │    │  Serviceable       │          │         │       │
-│     │    │    │  Obtainable Market │          │         │       │
-│     │    │    │  (수익 시장 규모)   │          │         │       │
-│     │    │    └────────────────────┘          │         │       │
-│     │    └────────────────────────────────────┘         │       │
-│     └───────────────────────────────────────────────────┘       │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
+### Input
+Your task is to estimate the market size for **$ARGUMENTS** within the specified market constraints (geography, industry vertical, customer type, etc.).
 
-TAM = 전 세계 시장 전체
-SAM = 우리가 실제로 접근 가능한 시장
-SOM = 현실적으로 확보 가능한 시장 (보통 1-5년)
-```
+If the user provides market research, industry reports, financial data, or competitor information, read and analyze them directly. Use web search to find current market data, industry reports, and growth projections.
 
-### 시장 규모 추정 방법
+### Analysis Steps (Think Step by Step)
 
-```
-Top-Down (하향식)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-전체 시장 → 세그먼트 비율 → 우리 타겟
+1. **Market Definition**: Define the market boundaries — what problem space, which customer segments, what geography or constraints apply
+2. **Top-Down Estimation**: Start from total industry size and narrow to the relevant slice
+3. **Bottom-Up Estimation**: Build from unit economics (customers × price × frequency) to cross-validate
+4. **SAM Scoping**: Identify which portion of TAM is realistically serviceable given product capabilities, channels, and constraints
+5. **SOM Estimation**: Estimate achievable share in the next 1-3 years based on competitive position and go-to-market capacity
+6. **Growth Projection**: Forecast how TAM, SAM, and SOM may evolve over the next 2-3 years
+7. **Assumption Mapping**: Surface the key assumptions underlying each estimate
 
-예: 글로벌 SaaS 시장 (100조)
-    → 한국 시장 (3조)
-    → 개발자 도구 (3000억)
-    → 스타트업 타겟 (300억)
+### Output Structure
 
-Bottom-Up (상향식)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-단가 × 고객 수 × 구매 빈도
+**Market Definition**
+- Problem space and customer need
+- Geographic and segment boundaries
+- Key constraints or scoping decisions
 
-예: 월 10만원 × 스타트업 30만개 × 10% 침투율
-    = 연 3600억
-```
+**TAM (Total Addressable Market)**
+- Top-down estimate with sources and reasoning
+- Bottom-up estimate for cross-validation
+- Reconciliation of the two approaches
+- Current TAM value (annual revenue opportunity)
 
-## 수집/분석 항목
+**SAM (Serviceable Addressable Market)**
+- Which portion of TAM the product can realistically serve
+- Constraints: geography, language, channels, product capabilities, pricing tier
+- SAM as percentage of TAM with reasoning
 
-### 1. 시장 규모 (Market Size)
+**SOM (Serviceable Obtainable Market)**
+- Realistic share achievable in 1-3 years
+- Basis: competitive position, go-to-market capacity, current traction
+- SOM as percentage of SAM with reasoning
 
-```yaml
-tam:
-  definition: ""              # TAM 정의
-  size: ""                    # 규모 (원 또는 달러)
-  source: ""                  # 출처
-  year: ""                    # 기준 연도
-  calculation: ""             # 계산 방식
+**Market Summary Table**
 
-sam:
-  definition: ""              # SAM 정의 (지역, 세그먼트 등)
-  size: ""
-  source: ""
-  constraints: []             # 제약 조건 (지역, 언어 등)
+| Metric | Current Estimate | 2-3 Year Projection |
+|--------|-----------------|---------------------|
+| TAM    |                 |                     |
+| SAM    |                 |                     |
+| SOM    |                 |                     |
 
-som:
-  definition: ""              # SOM 정의 (현실적 목표)
-  size: ""
-  timeline: ""                # 달성 기간
-  assumptions: []             # 가정
-```
+**Growth Drivers & Trends**
+- Key factors that could expand or contract the market
+- Technology, regulatory, demographic, or behavioral shifts
+- Emerging segments or adjacent markets
 
-### 2. 시장 성장성 (Market Growth)
+**Key Assumptions & Risks**
+- Critical assumptions behind each estimate (numbered)
+- Confidence level for each (high / medium / low)
+- How to validate the most uncertain assumptions
+- What would materially change the estimates
 
-```yaml
-growth:
-  cagr: ""                    # 연평균 성장률
-  historical:                 # 과거 성장
-    - year: 2022
-      size: ""
-    - year: 2023
-      size: ""
-  projection:                 # 미래 전망
-    - year: 2025
-      size: ""
-    - year: 2027
-      size: ""
-  drivers: []                 # 성장 동인
-  barriers: []                # 성장 저해 요소
-```
+## Best Practices
 
-### 3. 시장 트렌드 (Market Trends)
-
-```yaml
-trends:
-  macro: []                   # 거시 트렌드 (경제, 사회, 기술)
-  industry: []                # 산업 트렌드
-  consumer: []                # 소비자 트렌드
-  technology: []              # 기술 트렌드
-
-emerging:
-  opportunities: []           # 떠오르는 기회
-  threats: []                 # 잠재적 위협
-```
-
-### 4. 산업 구조 (Industry Structure)
-
-```yaml
-industry:
-  lifecycle_stage: ""         # 도입기/성장기/성숙기/쇠퇴기
-  concentration: ""           # 시장 집중도
-  key_players: []             # 주요 플레이어
-  entry_barriers: []          # 진입 장벽
-
-porters_five_forces:
-  supplier_power: ""          # 공급자 교섭력
-  buyer_power: ""             # 구매자 교섭력
-  competitive_rivalry: ""     # 경쟁 강도
-  threat_of_substitutes: ""   # 대체재 위협
-  threat_of_new_entrants: "" # 신규 진입 위협
-```
-
-## 워크플로우
-
-```
-1. 서비스 카테고리 확인
-      │
-      ▼
-2. TAM 정의 & 추정
-      │
-      ├─ Top-Down 접근
-      └─ Bottom-Up 검증
-      │
-      ▼
-3. SAM 정의 & 추정
-      │
-      ▼
-4. SOM 정의 & 추정
-      │
-      ▼
-5. 시장 성장성 분석
-      │
-      ▼
-6. 트렌드 분석
-      │
-      ▼
-7. 산업 구조 분석 (Porter's)
-      │
-      ▼
-8. 최종 문서 저장
-   → workspace/work-plan/{project}/02-research/market-research.md
-```
-
-## 출력 템플릿
-
-```markdown
-# {Project Name} - 시장 분석 리포트
-
-## Executive Summary
-
-| 지표 | 규모 | 성장률 |
-|------|------|--------|
-| TAM | {tam_size} | {tam_cagr}% |
-| SAM | {sam_size} | {sam_cagr}% |
-| SOM (3년) | {som_size} | - |
-
-**핵심 인사이트**
-> {key_insight}
+- Always provide both top-down and bottom-up estimates to triangulate
+- Use web search for current industry data, analyst reports, and market benchmarks
+- Cite sources for market data — avoid unsupported numbers
+- Be explicit about assumptions; label estimates vs. data
+- Distinguish between value-based (revenue) and volume-based (users/units) sizing
+- Consider currency and purchasing power parity for international markets
+- Flag where estimates have wide confidence intervals
+- Recommend specific data sources or research to sharpen estimates
 
 ---
 
-## 1. TAM (Total Addressable Market)
-
-### 정의
-{tam_definition}
-
-### 규모
-| 항목 | 수치 | 출처 |
-|------|------|------|
-| 글로벌 | {global_tam} | {source} |
-| 아시아 | {asia_tam} | {source} |
-| 한국 | {korea_tam} | {source} |
-
-### 계산 방식
-
-**Top-Down**
-```
-{top_down_calculation}
-```
-
-**Bottom-Up**
-```
-{bottom_up_calculation}
-```
-
----
-
-## 2. SAM (Serviceable Addressable Market)
-
-### 정의
-{sam_definition}
-
-### 제약 조건
-- 지역: {region_constraint}
-- 세그먼트: {segment_constraint}
-- 기타: {other_constraint}
-
-### 규모
-| 세그먼트 | 규모 | 비율 |
-|----------|------|------|
-| {segment_1} | {size_1} | {ratio_1} |
-| {segment_2} | {size_2} | {ratio_2} |
-| **Total SAM** | **{total_sam}** | - |
-
----
-
-## 3. SOM (Serviceable Obtainable Market)
-
-### 정의
-{som_definition}
-
-### 목표 기간
-{timeline}
-
-### 가정
-1. {assumption_1}
-2. {assumption_2}
-3. {assumption_3}
-
-### 목표 규모
-| 연도 | 목표 | 점유율 |
-|------|------|--------|
-| Year 1 | {y1_som} | {y1_share}% |
-| Year 2 | {y2_som} | {y2_share}% |
-| Year 3 | {y3_som} | {y3_share}% |
-
----
-
-## 4. 시장 성장성
-
-### 성장률 추이
-
-| 연도 | 시장 규모 | YoY |
-|------|----------|-----|
-| 2022 | {size_2022} | - |
-| 2023 | {size_2023} | {yoy_2023}% |
-| 2024 | {size_2024} | {yoy_2024}% |
-| 2025E | {size_2025} | {yoy_2025}% |
-| 2027E | {size_2027} | CAGR {cagr}% |
-
-### 성장 동인 (Growth Drivers)
-
-| # | 동인 | 영향 | 설명 |
-|---|------|------|------|
-| 1 | {driver_1} | 🔴 High | {desc_1} |
-| 2 | {driver_2} | 🟡 Medium | {desc_2} |
-| 3 | {driver_3} | 🟢 Low | {desc_3} |
-
-### 성장 저해 요소 (Barriers)
-
-| # | 요소 | 영향 | 대응 |
-|---|------|------|------|
-| 1 | {barrier_1} | 🔴 High | {response_1} |
-| 2 | {barrier_2} | 🟡 Medium | {response_2} |
-
----
-
-## 5. 시장 트렌드
-
-### 거시 트렌드 (Macro Trends)
-
-| 트렌드 | 방향 | 우리에게 미치는 영향 |
-|--------|------|---------------------|
-| {macro_1} | ↗️ | {impact_1} |
-| {macro_2} | ↗️ | {impact_2} |
-
-### 산업 트렌드 (Industry Trends)
-
-| 트렌드 | 설명 | 기회 |
-|--------|------|------|
-| {industry_1} | {desc_1} | {opportunity_1} |
-| {industry_2} | {desc_2} | {opportunity_2} |
-
-### 기술 트렌드 (Technology Trends)
-
-| 기술 | 성숙도 | 적용 가능성 |
-|------|--------|------------|
-| {tech_1} | 🟢 상용화 | {applicability_1} |
-| {tech_2} | 🟡 초기 | {applicability_2} |
-
----
-
-## 6. 산업 구조 분석
-
-### 시장 Life Cycle
-
-```
-[ 도입기 ] ─── [ 성장기 ] ─── [ 성숙기 ] ─── [ 쇠퇴기 ]
-                  ↑
-              현재 위치
-```
-
-### Porter's Five Forces
-
-| 요소 | 강도 | 설명 |
-|------|------|------|
-| 경쟁 강도 | {rivalry_level} | {rivalry_desc} |
-| 신규 진입 위협 | {entry_level} | {entry_desc} |
-| 대체재 위협 | {substitute_level} | {substitute_desc} |
-| 구매자 교섭력 | {buyer_level} | {buyer_desc} |
-| 공급자 교섭력 | {supplier_level} | {supplier_desc} |
-
-### 주요 플레이어
-
-| 플레이어 | 시장 점유율 | 포지셔닝 |
-|----------|-----------|---------|
-| {player_1} | {share_1}% | {position_1} |
-| {player_2} | {share_2}% | {position_2} |
-| {player_3} | {share_3}% | {position_3} |
-
----
-
-## 7. 기회 & 위협
-
-### 기회 (Opportunities)
-
-| # | 기회 | 타이밍 | 액션 |
-|---|------|--------|------|
-| 1 | {opportunity_1} | 즉시 | {action_1} |
-| 2 | {opportunity_2} | 6개월 내 | {action_2} |
-
-### 위협 (Threats)
-
-| # | 위협 | 가능성 | 대응 |
-|---|------|--------|------|
-| 1 | {threat_1} | 🔴 High | {response_1} |
-| 2 | {threat_2} | 🟡 Medium | {response_2} |
-
----
-
-## 8. 결론
-
-### 시장 매력도 평가
-
-| 요소 | 점수 | 근거 |
-|------|------|------|
-| 시장 규모 | ⭐⭐⭐⭐{star} | {reason} |
-| 성장성 | ⭐⭐⭐⭐{star} | {reason} |
-| 경쟁 강도 | ⭐⭐⭐{star} | {reason} |
-| 진입 장벽 | ⭐⭐⭐{star} | {reason} |
-| **종합** | **⭐⭐⭐⭐** | {summary} |
-
-### 권장사항
-
-{recommendation}
-
----
-
-## 참고 자료
-
-| 출처 | 제목 | 연도 | 링크 |
-|------|------|------|------|
-| {source_1} | {title_1} | {year_1} | {link_1} |
-| {source_2} | {title_2} | {year_2} | {link_2} |
-
----
-
-*다음 단계: Competitor Analysis*
-```
-
-## 데이터 소스 가이드
-
-### 시장 규모 데이터
-
-| 소스 | 유형 | 무료/유료 |
-|------|------|----------|
-| Statista | 글로벌 통계 | 일부 무료 |
-| IBISWorld | 산업 리포트 | 유료 |
-| Gartner | IT 시장 | 유료 |
-| 한국정보화진흥원 | 국내 IT | 무료 |
-| 중소벤처기업부 | 국내 산업 | 무료 |
-
-### 트렌드 데이터
-
-| 소스 | 유형 |
-|------|------|
-| Google Trends | 검색 트렌드 |
-| CB Insights | 스타트업 트렌드 |
-| Crunchbase | 투자 트렌드 |
-
-## 퀄리티 체크리스트
-
-```
-□ TAM/SAM/SOM이 논리적으로 연결되는가?
-□ 계산 방식이 투명한가? (Top-Down + Bottom-Up)
-□ 출처가 신뢰할 수 있는가?
-□ 성장률 근거가 있는가?
-□ 트렌드가 서비스와 연결되는가?
-□ Porter's 5 Forces가 작성되었는가?
-□ 기회/위협이 식별되었는가?
-```
-
-## 주의사항
-
-```
-⚠️ AI가 생성한 시장 규모 수치는 참고용입니다
-⚠️ 실제 투자 유치 시 전문 리서치 기관 데이터 필요
-⚠️ 숫자보다 논리적 추론 과정이 중요
-⚠️ 과도하게 낙관적인 추정 지양
-```
-
-## 🎯 인터랙티브 가이드
-
-### 작성 전 확인 질문
-
-**Q1. 시장 규모 데이터가 있나요?**
-- 있음 → 출처 확인 및 검증
-- 없음 → "어떤 카테고리로 검색해볼까요?"
-
-**Q2. TAM/SAM/SOM의 범위를 어떻게 정의하나요?**
-- 명확함 → 계산 방식 확인
-- 불명확 → "타겟 지역과 세그먼트는 어디인가요?"
-
-**Q3. 시장이 성장하고 있다는 증거가 있나요?**
-- 있음 → 성장 동인 분석
-- 불확실 → "관련 트렌드 검색을 해볼까요?"
-
-### 의사결정 포인트
-
-| 시점 | 확인 내용 | 사용자 프롬프트 |
-|------|----------|----------------|
-| TAM 정의 | 범위 설정 | "어느 범위까지를 전체 시장으로 볼까요?" |
-| SAM 산정 | 제약 조건 | "실제로 접근 가능한 시장의 제약은?" |
-| SOM 목표 | 현실성 | "3년 내 이 점유율이 현실적인가요?" |
-| 최종 확인 | 매력도 | "이 시장에 진입할 가치가 있나요?" |
-
----
-
-## 다음 스킬 연결
-
-Market Research 완료 후:
-
-1. **경쟁사 심화 분석** → Competitor Analysis Skill
-2. **사용자 검증** → User Research Skill
-3. **비즈니스 모델** → Business Model Skill
-
----
-
-*시장 분석은 감이 아닌 데이터로, 그러나 맹신하지 말고 참고하세요.*
+### Further Reading
+
+- [Market Research: Advanced Techniques](https://www.productcompass.pm/p/market-research-advanced-techniques)
+- [User Interviews: The Ultimate Guide to Research Interviews](https://www.productcompass.pm/p/interviewing-customers-the-ultimate)
+- [Crossing the Chasm: The Ultimate Guide For PMs](https://www.productcompass.pm/p/crossing-the-chasm)
+- [Product Innovation Masterclass](https://www.productcompass.pm/p/product-innovation-masterclass) (video course)

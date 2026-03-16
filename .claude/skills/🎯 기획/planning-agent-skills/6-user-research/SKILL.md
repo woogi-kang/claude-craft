@@ -1,528 +1,105 @@
 ---
-name: plan-user-research
-description: |
-  사용자 리서치를 설계하는 스킬.
-  인터뷰 가이드, 설문 설계를 제공합니다.
-triggers:
-  - "사용자 리서치"
-  - "인터뷰 가이드"
-  - "설문 설계"
-  - "고객 인터뷰"
-input:
-  - target-user.md 결과
-  - 검증하고 싶은 가설
-output:
-  - 02-research/user-research.md
+name: interview-script
+description: "Create a structured customer interview script with JTBD probing questions, warm-up, core exploration, and wrap-up sections. Follows The Mom Test principles — no leading questions, no pitching, focus on past behavior. Use when preparing for user interviews, creating interview guides, or planning discovery research."
 ---
 
-# User Research Skill
+## Customer Interview Script
 
-가설을 검증하고 사용자 인사이트를 얻기 위한 리서치를 설계합니다.
-실제 인터뷰, 설문을 진행할 수 있는 가이드를 제공합니다.
+Create a structured interview script that surfaces real insights, not just opinions. Follows "The Mom Test" principles — ask about their life, not your idea.
 
-## 리서치 유형
+### Domain Context
 
-### 리서치 매트릭스
+Customer interviews are one source in **Stage 1 (Explore)** of continuous discovery. Other sources: stakeholder interviews, usage analytics, data analytics, surveys, market trends, SEO/SEM analysis. The PM needs direct access to users, stakeholders, engineers, and designers — "without proxies." The **Product Trio** (PM + Designer + Engineer — Teresa Torres) should work together on discovery, not just the PM alone.
 
-```
-                    정성적 (Qualitative)              정량적 (Quantitative)
-                           │                                │
-탐색적 ──────────────────────────────────────────────────────────────────
-(Exploratory)      │  • 심층 인터뷰                  │  • 탐색적 설문
-"왜?"              │  • 맥락 조사                    │  • 트렌드 분석
-                   │  • 포커스 그룹                  │
-                   │                                │
-검증적 ──────────────────────────────────────────────────────────────────
-(Evaluative)       │  • 사용성 테스트               │  • A/B 테스트
-"이게 맞나?"       │  • 컨셉 테스트                 │  • 검증 설문
-                   │  • 프로토타입 테스트            │  • NPS 조사
-```
+### Context
 
-### 리서치 방법 선택 가이드
+You are preparing a customer interview script for research on **$ARGUMENTS**.
 
-| 목적 | 추천 방법 | 필요 인원 | 시간 |
-|------|----------|----------|------|
-| 문제 발견 | 심층 인터뷰 | 5-8명 | 1-2주 |
-| 가설 검증 | 설문조사 | 50-200명 | 1주 |
-| 컨셉 테스트 | 인터뷰 + 프로토타입 | 5-10명 | 1-2주 |
-| 사용성 검증 | 사용성 테스트 | 5명 | 1주 |
-| 만족도 측정 | NPS 설문 | 100명+ | 지속 |
+If the user provides files (personas, hypothesis lists, product briefs, or previous interview notes), read them first.
 
-## 워크플로우
+### Instructions
 
-```
-1. 리서치 목표 정의
-      │
-      ├─ 검증할 가설 명확화
-      └─ 알고 싶은 것 정리
-      │
-      ▼
-2. 리서치 방법 선택
-      │
-      ├─ 정성 vs 정량
-      └─ 예산/시간 고려
-      │
-      ▼
-3. 리서치 설계
-      │
-      ├─ 인터뷰 가이드
-      ├─ 설문 문항
-      └─ 리크루팅 기준
-      │
-      ▼
-4. 실행 가이드 작성
-      │
-      ▼
-5. 분석 프레임워크 준비
-      │
-      ▼
-6. 최종 문서 저장
-   → workspace/work-plan/{project}/02-research/user-research.md
-```
+1. **Clarify research objectives**:
+   - What specific questions does the team need answered?
+   - What decisions will this research inform?
+   - What assumptions need validation?
 
-## 출력 템플릿
+2. **Create the interview script** with these sections:
 
-```markdown
-# {Project Name} - 사용자 리서치 가이드
+   ### Opening (2-3 min)
+   - Introduce yourself and the purpose (learning, not selling)
+   - Set expectations: "There are no right or wrong answers. We're here to learn from your experience."
+   - Ask permission to record (if applicable)
+   - Confirm time available
 
-## 1. 리서치 개요
+   ### Warm-Up: Context & Background (5 min)
+   - "Tell me about your role and what a typical day/week looks like."
+   - "How long have you been doing [activity related to the product area]?"
+   - Goal: Build rapport and understand their context
 
-### 목적
-{research_objective}
+   ### Core Exploration: Jobs to Be Done (15-20 min)
 
-### 핵심 질문 (Research Questions)
+   **Current situation and behavior** (past tense, specific instances):
+   - "Walk me through the last time you [did the thing we're exploring]. What happened?"
+   - "What tools or methods did you use?"
+   - "How long did it take? Who else was involved?"
 
-| # | 질문 | 유형 | 우선순위 |
-|---|------|------|----------|
-| 1 | {question_1} | 탐색 | 🔴 High |
-| 2 | {question_2} | 검증 | 🔴 High |
-| 3 | {question_3} | 탐색 | 🟡 Medium |
+   **Pain points and frustrations** (observe, don't lead):
+   - "What was the hardest part about that?"
+   - "If you could wave a magic wand, what would change?"
+   - "What have you tried to solve this? What happened?"
 
-### 검증할 가설
+   **Desired outcomes** (their words, not yours):
+   - "What does 'good' look like for you in this area?"
+   - "How would you know if this was working well?"
 
-| # | 가설 | 검증 방법 | 성공 기준 |
-|---|------|----------|----------|
-| 1 | {hypothesis_1} | 인터뷰 | {criteria_1} |
-| 2 | {hypothesis_2} | 설문 | {criteria_2} |
-| 3 | {hypothesis_3} | 인터뷰 | {criteria_3} |
+   **Willingness to pay / priority** (skin in the game):
+   - "How much time/money do you currently spend on this?"
+   - "Have you looked for a better solution? What did you find?"
+   - "What would you give up to have this solved?"
+
+   ### Probing Techniques
+   Use these when you hit an interesting thread:
+   - **"Tell me more about that"** — opens up any topic
+   - **"Why?"** (asked gently, 2-3 times) — gets to root causes
+   - **"Can you give me a specific example?"** — moves from opinions to facts
+   - **"What happened next?"** — follows the story
+   - **"How did that make you feel?"** — captures emotional intensity
+
+   ### The Mom Test Rules
+   - Ask about **their life**, not your idea
+   - Ask about **the past**, not the future ("Would you use X?" is useless)
+   - **Talk less, listen more** — aim for 80/20 split
+   - **Never pitch** during the interview
+   - Look for **strong emotions** — they signal real pain or delight
+   - **Compliments are noise** — "That sounds cool!" tells you nothing
+
+   ### Wrap-Up (3-5 min)
+   - "Is there anything I didn't ask that you think is important?"
+   - "Who else should I talk to about this?"
+   - Thank them for their time
+   - Share next steps (if any)
+
+3. **Customize the script**: Adapt questions to the specific product area, persona, and research objectives. Add or remove sections based on the interview length available.
+
+4. **Include a note-taking template**:
+   ```
+   Participant: [Name / ID]
+   Date: [Date]
+   Key Jobs: [What they're trying to accomplish]
+   Current Solution: [What they use today]
+   Biggest Pain: [Their #1 frustration]
+   Desired Outcome: [What success looks like]
+   Willingness to Pay: [How much they invest / would invest]
+   Surprise Finding: [Something unexpected]
+   Follow-up: [Next steps]
+   ```
+
+Save as markdown. Include both the script and the note-taking template.
 
 ---
 
-## 2. 리서치 방법
+### Further Reading
 
-### 선택한 방법
-
-| 방법 | 목적 | 참여자 수 | 기간 |
-|------|------|----------|------|
-| 심층 인터뷰 | {purpose_1} | 5-8명 | 2주 |
-| 온라인 설문 | {purpose_2} | 50-100명 | 1주 |
-
-### 왜 이 방법인가?
-{method_rationale}
-
----
-
-## 3. 참여자 리크루팅
-
-### 참여자 기준 (Screener)
-
-**필수 조건**
-- {must_have_1}
-- {must_have_2}
-- {must_have_3}
-
-**제외 조건**
-- {exclude_1}
-- {exclude_2}
-
-### 참여자 프로필
-
-| 그룹 | 특성 | 인원 | 비율 |
-|------|------|------|------|
-| A | {profile_a} | 3명 | 40% |
-| B | {profile_b} | 3명 | 40% |
-| C | {profile_c} | 2명 | 20% |
-
-### 리크루팅 방법
-
-| 방법 | 예상 응답률 | 비용 |
-|------|------------|------|
-| SNS 공유 | 5-10% | 무료 |
-| 커뮤니티 | 10-20% | 무료 |
-| 패널 서비스 | 30-50% | 유료 |
-
-### 인센티브
-
-| 방법 | 인센티브 | 총 비용 |
-|------|----------|---------|
-| 인터뷰 (60분) | {incentive_interview} | {cost} |
-| 설문 (10분) | {incentive_survey} | {cost} |
-
----
-
-## 4. 심층 인터뷰 가이드
-
-### 인터뷰 개요
-
-| 항목 | 내용 |
-|------|------|
-| 시간 | 45-60분 |
-| 형식 | 1:1 화상/대면 |
-| 녹음 | 동의 하 녹음 |
-| 진행자 | 1명 (+ 기록자 1명 권장) |
-
-### 인터뷰 구조
-
-```
-[도입] 5분
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-- 인사 & 소개
-- 인터뷰 목적 설명
-- 동의 (녹음, 프라이버시)
-
-[배경] 10분
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-- 참여자 배경
-- 현재 상황/맥락
-
-[주요 질문] 30분
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-- 핵심 주제 탐색
-- 가설 검증
-
-[마무리] 10분
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-- 추가 의견
-- 감사 인사
-```
-
-### 인터뷰 스크립트
-
-**[도입]**
-
-```
-안녕하세요, {이름}님. 오늘 인터뷰에 참여해 주셔서 감사합니다.
-
-저는 {회사/프로젝트}에서 {역할}을 담당하고 있는 {인터뷰어 이름}입니다.
-
-오늘 인터뷰는 약 45분 정도 진행될 예정이고,
-{프로젝트}에 대한 {인터뷰 목적}을 이해하기 위해 진행합니다.
-
-정답이나 오답은 없습니다. 편하게 생각하시는 대로 말씀해 주세요.
-
-녹음해도 괜찮으실까요? 내부 분석 용도로만 사용됩니다.
-```
-
-**[배경 질문]**
-
-1. 간단하게 자기소개 부탁드려요. (직업, 역할)
-2. 평소 {관련 주제}에 대해 어떻게 생각하세요?
-3. 현재 {문제 영역}에서 어떤 도구/방법을 사용하고 계세요?
-
-**[핵심 질문 - 문제 탐색]**
-
-4. {문제}를 경험하신 적 있으신가요?
-   - (경험 있다면) 구체적으로 어떤 상황이었나요?
-   - 그때 어떤 기분이 드셨어요?
-   - 그 문제가 얼마나 자주 발생하나요?
-
-5. 그 문제를 해결하기 위해 어떤 시도를 해보셨나요?
-   - 왜 그 방법을 선택하셨나요?
-   - 결과는 어땠나요?
-   - 아쉬운 점이 있다면?
-
-6. 이상적인 해결책은 어떤 모습일까요?
-   - 가장 중요한 건 뭘까요?
-
-**[핵심 질문 - 솔루션 검증]** (컨셉 테스트 시)
-
-7. (컨셉 소개 후) 첫 인상이 어떠세요?
-   - 어떤 점이 끌리시나요?
-   - 이해가 안 되는 부분이 있으신가요?
-
-8. 이 서비스가 {가치 제안}한다면, 사용해 보실 의향이 있으신가요?
-   - (있다면) 어떤 상황에서 사용하실 것 같아요?
-   - (없다면) 왜 안 쓰실 것 같으세요?
-
-9. 이 서비스에 얼마까지 지불할 의향이 있으신가요?
-   - 그 가격이 합리적이라고 생각하시는 이유는요?
-
-**[마무리 질문]**
-
-10. 저희가 못 물어본 것 중에 말씀하고 싶으신 게 있으신가요?
-11. 혹시 비슷한 고민을 가진 분 중 인터뷰 가능한 분 소개해 주실 수 있나요?
-
----
-
-### 인터뷰 팁
-
-**Do's ✅**
-- 열린 질문 사용 ("어떻게", "왜")
-- 침묵 허용 (5초 기다리기)
-- "더 말씀해 주세요" 활용
-- 구체적 사례 요청
-
-**Don'ts ❌**
-- 유도 질문 ("~하시죠?")
-- 예/아니오 질문만
-- 끼어들기
-- 자신의 의견 개입
-
----
-
-## 5. 설문 설계
-
-### 설문 개요
-
-| 항목 | 내용 |
-|------|------|
-| 문항 수 | 15-20문항 |
-| 예상 소요 시간 | 5-10분 |
-| 배포 채널 | {channel} |
-| 목표 응답 수 | 50-100명 |
-
-### 설문 구조
-
-```
-[스크리닝] 3문항
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-참여 자격 확인
-
-[배경 정보] 3-5문항
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-인구통계, 현재 상황
-
-[핵심 주제] 7-10문항
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-가설 검증, 니즈 파악
-
-[인구통계] 2-3문항
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-마지막에 배치
-
-[마무리] 1문항
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-추가 의견/인터뷰 참여 의향
-```
-
-### 설문 문항
-
-**[스크리닝]**
-
-Q1. 귀하의 직업은 무엇입니까?
-- [ ] {option_1}
-- [ ] {option_2}
-- [ ] {option_3}
-- [ ] 기타: _______
-
-Q2. 지난 3개월 동안 {행동}을 하신 적이 있습니까?
-- [ ] 예
-- [ ] 아니오 → 종료
-
-**[현재 상황]**
-
-Q3. 현재 {문제 영역}에서 어떤 도구/방법을 사용하고 계십니까? (복수 선택)
-- [ ] {option_1}
-- [ ] {option_2}
-- [ ] {option_3}
-- [ ] 사용하지 않음
-
-Q4. 현재 사용하는 도구/방법에 얼마나 만족하십니까?
-- [ ] 매우 불만족 (1)
-- [ ] 불만족 (2)
-- [ ] 보통 (3)
-- [ ] 만족 (4)
-- [ ] 매우 만족 (5)
-
-**[문제 탐색]**
-
-Q5. {문제}를 얼마나 자주 경험하십니까?
-- [ ] 매일
-- [ ] 주 2-3회
-- [ ] 주 1회
-- [ ] 월 1-2회
-- [ ] 거의 없음
-
-Q6. {문제}가 얼마나 심각하다고 느끼십니까?
-- [ ] 전혀 심각하지 않음 (1)
-- [ ] ... (2-4)
-- [ ] 매우 심각함 (5)
-
-Q7. {문제}로 인해 다음 중 어떤 영향을 받으셨습니까? (복수 선택)
-- [ ] {impact_1}
-- [ ] {impact_2}
-- [ ] {impact_3}
-- [ ] 영향 없음
-
-**[솔루션 검증]**
-
-Q8. (컨셉 설명 후) 이 서비스에 대해 어떻게 생각하십니까?
-- [ ] 전혀 관심 없음 (1)
-- [ ] ... (2-4)
-- [ ] 매우 관심 있음 (5)
-
-Q9. 이 서비스가 출시된다면 사용해 보실 의향이 있습니까?
-- [ ] 전혀 없음 (1)
-- [ ] ... (2-4)
-- [ ] 매우 있음 (5)
-
-Q10. 이 서비스의 가장 매력적인 기능은 무엇입니까? (최대 2개)
-- [ ] {feature_1}
-- [ ] {feature_2}
-- [ ] {feature_3}
-- [ ] 매력적인 기능 없음
-
-Q11. 이 서비스에 월 얼마까지 지불할 의향이 있습니까?
-- [ ] 무료만 사용
-- [ ] 월 5,000원 이하
-- [ ] 월 5,000원 ~ 10,000원
-- [ ] 월 10,000원 ~ 30,000원
-- [ ] 월 30,000원 이상
-
-**[인구통계]**
-
-Q12. 귀하의 연령대는 어떻게 되십니까?
-- [ ] 20대
-- [ ] 30대
-- [ ] 40대
-- [ ] 50대 이상
-
-Q13. 귀하의 성별은 무엇입니까?
-- [ ] 남성
-- [ ] 여성
-- [ ] 기타/응답하지 않음
-
-**[마무리]**
-
-Q14. 추가로 말씀하고 싶은 의견이 있으시면 자유롭게 작성해 주세요.
-[자유 응답]
-
-Q15. 심층 인터뷰에 참여할 의향이 있으신가요? (인센티브 제공)
-- [ ] 예 (이메일: _______)
-- [ ] 아니오
-
----
-
-## 6. 분석 프레임워크
-
-### 인터뷰 분석
-
-**Affinity Mapping**
-```
-1. 모든 인사이트를 포스트잇에 기록
-2. 유사한 인사이트 그룹핑
-3. 그룹에 테마 이름 붙이기
-4. 패턴 및 인사이트 도출
-```
-
-**인사이트 우선순위**
-
-| 인사이트 | 빈도 | 중요도 | 액션 |
-|----------|------|--------|------|
-| {insight_1} | 5/8 | High | {action} |
-| {insight_2} | 3/8 | Medium | {action} |
-
-### 설문 분석
-
-**핵심 지표**
-
-| 지표 | 계산 | 목표 |
-|------|------|------|
-| 문제 심각도 | 평균 점수 | 3.5+ |
-| 솔루션 관심도 | 4-5점 비율 | 40%+ |
-| 지불 의향 | 유료 응답 비율 | 30%+ |
-
----
-
-## 7. 실행 체크리스트
-
-### 준비 단계
-- [ ] 리서치 목표 정의
-- [ ] 가설 명문화
-- [ ] 인터뷰 가이드/설문 작성
-- [ ] 리크루팅 기준 확정
-- [ ] 인센티브 준비
-- [ ] 동의서 준비
-- [ ] 녹음 장비 테스트
-
-### 실행 단계
-- [ ] 파일럿 테스트 (1-2명)
-- [ ] 가이드 수정
-- [ ] 본 리서치 진행
-- [ ] 매일 노트 정리
-
-### 분석 단계
-- [ ] 녹음 파일 정리
-- [ ] Affinity Mapping
-- [ ] 핵심 인사이트 도출
-- [ ] 가설 검증 결과 정리
-- [ ] 액션 아이템 도출
-
----
-
-## 8. 리서치 일정
-
-| 단계 | 기간 | 산출물 |
-|------|------|--------|
-| 설계 | Week 1 | 가이드, 설문 |
-| 리크루팅 | Week 1-2 | 참여자 확보 |
-| 실행 | Week 2-3 | 인터뷰, 설문 |
-| 분석 | Week 3-4 | 분석 리포트 |
-| 공유 | Week 4 | 인사이트 공유 |
-
----
-
-*다음 단계: Lean Canvas → MVP Definition*
-```
-
-## 퀄리티 체크리스트
-
-```
-□ 리서치 목표가 명확한가?
-□ 검증할 가설이 정의되었는가?
-□ 참여자 기준이 구체적인가?
-□ 인터뷰 질문이 열린 형식인가?
-□ 설문이 10분 이내인가?
-□ 유도 질문이 없는가?
-□ 분석 프레임워크가 준비되었는가?
-```
-
-## 🎯 인터랙티브 가이드
-
-### 작성 전 확인 질문
-
-**Q1. 검증하고 싶은 가설이 명확한가요?**
-- 명확함 → 가설별 질문 설계 진행
-- 모호함 → "어떤 가정이 가장 불확실한가요?"
-
-**Q2. 타겟 사용자에게 접근할 수 있나요?**
-- 접근 가능 → 리크루팅 방법 구체화
-- 어려움 → "어디서 타겟 고객을 찾을 수 있을까요? (커뮤니티, SNS, 지인)"
-
-**Q3. 인터뷰와 설문 중 어떤 방법이 적합한가요?**
-- 깊은 이해 필요 → 인터뷰 가이드 작성
-- 양적 검증 필요 → 설문 설계
-- 둘 다 → 혼합 방법론 설계
-
-### 의사결정 포인트
-
-| 시점 | 확인 내용 | 사용자 프롬프트 |
-|------|----------|----------------|
-| 가설 정의 | 검증 우선순위 | "가장 먼저 검증해야 할 가설은?" |
-| 참여자 선정 | 대표성 | "이 참여자가 타겟 고객을 대표하나요?" |
-| 질문 설계 | 유도 여부 | "이 질문이 특정 답을 유도하지 않나요?" |
-| 분석 완료 | 인사이트 | "가장 놀라운 발견은 무엇인가요?" |
-
----
-
-## 다음 스킬 연결
-
-User Research 완료 후:
-
-1. **검증 결과 반영** → Lean Canvas Skill
-2. **MVP 범위 조정** → MVP Definition Skill
-3. **타겟 업데이트** → Target User 수정
-
----
-
-*가정이 아닌 사실에 기반한 기획을 위해 리서치는 필수입니다.*
+- [User Interviews: The Ultimate Guide to Research Interviews](https://www.productcompass.pm/p/interviewing-customers-the-ultimate)
+- [Continuous Product Discovery Masterclass (CPDM)](https://www.productcompass.pm/p/cpdm) (video course)
