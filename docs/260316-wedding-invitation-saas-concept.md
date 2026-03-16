@@ -194,7 +194,7 @@
 |------|------|------|
 | Vercel Pro | 2만원 | 호스팅/배포 |
 | Supabase Pro | 3만원 | DB + Auth + Realtime + Storage |
-| Cloudflare R2 | 0.5~2만원 | Guest Snap 전용 (저장 $0.015/GB, egress 0원) |
+| Cloudflare R2 | 0.2~0.5만원 | Guest Snap 전용 (결혼식 후 2주 무료 → 정리, egress 0원) |
 | Gemini Flash API (텍스트+이미지) | 0.5~2만원 | 텍스트 ~50원, 이미지 ~92원/회 |
 | **인프라 소계** | **~8만원** | Supabase(DB/Auth/갤러리) + R2(Guest Snap) + Gemini |
 | 마케팅 (선택) | 0~40만원 | 초기 커뮤니티/입소문만이면 0원 |
