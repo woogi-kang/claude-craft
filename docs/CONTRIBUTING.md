@@ -8,26 +8,27 @@ Claude Craft 프로젝트에 스킬, 에이전트, 커맨드를 추가하는 방
 
 ```
 .claude/
-├── agents/           # 도메인 에이전트 정의 (8개 카테고리)
-│   ├── 💻 개발/      # FastAPI, Flutter, Next.js, 크롤러, TDD 등
+├── agents/           # 도메인 에이전트 정의 (8개 카테고리, 25+)
+│   ├── 💻 개발/      # FastAPI, Flutter, Next.js, Figma 변환, TDD 등
 │   ├── 🎯 기획/      # 디스커버리, 전략, GTM, 데이터 분석
 │   ├── 🎨 디자인/    # UI/UX 디자인 시스템
-│   ├── 📝 콘텐츠/    # PPT, 소셜 미디어, 블로그
-│   ├── 📣 마케팅/    # SEO, X 아웃리치
+│   ├── 📝 콘텐츠/    # PPT, 소셜 미디어, 블로그, 이모티콘
+│   ├── 📣 마케팅/    # SEO, 마케팅 전략, 광고
 │   ├── ⚖️ 법무/      # 계약, 법인 운영
 │   ├── 💰 재무/      # 결제, 재무 보고
 │   └── 🔍 리뷰/      # 멀티 리뷰 오케스트레이션
-├── skills/           # 스킬 원본 (Single Source of Truth, 313+ 스킬)
+├── skills/           # 스킬 원본 (Single Source of Truth, 340+)
 │   ├── _template/    # 새 스킬 템플릿
 │   ├── 💻 개발/      # 카테고리별 스킬 디렉토리
 │   ├── 🎯 기획/
 │   └── ...           # standalone 스킬 (brand, design, social-content 등)
-├── commands/         # 슬래시 커맨드 (commit, review, today, financial-report)
-└── hooks/            # 라이프사이클 훅 (post-write, sync-docs)
+├── commands/         # 슬래시 커맨드 (16개)
+├── hooks/            # 라이프사이클 훅 (3개)
+└── rules/            # 모듈형 규칙 (common, python, typescript)
 
 .agents/skills/       # → .claude/skills/ symlink (Gemini, Codex, OpenCode 공용)
-scripts/              # 유틸리티 (validate-skills.sh, skill-catalog.py)
-tools/                # 프로덕션 도구 (clinic-consult, x-outreach)
+contexts/             # 행동 모드 (dev, plan, research, review)
+scripts/              # 유틸리티 (validate, catalog, sync, orchestrate)
 ```
 
 ---
@@ -207,15 +208,9 @@ Version: 1.0.0
 
 ---
 
-## 5. 멀티 환경 동기화
+## 5. 동기화
 
-### 5.1 핵심 원칙
-
-- **원본은 항상 `.claude/`에서 수정**
-- symlink 파일을 직접 수정하지 않음
-- `.agents/skills/` → `.claude/skills/` symlink 유지
-
-### 5.2 Symlink 구조
+### 5.1 저장소 내 멀티 환경 (symlink)
 
 ```
 GEMINI.md  → CLAUDE.md           # Gemini CLI용
@@ -223,13 +218,25 @@ AGENTS.md  → CLAUDE.md           # Codex CLI, OpenCode용
 .agents/skills/ → .claude/skills/  # 스킬 공유
 ```
 
-### 5.3 자동 동기화
+### 5.2 다른 프로젝트에 동기화 (복사)
 
-`.claude/hooks/post-write-hook.sh`가 에이전트/스킬 파일 수정 시 자동으로 `sync-docs.sh`를 실행합니다. 수동 확인이 필요하면:
+다른 프로젝트(예: memoriz)에 `.claude/` 자산을 동기화할 때는 `sync-to-projects.sh`를 사용합니다:
 
 ```bash
-bash .claude/hooks/sync-docs.sh
+# 등록된 모든 프로젝트에 동기화
+bash scripts/sync-to-projects.sh
+
+# 특정 프로젝트에만 동기화
+bash scripts/sync-to-projects.sh /path/to/project
 ```
+
+새 프로젝트를 등록하려면 스크립트의 `DEFAULT_PROJECTS` 배열에 추가합니다.
+
+### 5.3 핵심 원칙
+
+- **원본은 항상 `.claude/`에서 수정**
+- 다른 프로젝트의 `.claude/`를 직접 수정하지 않음 (sync로 덮어씌워짐)
+- 스킬/에이전트 변경 후 `sync-to-projects.sh` 실행
 
 ---
 
@@ -287,4 +294,5 @@ python scripts/skill-catalog.py
 - [ ] kebab-case 네이밍을 따르는가
 - [ ] `scripts/validate-skills.sh` 통과하는가
 - [ ] `scripts/skill-catalog.py`로 카탈로그를 갱신했는가
-- [ ] symlink이 아닌 `.claude/` 원본을 수정했는가
+- [ ] `.claude/` 원본을 수정했는가 (다른 프로젝트 직접 수정 금지)
+- [ ] `bash scripts/sync-to-projects.sh`로 다른 프로젝트에 동기화했는가

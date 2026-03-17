@@ -1,37 +1,256 @@
 # Claude Craft
 
-Claude Code용 커스텀 자산 저장소입니다. 현재는 `moai` 코어 오케스트레이션을 제거하고, 도메인 에이전트/스킬과 커맨드, 경량 `statusline`만 유지합니다.
+AI 에이전트와 스킬을 체계적으로 관리하는 멀티 도메인 워크스페이스.
+Claude Code, Gemini CLI, Codex CLI, OpenCode에서 동일한 에이전트/스킬 자산을 공유합니다.
 
-## 포함 항목
+## 한눈에 보기
 
-- `.claude/agents/` 도메인 에이전트
-- `.claude/skills/` 도메인 스킬
-- `.claude/commands/` 커스텀 커맨드
-- `.claude/hooks/` 일반 훅 스크립트
-- `.claude/statusline.py` 상태줄
+| 자산 | 수량 | 설명 |
+|------|------|------|
+| 도메인 에이전트 | 25+ | 8개 카테고리 전문 에이전트 |
+| 스킬 | 340+ | 에이전트 전용 + 독립 스킬 |
+| 슬래시 커맨드 | 16 | `/commit`, `/review`, `/today` 등 |
+| 규칙 | 7 | 코딩, Git, 오케스트레이션 등 |
+| 컨텍스트 모드 | 4 | dev, plan, research, review |
 
-## 제거된 항목
+---
 
-- `.moai/` 설정 및 산출물
-- `.claude/agents/moai/`
-- `.claude/skills/moai*`
-- `.claude/hooks/moai/`
-- `.claude/rules/moai/`
-- `.claude/output-styles/moai/`
+## 프로젝트 구조
+
+```
+.claude/
+├── agents/           # 도메인 에이전트 (8개 카테고리, 25+ 에이전트)
+│   ├── 💻 개발/      # FastAPI, Flutter, Next.js, Figma 변환, TDD 등
+│   ├── 🎯 기획/      # 디스커버리, 전략, GTM, 데이터 분석
+│   ├── 🎨 디자인/    # UI/UX 디자인 시스템
+│   ├── 📝 콘텐츠/    # PPT, 소셜 미디어, 블로그, 이모티콘
+│   ├── 📣 마케팅/    # SEO, 마케팅 전략, 광고
+│   ├── ⚖️ 법무/      # 계약 검토, 법인 운영
+│   ├── 💰 재무/      # 결제 자동화, 재무 보고
+│   └── 🔍 리뷰/      # 멀티 리뷰 오케스트레이션
+├── skills/           # 스킬 원본 (Single Source of Truth, 340+)
+│   ├── _template/    # 새 스킬 템플릿
+│   ├── 💻 개발/      # 카테고리별 에이전트 스킬
+│   ├── 🎯 기획/
+│   └── ...           # 독립 스킬 (design, brand, social-content 등 22개)
+├── commands/         # 슬래시 커맨드 (16개)
+├── hooks/            # 라이프사이클 훅 (3개)
+├── rules/            # 모듈형 규칙 (common, python, typescript)
+└── statusline.py     # 상태줄
+
+.agents/skills/       # → .claude/skills/ symlink (Gemini, Codex, OpenCode 공용)
+contexts/             # 행동 모드 (dev, plan, research, review)
+scripts/              # 유틸리티 스크립트
+docs/                 # 프로젝트 문서 (YYMMDD- prefix)
+```
+
+---
+
+## 도메인 에이전트
+
+### 💻 개발
+
+| 에이전트 | 역할 |
+|----------|------|
+| `fastapi-expert-agent` | FastAPI 앱 설계/구현/테스트 |
+| `flutter-expert-agent` | Flutter 앱 설계/구현/테스트 |
+| `nextjs-expert-agent` | Next.js 웹 앱 설계/구현/테스트 |
+| `figma-to-nextjs` | Figma → Next.js 코드 변환 |
+| `figma-to-flutter` | Figma → Flutter 코드 변환 |
+| `flutter-to-nextjs-agent` | Flutter → Next.js 마이그레이션 |
+| `tdd-ralph` | 테스트 100% 통과까지 자율 루프 |
+| `build-error-resolver` | 최소 diff로 빌드 에러 수정 |
+| `refactor-cleaner` | 데드코드/미사용 의존성 제거 |
+| `loop-operator` | 자율 루프 모니터링/안전 관리 |
+
+### 🎯 기획
+
+| 에이전트 | 역할 |
+|----------|------|
+| `planning-agent` | 아이디어 → 출시 8단계 기획 (75개 스킬) |
+
+### 🎨 디자인
+
+| 에이전트 | 역할 |
+|----------|------|
+| `frontend-design-agent` | 독창적 웹/모바일 UI 디자인 생성 |
+| `mcp-figma` | Figma MCP 통합 디자인 추출 |
+
+### 📝 콘텐츠
+
+| 에이전트 | 역할 |
+|----------|------|
+| `ppt-agent` | PPT 리서치 → 제작 전 과정 |
+| `social-media-agent` | 멀티 플랫폼 소셜 콘텐츠 제작 |
+| `tech-blog-agent` | 기술 블로그 작성 → Hashnode 발행 |
+| `Emoticon Orchestrator` | AI 캐릭터 이모티콘 제작 |
+
+### 📣 마케팅
+
+| 에이전트 | 역할 |
+|----------|------|
+| `marketing-agent` | 마케팅 전략 → 실행 산출물 |
+| `seo-orchestrator-agent` | SEO + 콘텐츠 마케팅 통합 |
+
+### ⚖️ 법무
+
+| 에이전트 | 역할 |
+|----------|------|
+| `legal-contract-agent` | 계약 검토/초안/위험 분석 |
+| `corporate-legal-agent` | 법인 설립/등기/주총/정관 |
+
+### 💰 재무
+
+| 에이전트 | 역할 |
+|----------|------|
+| `payment-orchestrator-agent` | 결제 시스템 (Lemon Squeezy, 포트원) |
+| `finance-orchestrator-agent` | 재무 보고/영수증/세금계산서 |
+
+### 🔍 리뷰
+
+| 에이전트 | 역할 |
+|----------|------|
+| `review-orchestrator` | 멀티 관점 리뷰 분배 |
+| `review-code` | 코드 품질 리뷰 |
+| `review-architecture` | 시스템 설계/ERD/API 리뷰 |
+| `review-security` | 보안 취약점/컴플라이언스 리뷰 |
+| `review-design` | UI/UX/접근성 리뷰 |
+| `review-content` | 기획서/마케팅 카피/문서 리뷰 |
+
+---
+
+## 슬래시 커맨드
+
+### 개발
+
+| 커맨드 | 설명 |
+|--------|------|
+| `/commit` | 변경 분석 → 논리적 그루핑 → 스마트 커밋 |
+| `/verify` | 6단계 검증 (빌드→타입→린트→테스트→보안→리뷰) |
+| `/tdd` | TDD RED-GREEN-REFACTOR 사이클 |
+| `/test-coverage` | 커버리지 분석 + 부족한 테스트 자동 생성 |
+
+### 협업
+
+| 커맨드 | 설명 |
+|--------|------|
+| `/review` | 멀티-LLM 리뷰 (Claude + Gemini + Codex 합의) |
+| `/multi-plan` | 멀티-LLM 협업 기획 |
+| `/multi-execute` | 멀티-LLM 구현 (프로토타입 정제) |
+| `/orchestrate` | 병렬 워크트리 오케스트레이션 |
+
+### 세션 관리
+
+| 커맨드 | 설명 |
+|--------|------|
+| `/save-session` | 작업 세션 구조화 저장 |
+| `/resume-session` | 이전 세션 복원 |
+| `/checkpoint` | 이름 있는 체크포인트 생성/비교 |
+
+### 유틸리티
+
+| 커맨드 | 설명 |
+|--------|------|
+| `/today` | 데일리 컨텍스트 기반 작업 실행 |
+| `/audit` | AI 하니스 설정 종합 감사 (0-100) |
+| `/skill-audit` | 스킬 품질 감사 (Keep/Improve/Retire/Merge) |
+| `/learn` | 세션 패턴 추출 → 스킬로 저장 |
+| `/financial-report` | 월간 재무 보고서 생성 |
+
+---
+
+## 오케스트레이션
+
+에이전트/스킬/커맨드의 자동 라우팅은 `.claude/rules/common/agent-orchestration.md`에 정의됩니다:
+
+- **의사결정 트리**: 커맨드 → 에이전트 → 스킬 → 직접 처리 순서로 판단
+- **키워드 기반 라우팅**: 사용자 요청의 키워드로 적절한 에이전트 자동 선택
+- **워크플로우 체인**: 기획→디자인→구현→검증→리뷰 등 연계 패턴
+- **모델 라우팅**: Opus(설계/추론), Sonnet(구현), Haiku(탐색)
+
+---
 
 ## 설치
 
 ```bash
-git clone https://github.com/woogi-kang/claude-craft.git ~/.claude-craft
-cd ~/.claude-craft
+git clone https://github.com/woogi-kang/claude-craft.git
+cd claude-craft
 ./scripts/install.sh
 ```
 
-설치 스크립트는 `~/.claude` 아래에 `agents`, `skills`, `hooks`, `commands`, `statusline.py`를 설치합니다. `~/.claude/settings.json`이 없으면 기본 `statusLine` 설정만 생성합니다.
+설치 스크립트는 `~/.claude` 아래에 agents, skills, hooks, commands, statusline.py를 설치합니다.
 
-## 제거
+---
+
+## 다른 프로젝트에 동기화
+
+claude-craft의 에이전트/스킬/규칙을 다른 프로젝트에 복사합니다:
 
 ```bash
-rm -rf ~/.claude/agents ~/.claude/skills ~/.claude/hooks ~/.claude/commands
-rm -f ~/.claude/statusline.py
+# 등록된 모든 프로젝트에 동기화
+bash scripts/sync-to-projects.sh
+
+# 특정 프로젝트에만 동기화
+bash scripts/sync-to-projects.sh /path/to/my-project
 ```
+
+동기화 대상: `agents`, `commands`, `hooks`, `rules`, `skills`
+제외: `settings.json`, `logs/`
+
+새 프로젝트를 등록하려면 `scripts/sync-to-projects.sh`의 `DEFAULT_PROJECTS` 배열에 추가합니다.
+
+---
+
+## 멀티 환경 지원
+
+이 저장소 내에서 여러 AI 도구가 동일한 지시를 공유합니다:
+
+```
+CLAUDE.md              ← Claude Code (원본)
+GEMINI.md → CLAUDE.md  ← Gemini CLI
+AGENTS.md → CLAUDE.md  ← Codex CLI, OpenCode
+.agents/skills/ → .claude/skills/  ← Gemini/Codex 스킬 공유
+```
+
+수정은 항상 원본(`.claude/`, `CLAUDE.md`)에서 합니다.
+
+---
+
+## 규칙
+
+`.claude/rules/`에 모듈형으로 관리됩니다:
+
+```
+.claude/rules/
+├── common/
+│   ├── agent-orchestration.md   # 라우팅 매트릭스 + 워크플로우 체인
+│   ├── coding-style.md          # 코딩 스타일 + 보안
+│   ├── git-workflow.md          # 커밋/브랜치/PR 규칙
+│   ├── testing.md               # 테스트 원칙
+│   └── file-naming.md           # 파일명 컨벤션
+├── python/
+│   └── coding-style.md          # ruff, type hints, pathlib
+└── typescript/
+    └── coding-style.md          # Biome, Next.js App Router, shadcn/ui
+```
+
+---
+
+## 스크립트
+
+| 스크립트 | 설명 |
+|----------|------|
+| `install.sh` | ~/.claude에 자산 설치 |
+| `sync-to-projects.sh` | 다른 프로젝트에 .claude/ 동기화 |
+| `validate-skills.sh` | SKILL.md 프론트매터 검증 |
+| `skill-catalog.py` | 스킬 카탈로그 자동 생성 |
+| `integrity-check.py` | 참조 무결성 검증 |
+| `orchestrate-worktrees.py` | 병렬 워크트리 오케스트레이션 |
+| `usage-report.py` | 사용량 리포트 |
+| `fix-frontmatter.py` | 프론트매터 일괄 수정 |
+
+---
+
+## 기여
+
+새 스킬/에이전트/커맨드 추가 방법은 [CONTRIBUTING.md](docs/CONTRIBUTING.md)를 참고하세요.

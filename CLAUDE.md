@@ -1,23 +1,26 @@
 # Claude Craft
 
-AI 에이전트와 스킬을 체계적으로 관리하는 멀티 도메인 워크스페이스.
+AI 에이전트(25+)와 스킬(340+)을 체계적으로 관리하는 멀티 도메인 워크스페이스.
 Claude Code, Gemini CLI, Codex CLI, OpenCode에서 동일한 에이전트/스킬 자산을 공유합니다.
 
 ## 프로젝트 구조
 
 ```
-.claude/agents/    # 도메인 에이전트 정의
-.claude/skills/    # 스킬 원본 (Single Source of Truth)
-.claude/commands/  # 슬래시 커맨드 (16개)
-.claude/hooks/     # 라이프사이클 훅 (usage-tracker, quality-gate, git-push-guard)
-.claude/rules/     # 모듈형 규칙 (common, python, typescript)
-.agents/skills/    # → .claude/skills/ symlink (Gemini, Codex, OpenCode 공용)
-contexts/          # 행동 모드 (dev, research, review, plan)
-scripts/           # 유틸리티 스크립트 (검증, 카탈로그, 오케스트레이션)
-docs/              # 프로젝트 문서 (YYMMDD- prefix)
+.claude/
+├── agents/      # 도메인 에이전트 (8개 카테고리)
+├── skills/      # 스킬 원본 (Single Source of Truth)
+├── commands/    # 슬래시 커맨드 (16개)
+├── hooks/       # 라이프사이클 훅 (3개)
+├── rules/       # 모듈형 규칙 (common, python, typescript)
+└── statusline.py
+
+.agents/skills/  # → .claude/skills/ symlink (Gemini, Codex, OpenCode 공용)
+contexts/        # 행동 모드 (dev, plan, research, review)
+scripts/         # 유틸리티 스크립트
+docs/            # 프로젝트 문서 (YYMMDD- prefix)
 ```
 
-## 도메인 에이전트 (7개 카테고리)
+## 도메인 에이전트 (8개 카테고리)
 
 | 카테고리 | 영역 |
 |----------|------|
@@ -25,19 +28,33 @@ docs/              # 프로젝트 문서 (YYMMDD- prefix)
 | 🎯 기획 | 디스커버리, 전략, 실행, GTM, 데이터 분석 (75개 스킬) |
 | 🎨 디자인 | 프론트엔드 UI/UX 디자인 시스템 |
 | 📝 콘텐츠 | PPT, 소셜 미디어, 기술 블로그, 이모티콘 |
+| 📣 마케팅 | SEO, 마케팅 전략, 광고 카피 |
 | ⚖️ 법무 | 계약 검토, 법인 운영 |
 | 💰 재무 | 결제 자동화, 재무 보고 |
 | 🔍 리뷰 | 코드/아키텍처/보안/콘텐츠/디자인 멀티 리뷰 |
 
+## 오케스트레이션
+
+에이전트/스킬/커맨드의 자동 라우팅은 `.claude/rules/common/agent-orchestration.md`에 정의됩니다.
+사용자 요청을 분석하여 적절한 에이전트, 스킬, 커맨드로 자동 분배합니다.
+
 ## 멀티 환경 지원
 
-이 파일은 symlink로 각 도구에 공유됩니다:
-- `CLAUDE.md` — Claude Code
-- `GEMINI.md` → `CLAUDE.md` — Gemini CLI
-- `AGENTS.md` → `CLAUDE.md` — Codex CLI, OpenCode
+```
+CLAUDE.md              ← Claude Code (원본)
+GEMINI.md → CLAUDE.md  ← Gemini CLI
+AGENTS.md → CLAUDE.md  ← Codex CLI, OpenCode
+.agents/skills/ → .claude/skills/
+```
 
-스킬 역시 `.agents/skills/` → `.claude/skills/` symlink로 공유됩니다.
-수정은 항상 원본(`.claude/`)에서 하고, 다른 환경은 자동 반영됩니다.
+수정은 항상 원본(`.claude/`, `CLAUDE.md`)에서 하고, 다른 환경은 자동 반영됩니다.
+
+## 다른 프로젝트 동기화
+
+```bash
+bash scripts/sync-to-projects.sh              # 등록된 전체 프로젝트
+bash scripts/sync-to-projects.sh ../memoriz   # 특정 프로젝트
+```
 
 ## 작업 원칙
 
@@ -53,15 +70,15 @@ docs/              # 프로젝트 문서 (YYMMDD- prefix)
 
 ```
 .claude/rules/
-├── common/          # 공통 규칙
+├── common/
+│   ├── agent-orchestration.md   # 라우팅 매트릭스 + 워크플로우 체인
 │   ├── coding-style.md
 │   ├── git-workflow.md
-│   ├── agent-orchestration.md
 │   ├── testing.md
 │   └── file-naming.md
-├── python/          # Python 전용
+├── python/
 │   └── coding-style.md
-└── typescript/      # TypeScript 전용
+└── typescript/
     └── coding-style.md
 ```
 
