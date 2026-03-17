@@ -601,6 +601,162 @@ cta_types:
 ❌ CTA 없음
 ```
 
+<!-- Merged from coreyhaines31/marketingskills -->
+
+## Writing Style Rules
+
+효과적인 카피를 위한 핵심 스타일 원칙입니다.
+
+### Core Principles
+
+| 원칙 | 설명 | 예시 |
+|------|------|------|
+| **Simple > Complex** | "Use" not "utilize", "help" not "facilitate" | ❌ utilize → ✅ use |
+| **Specific > Vague** | "streamline", "optimize", "innovative" 피하기 | ❌ streamline workflow → ✅ cut reporting from 4h to 15min |
+| **Active > Passive** | 능동태 사용 | ❌ Reports are generated → ✅ We generate reports |
+| **Confident > Qualified** | "almost", "very", "really" 제거 | ❌ very fast → ✅ fast |
+| **Show > Tell** | 부사 대신 결과 묘사 | ❌ incredibly easy → ✅ set up in 5 minutes |
+| **Honest > Sensational** | 조작된 통계/추천사는 신뢰와 법적 리스크 | 실제 데이터만 사용 |
+
+### Quick Quality Check
+
+```
+□ 외부인이 혼란스러울 전문 용어가 있는가?
+□ 너무 많은 것을 담으려는 문장이 있는가?
+□ 수동태 구문이 있는가?
+□ 느낌표가 있는가? (제거하라)
+□ 실체 없는 마케팅 버즈워드가 있는가?
+```
+
+---
+
+## Page-Specific Copywriting Guidance
+
+페이지 유형별 카피라이팅 가이드입니다.
+
+### Homepage (홈페이지)
+
+```yaml
+homepage:
+  principles:
+    - "여러 청중을 섬기되 generic하지 않게"
+    - "가장 넓은 가치 제안으로 시작"
+    - "다양한 방문자 의도에 맞는 명확한 경로 제공"
+  above_the_fold:
+    headline: "핵심 가치 제안 — 한 문장"
+    subheadline: "헤드라인을 확장하는 1-2문장"
+    primary_cta: "행동 지향적 버튼"
+```
+
+### Landing Page (랜딩페이지)
+
+```yaml
+landing_page:
+  principles:
+    - "하나의 메시지, 하나의 CTA"
+    - "헤드라인을 광고/트래픽 소스와 일치"
+    - "한 페이지에서 완전한 설득 논리 완성"
+  structure:
+    - "Hero: 헤드라인 + 서브헤드라인 + CTA"
+    - "Social Proof: 로고, 통계, 추천사"
+    - "Problem/Pain: 그들의 상황을 이해함을 보여주기"
+    - "Solution/Benefits: 3-5개 핵심 혜택"
+    - "How It Works: 3-4 단계로 복잡성 제거"
+    - "Objection Handling: FAQ, 비교, 보증"
+    - "Final CTA: 가치 요약 + CTA 반복 + 리스크 제거"
+```
+
+### Pricing Page (가격 페이지)
+
+```yaml
+pricing_page:
+  principles:
+    - "방문자가 적합한 플랜 선택을 도움"
+    - "'나에게 맞는 건 뭘까?' 불안 해소"
+    - "추천 플랜을 눈에 띄게"
+```
+
+### Feature Page (기능 페이지)
+
+```yaml
+feature_page:
+  principles:
+    - "기능 → 혜택 → 결과 연결"
+    - "사용 사례와 예시 보여주기"
+    - "사용/구매로 가는 명확한 경로"
+```
+
+### About Page (회사 소개)
+
+```yaml
+about_page:
+  principles:
+    - "'왜 존재하는가'의 스토리 전달"
+    - "미션을 고객 혜택에 연결"
+    - "여전히 CTA 포함"
+```
+
+---
+
+## Seven Sweeps 편집 프레임워크 (요약)
+
+작성 후 카피를 7단계로 체계적으로 편집합니다. 각 단계는 하나의 차원에 집중합니다.
+
+```
+Sweep 1: Clarity — 독자가 이해할 수 있는가?
+Sweep 2: Voice & Tone — 일관된 톤인가?
+Sweep 3: So What — 모든 주장이 "그래서 뭐?"에 답하는가?
+Sweep 4: Prove It — 모든 주장에 증거가 있는가?
+Sweep 5: Specificity — 충분히 구체적인가?
+Sweep 6: Heightened Emotion — 감정을 불러일으키는가?
+Sweep 7: Zero Risk — CTA 주변의 모든 장벽을 제거했는가?
+```
+
+> **상세 가이드**: copy-editing 스킬에서 각 Sweep의 전체 프로세스를 참조하세요.
+
+---
+
+## Weak/Strong 단어 교체 가이드
+
+### 제거할 단어 (Filler)
+
+```
+very, really, extremely, incredibly    → (삭제)
+just, actually, basically              → (삭제)
+in order to                            → to
+that (불필요한 경우)                    → (삭제)
+things, stuff                          → (구체적 명사로)
+```
+
+### 교체 가이드
+
+| Weak (피하기) | Strong (사용하기) |
+|--------------|-----------------|
+| utilize | use |
+| implement | set up |
+| leverage | use |
+| facilitate | help |
+| innovative | new |
+| robust | strong |
+| seamless | smooth |
+| cutting-edge | new / modern |
+| streamline | simplify |
+| optimize | improve |
+
+### 문장 수준 체크
+
+```
+□ 한 문장에 하나의 아이디어
+□ 문장 길이 변화 (짧은 것과 긴 것 혼합)
+□ 중요한 정보를 문장 앞에 배치
+□ 한 문장에 접속사 최대 3개
+□ 25단어 이하 (보통)
+```
+
+<!-- End of merged content from coreyhaines31/marketingskills -->
+
+---
+
 ## 다음 스킬 연결
 
 - **Landing Page Skill**: 카피를 LP 구조에 배치

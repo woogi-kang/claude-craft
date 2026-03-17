@@ -393,6 +393,302 @@ efficiency_metrics:
 | 이메일 오픈율 | 20-25% | 15-20% | 20-25% |
 | 이메일 클릭률 | 2-3% | 2-3% | 3-5% |
 
+<!-- Merged from coreyhaines31/marketingskills -->
+
+## GA4 Implementation Guide
+
+### Quick Setup
+
+```yaml
+ga4_setup:
+  step_1: "GA4 property 및 data stream 생성"
+  step_2: "gtag.js 또는 GTM 설치"
+  step_3: "Enhanced Measurement 활성화"
+  step_4: "Custom events 설정"
+  step_5: "Admin에서 Conversions 마킹"
+```
+
+### Custom Event 예시
+
+```javascript
+// 가입 완료 이벤트
+gtag('event', 'signup_completed', {
+  'method': 'email',
+  'plan': 'free'
+});
+
+// CTA 클릭 이벤트
+gtag('event', 'cta_clicked', {
+  'button_text': 'Start Free Trial',
+  'location': 'hero_section'
+});
+
+// 구매 완료 이벤트
+gtag('event', 'purchase', {
+  'transaction_id': 'T12345',
+  'value': 49000,
+  'currency': 'KRW',
+  'items': [{
+    'item_name': 'Pro Plan',
+    'price': 49000
+  }]
+});
+```
+
+### GA4 핵심 이벤트 목록
+
+| 이벤트 | 카테고리 | 속성(Properties) |
+|--------|---------|-----------------|
+| `page_view` | 자동 | page_title, page_location, page_referrer |
+| `cta_clicked` | 커스텀 | button_text, location |
+| `form_submitted` | 커스텀 | form_type |
+| `signup_completed` | 커스텀 | method, source |
+| `demo_requested` | 커스텀 | - |
+| `purchase` | 커스텀 | transaction_id, value, currency, items |
+| `feature_used` | 커스텀 | feature_name |
+
+### Custom Dimensions 설정
+
+```yaml
+custom_dimensions:
+  user_scope:
+    - name: "user_type"
+      parameter: "user_type"
+      description: "사용자 유형 (free, paid, enterprise)"
+    - name: "plan_type"
+      parameter: "plan_type"
+      description: "구독 플랜"
+
+  event_scope:
+    - name: "button_location"
+      parameter: "location"
+      description: "CTA 위치"
+    - name: "content_type"
+      parameter: "content_type"
+      description: "콘텐츠 유형"
+```
+
+### Conversions 설정
+
+```yaml
+conversions:
+  - event: "signup_completed"
+    counting: "Once per session"
+  - event: "purchase"
+    counting: "Once per event"
+  - event: "demo_requested"
+    counting: "Once per session"
+```
+
+---
+
+## Data Layer Specifications (GTM)
+
+Google Tag Manager와 함께 사용할 Data Layer 명세입니다.
+
+### Data Layer 기본 구조
+
+```javascript
+// 페이지 로드 시 기본 데이터
+window.dataLayer = window.dataLayer || [];
+dataLayer.push({
+  'event': 'page_data_ready',
+  'page_type': 'landing_page',
+  'user_logged_in': false,
+  'user_plan': null
+});
+```
+
+### 이벤트별 Data Layer Push
+
+```javascript
+// 폼 제출
+dataLayer.push({
+  'event': 'form_submitted',
+  'form_name': 'contact',
+  'form_location': 'footer'
+});
+
+// 제품 조회
+dataLayer.push({
+  'event': 'product_viewed',
+  'product_name': 'Pro Plan',
+  'product_price': 49000,
+  'product_category': 'subscription'
+});
+
+// 전환 완료
+dataLayer.push({
+  'event': 'conversion_completed',
+  'conversion_type': 'signup',
+  'conversion_value': 0,
+  'conversion_source': 'organic'
+});
+```
+
+### GTM Container 구조
+
+| 컴포넌트 | 용도 | 예시 |
+|---------|------|------|
+| **Tags** | 실행할 코드 | GA4 이벤트, Meta Pixel, LinkedIn Insight |
+| **Triggers** | 태그 실행 시점 | 페이지뷰, 클릭, 폼 제출, Data Layer 이벤트 |
+| **Variables** | 동적 값 | 클릭 텍스트, Data Layer 변수, URL 파라미터 |
+
+### 네이밍 컨벤션
+
+```yaml
+naming_conventions:
+  events:
+    format: "object_action"
+    examples:
+      - "signup_completed"
+      - "button_clicked"
+      - "form_submitted"
+      - "article_read"
+      - "checkout_payment_completed"
+  rules:
+    - "소문자 + 언더스코어"
+    - "구체적으로: cta_hero_clicked (O) vs button_clicked (X)"
+    - "컨텍스트는 속성에, 이벤트명에는 넣지 않기"
+    - "공백/특수문자 금지"
+```
+
+---
+
+## Attribution Model Selection (기여도 모델 선택)
+
+### 모델 비교
+
+| 모델 | 방식 | 장점 | 단점 | 적합 |
+|------|------|------|------|------|
+| **Last-Click** | 마지막 클릭에 100% | 단순, 명확 | 상위 퍼널 과소평가 | 짧은 구매 사이클 |
+| **First-Click** | 첫 클릭에 100% | 인지도 평가에 유용 | 전환 기여 무시 | 인지도 캠페인 |
+| **Linear** | 균등 배분 | 모든 터치포인트 인정 | 핵심 포인트 구분 불가 | 멀티채널 균형 |
+| **Time-Decay** | 최근에 가중치 | 전환 직전 활동 중시 | 초기 인지 과소평가 | 긴 세일즈 사이클 |
+| **Data-Driven** | ML 기반 실제 기여도 | 가장 정확 | 데이터 300건+ 필요 | 충분한 데이터 |
+
+### 선택 가이드
+
+```yaml
+model_selection:
+  짧은_구매_사이클:
+    recommended: "Last-Click"
+    reason: "구매 결정이 빠르므로 마지막 터치포인트가 중요"
+
+  긴_B2B_사이클:
+    recommended: "Time-Decay 또는 Data-Driven"
+    reason: "여러 터치포인트를 거치므로 종합 평가 필요"
+
+  인지도_중심_캠페인:
+    recommended: "First-Click"
+    reason: "최초 접점의 가치를 정확히 평가"
+
+  충분한_전환_데이터:
+    recommended: "Data-Driven"
+    reason: "실제 패턴 기반으로 가장 정확한 기여도 산정"
+```
+
+---
+
+## Tracking Debugging / Troubleshooting Guide
+
+### 디버깅 도구
+
+| 도구 | 용도 | 접근 방법 |
+|------|------|----------|
+| **GA4 DebugView** | 실시간 이벤트 모니터링 | GA4 Admin → DebugView |
+| **GTM Preview Mode** | 태그 트리거 테스트 | GTM → Preview 버튼 |
+| **Tag Assistant** | 크롬 확장 프로그램 | Chrome Web Store |
+| **dataLayer Inspector** | Data Layer 디버깅 | 브라우저 콘솔 |
+| **Network Tab** | 요청 확인 | 브라우저 개발자 도구 → Network |
+
+### 일반적인 문제와 해결
+
+| 문제 | 확인 사항 | 해결 방법 |
+|------|----------|----------|
+| 이벤트 미발화 | 트리거 설정, GTM 로드 여부 | 트리거 조건 확인, GTM 스니펫 점검 |
+| 잘못된 값 | 변수 경로, Data Layer 구조 | 변수 매핑 확인, 콘솔에서 dataLayer 확인 |
+| 중복 이벤트 | 복수 컨테이너, 트리거 중복 | 한 컨테이너만 사용, 트리거 조건 정밀화 |
+| 전환 미기록 | 전환 마킹, 이벤트 파라미터 | GA4에서 해당 이벤트가 Conversion으로 마킹됐는지 확인 |
+| PII 유출 | 이벤트 속성에 개인정보 | 이메일, 전화번호 등 속성에서 제거 |
+
+### Validation Checklist
+
+```
+□ 올바른 트리거에서 이벤트가 발화하는가?
+□ 속성 값이 올바르게 채워지는가?
+□ 중복 이벤트가 없는가?
+□ 크로스 브라우저 및 모바일에서 동작하는가?
+□ 전환이 올바르게 기록되는가?
+□ PII(개인정보)가 유출되지 않는가?
+□ 쿠키 동의 연동이 되어 있는가?
+```
+
+---
+
+## UTM Parameter Strategy
+
+### 표준 파라미터
+
+| 파라미터 | 용도 | 예시 |
+|---------|------|------|
+| `utm_source` | 트래픽 소스 | google, newsletter, linkedin |
+| `utm_medium` | 마케팅 매체 | cpc, email, social, referral |
+| `utm_campaign` | 캠페인 이름 | spring_sale, product_launch_q1 |
+| `utm_content` | 버전 구분 | hero_cta, sidebar_banner, email_footer |
+| `utm_term` | 유료 검색 키워드 | running+shoes, project+management |
+
+### 네이밍 규칙
+
+```yaml
+utm_naming_rules:
+  case: "소문자 통일"
+  separator: "언더스코어(_) 또는 하이픈(-) 중 하나로 통일"
+  specificity: "구체적이되 간결하게"
+  documentation: "모든 UTM을 스프레드시트에 문서화"
+
+  examples:
+    good:
+      - "?utm_source=google&utm_medium=cpc&utm_campaign=brand_2024q1&utm_content=headline_a"
+      - "?utm_source=newsletter&utm_medium=email&utm_campaign=weekly_digest_240315"
+    bad:
+      - "?utm_source=Google (대문자)"
+      - "?utm_campaign=campaign1 (의미 불명)"
+      - "?utm_content=cta (어떤 CTA?)"
+```
+
+### UTM 빌더 템플릿
+
+```
+기본 URL:        https://example.com/landing
+utm_source:      {플랫폼 or 소스}
+utm_medium:      {채널 유형}
+utm_campaign:    {캠페인명_YYMMDD or YYQ#}
+utm_content:     {변형 구분}
+utm_term:        {키워드} (유료 검색만)
+
+결과: https://example.com/landing?utm_source=linkedin&utm_medium=social&utm_campaign=product_launch_2403&utm_content=carousel_v2
+```
+
+### 자주 쓰는 utm_medium 값
+
+```yaml
+standard_mediums:
+  - cpc: "유료 검색 (CPC)"
+  - cpm: "유료 디스플레이 (CPM)"
+  - email: "이메일"
+  - social: "소셜 미디어 (유기적)"
+  - paid_social: "소셜 미디어 (유료)"
+  - referral: "레퍼럴/제휴"
+  - affiliate: "어필리에이트"
+  - organic: "오가닉 검색"
+  - direct: "다이렉트 트래픽"
+```
+
+<!-- End of merged content from coreyhaines31/marketingskills -->
+
+---
+
 ## 다음 스킬 연결
 
 - **A/B Testing Skill**: 테스트 결과 분석

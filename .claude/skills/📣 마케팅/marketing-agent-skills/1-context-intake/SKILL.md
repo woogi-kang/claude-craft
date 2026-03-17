@@ -278,6 +278,226 @@ minimum_viable_context:
 1차 산출물 → 사용자 피드백 → 컨텍스트 보완 → 2차 산출물 (개선)
 ```
 
+<!-- Merged from coreyhaines31/marketingskills -->
+
+## Auto-Draft from Codebase
+
+코드베이스에서 자동으로 컨텍스트 초안을 생성할 수 있습니다. 처음부터 수동으로 입력하는 대신, 기존 자료에서 핵심 정보를 추출합니다.
+
+### 자동 스캔 대상
+
+```yaml
+auto_scan_sources:
+  - README.md                    # 제품 설명, 핵심 기능
+  - landing pages                # 가치 제안, 포지셔닝
+  - package.json / pyproject.toml # 제품 카테고리, 기술 스택
+  - marketing copy               # 기존 메시지, 톤앤매너
+  - about pages                  # 미션, 스토리
+  - meta descriptions            # 한 줄 설명
+```
+
+### 워크플로우
+
+```
+1. 코드베이스 스캔
+      │
+      ▼
+2. 초안 자동 생성 (V1)
+      │
+      ▼
+3. 사용자 검토 & 수정
+      │
+      ▼
+4. 빈 항목 보완 (인터뷰 질문)
+      │
+      ▼
+5. 최종 컨텍스트 저장
+```
+
+대부분의 경우 자동 초안이 수동 입력보다 빠르고 정확합니다.
+
+---
+
+## JTBD Four Forces (전환 역학)
+
+고객이 현재 솔루션에서 우리 제품으로 전환하는 과정의 4가지 힘을 분석합니다.
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    JTBD Four Forces                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│   ← Push (밀어내는 힘)                                       │
+│     현재 솔루션에 대한 불만/좌절                               │
+│     "기존 도구가 너무 느려서..."                               │
+│                                                              │
+│   → Pull (끌어당기는 힘)                                     │
+│     우리 제품의 매력                                          │
+│     "이 기능이 있으면 시간을 절약할 수 있겠다"                  │
+│                                                              │
+│   ■ Habit (관성)                                             │
+│     현재 방식에 머무르게 하는 습관                              │
+│     "지금 쓰는 것도 괜찮은데..."                               │
+│                                                              │
+│   ✕ Anxiety (불안)                                           │
+│     전환에 대한 걱정/두려움                                    │
+│     "새 도구로 바꾸면 데이터 이전이 힘들지 않을까?"             │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### 수집 항목
+
+```yaml
+switching_dynamics:
+  push:                           # 현재 솔루션의 불만
+    - ""
+    - ""
+  pull:                           # 우리 제품의 매력 포인트
+    - ""
+    - ""
+  habit:                          # 전환을 막는 관성
+    - ""
+    - ""
+  anxiety:                        # 전환에 대한 불안
+    - ""
+    - ""
+```
+
+---
+
+## Anti-Persona (비타겟 고객)
+
+우리 제품에 맞지 않는 고객을 명확히 정의합니다. 잘못된 고객에게 마케팅 리소스를 낭비하지 않기 위해 필수적입니다.
+
+```yaml
+anti_persona:
+  description: ""                 # 맞지 않는 고객 설명
+  reasons:                        # 맞지 않는 이유
+    - ""
+    - ""
+  signals:                        # 이런 신호가 보이면 비타겟
+    - ""
+    - ""
+  examples:                       # 구체적 예시
+    - ""
+```
+
+**예시:**
+```yaml
+anti_persona:
+  description: "엔터프라이즈 규모의 회사로 커스텀 온프레미스 솔루션을 원하는 기업"
+  reasons:
+    - "셀프서브 SaaS 모델과 맞지 않음"
+    - "커스텀 개발 요구가 우리 역량을 초과"
+  signals:
+    - "RFP/입찰을 통한 구매 프로세스"
+    - "온프레미스 배포 요구"
+```
+
+---
+
+## Proof Points (증거 포인트)
+
+마케팅 메시지를 뒷받침하는 구체적 증거를 체계적으로 수집합니다.
+
+```yaml
+proof_points:
+  metrics:                        # 핵심 성과 지표
+    - stat: ""                    # 예: "시간 50% 절약"
+      context: ""                 # 어떤 상황에서
+    - stat: ""
+      context: ""
+
+  logos:                          # 주요 고객/파트너 로고
+    - ""
+    - ""
+
+  testimonials:                   # 고객 추천사
+    - quote: ""
+      who: ""                     # 이름, 직책, 회사
+      theme: ""                   # 핵심 가치 테마
+    - quote: ""
+      who: ""
+      theme: ""
+
+  value_themes:                   # 가치 테마별 증거
+    - theme: ""
+      proof: ""
+    - theme: ""
+      proof: ""
+```
+
+---
+
+## Customer Language (고객 언어)
+
+고객이 실제로 사용하는 언어를 수집합니다. 다듬어진 마케팅 용어가 아니라, 고객의 **원래 표현(verbatim)** 을 기록합니다.
+
+> **핵심 원칙**: 고객의 정확한 표현이 다듬어진 설명보다 훨씬 가치 있습니다.
+> 고객이 실제로 생각하고 말하는 방식을 반영해야 카피가 더 강력해집니다.
+
+```yaml
+customer_language:
+  problem_description:            # 고객이 문제를 설명하는 방식
+    - "[verbatim quote]"
+    - "[verbatim quote]"
+
+  solution_description:           # 고객이 우리 제품을 설명하는 방식
+    - "[verbatim quote]"
+    - "[verbatim quote]"
+
+  words_to_use:                   # 고객이 자주 쓰는 단어/표현
+    - ""
+    - ""
+
+  words_to_avoid:                 # 고객이 쓰지 않는 표현 (내부 용어 등)
+    - ""
+    - ""
+
+  glossary:                       # 제품 관련 용어 정의
+    - term: ""
+      meaning: ""
+```
+
+### 수집 소스
+
+- 고객 인터뷰 녹취록
+- 리뷰 사이트 (G2, Capterra)
+- 서포트 티켓
+- 세일즈 콜 녹음
+- 소셜 미디어 멘션
+- 커뮤니티 포럼
+
+---
+
+## Cross-Skill 컨텍스트 공유
+
+Context Intake에서 수집한 정보는 다른 모든 마케팅 스킬에서 참조할 수 있도록 저장합니다.
+
+### 출력 경로
+
+```yaml
+output_paths:
+  primary: "workspace/work-marketing/context/{project}-context.md"
+  cross_skill: ".agents/product-marketing-context.md"
+```
+
+`.agents/product-marketing-context.md`에 저장하면 다른 마케팅 스킬(Copywriting, Email, Ads 등)이 자동으로 이 컨텍스트를 참조합니다.
+
+### 다른 스킬에서의 사용
+
+```
+다른 스킬 시작 시:
+1. .agents/product-marketing-context.md 확인
+2. 존재하면 → 컨텍스트 로드 후 추가 질문만
+3. 없으면 → Context Intake 스킬 실행 안내
+```
+
+<!-- End of merged content from coreyhaines31/marketingskills -->
+
+---
+
 ## 다음 스킬 연결
 
 컨텍스트 수집 완료 후:

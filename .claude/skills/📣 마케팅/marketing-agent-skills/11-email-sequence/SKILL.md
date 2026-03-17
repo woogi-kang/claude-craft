@@ -424,6 +424,171 @@ subject_formulas:
 5. CTA - 명확한 행동 유도
 ```
 
+<!-- Merged from coreyhaines31/marketingskills -->
+
+## Core Principles (핵심 원칙)
+
+리모트 이메일 시퀀스 스킬에서 가져온 3가지 핵심 원칙입니다.
+
+### 1. One Email, One Job (하나의 이메일, 하나의 목적)
+
+```
+• 각 이메일에는 하나의 주요 목적만
+• 이메일당 하나의 메인 CTA
+• 모든 것을 한 이메일에 담으려 하지 마라
+```
+
+### 2. Value Before Ask (요청 전에 가치 먼저)
+
+```
+• 유용한 것으로 시작
+• 콘텐츠를 통해 신뢰 구축
+• 판매할 권리를 먼저 획득
+```
+
+### 3. Relevance Over Volume (양보다 관련성)
+
+```
+• 적지만 더 좋은 이메일이 승리
+• 관련성을 위해 세그먼트
+• Quality > Frequency
+```
+
+---
+
+## Deliverability 가이드 (전달률 확보)
+
+이메일이 스팸함이 아닌 받은편지함에 도달하도록 하는 기술적 설정입니다.
+
+### 이메일 인증 3종 세트
+
+```yaml
+email_authentication:
+  SPF:
+    description: "Sender Policy Framework — 허가된 IP에서만 발송"
+    setup: "DNS TXT 레코드에 발송 서버 IP 등록"
+    example: "v=spf1 include:_spf.google.com ~all"
+
+  DKIM:
+    description: "DomainKeys Identified Mail — 이메일에 디지털 서명"
+    setup: "이메일 서비스에서 DKIM 키 생성 → DNS에 공개키 등록"
+    verification: "이메일 헤더에서 DKIM-Signature 확인"
+
+  DMARC:
+    description: "Domain-based Message Authentication — SPF/DKIM 기반 정책"
+    setup: "DNS TXT 레코드에 DMARC 정책 등록"
+    example: "v=DMARC1; p=quarantine; rua=mailto:dmarc@yourdomain.com"
+    levels:
+      none: "모니터링만 (시작 단계)"
+      quarantine: "실패 시 스팸함으로"
+      reject: "실패 시 거부 (최종 목표)"
+```
+
+### Warm-Up 전략
+
+새 도메인이나 새 이메일 서비스로 전환 시 점진적으로 발송량을 늘려야 합니다.
+
+```yaml
+warmup_schedule:
+  week_1: "일 50통 (가장 활성적인 구독자에게)"
+  week_2: "일 100통"
+  week_3: "일 250통"
+  week_4: "일 500통"
+  week_5_plus: "20-30%씩 증가"
+
+warmup_tips:
+  - "높은 참여율 구독자에게 먼저 발송"
+  - "오래된 리스트 정리 후 시작"
+  - "바운스 즉시 제거"
+  - "불만 접수 모니터링"
+  - "Postmaster Tools (Gmail) 활용"
+```
+
+### 전달률 모니터링
+
+```yaml
+deliverability_metrics:
+  inbox_placement_rate: "> 95% 목표"
+  bounce_rate: "< 2% 유지"
+  complaint_rate: "< 0.1% 유지"
+  unsubscribe_rate: "< 0.5% 정상"
+
+monitoring_tools:
+  - "Google Postmaster Tools"
+  - "MXToolbox (SPF/DKIM/DMARC 검증)"
+  - "Mail Tester (발송 전 테스트)"
+```
+
+---
+
+## Legal Compliance (법적 준수사항)
+
+이메일 마케팅 관련 주요 법률을 반드시 준수해야 합니다.
+
+### CAN-SPAM (미국)
+
+```yaml
+can_spam_requirements:
+  mandatory:
+    - "발신자 정보 정확히 표시 (From, Reply-To)"
+    - "기만적인 제목줄 금지"
+    - "광고임을 명시"
+    - "실제 물리적 주소 포함"
+    - "수신 거부 방법 명확히 제공"
+    - "수신 거부 요청 10영업일 내 처리"
+    - "수신 거부 후 추가 발송 금지"
+  penalties:
+    - "위반 시 이메일당 최대 $51,744 벌금"
+```
+
+### GDPR (유럽)
+
+```yaml
+gdpr_requirements:
+  mandatory:
+    - "명시적 동의(opt-in) 필수 (사전 체크 금지)"
+    - "동의 시 수집 목적 명확히 고지"
+    - "동의 기록 보관"
+    - "언제든 수신 거부 가능하게"
+    - "개인 데이터 삭제 요청 시 처리 (잊혀질 권리)"
+    - "데이터 처리 목적 문서화"
+    - "데이터 보호 담당자(DPO) 지정 (필요 시)"
+  best_practices:
+    - "Double opt-in 사용 (확인 이메일 발송)"
+    - "개인정보 처리방침 링크 포함"
+    - "최소 필요 데이터만 수집"
+    - "데이터 보존 기간 설정"
+```
+
+### 한국 (정보통신망법)
+
+```yaml
+korea_requirements:
+  mandatory:
+    - "수신 동의 획득 (opt-in)"
+    - "광고 메일 제목에 '(광고)' 표시"
+    - "발신자 정보 명시"
+    - "수신 거부 방법 안내"
+    - "수신 거부 시 즉시 처리"
+    - "야간(21시-08시) 광고 메일 발송 시 별도 동의"
+```
+
+### 체크리스트
+
+```
+□ 수신 동의(opt-in) 확보 절차 있는가?
+□ 모든 이메일에 수신 거부 링크 있는가?
+□ 발신자 정보와 물리적 주소 포함하는가?
+□ 수신 거부 즉시 처리되는가?
+□ 제목줄이 기만적이지 않은가?
+□ 타겟 시장의 법률을 준수하는가?
+□ 동의 기록을 보관하는가?
+```
+
+<!-- End of merged content from coreyhaines31/marketingskills -->
+
+---
+
 ## 다음 스킬 연결
 
 - **Ads Creative Skill**: 이메일 가입 유도 광고
