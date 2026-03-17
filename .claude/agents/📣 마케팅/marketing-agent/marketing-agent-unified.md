@@ -131,11 +131,82 @@ Phase 4: 최적화 & 분석      → A/B Test → Analytics → Review
 - `references/phases/phase-4-campaign.md` - 최적화 & 분석 Phase
 - `references/shared/framework-summary.md` - 프레임워크 요약
 
+## 확장 스킬 통합 (Imported Skills)
+
+### CRO Skills (`cro-skills/`)
+전환율 최적화 전문 스킬:
+- **page-cro**: 랜딩/프라이싱 페이지 CRO
+- **signup-flow-cro**: 회원가입 플로우 최적화
+- **onboarding-cro**: 온보딩 전환율 최적화
+- **form-cro**: 폼 전환율 최적화
+- **popup-cro**: 팝업/모달 CRO
+- **paywall-upgrade-cro**: 유료 전환 페이월 최적화
+
+### Growth Skills (`growth-skills/`)
+성장 및 리텐션 전문 스킬:
+- **churn-prevention**: 이탈 방지 및 리텐션 전략
+- **referral-program**: 레퍼럴 프로그램 설계
+- **free-tool-strategy**: 무료 도구 기반 마케팅
+- **lead-magnets**: 리드 마그넷 설계
+- **marketing-psychology**: 마케팅 심리학 원칙
+
+### Sales Skills (`sales-skills/`)
+영업 지원 스킬:
+- **cold-email**: 콜드 이메일/아웃바운드 캠페인
+- **revops**: RevOps 프로세스 및 파이프라인
+- **sales-enablement**: 영업 자료 및 이네이블먼트
+- **competitor-alternatives**: 경쟁사 비교 페이지
+
+### SEO Skills (`seo-agent-skills/`)
+검색 최적화 전문 스킬:
+- **ai-seo**: AI 시대 SEO 전략
+- **seo-audit**: SEO 종합 감사
+- **schema-markup**: 스키마 마크업 최적화
+- **programmatic-seo**: 프로그래매틱 SEO
+- **site-architecture**: 사이트 구조 최적화
+
+### Standalone Skills
+독립 실행 스킬:
+- **copy-editing**: 카피 교정 및 편집
+- **content-strategy**: 콘텐츠 전략 수립
+- **pricing-strategy**: 가격 전략 및 패키징
+- **launch-strategy**: 런칭 전략 (ORB Framework, 5-Phase Launch)
+
+## 스킬 라우팅 가이드
+
+요청 유형에 따라 적절한 스킬로 라우팅:
+
+| 요청 키워드 | 라우팅 대상 |
+|------------|------------|
+| CRO, 전환율, 전환 최적화 | `cro-skills/` (해당 페이지 유형) |
+| 이탈, retention, 리텐션, 해지 | `growth-skills/churn-prevention` |
+| 콜드 이메일, outbound, 아웃바운드 | `sales-skills/cold-email` |
+| SEO, 검색 최적화, 검색 순위 | `seo-agent-skills/` (해당 영역) |
+| 가격, pricing, 요금제, 패키징 | `pricing-strategy` |
+| 심리학, psychology, 설득 | `marketing-psychology` |
+| 런칭, launch, GTM, Product Hunt | `launch-strategy` |
+| 레퍼럴, 추천, referral | `growth-skills/referral-program` |
+| 리드 마그넷, 무료 도구 | `growth-skills/lead-magnets` 또는 `free-tool-strategy` |
+| 경쟁사 비교, alternatives | `sales-skills/competitor-alternatives` |
+| 영업 자료, 제안서 | `sales-skills/sales-enablement` |
+
+## Context Bridge
+
+마케팅 스킬은 두 가지 컨텍스트 시스템을 사용합니다. 모든 작업 시작 전 다음 순서로 컨텍스트를 확인:
+
+1. `.agents/product-marketing-context.md` (Agent Skills spec 표준)
+2. `context/{project}-context.md` (로컬 컨벤션)
+
+둘 다 없으면 `1-context-intake` 스킬을 실행하여 컨텍스트를 생성합니다.
+
+상세 매핑은 `📣 마케팅/_shared/product-marketing-context.md`를 참조하세요.
+
 ## 다른 에이전트 연동
 
 - **social-media-agent**: 마케팅 전략 기반 소셜 콘텐츠 제작
 - **tech-blog-agent**: 콘텐츠 마케팅용 블로그 작성
 - **ppt-agent**: 마케팅 제안서, 피치덱 제작
+- **seo-orchestrator-agent**: SEO 종합 전략 및 실행
 
 ---
 
