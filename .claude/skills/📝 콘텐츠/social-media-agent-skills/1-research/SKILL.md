@@ -302,6 +302,140 @@ research_tools:
     - Pinterest Trends (무료)
 ```
 
+## 🌏 글로벌 트렌드 소스 (Global Trend Sources)
+
+### 글로벌 트렌드 모니터링
+
+```yaml
+global_trend_sources:
+  social_platforms:
+    - name: "Reddit Trending"
+      url: "reddit.com/r/popular, r/all"
+      use: "글로벌 바이럴 토픽, 커뮤니티별 트렌드"
+      subreddits:
+        tech: [r/technology, r/startups, r/SaaS, r/webdev]
+        marketing: [r/marketing, r/socialmedia, r/entrepreneur]
+        general: [r/popular, r/todayilearned]
+
+    - name: "TikTok Creative Center"
+      url: "ads.tiktok.com/business/creativecenter"
+      use: "트렌딩 사운드, 해시태그, 크리에이터, 광고 레퍼런스"
+
+    - name: "X/Twitter Trending Topics"
+      url: "twitter.com/explore"
+      use: "실시간 글로벌 이슈, 업계 대화"
+
+  search_and_discovery:
+    - name: "Google Trends (Global)"
+      url: "trends.google.com"
+      use: "국가별/언어별 검색 트렌드 비교"
+      tip: "지역을 Worldwide로 설정하여 글로벌 관심도 확인"
+
+    - name: "Exploding Topics"
+      url: "explodingtopics.com"
+      use: "떠오르는 트렌드 조기 발견"
+
+    - name: "Pinterest Trends"
+      url: "trends.pinterest.com"
+      use: "비주얼/라이프스타일 트렌드, 시즌 예측"
+
+  tech_and_product:
+    - name: "Product Hunt"
+      url: "producthunt.com"
+      use: "신규 제품/서비스 트렌드, 얼리어답터 반응"
+
+    - name: "Hacker News"
+      url: "news.ycombinator.com"
+      use: "테크 업계 트렌드, 개발자 관심사"
+
+    - name: "Indie Hackers"
+      url: "indiehackers.com"
+      use: "인디 메이커 트렌드, 수익 공유 사례"
+
+  industry_media:
+    - name: "TechCrunch, The Verge"
+      use: "글로벌 테크 뉴스"
+    - name: "Social Media Today, Later Blog"
+      use: "소셜미디어 업계 동향"
+    - name: "HubSpot Blog"
+      use: "마케팅 트렌드, 리서치 리포트"
+```
+
+### 영어권 바이럴 패턴
+
+```yaml
+english_viral_patterns:
+  controversy_opinion:
+    pattern: "Hot take / Unpopular opinion"
+    example_en: |
+      Unpopular opinion: You don't need 10K followers to make money online.
+      Here's what actually matters (thread 🧵)
+    example_kr: |
+      인기 없는 의견: 팔로워 1만 없어도 온라인으로 돈 벌 수 있습니다.
+      진짜 중요한 건 이겁니다 (스레드 🧵)
+
+  listicle_thread:
+    pattern: "Numbered list / Thread"
+    example_en: |
+      7 free tools that replaced my $500/month tech stack:
+      1/ Notion → replaced Confluence...
+    example_kr: |
+      월 50만원짜리 툴을 대체한 무료 도구 7개:
+      1/ Notion → Confluence 대체...
+
+  before_after:
+    pattern: "Transformation story"
+    example_en: |
+      6 months ago: 0 followers, 0 revenue
+      Today: 50K followers, $10K MRR
+      Here's exactly what I did differently...
+    example_kr: |
+      6개월 전: 팔로워 0, 매출 0
+      현재: 팔로워 5만, 월 매출 1천만원
+      제가 달리 한 것은...
+
+  relatable_meme:
+    pattern: "Meme + Professional insight"
+    example_en: |
+      Me: "Let me just check one thing on TikTok"
+      3 hours later: *has a complete content strategy*
+
+      (But seriously, here's why TikTok research matters...)
+
+  save_worthy:
+    pattern: "Bookmark-bait / Save this"
+    example_en: |
+      Save this for later 📌
+      The complete social media image size cheat sheet for 2025:
+    example_kr: |
+      저장 필수 📌
+      2025 소셜미디어 이미지 사이즈 완벽 가이드:
+```
+
+### 글로벌 시즌 이벤트 (영어권)
+
+```yaml
+global_seasonal_hooks:
+  monthly:
+    January: "New Year goals, Dry January, planning season"
+    February: "Valentine's Day, Black History Month (US)"
+    March: "Women's History Month, Spring break, SXSW"
+    April: "Earth Day, April Fools"
+    May: "Mental Health Awareness, Mother's Day (US/UK)"
+    June: "Pride Month, Summer kickoff, Father's Day"
+    July: "4th of July (US), Mid-year review"
+    August: "Back to school, Summer wrap-up"
+    September: "Fall season, Apple events, Labor Day (US)"
+    October: "Halloween, Breast Cancer Awareness"
+    November: "Black Friday, Thanksgiving (US), NaNoWriMo"
+    December: "Holiday season, Year in review, Christmas, New Year's Eve"
+
+  recurring_en:
+    monday: "Monday Motivation, Weekly goals"
+    wednesday: "Midweek check-in, Hump Day"
+    friday: "TGIF, Weekend plans, Friday wins"
+```
+
 ## 다음 단계
 
 리서치 완료 후:

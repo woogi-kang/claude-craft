@@ -439,6 +439,148 @@ tracking_spreadsheet:
     quarterly: "분기 전략 리뷰"
 ```
 
+## 🌏 글로벌 플랫폼 분석 (Global Platform Analytics)
+
+### TikTok 분석 지표
+
+```yaml
+tiktok_metrics:
+  reach:
+    - "영상 조회수 (Video Views)"
+    - "프로필 조회수 (Profile Views)"
+    - "유니크 뷰어 (Unique Viewers)"
+
+  engagement:
+    - "좋아요 (Likes)"
+    - "댓글 (Comments)"
+    - "공유 (Shares)"
+    - "저장/북마크 (Saves/Bookmarks)"
+    - "듀엣/스티치 (Duets/Stitches)"
+
+  retention:
+    - "시청 완료율 (Watch-through Rate) — 가장 중요"
+    - "평균 시청 시간 (Average Watch Time)"
+    - "반복 시청 비율 (Replay Rate)"
+    - "이탈 지점 (Drop-off Point)"
+
+  growth:
+    - "팔로워 증가 (Follower Growth)"
+    - "팔로워 소스 (팔로우한 경로: FYP, 프로필, 검색)"
+
+  algorithm_signals:
+    primary: "시청 완료율 > 공유 > 댓글 > 좋아요"
+    note: "TikTok 알고리즘은 시청 완료율을 가장 중시"
+
+  benchmarks:
+    view_rate: |
+      팔로워 대비 조회율:
+      excellent: ">30%"
+      good: "10-30%"
+      average: "3-10%"
+      low: "<3%"
+    engagement_rate: |
+      조회수 대비:
+      excellent: ">10%"
+      good: "4-10%"
+      average: "2-4%"
+      low: "<2%"
+    completion_rate: |
+      excellent: ">70% (15초 영상)"
+      good: ">50%"
+      average: "30-50%"
+      low: "<30%"
+
+  tools:
+    native: "TikTok Analytics (비즈니스 계정 필수)"
+    third_party:
+      - "Pentos (TikTok 특화 분석)"
+      - "Exolyt (경쟁사 분석)"
+      - "Tokboard (랭킹/트렌드)"
+```
+
+### 글로벌 벤치마크 데이터
+
+```yaml
+global_benchmarks:
+  engagement_rate_by_platform:
+    tiktok:
+      global_average: "4.25%"
+      note: "가장 높은 오가닉 참여율"
+    instagram:
+      global_average: "1.16%"
+      korean_average: "2.5-4.0%"
+      note: "한국 시장이 글로벌 대비 높은 참여율"
+    linkedin:
+      global_average: "2.0%"
+      note: "B2B 콘텐츠 기준"
+    x:
+      global_average: "0.035%"
+      note: "노출 대비 낮지만, 팔로워 대비로 계산 시 0.5-1.0%"
+    pinterest:
+      global_average: "Pin save rate 1-2%"
+      note: "저장 중심 지표가 더 의미 있음"
+    youtube:
+      global_average: "CTR 2-10%"
+      note: "클릭률(CTR)과 시청 시간이 핵심"
+
+  follower_growth_benchmarks:
+    tiktok:
+      fast: ">10%/월 (알고리즘 기반 급성장 가능)"
+      average: "3-10%/월"
+    instagram:
+      fast: ">5%/월"
+      average: "1-3%/월"
+    linkedin:
+      fast: ">3%/월"
+      average: "1-2%/월"
+
+  content_type_performance:
+    global_trends:
+      video: "텍스트 대비 평균 2-3배 참여율"
+      carousel: "단일 이미지 대비 평균 1.5-2배"
+      short_form_video: "전 플랫폼 최고 도달률"
+    korean_specific:
+      카드뉴스: "한국 인스타그램에서 여전히 높은 참여"
+      네이버블로그: "검색 유입 기반으로 별도 지표 필요"
+
+  posting_frequency_impact:
+    tiktok: "1-3회/일이 최적, 더 많아도 패널티 없음"
+    instagram: "주 3-5회가 최적, 일 1회 초과 시 참여율 하락"
+    linkedin: "주 2-3회 최적"
+    x: "일 1-5회 최적"
+```
+
+### 글로벌 분석 도구 추가
+
+```yaml
+global_analytics_tools:
+  tiktok:
+    native: "TikTok Analytics (Creator/Business account)"
+    third_party:
+      - "Pentos — TikTok 경쟁사 분석"
+      - "Exolyt — 계정/영상 심층 분석"
+
+  reddit:
+    native: "Reddit Analytics (모더레이터/광고주)"
+    third_party:
+      - "Later for Reddit — 최적 발행 시간"
+      - "Subreddit Stats — 서브레딧 성장 추이"
+
+  pinterest:
+    native: "Pinterest Analytics (비즈니스 계정)"
+    metrics: ["핀 노출", "핀 클릭", "아웃바운드 클릭", "저장"]
+
+  youtube:
+    native: "YouTube Studio Analytics"
+    key_metrics: ["시청 시간", "CTR", "구독자 전환", "시청 유지율"]
+
+  cross_platform:
+    - "Sprout Social — 전 플랫폼 통합 (TikTok 포함)"
+    - "Hootsuite — 글로벌 멀티 플랫폼"
+    - "Metricool — TikTok + Instagram + X 통합"
+    - "Notion/Google Sheets — 수동 트래킹 (무료)"
+```
+
 ## 다음 단계
 
 분석 완료 후:

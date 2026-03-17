@@ -359,6 +359,133 @@ repurpose_output:
     threads: "2025-01-06 20:00"
 ```
 
+## 🌏 크로스마켓 리퍼포징 (Cross-Market Repurposing)
+
+### Korean ↔ English 콘텐츠 로컬라이제이션
+
+```yaml
+localization_guide:
+  principle: "번역이 아닌 문화적 적응 (Translation ≠ Localization)"
+
+  korean_to_english:
+    tone_shift:
+      - "존댓말/반말 → Casual professional English"
+      - "~해요/~합니다 → Direct, conversational"
+      - "겸손한 표현 → Confident, value-forward"
+    cultural_adaptation:
+      - "한국 사례 → 글로벌/서양 사례로 대체 또는 보충"
+      - "한국 시즌 이벤트 → 해당 시장 이벤트"
+      - "원화 금액 → 달러/현지 통화"
+      - "한국 브랜드 레퍼런스 → 글로벌 브랜드"
+    example:
+      korean: |
+        오늘 깨달은 게 있어요 💡
+        네이버 블로그 SEO보다 중요한 건
+        고객이 진짜 검색하는 키워드를 아는 거예요.
+        여러분은 어떻게 키워드 찾으세요?
+      english: |
+        Had a lightbulb moment today 💡
+        More important than SEO tricks?
+        Knowing the exact words your customers use to search.
+        How do you do your keyword research?
+
+  english_to_korean:
+    tone_shift:
+      - "Direct statements → 부드러운 표현"
+      - "I/Me 중심 → 공감/커뮤니티 중심"
+      - "Bold claims → 데이터/근거 추가"
+    cultural_adaptation:
+      - "글로벌 사례 → 한국 시장 맥락 추가"
+      - "달러 → 원화"
+      - "서양 문화 레퍼런스 → 한국 문화 레퍼런스"
+    example:
+      english: |
+        I made $10K MRR in 6 months with zero marketing budget.
+        Here's my exact playbook:
+      korean: |
+        마케팅 예산 0원으로 6개월 만에 월 매출 1천만원 달성했습니다.
+        제가 실제로 한 방법을 공유합니다:
+
+  common_mistakes:
+    - "직역으로 인한 어색한 표현"
+    - "문화적 맥락 무시 (한국 유머 → 영어권에서 이해 불가)"
+    - "단위/통화 미변환"
+    - "현지에서 통하지 않는 사례 그대로 사용"
+```
+
+### TikTok 리퍼포징 타겟
+
+```yaml
+repurpose_to_tiktok:
+  from_blog_article:
+    format: "15-60초 요약 영상"
+    adaptation: |
+      - 핵심 포인트 1-3개만 추출
+      - 말하는 사람 + 텍스트 오버레이
+      - 첫 3초에 강렬한 훅
+      - 마지막에 "팔로우하면 더 많은 팁"
+
+  from_instagram_carousel:
+    format: "슬라이드를 영상으로 변환"
+    adaptation: |
+      - 캐러셀 슬라이드를 빠른 컷으로 재구성
+      - 내레이션 또는 트렌딩 사운드 추가
+      - 각 슬라이드 2-3초씩
+
+  from_linkedin_post:
+    format: "말하기 또는 스크린 녹화"
+    adaptation: |
+      - 전문적 인사이트를 캐주얼하게 전달
+      - "LinkedIn에서 화제가 된 이야기인데..."로 훅
+      - 짧고 임팩트 있게
+
+  from_x_thread:
+    format: "스레드 내용을 영상으로"
+    adaptation: |
+      - 트윗 하나씩 화면에 표시하며 내레이션
+      - 또는 직접 말하면서 포인트 전달
+      - 원본 스레드 링크를 프로필에
+
+  from_youtube_video:
+    format: "숏폼 클립 (15-60초)"
+    adaptation: |
+      - 가장 임팩트 있는 부분 클립
+      - 세로 비율로 크롭 (9:16)
+      - 자막 추가 필수
+      - "풀 영상은 프로필 링크에서"
+```
+
+### 크로스마켓 리퍼포징 워크플로우
+
+```yaml
+cross_market_workflow:
+  step_1_create_core:
+    description: "한 언어로 핵심 콘텐츠 제작"
+    tip: "가장 자신 있는 언어로 먼저 제작"
+
+  step_2_localize:
+    description: "다른 시장에 맞게 적응"
+    checklist:
+      - "문화적 맥락 적합한가?"
+      - "사례/레퍼런스 현지화 했는가?"
+      - "통화/단위 변환 했는가?"
+      - "톤앤매너가 현지에 맞는가?"
+      - "해시태그를 현지 언어로 변경했는가?"
+
+  step_3_platform_adapt:
+    description: "각 플랫폼에 맞게 포맷 변환"
+    matrix:
+      korean_instagram: "한국어 캐러셀"
+      global_tiktok: "영어 숏폼 영상"
+      global_reddit: "영어 텍스트 포스트"
+      korean_x: "한국어 스레드"
+      global_linkedin: "영어 프로페셔널 포스트"
+
+  step_4_schedule:
+    description: "시간대별 발행"
+    tip: "한국 콘텐츠는 KST, 글로벌 콘텐츠는 EST/UTC 기준"
+```
+
 ## 다음 단계
 
 리퍼포징 완료 후:

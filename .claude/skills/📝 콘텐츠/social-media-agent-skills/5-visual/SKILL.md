@@ -323,6 +323,86 @@ visual_output:
     - "폰트: Pretendard Bold/Regular"
 ```
 
+## 🌏 글로벌 비주얼 가이드 (Global Visual Guide)
+
+### TikTok 영상 사양
+
+```yaml
+tiktok_video_specs:
+  aspect_ratio: "9:16 (세로 필수)"
+  resolution: "1080x1920 (Full HD)"
+  formats:
+    short: "15초 (트렌드 참여, 훅 강조)"
+    standard: "60초 (튜토리얼, 스토리텔링)"
+    extended: "3분 (심층 콘텐츠)"
+    long: "10분 (풀 튜토리얼, 브이로그)"
+  file_format: "MP4, MOV"
+  max_file_size: "287.6MB (모바일), 500MB (웹)"
+
+  visual_guidelines:
+    safe_zone: |
+      - 상단 15%: 사용자명/아이콘 영역 — 핵심 텍스트 배치 금지
+      - 하단 20%: 캡션/버튼 영역 — 핵심 비주얼 피하기
+      - 중앙 65%: 핵심 콘텐츠 영역
+    text_overlay:
+      font_size: "최소 20pt (모바일 가독성)"
+      position: "중앙 또는 중앙 상단"
+      style: "Bold, 고대비, 짧은 문구"
+    thumbnail:
+      importance: "TikTok 프로필 그리드에서 노출"
+      tip: "영상 중 가장 임팩트 있는 프레임 선택"
+
+  hook_visual_patterns:
+    text_hook: "첫 프레임에 텍스트 오버레이 ('이거 모르면 손해')"
+    motion_hook: "빠른 움직임, 줌인으로 시작"
+    face_hook: "얼굴 클로즈업 + 표정"
+    before_after: "비포/애프터 대비"
+```
+
+### 멀티 언어 디자인 고려사항
+
+```yaml
+multi_language_design:
+  text_in_images:
+    principle: "텍스트가 포함된 이미지는 언어별 별도 제작 권장"
+    alternatives:
+      - "텍스트 최소화, 유니버설 아이콘/이모지 활용"
+      - "숫자와 그래프 중심 (언어 무관)"
+      - "템플릿화하여 텍스트만 교체"
+    font_considerations:
+      korean: "Pretendard, Noto Sans KR, Spoqa Han Sans"
+      english: "Inter, DM Sans, Plus Jakarta Sans"
+      bilingual: "Noto Sans (한/영 모두 지원)"
+
+  universal_visual_elements:
+    icons: |
+      - 이모지: 전 세계 공통 이해 (🚀 💡 ✅ 📊)
+      - 아이콘 라이브러리: Lucide, Phosphor (문화 중립적)
+      - 화살표, 숫자, 체크마크: 언어 무관
+    imagery: |
+      - 다양한 인종/문화 반영 (글로벌 이미지 사용 시)
+      - 문화 특정 제스처 주의 (OK 사인, 엄지척 등 국가별 의미 다름)
+      - 색상 의미 차이 고려 (빨간색: 한국=열정/축하, 서양=위험/정지)
+    layout: |
+      - 텍스트 방향: 영어(LTR)와 한국어 모두 좌→우
+      - 여백 충분히 확보 (번역 시 텍스트 길이 변화 대비)
+      - 핵심 메시지는 비주얼로도 전달 가능하게
+
+  platform_specific_global:
+    tiktok: |
+      - 자막 필수 (음소거 시청 + 외국어 오디언스)
+      - 자동 자막 기능 활용 가능하나, 수동 편집 권장
+      - 한국어 콘텐츠에 영어 자막 추가하면 글로벌 도달 확대
+    pinterest: |
+      - 텍스트 오버레이는 간결하게 (영어 기준 6 단어 이하)
+      - 세로 2:3 비율 핀이 피드에서 가장 큰 노출
+      - 깔끔한 타이포그래피 + 고품질 이미지
+    youtube_shorts: |
+      - TikTok과 동일 9:16 비율
+      - 썸네일 별도 설정 불가 — 영상 자체가 썸네일
+      - 제목에 핵심 키워드 (검색 최적화)
+```
+
 ## 다음 단계
 
 비주얼 기획 완료 후:

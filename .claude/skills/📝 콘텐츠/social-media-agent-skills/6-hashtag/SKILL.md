@@ -308,6 +308,99 @@ hashtag_output:
     checked_date: "2025-01-04"
 ```
 
+## 🌏 글로벌 해시태그 전략 (Global Hashtag Strategy)
+
+### TikTok 해시태그
+
+```yaml
+tiktok_hashtags:
+  count:
+    recommended: "3-5개"
+    maximum: "무제한이나 5개 이하 권장"
+
+  strategy:
+    trending_sounds: |
+      - 트렌딩 사운드를 사용하면 해시태그보다 더 큰 도달
+      - 사운드 자체가 해시태그 역할
+    challenge_hashtags: |
+      - 브랜드 챌린지: #YourBrandChallenge
+      - 커뮤니티 챌린지 참여: #BookTok, #CleanTok
+    niche_tags: |
+      - 닛치 커뮤니티: #SmallBusinessTok, #IndieHacker
+      - 콘텐츠 유형: #LearnOnTikTok, #Tutorial
+    discovery_tags: |
+      - #fyp, #foryou, #foryoupage (효과 논란 있으나 여전히 사용)
+      - 카테고리 태그: #Tech, #Marketing, #Design
+
+  placement: "캡션 끝에 자연스럽게"
+
+  examples:
+    tech_product: ["#TechTok", "#AppReview", "#ProductivityHack"]
+    lifestyle: ["#DayInMyLife", "#GRWM", "#Aesthetic"]
+    education: ["#LearnOnTikTok", "#DidYouKnow", "#FactCheck"]
+    korean_content: ["#한국", "#KoreanStyle", "#kbeauty"]
+```
+
+### 영어 해시태그 예시
+
+```yaml
+english_hashtag_examples:
+  industry:
+    description: "Industry/Topic tags"
+    examples: ["#Marketing", "#SaaS", "#StartupLife", "#Tech", "#Design"]
+
+  niche:
+    description: "Specific niche tags"
+    examples: ["#GrowthHacking", "#UXDesign", "#FinTech", "#IndieHacker"]
+
+  community:
+    description: "Community/Culture tags"
+    examples: ["#MarketingTwitter", "#BuildInPublic", "#CreatorEconomy"]
+
+  engagement:
+    description: "Engagement-driving tags"
+    examples: ["#TipsAndTricks", "#SaveThisForLater", "#HowTo"]
+
+  trending_formats:
+    description: "Trending content format tags"
+    examples: ["#Thread", "#Breakdown", "#CheatSheet", "#FreeTemplate"]
+```
+
+### 글로벌 vs 한국 해시태그 믹스
+
+```yaml
+hashtag_mix_recommendations:
+  korean_market_only:
+    korean_tags: "90-100%"
+    english_tags: "0-10%"
+    example: |
+      #마케팅팁 #콘텐츠마케팅 #스타트업일상 #디지털마케팅
+      #Marketing (영어 태그 소량 추가로 검색 확장)
+
+  global_market_only:
+    korean_tags: "0%"
+    english_tags: "100%"
+    example: |
+      #MarketingTips #ContentStrategy #StartupLife #GrowthHacking
+
+  dual_market:
+    korean_tags: "40-50%"
+    english_tags: "50-60%"
+    strategy: |
+      - 한국어 + 영어 태그를 혼합
+      - 양쪽 검색에 모두 노출
+      - 플랫폼에 따라 비율 조정
+    example: |
+      #마케팅 #Marketing #스타트업 #Startup
+      #콘텐츠전략 #ContentStrategy #그로스해킹 #GrowthHacking
+
+  platform_guidance:
+    instagram: "한국 계정은 한국어 위주, 글로벌 계정은 영어 위주"
+    tiktok: "영어 태그가 글로벌 도달에 유리 (알고리즘이 태그 기반 추천)"
+    linkedin: "비즈니스 영어 태그가 글로벌 전문가 도달에 효과적"
+    x: "대화 언어에 맞춤 (한국어 트윗 → 한국어 태그)"
+```
+
 ## 다음 단계
 
 해시태그 최적화 후:

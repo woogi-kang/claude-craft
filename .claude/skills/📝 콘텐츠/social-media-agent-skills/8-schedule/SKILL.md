@@ -58,19 +58,96 @@ best_times:
     note: "캐주얼 플랫폼, 시간 덜 민감"
 ```
 
-### 글로벌 타겟 시
+### 🌏 글로벌 타임존별 최적 발행 시간 (Global Timezone Guide)
 
 ```yaml
 global_timing:
   strategy: "주요 타겟 시간대 기준"
 
+  utc_reference:
+    description: "모든 시간대의 기준점 (UTC+0)"
+    peak_hours: "12:00-14:00, 17:00-19:00 UTC"
+    note: "스케줄링 도구에서 UTC 기준으로 설정하면 실수 방지"
+
   us_audience:
-    est: "09:00-11:00, 14:00-16:00 EST"
-    pst: "06:00-08:00, 11:00-13:00 PST"
+    est_edt:
+      timezone: "UTC-5 (EST) / UTC-4 (EDT)"
+      weekday:
+        morning: "09:00-11:00 (출근 후)"
+        lunch: "12:00-13:00"
+        evening: "19:00-21:00"
+      best_days: ["Tue", "Wed", "Thu"]
+    pst_pdt:
+      timezone: "UTC-8 (PST) / UTC-7 (PDT)"
+      weekday:
+        morning: "06:00-08:00"
+        lunch: "11:00-13:00"
+        evening: "17:00-19:00"
+      note: "EST 기준으로 발행하면 PST는 자연스럽게 오전에 도달"
+
+  europe_audience:
+    gmt_bst:
+      timezone: "UTC+0 (GMT) / UTC+1 (BST)"
+      region: "UK, Ireland, Portugal"
+      weekday:
+        morning: "08:00-10:00"
+        lunch: "12:00-13:00"
+        evening: "17:00-19:00"
+    cet_cest:
+      timezone: "UTC+1 (CET) / UTC+2 (CEST)"
+      region: "France, Germany, Spain, Italy, Netherlands"
+      weekday:
+        morning: "08:00-10:00"
+        lunch: "12:00-14:00"
+        evening: "18:00-20:00"
+
+  japan_audience:
+    jst:
+      timezone: "UTC+9 (JST)"
+      weekday:
+        morning: "07:00-09:00 (通勤時間)"
+        lunch: "12:00-13:00"
+        evening: "19:00-22:00"
+      best_days: ["火", "水", "木"]
+      note: "KST와 동일 시간대이므로 한국 콘텐츠와 동시 발행 가능"
 
   overlap_zones:
-    korea_us: "22:00-24:00 KST = 09:00-11:00 EST"
-    korea_europe: "16:00-18:00 KST = 08:00-10:00 CET"
+    korea_us: "22:00-24:00 KST = 09:00-11:00 EST = 06:00-08:00 PST"
+    korea_europe: "16:00-18:00 KST = 08:00-10:00 CET = 07:00-09:00 GMT"
+    korea_japan: "동일 시간대 (KST = JST)"
+    us_europe: "15:00-17:00 CET = 09:00-11:00 EST"
+```
+
+### 멀티 타임존 스케줄링 전략
+
+```yaml
+multi_timezone_strategy:
+  single_market:
+    description: "단일 시장 타겟"
+    approach: "해당 시간대 최적 시간에 발행"
+    example: "US 타겟 → EST 09:00 발행"
+
+  dual_market_kr_us:
+    description: "한국 + 미국 동시 타겟"
+    approach: |
+      - 한국 저녁 (22:00 KST) = 미국 동부 아침 (08:00 EST)
+      - 이 시간대가 양쪽 모두 활성 시간
+    optimal_slot: "22:00-23:00 KST"
+
+  global_brand:
+    description: "전 세계 오디언스"
+    approach: |
+      - 하루 2-3회 발행으로 주요 시간대 커버
+      - 슬롯 1: 08:00 KST (아시아 아침, 유럽 전날 밤)
+      - 슬롯 2: 16:00 KST (유럽 아침, 아시아 오후)
+      - 슬롯 3: 23:00 KST (미국 아침, 아시아 밤)
+    tip: "같은 콘텐츠를 시간대별로 리포스팅하지 말고, 각 슬롯에 다른 콘텐츠 배치"
+
+  platform_specific_global:
+    tiktok: "알고리즘 기반이므로 시간대 영향 적음 — 일관된 시간에 발행이 더 중요"
+    reddit: "미국 동부 기준 오전 (06:00-09:00 EST)이 글로벌 최고 노출"
+    pinterest: "토요일 오전이 글로벌 최고 참여율"
+    youtube: "구독자 기반이므로 주요 오디언스 시간대에 맞춤"
 ```
 
 ## 발행 빈도 가이드
