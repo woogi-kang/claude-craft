@@ -5,6 +5,44 @@
 
 ---
 
+## [1.1.0] - 2026-03-19
+
+Craft Orchestra: DAG 기반 멀티 에이전트 병렬 오케스트레이션 시스템.
+
+### Added
+
+**팀 오케스트레이션 (3개 커맨드)**
+- `/team`: 자연어 → 자동 DAG 구성 + 도메인 에이전트 매칭 + 병렬 실행
+- `/team-launch`: TOML 템플릿 기반 원커맨드 팀 실행
+- `orchestrate-dashboard.py`: 웹 대시보드 (실시간 DAG 시각화, stdlib only)
+
+**DAG 의존성 엔진 (orchestrate-worktrees.py 확장)**
+- `depends_on` 필드로 워커 간 의존성 선언
+- 위상 정렬 기반 실행 순서 자동 결정
+- `--watch` 모드: tmux pane exit code 감지 → 블로킹 해제 → 자동 스폰
+- 실패 전파: 선행 워커 실패 시 하류 워커 자동 cascade fail
+- 순환 의존성 / 중복 이름 / 잘못된 참조 자동 감지
+
+**TOML 팀 템플릿 (5개)**
+- `fullstack-dev.toml`: Backend → Frontend → Tester
+- `content-pipeline.toml`: Strategist → Writer → SEO → Reviewer
+- `multi-reviewer.toml`: Code + Arch + Security → Consolidator
+- `figma-to-prod.toml`: Design-Extractor → Implementer → Visual-Tester
+- `planning.toml`: Researcher + Analyst → Strategist
+
+**보안 강화**
+- `shlex.quote()` 전 템플릿 변수 적용 (shell injection 방지)
+- 세션명 / 대시보드 API 경로 검증 (path traversal 방지)
+- 대시보드 localhost 바인딩 (네트워크 노출 방지)
+
+### Changed
+- `agent-orchestration.md`: 라우팅 의사결정 트리에 /team 분기 추가
+- `CLAUDE.md`: 팀 오케스트레이션 섹션 + templates/ 디렉토리 추가
+- `.gitignore`: `.orchestration/` 추가 (세션 상태 파일 제외)
+- `orchestrate.md`: `depends_on`, `--watch`, DAG 시각화 문서화
+
+---
+
 ## [1.0.0] - 2026-03-16
 
 초기 안정 릴리스. 멀티 도메인 에이전트/스킬 워크스페이스 구축 완료.

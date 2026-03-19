@@ -22,7 +22,8 @@ Claude Craft 프로젝트에 스킬, 에이전트, 커맨드를 추가하는 방
 │   ├── 💻 개발/      # 카테고리별 스킬 디렉토리
 │   ├── 🎯 기획/
 │   └── ...           # standalone 스킬 (brand, design, social-content 등)
-├── commands/         # 슬래시 커맨드 (16개)
+├── commands/         # 슬래시 커맨드 (18개)
+├── templates/        # 팀 오케스트레이션 TOML 템플릿 (5개)
 ├── hooks/            # 라이프사이클 훅 (3개)
 └── rules/            # 모듈형 규칙 (common, python, typescript)
 
@@ -203,14 +204,80 @@ Version: 1.0.0
 |--------|------|------|
 | `/commit` | 스마트 커밋 (논리적 그루핑) | `commit.md` |
 | `/review` | 멀티-LLM 리뷰 | `review.md` |
+| `/team` | 자연어 → DAG 팀 오케스트레이션 | `team.md` |
+| `/team-launch` | TOML 템플릿 기반 팀 실행 | `team-launch.md` |
+| `/orchestrate` | 수동 plan.json 병렬 워크트리 | `orchestrate.md` |
 | `/today` | 데일리 브리핑 | `today.md` |
 | `/financial-report` | 월간 재무 보고 | `financial-report.md` |
 
 ---
 
-## 5. 동기화
+## 5. 새 팀 템플릿 추가하기
 
-### 5.1 저장소 내 멀티 환경 (symlink)
+### 5.1 템플릿 위치
+
+`.claude/templates/` 디렉토리에 `template-name.toml` 형식으로 생성합니다.
+
+### 5.2 TOML 구조
+
+```toml
+[team]
+name = "my-template"
+description = "템플릿 설명"
+
+[[agents]]
+name = "Worker-A"
+role = "역할 설명"
+task_template = """
+{goal}에 대한 작업을 수행하세요.
+
+## 기술 스택
+- 사용할 기술
+
+## 산출물
+- handoff.md에 작업 결과 요약 기록
+
+## 범위
+- 프로젝트의 기존 디렉토리 구조를 따르세요
+"""
+
+[[agents]]
+name = "Worker-B"
+role = "역할 설명"
+blocked_by = ["Worker-A"]
+task_template = """
+{goal}에 대한 후속 작업을 수행하세요.
+
+## 지침
+- Worker-A의 handoff.md에서 선행 작업 결과를 확인하세요
+"""
+```
+
+### 5.3 템플릿 작성 규칙
+
+| 규칙 | 설명 |
+|------|------|
+| `{goal}` 플레이스홀더 | 모든 task_template에 포함 (`/team-launch --goal` 값으로 치환) |
+| `blocked_by` | 선행 에이전트 이름 배열 (plan.json의 `depends_on`으로 자동 변환) |
+| handoff 패턴 | 루트 에이전트는 handoff.md **작성** 지침, 후속 에이전트는 **읽기** 지침 |
+| 산출물 경로 | `docs/`에 저장 시 `YYMMDD-` prefix 규칙 안내 |
+| 에이전트 이름 | 영어, 고유값 (브랜치/slug 생성에 사용) |
+
+### 5.4 기존 템플릿 참고
+
+| 템플릿 | 패턴 | 에이전트 수 |
+|--------|------|------------|
+| `fullstack-dev` | 선형 DAG (A → B → C) | 3 |
+| `content-pipeline` | 선형 체인 (A → B → C → D) | 4 |
+| `multi-reviewer` | 팬인 (A + B + C → D) | 4 |
+| `figma-to-prod` | 선형 DAG | 3 |
+| `planning` | 팬인 (A + B → C) | 3 |
+
+---
+
+## 6. 동기화
+
+### 6.1 저장소 내 멀티 환경 (symlink)
 
 ```
 GEMINI.md  → CLAUDE.md           # Gemini CLI용
@@ -218,7 +285,7 @@ AGENTS.md  → CLAUDE.md           # Codex CLI, OpenCode용
 .agents/skills/ → .claude/skills/  # 스킬 공유
 ```
 
-### 5.2 다른 프로젝트에 동기화 (복사)
+### 6.2 다른 프로젝트에 동기화 (복사)
 
 다른 프로젝트(예: memoriz)에 `.claude/` 자산을 동기화할 때는 `sync-to-projects.sh`를 사용합니다:
 
@@ -232,7 +299,7 @@ bash scripts/sync-to-projects.sh /path/to/project
 
 새 프로젝트를 등록하려면 스크립트의 `DEFAULT_PROJECTS` 배열에 추가합니다.
 
-### 5.3 핵심 원칙
+### 6.3 핵심 원칙
 
 - **원본은 항상 `.claude/`에서 수정**
 - 다른 프로젝트의 `.claude/`를 직접 수정하지 않음 (sync로 덮어씌워짐)
@@ -240,11 +307,11 @@ bash scripts/sync-to-projects.sh /path/to/project
 
 ---
 
-## 6. 검증
+## 7. 검증
 
 커밋 전에 다음 스크립트를 실행하여 무결성을 확인합니다.
 
-### 6.1 프론트매터 검증
+### 7.1 프론트매터 검증
 
 모든 SKILL.md에 YAML 프론트매터가 있는지 확인:
 
@@ -252,7 +319,7 @@ bash scripts/sync-to-projects.sh /path/to/project
 bash scripts/validate-skills.sh
 ```
 
-### 6.2 참조 무결성 검증
+### 7.2 참조 무결성 검증
 
 SKILL.md에서 참조하는 파일이 실제로 존재하는지 확인:
 
@@ -260,7 +327,7 @@ SKILL.md에서 참조하는 파일이 실제로 존재하는지 확인:
 python scripts/integrity-check.py
 ```
 
-### 6.3 카탈로그 재생성
+### 7.3 카탈로그 재생성
 
 스킬 추가/수정 후 카탈로그를 업데이트:
 
@@ -270,7 +337,7 @@ python scripts/skill-catalog.py
 
 ---
 
-## 7. 네이밍 컨벤션 요약
+## 8. 네이밍 컨벤션 요약
 
 | 대상 | 형식 | 예시 |
 |------|------|------|
@@ -279,12 +346,13 @@ python scripts/skill-catalog.py
 | 에이전트 (단일) | `{domain}-agent.md` | `fastapi-expert-agent.md` |
 | 에이전트 (디렉토리) | `{domain}/{domain}-unified.md` | `figma-to-flutter/figma-to-flutter-unified.md` |
 | 커맨드 | kebab-case | `financial-report.md` |
+| 팀 템플릿 | kebab-case `.toml` | `fullstack-dev.toml` |
 | 문서 (docs/) | `YYMMDD-description.md` | `260316-liff-integration-guide.md` |
 | 메타 문서 | 날짜 없이 | `CONTRIBUTING.md`, `CHANGELOG.md` |
 
 ---
 
-## 8. 체크리스트
+## 9. 체크리스트
 
 새 스킬/에이전트 추가 시:
 

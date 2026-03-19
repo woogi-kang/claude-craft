@@ -9,7 +9,8 @@ Claude Code, Gemini CLI, Codex CLI, OpenCode에서 동일한 에이전트/스킬
 |------|------|------|
 | 도메인 에이전트 | 25+ | 8개 카테고리 전문 에이전트 |
 | 스킬 | 340+ | 에이전트 전용 + 독립 스킬 |
-| 슬래시 커맨드 | 16 | `/commit`, `/review`, `/today` 등 |
+| 슬래시 커맨드 | 18 | `/commit`, `/review`, `/team`, `/today` 등 |
+| 팀 템플릿 | 5 | fullstack-dev, content-pipeline 등 |
 | 규칙 | 7 | 코딩, Git, 오케스트레이션 등 |
 | 컨텍스트 모드 | 4 | dev, plan, research, review |
 
@@ -33,7 +34,8 @@ Claude Code, Gemini CLI, Codex CLI, OpenCode에서 동일한 에이전트/스킬
 │   ├── 💻 개발/      # 카테고리별 에이전트 스킬
 │   ├── 🎯 기획/
 │   └── ...           # 독립 스킬 (design, brand, social-content 등 22개)
-├── commands/         # 슬래시 커맨드 (16개)
+├── commands/         # 슬래시 커맨드 (18개)
+├── templates/        # 팀 오케스트레이션 TOML 템플릿 (5개)
 ├── hooks/            # 라이프사이클 훅 (3개)
 ├── rules/            # 모듈형 규칙 (common, python, typescript)
 └── statusline.py     # 상태줄
@@ -130,6 +132,14 @@ docs/                 # 프로젝트 문서 (YYMMDD- prefix)
 | `/tdd` | TDD RED-GREEN-REFACTOR 사이클 |
 | `/test-coverage` | 커버리지 분석 + 부족한 테스트 자동 생성 |
 
+### 팀 오케스트레이션
+
+| 커맨드 | 설명 |
+|--------|------|
+| `/team` | 자연어 → DAG 자동 구성 + 병렬 실행 |
+| `/team-launch` | TOML 템플릿 기반 원커맨드 팀 실행 |
+| `/orchestrate` | 수동 plan.json 기반 병렬 워크트리 실행 |
+
 ### 협업
 
 | 커맨드 | 설명 |
@@ -137,7 +147,6 @@ docs/                 # 프로젝트 문서 (YYMMDD- prefix)
 | `/review` | 멀티-LLM 리뷰 (Claude + Gemini + Codex 합의) |
 | `/multi-plan` | 멀티-LLM 협업 기획 |
 | `/multi-execute` | 멀티-LLM 구현 (프로토타입 정제) |
-| `/orchestrate` | 병렬 워크트리 오케스트레이션 |
 
 ### 세션 관리
 
@@ -163,10 +172,36 @@ docs/                 # 프로젝트 문서 (YYMMDD- prefix)
 
 에이전트/스킬/커맨드의 자동 라우팅은 `.claude/rules/common/agent-orchestration.md`에 정의됩니다:
 
-- **의사결정 트리**: 커맨드 → 에이전트 → 스킬 → 직접 처리 순서로 판단
+- **의사결정 트리**: 커맨드 → 멀티에이전트(/team) → 단일에이전트 → 스킬 → 직접 처리
 - **키워드 기반 라우팅**: 사용자 요청의 키워드로 적절한 에이전트 자동 선택
 - **워크플로우 체인**: 기획→디자인→구현→검증→리뷰 등 연계 패턴
 - **모델 라우팅**: Opus(설계/추론), Sonnet(구현), Haiku(탐색)
+
+### 팀 오케스트레이션 (Craft Orchestra)
+
+DAG 기반 병렬 실행으로 여러 에이전트가 의존성 순서에 따라 자율 협업합니다.
+
+| 커맨드 | 용도 | 예시 |
+|--------|------|------|
+| `/team` | 자연어 → 자동 DAG 구성 | `/team "백엔드 API + 프론트 UI + 테스트"` |
+| `/team-launch` | 템플릿 기반 원커맨드 | `/team-launch fullstack-dev --goal "JWT 인증"` |
+| `/orchestrate` | 수동 plan.json | `/orchestrate` |
+
+```bash
+# 실행 후 모니터링
+python3 scripts/orchestrate-worktrees.py plan.json --watch    # DAG 자동 스폰
+python3 scripts/orchestrate-dashboard.py --open                # 웹 대시보드
+```
+
+**TOML 팀 템플릿** (`.claude/templates/`):
+
+| 템플릿 | 구성 |
+|--------|------|
+| `fullstack-dev` | Backend → Frontend → Tester |
+| `content-pipeline` | Strategist → Writer → SEO → Reviewer |
+| `multi-reviewer` | Code + Arch + Security → Consolidator |
+| `figma-to-prod` | Design-Extractor → Implementer → Visual-Tester |
+| `planning` | Researcher + Analyst → Strategist |
 
 ---
 
@@ -245,7 +280,8 @@ AGENTS.md → CLAUDE.md  ← Codex CLI, OpenCode
 | `validate-skills.sh` | SKILL.md 프론트매터 검증 |
 | `skill-catalog.py` | 스킬 카탈로그 자동 생성 |
 | `integrity-check.py` | 참조 무결성 검증 |
-| `orchestrate-worktrees.py` | 병렬 워크트리 오케스트레이션 |
+| `orchestrate-worktrees.py` | 병렬 워크트리 오케스트레이션 (DAG 지원) |
+| `orchestrate-dashboard.py` | 웹 대시보드 (실시간 세션 모니터링) |
 | `usage-report.py` | 사용량 리포트 |
 | `fix-frontmatter.py` | 프론트매터 일괄 수정 |
 
