@@ -129,9 +129,10 @@
 
 ### 팀 오케스트레이션
 ```
-/team "작업 설명" → 자연어 → DAG 자동 구성 + 실행
-/team-launch fullstack-dev --goal "..." → 템플릿 기반 원커맨드 실행
-/orchestrate → 병렬 워크트리 실행 (수동 plan.json)
+/team "작업 설명"          → 자연어 → DAG 자동 구성 + 실행
+/team-launch <tmpl> --goal → 템플릿 기반 원커맨드 실행
+/orchestrate               → 병렬 워크트리 실행 (수동 plan.json)
+대시보드: python3 scripts/orchestrate-dashboard.py --open
 ```
 
 ### 멀티 LLM 협업
