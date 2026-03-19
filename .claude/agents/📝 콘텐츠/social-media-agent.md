@@ -456,9 +456,9 @@ linkedin:
 ```yaml
 x:
   tweet:
-    limit: 280자
-    optimal: "100-150자"
-    hashtags: "1-2개"
+    limit: "25,000자 (X Premium)"
+    optimal: "300-800자 (읽기 편한 분량)"
+    hashtags: "2-4개"
   thread:
     optimal: "5-15 트윗"
     numbering: "1/, 2/ 형식"
