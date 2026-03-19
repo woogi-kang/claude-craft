@@ -109,10 +109,10 @@ python3 scripts/orchestrate-worktrees.py .orchestration/{session}/plan.json --cl
 
 ## Step 5: Save Plan & Dry Run
 
+1. `mkdir -p .orchestration/{session}`
+2. Write tool로 `.orchestration/{session}/plan.json`에 생성한 JSON 저장
+3. Dry-run 실행:
 ```bash
-# Save plan to .orchestration/ for later reference
-mkdir -p .orchestration/{session}
-# Write plan.json
 python3 scripts/orchestrate-worktrees.py .orchestration/{session}/plan.json
 ```
 
@@ -170,10 +170,10 @@ Run `--watch` in another terminal to auto-spawn blocked workers when dependencie
      - Non-overlapping file scopes
      - Appropriate depends_on relationships
    - Generate session name (kebab-case summary of the task)
-   - Create plan.json in `.orchestration/{session}/`
-   - Run dry-run: `python3 scripts/orchestrate-worktrees.py plan.json`
+   - Use Write tool to save plan.json to `.orchestration/{session}/plan.json`
+   - Run dry-run: `python3 scripts/orchestrate-worktrees.py .orchestration/{session}/plan.json`
    - Ask user to confirm via AskUserQuestion
-   - If confirmed, run `--execute`
+   - If confirmed, run `--execute` with the same path
    - Show post-execution guide
 
 4. Key principles:

@@ -1,6 +1,6 @@
 [team]
 name = "multi-reviewer"
-description = "멀티 관점 리뷰: 코드 + 아키텍처 + 보안 + 디자인"
+description = "멀티 관점 리뷰: 코드 + 아키텍처 + 보안 → 통합"
 
 [[agents]]
 name = "Code-Reviewer"

@@ -9,9 +9,10 @@ Claude Code, Gemini CLI, Codex CLI, OpenCode에서 동일한 에이전트/스킬
 .claude/
 ├── agents/      # 도메인 에이전트 (8개 카테고리)
 ├── skills/      # 스킬 원본 (Single Source of Truth)
-├── commands/    # 슬래시 커맨드 (16개)
+├── commands/    # 슬래시 커맨드 (18개)
 ├── hooks/       # 라이프사이클 훅 (3개)
 ├── rules/       # 모듈형 규칙 (common, python, typescript)
+├── templates/   # 팀 오케스트레이션 TOML 템플릿 (5개)
 └── statusline.py
 
 .agents/skills/  # → .claude/skills/ symlink (Gemini, Codex, OpenCode 공용)
@@ -37,6 +38,16 @@ docs/            # 프로젝트 문서 (YYMMDD- prefix)
 
 에이전트/스킬/커맨드의 자동 라우팅은 `.claude/rules/common/agent-orchestration.md`에 정의됩니다.
 사용자 요청을 분석하여 적절한 에이전트, 스킬, 커맨드로 자동 분배합니다.
+
+### 팀 오케스트레이션 (DAG 기반 병렬 실행)
+
+| 커맨드 | 용도 | 예시 |
+|--------|------|------|
+| `/team` | 자연어 → 자동 DAG 구성 + 실행 | `/team "백엔드 API + 프론트 UI + 테스트"` |
+| `/team-launch` | TOML 템플릿 기반 원커맨드 실행 | `/team-launch fullstack-dev --goal "JWT 인증"` |
+| `/orchestrate` | 수동 plan.json 기반 병렬 실행 | `/orchestrate` |
+
+템플릿: `.claude/templates/` (fullstack-dev, content-pipeline, multi-reviewer, figma-to-prod, planning)
 
 ## 멀티 환경 지원
 

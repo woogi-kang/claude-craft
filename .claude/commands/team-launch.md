@@ -87,16 +87,14 @@ task_template = """
 - tests/ 디렉토리
 """
 
-[budget]
-max_cents = 1000
-warn_at_pct = 80
 ```
 
 ## Step 4: Generate Plan
 
 TOML → plan.json 변환:
-1. `{goal}`을 사용자의 `--goal` 값으로 치환
-2. `blocked_by` → `depends_on` 변환
+1. `--goal`이 없거나 비어 있으면 에러 → 사용 예시를 보여주고 STOP
+2. `{goal}`을 사용자의 `--goal` 값으로 치환 (str.replace, format 아님)
+3. `blocked_by` → `depends_on` 변환
 3. 세션 이름 생성: `{template-name}-{goal-slug}`
 
 ```json
