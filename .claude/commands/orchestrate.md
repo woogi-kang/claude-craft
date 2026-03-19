@@ -71,8 +71,7 @@ python3 scripts/orchestrate-worktrees.py plan.json --cleanup
 ```json
 {
   "session": "feature-name",
-  "base_ref": "main",
-  "launcher": "claude --dangerously-skip-permissions -p '{task}' --cwd {worktree}",
+  "base_ref": "HEAD",
   "workers": [
     { "name": "Backend", "task": "구체적인 작업 설명" },
     { "name": "Frontend", "task": "구체적인 작업 설명", "depends_on": ["Backend"] },

@@ -248,7 +248,7 @@ def load_plan(path: str) -> dict:
     plan.setdefault("base_ref", "HEAD")
     plan.setdefault(
         "launcher",
-        "claude --dangerously-skip-permissions -p '{task}' --cwd {worktree}",
+        "claude --dangerously-skip-permissions -p {task} --cwd {worktree}",
     )
 
     return plan
@@ -277,7 +277,7 @@ class WorkerInfo:
         self.base_ref: str = plan.get("base_ref", "HEAD")
         self.launcher_template: str = plan.get(
             "launcher",
-            "claude --dangerously-skip-permissions -p '{task}' --cwd {worktree}",
+            "claude --dangerously-skip-permissions -p {task} --cwd {worktree}",
         )
         self.depends_on: list[str] = worker.get("depends_on", [])
 
@@ -570,9 +570,9 @@ def mode_execute(plan: dict, workers: list[WorkerInfo], repo_root: Path) -> None
     # Pre-flight checks
     if tmux_session_exists(tmux_name):
         die(f"Session '{tmux_name}' already running. Use --status to check or --cleanup first.")
-    coord_root = repo_root / ".orchestration" / session
     stale_worktrees = [w for w in workers if w.worktree_path.exists()]
-    if coord_root.exists() or stale_worktrees:
+    stale_worker_dirs = [w for w in workers if w.coord_dir.exists()]
+    if stale_worker_dirs or stale_worktrees:
         die(f"Stale artifacts from previous '{session}' run. Run --cleanup first or use a different session name.")
 
     info(f"Starting orchestration: {session}")
