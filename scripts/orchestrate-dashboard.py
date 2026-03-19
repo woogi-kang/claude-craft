@@ -195,12 +195,14 @@ def get_session_detail(session_name: str) -> dict | None:
 
 
 def compute_layers(workers: list[dict], name_to_deps: dict) -> list[list[str]]:
-    """Compute topological layers for DAG visualization."""
+    """Compute topological layers for DAG visualization (cycle-safe)."""
     depths: dict[str, int] = {}
+    VISITING = -1
 
     def depth_of(name: str) -> int:
         if name in depths:
-            return depths[name]
+            return 0 if depths[name] == VISITING else depths[name]  # cycle → break
+        depths[name] = VISITING
         deps = name_to_deps.get(name, [])
         if not deps:
             depths[name] = 0
@@ -382,6 +384,10 @@ class DashboardHandler(BaseHTTPRequestHandler):
             self._json(list_sessions())
         elif path.startswith("/api/sessions/"):
             session_name = path.split("/api/sessions/", 1)[1].strip("/")
+            # Path traversal protection
+            if not re.fullmatch(r'[a-zA-Z0-9_-]+', session_name):
+                self._json({"error": "Invalid session name"}, 400)
+                return
             data = get_session_detail(session_name)
             if data:
                 self._json(data)
@@ -399,7 +405,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
     def _json(self, data, status: int = 200):
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Access-Control-Allow-Origin", "*")
+        # No CORS header needed — same-origin requests from embedded HTML
         self.end_headers()
         self.wfile.write(json.dumps(data, ensure_ascii=False).encode("utf-8"))
 
@@ -411,10 +417,11 @@ class DashboardHandler(BaseHTTPRequestHandler):
 def main():
     parser = argparse.ArgumentParser(description="Web dashboard for orchestration sessions.")
     parser.add_argument("--port", type=int, default=8080, help="Server port (default: 8080)")
+    parser.add_argument("--bind", default="127.0.0.1", help="Bind address (default: 127.0.0.1)")
     parser.add_argument("--open", action="store_true", help="Auto-open browser")
     args = parser.parse_args()
 
-    server = HTTPServer(("0.0.0.0", args.port), DashboardHandler)
+    server = HTTPServer((args.bind, args.port), DashboardHandler)
     url = f"http://localhost:{args.port}"
 
     print(f"\033[36m▸\033[0m Craft Orchestra Dashboard")

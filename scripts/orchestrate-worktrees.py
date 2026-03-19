@@ -15,6 +15,7 @@ Usage:
 import argparse
 import json
 import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -22,6 +23,8 @@ import textwrap
 import time
 import unicodedata
 from pathlib import Path
+
+SAFE_NAME_RE = re.compile(r'^[a-zA-Z0-9][a-zA-Z0-9 _-]{0,63}$')
 
 
 # ---------------------------------------------------------------------------
@@ -225,6 +228,10 @@ def load_plan(path: str) -> dict:
     if not isinstance(plan["workers"], list) or len(plan["workers"]) == 0:
         die("Plan must have at least one worker.")
 
+    # Validate session name
+    if not SAFE_NAME_RE.match(plan["session"]):
+        die(f"Invalid session name: '{plan['session']}'. Use alphanumeric, hyphen, underscore only.")
+
     # Validate workers
     seen_names: set[str] = set()
     for i, w in enumerate(plan["workers"]):
@@ -233,6 +240,9 @@ def load_plan(path: str) -> dict:
         if w["name"] in seen_names:
             die(f"Duplicate worker name: '{w['name']}'")
         seen_names.add(w["name"])
+        # Normalize blocked_by → depends_on (TOML template compat)
+        if "blocked_by" in w and "depends_on" not in w:
+            w["depends_on"] = w.pop("blocked_by")
 
     # Defaults
     plan.setdefault("base_ref", "HEAD")
@@ -272,18 +282,16 @@ class WorkerInfo:
         self.depends_on: list[str] = worker.get("depends_on", [])
 
     def launcher_cmd(self) -> str:
-        """Expand template variables in the launcher string."""
-        # Read task from file to avoid shell quoting issues with Korean text
-        task_escaped = self.task.replace("'", "'\\''")
+        """Expand template variables in the launcher string with shell escaping."""
         return (
             self.launcher_template
-            .replace("{worker}", self.name)
-            .replace("{session}", self.session)
-            .replace("{worktree}", str(self.worktree_path))
-            .replace("{branch}", self.branch)
-            .replace("{task}", task_escaped)
-            .replace("{task_file}", str(self.task_file))
-            .replace("{handoff_file}", str(self.handoff_file))
+            .replace("{worker}", shlex.quote(self.name))
+            .replace("{session}", shlex.quote(self.session))
+            .replace("{worktree}", shlex.quote(str(self.worktree_path)))
+            .replace("{branch}", shlex.quote(self.branch))
+            .replace("{task}", shlex.quote(self.task))
+            .replace("{task_file}", shlex.quote(str(self.task_file)))
+            .replace("{handoff_file}", shlex.quote(str(self.handoff_file)))
         )
 
 
@@ -559,9 +567,13 @@ def mode_execute(plan: dict, workers: list[WorkerInfo], repo_root: Path) -> None
     tmux_name = f"orch-{session}"
     is_dag = has_dag(workers)
 
-    # Pre-flight check
+    # Pre-flight checks
     if tmux_session_exists(tmux_name):
         die(f"Session '{tmux_name}' already running. Use --status to check or --cleanup first.")
+    coord_root = repo_root / ".orchestration" / session
+    stale_worktrees = [w for w in workers if w.worktree_path.exists()]
+    if coord_root.exists() or stale_worktrees:
+        die(f"Stale artifacts from previous '{session}' run. Run --cleanup first or use a different session name.")
 
     info(f"Starting orchestration: {session}")
     print()
@@ -774,12 +786,16 @@ def mode_watch(plan: dict, workers: list[WorkerInfo], repo_root: Path) -> None:
                 shutil.copy2(w.task_file, dst / "task.md")
                 shutil.copy2(w.handoff_file, dst / "handoff.md")
                 write_state(dst / "status.md", "running")
-                # Also sync upstream handoff files so worker can read dep results
+                # Sync upstream handoff files (prefer worktree copy where worker actually wrote)
                 for dep_name in w.depends_on:
                     dep_w = name_to_worker[dep_name]
                     dep_dst = w.worktree_path / ".orchestration" / session / dep_w.slug
                     dep_dst.mkdir(parents=True, exist_ok=True)
-                    if dep_w.handoff_file.exists():
+                    # Worker writes handoff in its own worktree, so read from there first
+                    wt_handoff = dep_w.worktree_path / ".orchestration" / session / dep_w.slug / "handoff.md"
+                    if wt_handoff.exists():
+                        shutil.copy2(wt_handoff, dep_dst / "handoff.md")
+                    elif dep_w.handoff_file.exists():
                         shutil.copy2(dep_w.handoff_file, dep_dst / "handoff.md")
                 try:
                     add_worker_to_tmux(w)

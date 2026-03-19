@@ -28,6 +28,9 @@ local.json
 *.local.*
 .playwright-mcp/
 
+# Orchestration (ephemeral session state)
+.orchestration/
+
 # Build outputs
 dist/
 
