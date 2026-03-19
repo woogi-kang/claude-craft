@@ -126,11 +126,17 @@
          → /multi-plan (멀티 LLM 기획)
 ```
 
+### 팀 오케스트레이션
+```
+/team "작업 설명" → 자연어 → DAG 자동 구성 + 실행
+/team-launch fullstack-dev --goal "..." → 템플릿 기반 원커맨드 실행
+/orchestrate → 병렬 워크트리 실행 (수동 plan.json)
+```
+
 ### 멀티 LLM 협업
 ```
 /multi-plan → 기획 (Claude + Gemini + Codex 분석)
 /multi-execute → 구현 (프로토타입 정제)
-/orchestrate → 병렬 워크트리 실행
 ```
 
 ### 세션/상태 관리

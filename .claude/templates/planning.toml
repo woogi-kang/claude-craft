@@ -1,0 +1,57 @@
+[team]
+name = "planning"
+description = "서비스 기획: 리서처 + 분석가 + 전략가"
+
+[[agents]]
+name = "Researcher"
+role = "시장 조사 및 데이터 수집"
+task_template = """
+{goal}에 대한 시장 조사를 수행하세요.
+
+## 작업
+- 시장 규모 및 성장률
+- 경쟁사 분석 (3-5개)
+- 타겟 사용자 페르소나
+- 기존 솔루션의 강점/약점
+
+## 산출물
+- 시장 조사 보고서 (docs/에 저장)
+- 경쟁사 비교 매트릭스
+"""
+
+[[agents]]
+name = "Analyst"
+role = "데이터 분석 및 기회 식별"
+task_template = """
+{goal}에 대한 기회를 분석하세요.
+
+## 작업
+- SWOT 분석
+- 비즈니스 모델 캔버스
+- 수익 모델 비교
+- 리스크 평가
+
+## 산출물
+- 분석 보고서 (docs/에 저장)
+- 기회/위험 매트릭스
+"""
+
+[[agents]]
+name = "Strategist"
+role = "전략 수립 및 로드맵"
+blocked_by = ["Researcher", "Analyst"]
+task_template = """
+{goal}에 대한 전략을 수립하세요.
+
+## 작업
+- Researcher와 Analyst의 handoff.md를 종합
+- Go-to-Market 전략
+- MVP 스코프 정의
+- 3개월/6개월/12개월 로드맵
+- 핵심 성과 지표 (KPI) 정의
+
+## 산출물
+- 전략 보고서 (docs/에 저장)
+- 로드맵 타임라인
+- MVP 기능 목록
+"""
