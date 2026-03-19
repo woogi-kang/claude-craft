@@ -62,6 +62,7 @@ python3 scripts/orchestrate-worktrees.py plan.json --cleanup
 - 파일 수정 범위가 겹치지 않도록 분리
 - 각 워커에 명확한 목표 부여
 - 워커 이름은 영어 권장 (브랜치명 생성에 사용)
+- 작업 간 의존성이 있으면 `depends_on`으로 명시 (선택)
 
 ## Step 4: Generate Plan
 
@@ -74,10 +75,16 @@ python3 scripts/orchestrate-worktrees.py plan.json --cleanup
   "launcher": "claude --dangerously-skip-permissions -p '{task}' --cwd {worktree}",
   "workers": [
     { "name": "Backend", "task": "구체적인 작업 설명" },
-    { "name": "Frontend", "task": "구체적인 작업 설명" }
+    { "name": "Frontend", "task": "구체적인 작업 설명", "depends_on": ["Backend"] },
+    { "name": "Tests", "task": "E2E 테스트", "depends_on": ["Backend", "Frontend"] }
   ]
 }
 ```
+
+**depends_on 규칙:**
+- 다른 워커의 name을 참조 (배열)
+- 순환 의존성은 자동 감지되어 거부됨
+- 생략하면 즉시 실행 (기존 동작과 동일)
 
 ## Step 5: Dry Run & Confirm
 
@@ -110,10 +117,12 @@ python3 scripts/orchestrate-worktrees.py plan.json --execute
 ### Commands
 - Attach: `tmux attach -t orch-{session}`
 - Status: `python3 scripts/orchestrate-worktrees.py plan.json --status`
+- Watch:  `python3 scripts/orchestrate-worktrees.py plan.json --watch` (DAG 모드)
 - Cleanup: `python3 scripts/orchestrate-worktrees.py plan.json --cleanup`
 
 ### Tips
 - 각 워커는 독립 브랜치에서 작업합니다
+- depends_on이 있으면 `--watch`로 자동 스폰을 관리하세요
 - 완료 후 `--cleanup`으로 정리하세요
 - handoff.md에서 각 워커의 작업 결과를 확인하세요
 ```
@@ -132,18 +141,23 @@ python3 scripts/orchestrate-worktrees.py plan.json --execute
 
 3. IF orchestrate mode:
    - Analyze user's task descriptions
-   - Decompose into independent workers with non-overlapping scopes
+   - Decompose into workers with non-overlapping scopes
+   - Identify dependencies between workers (add `depends_on` if needed)
    - Create plan.json in `.orchestration/` directory
    - Run dry-run: `python3 scripts/orchestrate-worktrees.py plan.json`
    - Ask user to confirm via AskUserQuestion
    - If confirmed, run: `python3 scripts/orchestrate-worktrees.py plan.json --execute`
-   - Show post-execution guide with attach/status/cleanup commands
+   - If plan has dependencies, advise user to run `--watch` in another terminal
+   - Show post-execution guide with attach/status/watch/cleanup commands
 
 4. Key considerations:
    - Worker names should be English (for branch/slug generation)
+   - Worker names must be unique (duplicates are rejected)
    - Task descriptions can be Korean (UTF-8 safe)
    - Session names should be kebab-case English
-   - base_ref defaults to current branch or "main"
+   - base_ref defaults to HEAD
+   - depends_on: array of worker names that must complete first
+   - Circular dependencies are automatically detected and rejected
 
 ---
 

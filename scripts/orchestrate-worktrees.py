@@ -2,12 +2,13 @@
 """orchestrate-worktrees.py — tmux worktree orchestration for parallel Claude Code instances.
 
 Creates git worktrees and tmux panes so multiple Claude instances can work on
-independent tasks simultaneously.
+independent tasks simultaneously, with optional dependency ordering (DAG).
 
 Usage:
     python3 scripts/orchestrate-worktrees.py plan.json              # dry-run
     python3 scripts/orchestrate-worktrees.py plan.json --execute    # run
     python3 scripts/orchestrate-worktrees.py plan.json --status     # check
+    python3 scripts/orchestrate-worktrees.py plan.json --watch      # auto-spawn on dep completion
     python3 scripts/orchestrate-worktrees.py plan.json --cleanup    # teardown
 """
 
@@ -18,8 +19,16 @@ import shutil
 import subprocess
 import sys
 import textwrap
+import time
 import unicodedata
 from pathlib import Path
+
+
+# ---------------------------------------------------------------------------
+# Constants
+# ---------------------------------------------------------------------------
+
+KNOWN_STATES = frozenset({"not_started", "waiting", "running", "completed", "failed"})
 
 
 # ---------------------------------------------------------------------------
@@ -81,6 +90,120 @@ def warn(msg: str) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Status file helpers
+# ---------------------------------------------------------------------------
+
+def read_worker_state(worker) -> str:
+    """Read worker state from status.md. Handles JSON and legacy text."""
+    if not worker.status_file.exists():
+        return "unknown"
+    text = worker.status_file.read_text(encoding="utf-8").strip()
+    if not text:
+        return "unknown"
+    # Try JSON first (forward compat)
+    try:
+        data = json.loads(text)
+        state = data.get("state", "unknown")
+    except (json.JSONDecodeError, AttributeError):
+        # Legacy plain-text format
+        state = text
+    return state if state in KNOWN_STATES else "unknown"
+
+
+def write_state(path: Path, state: str) -> None:
+    """Write status as plain text (backward compatible)."""
+    path.write_text(f"{state}\n", encoding="utf-8")
+
+
+# ---------------------------------------------------------------------------
+# DAG validation & ordering
+# ---------------------------------------------------------------------------
+
+def validate_dag(workers: list) -> None:
+    """Validate dependency references exist and detect cycles."""
+    names = {w.name for w in workers}
+
+    # Check references
+    for w in workers:
+        for dep in w.depends_on:
+            if dep not in names:
+                die(f"Worker '{w.name}' depends on unknown worker '{dep}'")
+
+    # Cycle detection via DFS coloring
+    WHITE, GRAY, BLACK = 0, 1, 2
+    color = {w.name: WHITE for w in workers}
+    dep_map = {w.name: w.depends_on for w in workers}
+
+    def dfs(name: str) -> None:
+        color[name] = GRAY
+        for dep in dep_map[name]:
+            if color[dep] == GRAY:
+                die(f"Dependency cycle detected: '{name}' → '{dep}'")
+            if color[dep] == WHITE:
+                dfs(dep)
+        color[name] = BLACK
+
+    for w in workers:
+        if color[w.name] == WHITE:
+            dfs(w.name)
+
+
+def topological_sort(workers: list) -> list:
+    """Return workers in dependency order (dependencies first)."""
+    name_to_worker = {w.name: w for w in workers}
+    visited: set[str] = set()
+    order: list = []
+
+    def visit(name: str) -> None:
+        if name in visited:
+            return
+        visited.add(name)
+        for dep in name_to_worker[name].depends_on:
+            visit(dep)
+        order.append(name_to_worker[name])
+
+    for w in workers:
+        visit(w.name)
+    return order
+
+
+def partition_workers(workers: list) -> tuple[list, list]:
+    """Partition not-yet-started workers into (ready, blocked).
+
+    Ready = no deps or all deps completed.
+    Blocked = has unmet deps (including failed deps → mark as failed).
+    Already running/completed/failed workers are excluded.
+    """
+    states = {w.name: read_worker_state(w) for w in workers}
+    ready, blocked = [], []
+
+    for w in workers:
+        state = states[w.name]
+        if state in ("running", "completed", "failed", "unknown"):
+            continue  # already handled or unresolvable
+
+        # Check if any dependency failed → propagate failure
+        failed_deps = [d for d in w.depends_on if states.get(d) == "failed"]
+        if failed_deps:
+            write_state(w.status_file, "failed")
+            warn(f"Worker '{w.name}' marked failed: dependency {', '.join(failed_deps)} failed")
+            continue
+
+        if not w.depends_on:
+            ready.append(w)
+        elif all(states.get(d) == "completed" for d in w.depends_on):
+            ready.append(w)
+        else:
+            blocked.append(w)
+    return ready, blocked
+
+
+def has_dag(workers: list) -> bool:
+    """Check if any worker has dependencies."""
+    return any(w.depends_on for w in workers)
+
+
+# ---------------------------------------------------------------------------
 # Plan loading & validation
 # ---------------------------------------------------------------------------
 
@@ -102,9 +225,14 @@ def load_plan(path: str) -> dict:
     if not isinstance(plan["workers"], list) or len(plan["workers"]) == 0:
         die("Plan must have at least one worker.")
 
+    # Validate workers
+    seen_names: set[str] = set()
     for i, w in enumerate(plan["workers"]):
         if "name" not in w or "task" not in w:
             die(f"Worker #{i} is missing 'name' or 'task'.")
+        if w["name"] in seen_names:
+            die(f"Duplicate worker name: '{w['name']}'")
+        seen_names.add(w["name"])
 
     # Defaults
     plan.setdefault("base_ref", "HEAD")
@@ -141,6 +269,7 @@ class WorkerInfo:
             "launcher",
             "claude --dangerously-skip-permissions -p '{task}' --cwd {worktree}",
         )
+        self.depends_on: list[str] = worker.get("depends_on", [])
 
     def launcher_cmd(self) -> str:
         """Expand template variables in the launcher string."""
@@ -177,7 +306,7 @@ TASK_TEMPLATE = textwrap.dedent("""\
     - Worker: {worker_name}
     - Branch: {branch}
     - Worktree: {worktree_path}
-
+    {dependency_section}
     ## Objective
     {task_description}
 
@@ -211,6 +340,13 @@ HANDOFF_TEMPLATE = textwrap.dedent("""\
 def write_coordination_files(worker: WorkerInfo) -> None:
     worker.coord_dir.mkdir(parents=True, exist_ok=True)
 
+    # Build dependency section
+    if worker.depends_on:
+        deps = ", ".join(worker.depends_on)
+        dependency_section = f"\n    ## Dependencies\n    Blocked by: {deps}\n"
+    else:
+        dependency_section = ""
+
     worker.task_file.write_text(
         TASK_TEMPLATE.format(
             worker_name=worker.name,
@@ -219,6 +355,7 @@ def write_coordination_files(worker: WorkerInfo) -> None:
             worktree_path=worker.worktree_path,
             task_description=worker.task,
             worker_slug=worker.slug,
+            dependency_section=dependency_section,
         ),
         encoding="utf-8",
     )
@@ -228,7 +365,9 @@ def write_coordination_files(worker: WorkerInfo) -> None:
         encoding="utf-8",
     )
 
-    worker.status_file.write_text("not_started\n", encoding="utf-8")
+    # Initial state: 'waiting' if has deps, 'not_started' otherwise
+    initial = "waiting" if worker.depends_on else "not_started"
+    write_state(worker.status_file, initial)
 
 
 # ---------------------------------------------------------------------------
@@ -271,7 +410,11 @@ def tmux_session_exists(name: str) -> bool:
     return result.returncode == 0
 
 
-def create_tmux_session(workers: list[WorkerInfo]) -> None:
+def create_tmux_session(workers: list[WorkerInfo], *, remain_on_exit: bool = False) -> None:
+    """Create tmux session and launch given workers."""
+    if not workers:
+        return
+
     session_name = workers[0].tmux_session
 
     if tmux_session_exists(session_name):
@@ -279,7 +422,7 @@ def create_tmux_session(workers: list[WorkerInfo]) -> None:
 
     # Create session with the first worker
     first = workers[0]
-    first.status_file.write_text("running\n", encoding="utf-8")
+    write_state(first.status_file, "running")
     tmux(
         "new-session",
         "-d",                        # detached
@@ -287,18 +430,31 @@ def create_tmux_session(workers: list[WorkerInfo]) -> None:
         "-n", first.slug,            # first window name
     )
 
-    # Send the launch command to the first pane
+    # Keep panes alive after process exit (for --watch pane death detection)
+    if remain_on_exit:
+        tmux("set-option", "-t", session_name, "remain-on-exit", "on")
+
     cmd = first.launcher_cmd()
     tmux("send-keys", "-t", f"{session_name}:{first.slug}", cmd, "Enter")
     success(f"Started worker: {first.name} ({first.slug})")
 
-    # Create additional windows for remaining workers
+    # Additional windows
     for w in workers[1:]:
-        w.status_file.write_text("running\n", encoding="utf-8")
-        tmux("new-window", "-t", session_name, "-n", w.slug)
-        cmd = w.launcher_cmd()
-        tmux("send-keys", "-t", f"{session_name}:{w.slug}", cmd, "Enter")
-        success(f"Started worker: {w.name} ({w.slug})")
+        add_worker_to_tmux(w)
+
+
+def add_worker_to_tmux(worker: WorkerInfo) -> None:
+    """Add a single worker as a new window in an existing tmux session."""
+    session_name = worker.tmux_session
+    if not tmux_session_exists(session_name):
+        warn(f"tmux session '{session_name}' does not exist, cannot add worker.")
+        return
+
+    write_state(worker.status_file, "running")
+    tmux("new-window", "-t", session_name, "-n", worker.slug)
+    cmd = worker.launcher_cmd()
+    tmux("send-keys", "-t", f"{session_name}:{worker.slug}", cmd, "Enter")
+    success(f"Started worker: {worker.name} ({worker.slug})")
 
 
 def kill_tmux_session(session_name: str) -> None:
@@ -309,6 +465,41 @@ def kill_tmux_session(session_name: str) -> None:
         info(f"tmux session not found: {session_name}")
 
 
+def detect_completed_panes(session_name: str) -> dict[str, int]:
+    """Return {window_name: exit_code} for panes whose process has exited."""
+    if not tmux_session_exists(session_name):
+        return {}
+
+    result = tmux(
+        "list-panes", "-s", "-t", session_name,
+        "-F", "#{window_name} #{pane_dead} #{pane_dead_status}",
+        check=False,
+    )
+    completed: dict[str, int] = {}
+    if result.returncode == 0:
+        for line in result.stdout.strip().splitlines():
+            parts = line.split(None, 2)
+            if len(parts) >= 2 and parts[1] == "1":
+                exit_code = int(parts[2]) if len(parts) == 3 else 0
+                completed[parts[0]] = exit_code
+    return completed
+
+
+# ---------------------------------------------------------------------------
+# Display helpers
+# ---------------------------------------------------------------------------
+
+STATE_COLORS = {
+    "completed": "\033[32m",   # green
+    "running": "\033[36m",     # cyan
+    "waiting": "\033[33m",     # yellow
+    "not_started": "\033[37m", # white
+    "failed": "\033[31m",      # red
+    "unknown": "\033[35m",     # magenta
+}
+RESET = "\033[0m"
+
+
 # ---------------------------------------------------------------------------
 # Modes
 # ---------------------------------------------------------------------------
@@ -317,6 +508,7 @@ def mode_dry_run(plan: dict, workers: list[WorkerInfo]) -> None:
     """Print what would happen without executing anything."""
     session = plan["session"]
     tmux_name = f"orch-{session}"
+    is_dag = has_dag(workers)
 
     print()
     print(f"{'='*60}")
@@ -326,40 +518,65 @@ def mode_dry_run(plan: dict, workers: list[WorkerInfo]) -> None:
     print(f"  tmux session : {tmux_name}")
     print(f"  base ref     : {plan.get('base_ref', 'HEAD')}")
     print(f"  workers      : {len(workers)}")
+    if is_dag:
+        print(f"  dependencies : yes (use --watch for auto-spawn)")
     print(f"  launcher     : {plan.get('launcher', '(default)')}")
     print()
-    print(f"  {'Worker':<16} {'Slug':<16} {'Branch':<32} Worktree")
-    print(f"  {'─'*15:<16} {'─'*15:<16} {'─'*31:<32} {'─'*40}")
 
-    for w in workers:
-        print(f"  {w.name:<16} {w.slug:<16} {w.branch:<32} {w.worktree_path}")
+    if is_dag:
+        print(f"  {'Worker':<16} {'Slug':<16} {'Depends On':<24} Worktree")
+        print(f"  {'─'*15:<16} {'─'*15:<16} {'─'*23:<24} {'─'*40}")
+        for w in workers:
+            deps = ", ".join(w.depends_on) if w.depends_on else "—"
+            print(f"  {w.name:<16} {w.slug:<16} {deps:<24} {w.worktree_path}")
+        print()
+
+        # DAG visualization
+        print("  Execution Order:")
+        sorted_workers = topological_sort(workers)
+        for i, w in enumerate(sorted_workers):
+            arrow = "→ " if w.depends_on else "  "
+            deps_str = f" (after {', '.join(w.depends_on)})" if w.depends_on else " (immediate)"
+            print(f"    {i+1}. {arrow}{w.name}{deps_str}")
+    else:
+        print(f"  {'Worker':<16} {'Slug':<16} {'Branch':<32} Worktree")
+        print(f"  {'─'*15:<16} {'─'*15:<16} {'─'*31:<32} {'─'*40}")
+        for w in workers:
+            print(f"  {w.name:<16} {w.slug:<16} {w.branch:<32} {w.worktree_path}")
 
     print()
     print(f"  Coordination dir: .orchestration/{session}/")
     print()
     print("  Run with --execute to start, or --status / --cleanup for existing sessions.")
+    if is_dag:
+        print("  After --execute, run --watch in another terminal for auto dependency spawning.")
     print()
 
 
 def mode_execute(plan: dict, workers: list[WorkerInfo], repo_root: Path) -> None:
     """Full execution: coordination files, worktrees, tmux session."""
     session = plan["session"]
+    tmux_name = f"orch-{session}"
+    is_dag = has_dag(workers)
+
+    # Pre-flight check
+    if tmux_session_exists(tmux_name):
+        die(f"Session '{tmux_name}' already running. Use --status to check or --cleanup first.")
 
     info(f"Starting orchestration: {session}")
     print()
 
-    # 1. Coordination files
+    # 1. Coordination files (all workers)
     info("Creating coordination files...")
     for w in workers:
         write_coordination_files(w)
     success(f"Coordination directory: .orchestration/{session}/")
     print()
 
-    # 2. Git worktrees
+    # 2. Git worktrees (all workers — need them ready for when deps are met)
     info("Creating git worktrees...")
     for w in workers:
         create_worktree(w)
-    # Prune stale worktree references
     git("worktree", "prune")
     print()
 
@@ -373,24 +590,45 @@ def mode_execute(plan: dict, workers: list[WorkerInfo], repo_root: Path) -> None
         shutil.copy2(w.status_file, dst / "status.md")
     print()
 
-    # 4. tmux
-    info("Creating tmux session...")
-    create_tmux_session(workers)
+    # 4. tmux — DAG-aware: only spawn ready workers
+    session_created = False
+    if is_dag:
+        ready, blocked = partition_workers(workers)
+        info(f"DAG mode: {len(ready)} ready, {len(blocked)} blocked")
+        if ready:
+            info("Creating tmux session with ready workers...")
+            create_tmux_session(ready, remain_on_exit=True)
+            session_created = True
+        else:
+            die("DAG deadlock: all workers are blocked with no initially-ready worker.")
+        if blocked:
+            print()
+            info("Blocked workers (waiting for dependencies):")
+            for w in blocked:
+                deps = ", ".join(w.depends_on)
+                info(f"  {w.name} ← waiting for: {deps}")
+    else:
+        info("Creating tmux session...")
+        create_tmux_session(workers)
+        session_created = True
     print()
 
-    tmux_name = f"orch-{session}"
-    success(f"Orchestration running!")
-    print()
-    print(f"  Attach: tmux attach -t {tmux_name}")
-    print(f"  Status: python3 scripts/orchestrate-worktrees.py {sys.argv[1]} --status")
-    print(f"  Cleanup: python3 scripts/orchestrate-worktrees.py {sys.argv[1]} --cleanup")
-    print()
+    if session_created:
+        success("Orchestration running!")
+        print()
+        print(f"  Attach:  tmux attach -t {tmux_name}")
+        print(f"  Status:  python3 scripts/orchestrate-worktrees.py {sys.argv[1]} --status")
+        if is_dag:
+            print(f"  Watch:   python3 scripts/orchestrate-worktrees.py {sys.argv[1]} --watch")
+        print(f"  Cleanup: python3 scripts/orchestrate-worktrees.py {sys.argv[1]} --cleanup")
+        print()
 
 
 def mode_status(plan: dict, workers: list[WorkerInfo]) -> None:
-    """Show status of a running session."""
+    """Show status of a running session (read-only — does not mutate status files)."""
     session = plan["session"]
     tmux_name = f"orch-{session}"
+    is_dag = has_dag(workers)
 
     print()
     print(f"=== Session: {session} ===")
@@ -400,9 +638,10 @@ def mode_status(plan: dict, workers: list[WorkerInfo]) -> None:
     session_alive = tmux_session_exists(tmux_name)
     if not session_alive:
         warn(f"tmux session '{tmux_name}' is not running.")
+        warn("States below are from status files and may be stale.")
         print()
 
-    # Get pane info from tmux if alive
+    # Pane info
     pane_map: dict[str, str] = {}
     if session_alive:
         result = tmux(
@@ -416,21 +655,158 @@ def mode_status(plan: dict, workers: list[WorkerInfo]) -> None:
                 if len(parts) == 2:
                     pane_map[parts[0]] = parts[1]
 
-    print(f"  {'Worker':<16} {'Branch':<32} {'Status':<14} Pane")
-    print(f"  {'─'*15:<16} {'─'*31:<32} {'─'*13:<14} {'─'*8}")
+    # Detect completed panes (read-only — for display only, no writes)
+    dead_panes = detect_completed_panes(tmux_name) if session_alive else {}
 
+    # Collect states (display only — no file writes)
+    states: dict[str, str] = {}
     for w in workers:
-        status = "unknown"
-        if w.status_file.exists():
-            status = w.status_file.read_text(encoding="utf-8").strip()
-        pane = pane_map.get(w.slug, "-")
-        print(f"  {w.name:<16} {w.branch:<32} {status:<14} {pane}")
+        state = read_worker_state(w)
+        # Infer state from tmux info (display only)
+        if state == "running" and w.slug in dead_panes:
+            exit_code = dead_panes[w.slug]
+            state = "completed" if exit_code == 0 else "failed"
+        elif state == "running" and not session_alive:
+            state = "unknown"
+        states[w.name] = state
+
+    if is_dag:
+        # DAG visualization
+        print("  DAG Status:")
+        print()
+        sorted_workers = topological_sort(workers)
+        for w in sorted_workers:
+            state = states.get(w.name, "unknown")
+            color = STATE_COLORS.get(state, "")
+            pane = pane_map.get(w.slug, "—")
+
+            # Build dependency arrows
+            if w.depends_on:
+                arrow = " ← " + ", ".join(w.depends_on)
+            else:
+                arrow = ""
+
+            print(f"  {color}{w.name:<16} [{state:<10}]{RESET}  pane:{pane:<8}{arrow}")
+
+        print()
+
+        # Summary
+        total = len(workers)
+        counts: dict[str, int] = {}
+        for s in states.values():
+            counts[s] = counts.get(s, 0) + 1
+
+        parts = []
+        for label in ("completed", "running", "waiting", "not_started", "failed", "unknown"):
+            if label in counts:
+                parts.append(f"{counts[label]} {label}")
+        print(f"  Tasks: {total} total | {' | '.join(parts)}")
+    else:
+        # Flat table with colors
+        print(f"  {'Worker':<16} {'Branch':<32} {'Status':<14} Pane")
+        print(f"  {'─'*15:<16} {'─'*31:<32} {'─'*13:<14} {'─'*8}")
+        for w in workers:
+            state = states.get(w.name, "unknown")
+            color = STATE_COLORS.get(state, "")
+            pane = pane_map.get(w.slug, "—")
+            print(f"  {w.name:<16} {w.branch:<32} {color}{state:<14}{RESET} {pane}")
 
     print()
     print(f"  Coordination: .orchestration/{session}/")
     if session_alive:
         print(f"  Attach: tmux attach -t {tmux_name}")
     print()
+
+
+def mode_watch(plan: dict, workers: list[WorkerInfo], repo_root: Path) -> None:
+    """Monitor running session and auto-spawn blocked workers when deps complete."""
+    session = plan["session"]
+    tmux_name = f"orch-{session}"
+    name_to_worker = {w.name: w for w in workers}
+
+    if not has_dag(workers):
+        info("No dependencies in plan — nothing to watch.")
+        return
+
+    if not tmux_session_exists(tmux_name):
+        die(f"tmux session '{tmux_name}' not found. Run --execute first.")
+
+    info(f"Watching session: {session} (Ctrl+C to stop)")
+    print()
+
+    try:
+        while True:
+            # 0. Check tmux session is still alive
+            if not tmux_session_exists(tmux_name):
+                warn(f"tmux session '{tmux_name}' died.")
+                for w in workers:
+                    if read_worker_state(w) == "running":
+                        write_state(w.status_file, "failed")
+                        warn(f"Worker marked failed (session lost): {w.name}")
+                die("Watch aborted: tmux session no longer exists.")
+
+            # 1. Detect completed panes and update status files (with exit codes)
+            dead_panes = detect_completed_panes(tmux_name)
+            for w in workers:
+                state = read_worker_state(w)
+                if state == "running" and w.slug in dead_panes:
+                    exit_code = dead_panes[w.slug]
+                    new_state = "completed" if exit_code == 0 else "failed"
+                    write_state(w.status_file, new_state)
+                    if exit_code == 0:
+                        success(f"Worker completed: {w.name}")
+                    else:
+                        warn(f"Worker FAILED (exit {exit_code}): {w.name}")
+
+            # 2. Check for newly ready workers (also propagates failure)
+            try:
+                ready, blocked = partition_workers(workers)
+            except SystemExit:
+                break  # die() was called inside partition_workers
+
+            for w in ready:
+                # Mark running BEFORE spawn to prevent double-spawn
+                write_state(w.status_file, "running")
+                info(f"Dependencies met — spawning: {w.name}")
+                # Sync coordination files to worktree
+                dst = w.worktree_path / ".orchestration" / session / w.slug
+                dst.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(w.task_file, dst / "task.md")
+                shutil.copy2(w.handoff_file, dst / "handoff.md")
+                write_state(dst / "status.md", "running")
+                # Also sync upstream handoff files so worker can read dep results
+                for dep_name in w.depends_on:
+                    dep_w = name_to_worker[dep_name]
+                    dep_dst = w.worktree_path / ".orchestration" / session / dep_w.slug
+                    dep_dst.mkdir(parents=True, exist_ok=True)
+                    if dep_w.handoff_file.exists():
+                        shutil.copy2(dep_w.handoff_file, dep_dst / "handoff.md")
+                try:
+                    add_worker_to_tmux(w)
+                except subprocess.CalledProcessError as e:
+                    write_state(w.status_file, "failed")
+                    warn(f"Failed to spawn worker '{w.name}': {e}")
+
+            # 3. Check exit condition
+            all_states = {w.name: read_worker_state(w) for w in workers}
+            running = [n for n, s in all_states.items() if s == "running"]
+            pending = [n for n, s in all_states.items() if s in ("not_started", "waiting")]
+            failed = [n for n, s in all_states.items() if s == "failed"]
+
+            if not running and not pending:
+                print()
+                if failed:
+                    warn(f"Session finished with {len(failed)} failed: {', '.join(failed)}")
+                else:
+                    success("All workers completed!")
+                break
+
+            time.sleep(5)
+
+    except KeyboardInterrupt:
+        print()
+        info("Watch stopped.")
+        print()
 
 
 def mode_cleanup(plan: dict, workers: list[WorkerInfo], repo_root: Path, *, force: bool = False) -> None:
@@ -492,6 +868,7 @@ def main() -> None:
               %(prog)s plan.json              # dry-run — show plan
               %(prog)s plan.json --execute    # create worktrees & tmux session
               %(prog)s plan.json --status     # check running session
+              %(prog)s plan.json --watch      # auto-spawn blocked workers on dep completion
               %(prog)s plan.json --cleanup    # teardown everything
         """),
     )
@@ -500,6 +877,7 @@ def main() -> None:
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--execute", action="store_true", help="Execute the plan (create worktrees & tmux)")
     mode.add_argument("--status", action="store_true", help="Show status of running session")
+    mode.add_argument("--watch", action="store_true", help="Monitor and auto-spawn workers when deps complete")
     mode.add_argument("--cleanup", action="store_true", help="Kill session and remove worktrees")
 
     parser.add_argument("--force", action="store_true", help="With --cleanup, also remove .orchestration dir")
@@ -512,8 +890,12 @@ def main() -> None:
     plan = load_plan(args.plan)
     workers = build_workers(plan, repo_root)
 
+    # Validate DAG if dependencies exist
+    if has_dag(workers):
+        validate_dag(workers)
+
     # tmux is only required for modes that interact with it
-    needs_tmux = args.execute or args.status or args.cleanup
+    needs_tmux = args.execute or args.status or args.cleanup or args.watch
     if needs_tmux:
         ensure_command("tmux")
 
@@ -521,6 +903,8 @@ def main() -> None:
         mode_execute(plan, workers, repo_root)
     elif args.status:
         mode_status(plan, workers)
+    elif args.watch:
+        mode_watch(plan, workers, repo_root)
     elif args.cleanup:
         mode_cleanup(plan, workers, repo_root, force=args.force)
     else:
