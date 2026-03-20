@@ -169,9 +169,9 @@ workspace/work-plan/{project-name}/
 
 ```
 planning-agent
-    ├─→ frontend-design-agent (wireframe-guide → UI)
-    ├─→ nextjs-expert-agent (tech-stack → 개발)
-    ├─→ ppt-agent (pitch-deck → 슬라이드)
+    ├─→ ui-design-agent (wireframe-guide → UI)
+    ├─→ nextjs-agent (tech-stack → 개발)
+    ├─→ presentation-agent (pitch-deck → 슬라이드)
     └─→ marketing-agent (gtm-strategy → 실행)
 ```
 

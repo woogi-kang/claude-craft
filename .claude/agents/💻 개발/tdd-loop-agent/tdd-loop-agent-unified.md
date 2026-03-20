@@ -1,5 +1,5 @@
 ---
-name: tdd-ralph
+name: tdd-loop-agent
 description: |
   TDD agent using Ralph Wiggum methodology.
   Self-referential file-based learning loop that runs until all tests pass (100%).
@@ -314,16 +314,16 @@ TDD_RALPH_STOPPED: <reason>
 
 ```bash
 # Ralph Pure (promise-based exit)
-@tdd-ralph --strategy pure
+@tdd-loop-agent --strategy pure
 
 # Ralph Hybrid (score-based exit, 80% coverage target)
-@tdd-ralph --strategy hybrid --coverage 80
+@tdd-loop-agent --strategy hybrid --coverage 80
 
 # With specific test file
-@tdd-ralph --strategy pure --target test/auth_test.dart
+@tdd-loop-agent --strategy pure --target test/auth_test.dart
 
 # Resume from previous session
-@tdd-ralph --resume
+@tdd-loop-agent --resume
 ```
 
 ---

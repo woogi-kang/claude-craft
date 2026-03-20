@@ -117,7 +117,7 @@ Launch Phase 완료 후 연계:
 
 ```
 Launch Prep
-    ├─→ ppt-agent (pitch-deck → 실제 슬라이드)
+    ├─→ presentation-agent (pitch-deck → 실제 슬라이드)
     └─→ marketing-agent (gtm-strategy → 마케팅 실행)
 ```
 

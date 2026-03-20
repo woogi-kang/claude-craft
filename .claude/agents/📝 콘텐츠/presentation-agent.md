@@ -1,5 +1,5 @@
 ---
-name: ppt-agent
+name: presentation-agent
 description: |
   전문적인 PPT 제작을 위한 종합 Agent.
   리서치부터 최종 출력까지 PPT 제작 전 과정을 관리합니다.

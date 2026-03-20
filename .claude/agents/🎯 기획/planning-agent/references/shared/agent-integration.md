@@ -9,13 +9,13 @@
 ```
 planning-agent (기획)
     │
-    ├─► frontend-design-agent (UI 디자인)
+    ├─► ui-design-agent (UI 디자인)
     │       └─ wireframe-guide에서 연계
     │
-    ├─► nextjs-expert-agent / flutter-expert-agent (개발)
+    ├─► nextjs-agent / flutter-agent (개발)
     │       └─ tech-stack에서 연계
     │
-    ├─► ppt-agent (피치덱)
+    ├─► presentation-agent (피치덱)
     │       └─ pitch-deck에서 연계
     │
     ├─► marketing-agent (GTM 실행)
@@ -29,7 +29,7 @@ planning-agent (기획)
 
 ## Handoff Points
 
-### frontend-design-agent
+### ui-design-agent
 
 **Trigger**: wireframe-guide.md 완성 후
 **Input**: 와이어프레임 가이드, IA 문서
@@ -38,7 +38,7 @@ planning-agent (기획)
 ```yaml
 handoff:
   from: planning-agent
-  to: frontend-design-agent
+  to: ui-design-agent
   artifact: wireframe-guide.md
   context:
     - information-architecture.md
@@ -46,7 +46,7 @@ handoff:
     - ux-strategy.md
 ```
 
-### nextjs-expert-agent / flutter-expert-agent
+### nextjs-agent / flutter-agent
 
 **Trigger**: tech-stack.md 완성 후
 **Input**: 기술 스택, PRD, 기능 명세
@@ -55,7 +55,7 @@ handoff:
 ```yaml
 handoff:
   from: planning-agent
-  to: nextjs-expert-agent | flutter-expert-agent
+  to: nextjs-agent | flutter-agent
   artifact: tech-stack.md
   context:
     - prd.md
@@ -63,7 +63,7 @@ handoff:
     - data-strategy.md
 ```
 
-### ppt-agent
+### presentation-agent
 
 **Trigger**: pitch-deck-outline.md 완성 후
 **Input**: 피치덱 구조, 비즈니스 모델
@@ -72,7 +72,7 @@ handoff:
 ```yaml
 handoff:
   from: planning-agent
-  to: ppt-agent
+  to: presentation-agent
   artifact: pitch-deck-outline.md
   context:
     - lean-canvas.md
@@ -123,9 +123,9 @@ handoff:
    └─ 8개 Phase 완료
 
 2. 자동 연계 제안
-   ├─ "UI 디자인을 진행할까요?" → frontend-design-agent
-   ├─ "개발을 시작할까요?" → nextjs-expert-agent
-   └─ "피치덱을 만들까요?" → ppt-agent
+   ├─ "UI 디자인을 진행할까요?" → ui-design-agent
+   ├─ "개발을 시작할까요?" → nextjs-agent
+   └─ "피치덱을 만들까요?" → presentation-agent
 
 3. 사용자 선택에 따라 해당 에이전트 호출
 ```

@@ -61,4 +61,4 @@ Retire/Merge 판정은 사용자 확인 후에만 실행.
 ## 스코프
 - `$ARGUMENTS` 없으면 전체 스캔
 - 카테고리 지정 가능: `/skill-audit 💻 개발`
-- 특정 스킬: `/skill-audit fastapi-expert-agent-skills`
+- 특정 스킬: `/skill-audit fastapi-agent-skills`

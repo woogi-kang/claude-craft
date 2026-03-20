@@ -1,5 +1,5 @@
 ---
-name: loop-operator
+name: loop-monitor-agent
 description: |
   자율 루프 모니터링 및 안전 관리 에이전트.
   교착 감지, 비용 추적, 에스컬레이션을 담당.

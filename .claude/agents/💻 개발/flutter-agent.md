@@ -1,5 +1,5 @@
 ---
-name: flutter-expert-agent
+name: flutter-agent
 description: |
   Flutter 프로젝트의 설계, 구현, 테스트를 지원하는 종합 Expert Agent.
   Clean Architecture + Riverpod 3 + GoRouter + TDD 기반의 현대적 Flutter 개발.

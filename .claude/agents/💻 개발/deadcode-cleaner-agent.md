@@ -1,5 +1,5 @@
 ---
-name: refactor-cleaner
+name: deadcode-cleaner-agent
 description: |
   데드코드 탐지 및 안전한 정리 전문 에이전트.
   사용하지 않는 코드, 임포트, 의존성을 찾아 제거.

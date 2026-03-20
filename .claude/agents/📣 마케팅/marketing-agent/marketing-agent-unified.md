@@ -205,8 +205,8 @@ Phase 4: 최적화 & 분석      → A/B Test → Analytics → Review
 
 - **social-media-agent**: 마케팅 전략 기반 소셜 콘텐츠 제작
 - **tech-blog-agent**: 콘텐츠 마케팅용 블로그 작성
-- **ppt-agent**: 마케팅 제안서, 피치덱 제작
-- **seo-orchestrator-agent**: SEO 종합 전략 및 실행
+- **presentation-agent**: 마케팅 제안서, 피치덱 제작
+- **seo-orchestrator**: SEO 종합 전략 및 실행
 
 ---
 

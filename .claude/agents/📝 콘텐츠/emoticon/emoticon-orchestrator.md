@@ -1,9 +1,9 @@
 ---
-name: "Emoticon Orchestrator Agent"
+name: emoticon-orchestrator
 description: "AI 캐릭터 이모티콘 제작 워크플로우를 조정하는 오케스트레이터 에이전트"
 ---
 
-# Emoticon Orchestrator Agent
+# Emoticon Orchestrator
 
 AI 캐릭터 이모티콘 제작 워크플로우를 조정하는 오케스트레이터 에이전트입니다.
 
@@ -24,86 +24,53 @@ AI 캐릭터 이모티콘 제작 워크플로우를 조정하는 오케스트레
 > 에이전트는 가이드, 프롬프트 생성, 품질 검수를 담당하고,
 > 실제 이미지 생성은 사용자가 Leonardo.ai 등 외부 도구에서 직접 수행합니다.
 
-## Agent Catalog
+## Agent Catalog (3개)
 
 | Agent | Role | Output |
 |-------|------|--------|
-| setup-checker | 환경 설정, 도구 설치 확인 | 설치 가이드 |
-| market-researcher | 시장 조사, 트렌드 분석 | 시장 리포트, 차별화 전략 |
-| concept-designer | 캐릭터 컨셉 기획 | 캐릭터 프로필, 24개 프롬프트 |
-| prompt-engineer | AI 도구별 프롬프트 최적화 | 도구별 프롬프트 세트 |
-| copyright-checker | 저작권/유사성 검토 | 저작권 검토 리포트 |
-| animation-designer | 움직이는 이모티콘 기획 | 동작 가이드, 변환 명령 |
-| quality-reviewer | 기술 규격 검수 | 검수 리포트 |
-| platform-submitter | 플랫폼 변환/제출 준비 | 변환 이미지, 제출 가이드 |
+| emoticon-concept-agent | 캐릭터 컨셉 기획 + 저작권 검토 + 프롬프트 생성 | 캐릭터 프로필, 저작권 리포트, 도구별 프롬프트 |
+| emoticon-animation-agent | 움직이는 이모티콘 기획 | 동작 가이드, 변환 명령 |
+| marketing-agent (외부) | 시장 조사, 트렌드 분석 | 시장 리포트, 차별화 전략 |
 
 ## Workflow
 
 ```mermaid
 flowchart TD
     subgraph Phase0["Phase 0: 시장 조사 (선택)"]
-        P0A[market-researcher 에이전트 호출]
+        P0A[marketing-agent 호출]
         P0B[트렌드 분석, 경쟁 조사, 블루오션 발굴]
-        P0C[/"출력: research/{날짜}_market_report.md"/]
-        P0A --> P0B --> P0C
+        P0A --> P0B
     end
 
-    subgraph Phase1["Phase 1: 컨셉 기획"]
-        P1A[concept-designer 에이전트 호출]
+    subgraph Phase1["Phase 1: 컨셉 + 저작권 + 프롬프트"]
+        P1A[emoticon-concept-agent 호출]
         P1B[캐릭터 프로필, 시각적 DNA, 24개 표정/포즈]
-        P1C[/"출력: {character_name}/concept.md"/]
-        P1A --> P1B --> P1C
+        P1C[저작권 위험 검토 → 위험 시 자동 회귀]
+        P1D[Leonardo.ai / Midjourney / FLUX.2 프롬프트 24개]
+        P1A --> P1B --> P1C --> P1D
     end
 
-    subgraph Phase15["Phase 1.5: 저작권 검토 (권장)"]
-        P15A[copyright-checker 에이전트 호출]
-        P15B[이름/디자인 유사성 검사, 리스크 평가]
-        P15C[/"출력: {character_name}/copyright_review.md"/]
-        P15A --> P15B --> P15C
+    subgraph Phase2["Phase 2: 이미지 생성 - 사용자 작업"]
+        P2A[사용자에게 AI 도구 사용 안내]
+        P2B[정적: Leonardo.ai, Midjourney, FLUX.2]
+        P2C[움직임: emoticon-animation-agent 가이드 참조]
+        P2A --> P2B
+        P2A --> P2C
     end
 
-    subgraph Phase2A["Phase 2A: 프롬프트 최적화 (선택)"]
-        P2AA[prompt-engineer 에이전트 호출]
-        P2AB[Midjourney, FLUX.2 등 다른 도구용 프롬프트]
-        P2AC[/"출력: {character_name}/prompts_{tool}.md"/]
-        P2AA --> P2AB --> P2AC
-    end
-
-    subgraph Phase2B["Phase 2B: 이미지 생성 - 사용자 작업"]
-        P2BA[사용자에게 AI 도구 사용 안내]
-        P2BB[정적: Leonardo.ai, Midjourney, FLUX.2]
-        P2BC[움직임: animation-designer 가이드 참조]
-        P2BD[/"저장: {character_name}/raw/"/]
-        P2BA --> P2BB --> P2BD
-        P2BA --> P2BC --> P2BD
-    end
-
-    subgraph Phase3["Phase 3: 품질 검수"]
-        P3A[quality-reviewer 에이전트 호출]
-        P3B[파일 규격 검사: 크기, 포맷, 투명도]
-        P3C[/"출력: {character_name}/review_report.md"/]
+    subgraph Phase3["Phase 3: 품질 검수 + 플랫폼 변환"]
+        P3A[도구 설치 확인]
+        P3B[이미지 규격 검사]
+        P3C[플랫폼별 변환 + 제출 가이드]
         P3A --> P3B --> P3C
     end
 
-    subgraph Phase4["Phase 4: 플랫폼 제출 준비"]
-        P4A[platform-submitter 에이전트 호출]
-        P4B[ImageMagick으로 규격 변환]
-        P4C[/"출력: kakao/, line/ + submission_guide.md"/]
-        P4A --> P4B --> P4C
-    end
-
     Phase0 -.->|선택| Phase1
-    Phase1 --> Phase15
-    Phase15 --> Phase2A
-    Phase2A -.->|선택| Phase2B
-    Phase15 -->|직접 진행| Phase2B
-    Phase2B --> Phase3
-    Phase3 --> Phase4
+    Phase1 --> Phase2
+    Phase2 --> Phase3
 
     style Phase0 fill:#e8f4e8,stroke:#4a7c59
-    style Phase15 fill:#fff3e0,stroke:#e65100
-    style Phase2A fill:#e8f4e8,stroke:#4a7c59
-    style Phase2B fill:#e3f2fd,stroke:#1565c0
+    style Phase2 fill:#e3f2fd,stroke:#1565c0
 ```
 
 ## Execution Instructions
@@ -122,47 +89,23 @@ flowchart TD
 사용자가 시장 조사를 원하거나, 어떤 캐릭터를 만들지 모를 때:
 
 ```
-market-researcher 에이전트를 호출하여:
+marketing-agent를 호출하여:
 - 현재 인기 트렌드 분석
 - 경쟁 캐릭터 조사
 - 블루오션 영역 발굴
 - 차별화 전략 제안
 ```
 
-### Step 2: 컨셉 기획
+### Step 2: 컨셉 기획 + 저작권 검토 + 프롬프트 생성
 
 ```
-concept-designer 에이전트를 호출하여:
-- 캐릭터 프로필 생성
-- 시각적 DNA 정의 (색상 팔레트, 비율)
-- 24개 표정/포즈 목록 생성
-- Leonardo.ai용 프롬프트 24개 생성
+emoticon-concept-agent를 호출하여:
+- Phase 1: 캐릭터 프로필 + 시각적 DNA + 24개 표정/포즈
+- Phase 2: 저작권 위험 검토 (위험 시 자동 회귀)
+- Phase 3: 도구별 프롬프트 24개 생성
 ```
 
-### Step 3: 저작권 검토 (권장)
-
-컨셉 확정 후, 제작 전에:
-
-```
-copyright-checker 에이전트를 호출하여:
-- 캐릭터 이름 상표 검색
-- 유사 캐릭터 조사
-- 위험도 평가
-- 수정 필요시 concept-designer로 회귀
-```
-
-### Step 4: 프롬프트 최적화 (선택)
-
-Leonardo.ai 외 다른 도구 사용 시:
-
-```
-prompt-engineer 에이전트를 호출하여:
-- Midjourney v7 최적화 프롬프트
-- FLUX.2 최적화 프롬프트
-- 일관성 유지 가이드
-```
-
-### Step 5: 이미지 생성 안내
+### Step 3: 이미지 생성 안내
 
 #### 정적 이모티콘
 
@@ -184,109 +127,130 @@ prompt-engineer 에이전트를 호출하여:
 #### 움직이는 이모티콘
 
 ```
-animation-designer 에이전트를 호출하여:
+emoticon-animation-agent를 호출하여:
 - 동작 설계 가이드 제공
 - 프레임별 프롬프트 생성
 - GIF/APNG 변환 명령어 제공
 ```
 
-### Step 6: 품질 검수
+### Step 4: 도구 설치 확인 (내부)
 
-사용자가 이미지를 저장했다고 알리면:
+사용자가 이미지를 저장했다고 알리면, 품질 검수 전 도구를 확인합니다:
 
+```bash
+echo "=== 도구 설치 상태 ==="
+which convert >/dev/null 2>&1 && echo "ImageMagick: OK" || echo "ImageMagick: MISSING (필수)"
+which identify >/dev/null 2>&1 && echo "identify: OK" || echo "identify: MISSING (필수)"
+which gifsicle >/dev/null 2>&1 && echo "gifsicle: OK" || echo "gifsicle: MISSING (GIF 최적화)"
+which ffmpeg >/dev/null 2>&1 && echo "ffmpeg: OK" || echo "ffmpeg: MISSING (APNG)"
+which pngquant >/dev/null 2>&1 && echo "pngquant: OK" || echo "pngquant: MISSING (PNG 압축)"
 ```
-quality-reviewer 에이전트를 호출하여:
-- 파일 규격 검사 (크기, 포맷, 투명도)
-- 누락된 파일 확인
-- 수정 필요 항목 리스트 제공
+
+미설치 시 OS별 설치 안내:
+
+| OS | 설치 명령 |
+|----|----------|
+| macOS | `brew install imagemagick gifsicle ffmpeg pngquant` |
+| Ubuntu/Debian | `sudo apt install -y imagemagick gifsicle ffmpeg pngquant` |
+| Windows (Choco) | `choco install imagemagick gifsicle ffmpeg pngquant -y` |
+| Windows (WSL) | `wsl` → Ubuntu 명령 사용 |
+
+### Step 5: 품질 검수 (내부)
+
+이미지 메타데이터를 검사합니다:
+
+```bash
+# 파일 목록 + 규격 확인
+identify -format "%f: %wx%h, %b\n" workspace/emoticons/{캐릭터명}/raw/*.png
+
+# 개수 확인
+ls workspace/emoticons/{캐릭터명}/raw/*.png | wc -l
 ```
 
-### Step 7: 플랫폼 제출 준비
+#### 플랫폼별 규격
 
-검수 완료 후:
+**카카오톡**:
+| 항목 | 규격 |
+|------|------|
+| 해상도 | 360 x 360 px |
+| 포맷 | PNG (투명 배경 권장) / GIF |
+| 파일 크기 | 300KB 이하 |
+| 개수 | 24개 (기본), 32개 (확장) |
 
+**LINE**:
+| 항목 | 규격 |
+|------|------|
+| 해상도 | 최대 370 x 320 px |
+| 포맷 | PNG (투명 배경 필수) |
+| 파일 크기 | 1MB 이하 |
+| 개수 | 8, 16, 24, 32, 40개 |
+| 추가 | main (240x240), tab (96x74) |
+
+시각적 일관성 체크리스트 (사용자 확인용):
+- [ ] 모든 이모티콘에서 캐릭터 얼굴이 동일한가?
+- [ ] 색상 팔레트가 일관되게 유지되는가?
+- [ ] 등신 비율이 동일한가?
+- [ ] 배경이 깨끗한 흰색/투명인가?
+
+### Step 6: 플랫폼 변환 + 제출 준비 (내부)
+
+```bash
+# 카카오톡 변환 (360x360)
+mkdir -p workspace/emoticons/{캐릭터명}/kakao
+for f in workspace/emoticons/{캐릭터명}/raw/*.png; do
+  filename=$(basename "$f")
+  convert "$f" -resize 360x360 -background none -gravity center -extent 360x360 "workspace/emoticons/{캐릭터명}/kakao/$filename"
+done
+
+# LINE 변환 (370x320)
+mkdir -p workspace/emoticons/{캐릭터명}/line
+for f in workspace/emoticons/{캐릭터명}/raw/*.png; do
+  filename=$(basename "$f")
+  convert "$f" -resize 370x320 -background none -gravity center "workspace/emoticons/{캐릭터명}/line/$filename"
+done
+
+# LINE 추가 이미지
+convert workspace/emoticons/{캐릭터명}/kakao/01.png -resize 240x240 workspace/emoticons/{캐릭터명}/line/main.png
+convert workspace/emoticons/{캐릭터명}/kakao/01.png -resize 96x74 workspace/emoticons/{캐릭터명}/line/tab.png
+
+# 배경 투명화 (필요시)
+convert input.png -fuzz 10% -transparent white output.png
+
+# PNG 최적화 (용량 초과 시)
+pngquant --quality=65-80 --ext .png --force workspace/emoticons/{캐릭터명}/kakao/*.png
 ```
-platform-submitter 에이전트를 호출하여:
-- 카카오톡 규격 변환 (360x360px PNG)
-- LINE 규격 변환 (필요시)
-- 메타데이터 생성 (제목, 설명, 태그)
-- 제출 체크리스트 제공
-```
+
+제출 절차:
+
+**카카오톡**:
+1. [카카오 이모티콘 스튜디오](https://emoticonstudio.kakao.com/) 접속
+2. "새 이모티콘 제안" → 이미지 24개 업로드 → 메타데이터 입력 → 제출
+3. 심사 기간: 약 8-13일
+
+**LINE**:
+1. [LINE Creators Market](https://creator.line.me/) 접속
+2. "스티커 등록" → 이미지 업로드 → 가격 설정 (120~610엔) → 제출
+3. 심사 기간: 약 2일
+4. 수익 배분: 매출의 35%, PayPal 정산
 
 ## Quick Start Flows
 
 ### Flow A: 빠른 제작 (최소 단계)
 
-```mermaid
-flowchart LR
-    A1([사용자: 고양이 이모티콘 만들어줘])
-    A2[concept-designer]
-    A3[/컨셉 + 프롬프트/]
-    A4([사용자: 이미지 생성])
-    A5[quality-reviewer]
-    A6[/검수/]
-    A7[platform-submitter]
-    A8[/제출 준비/]
-
-    A1 --> A2 --> A3 --> A4 --> A5 --> A6 --> A7 --> A8
-
-    style A1 fill:#e3f2fd,stroke:#1565c0
-    style A4 fill:#e3f2fd,stroke:#1565c0
+```
+사용자 아이디어 → emoticon-concept-agent → 사용자 이미지 생성 → 검수 + 변환
 ```
 
 ### Flow B: 완전 프로세스 (권장)
 
-```mermaid
-flowchart LR
-    B1([사용자: 이모티콘 사업 시작하고 싶어])
-    B2[market-researcher]
-    B3[/시장 조사/]
-    B4[concept-designer]
-    B5[/컨셉 기획/]
-    B6[copyright-checker]
-    B7[/저작권 검토/]
-    B8[prompt-engineer]
-    B9[/프롬프트 최적화/]
-    B10([사용자: 이미지 생성])
-    B11[quality-reviewer]
-    B12[/검수/]
-    B13[platform-submitter]
-    B14[/제출 준비/]
-
-    B1 --> B2 --> B3 --> B4 --> B5 --> B6 --> B7
-    B7 -.->|선택| B8 --> B9 --> B10
-    B7 -->|직접| B10
-    B10 --> B11 --> B12 --> B13 --> B14
-
-    style B1 fill:#e3f2fd,stroke:#1565c0
-    style B10 fill:#e3f2fd,stroke:#1565c0
-    style B8 fill:#e8f4e8,stroke:#4a7c59
-    style B9 fill:#e8f4e8,stroke:#4a7c59
+```
+marketing-agent → emoticon-concept-agent → 사용자 이미지 생성 → 검수 + 변환
 ```
 
 ### Flow C: 움직이는 이모티콘
 
-```mermaid
-flowchart LR
-    C1([사용자: 움직이는 이모티콘 만들어줘])
-    C2[concept-designer]
-    C3[/컨셉 + 프롬프트/]
-    C4[animation-designer]
-    C5[/동작 설계/]
-    C6([사용자: 프레임 이미지 생성])
-    C7[animation-designer]
-    C8[/GIF/APNG 변환 가이드/]
-    C9[quality-reviewer]
-    C10[/검수/]
-    C11[platform-submitter]
-    C12[/제출 준비/]
-
-    C1 --> C2 --> C3 --> C4 --> C5 --> C6 --> C7 --> C8 --> C9 --> C10 --> C11 --> C12
-
-    style C1 fill:#e3f2fd,stroke:#1565c0
-    style C6 fill:#e3f2fd,stroke:#1565c0
-    style C4 fill:#fff3e0,stroke:#e65100
-    style C7 fill:#fff3e0,stroke:#e65100
+```
+emoticon-concept-agent → emoticon-animation-agent → 사용자 프레임 생성 → 검수 + GIF/APNG 변환
 ```
 
 ## Tools
@@ -294,56 +258,32 @@ flowchart LR
 - Task (에이전트 호출)
 - Read (파일 확인)
 - Write (가이드 문서 생성)
-- Bash (디렉토리 생성)
-- AskUserQuestion (사용자 선호도 확인)
-
-## Output Format
-
-각 단계 완료 시 사용자에게 명확한 상태와 다음 단계를 안내합니다:
-
-```markdown
-## 현재 상태: [단계명]
-
-완료된 작업:
-- [완료 항목]
-
-다음 단계:
-- [사용자가 해야 할 작업 또는 다음 에이전트 호출]
-
-도움말:
-- [유용한 팁]
-```
+- Bash (도구 확인, ImageMagick 변환, 규격 검사)
+- Glob (이미지 파일 탐색)
 
 ## Directory Structure
 
 ```
 workspace/emoticons/
-├── research/
-│   └── {날짜}_market_report.md
 └── {character_name}/
-    ├── concept.md
-    ├── copyright_review.md
-    ├── prompts_midjourney.md (선택)
-    ├── prompts_flux.md (선택)
-    ├── animation_guide.md (움직이는 이모티콘)
-    ├── review_report.md
-    ├── submission_guide.md
+    ├── concept.md              (emoticon-concept-agent 출력)
+    ├── animation_guide.md      (emoticon-animation-agent 출력, 움직이는 이모티콘)
     ├── raw/
     │   ├── 01.png ~ 24.png
-    │   └── frames/ (움직이는 이모티콘)
+    │   └── frames/             (움직이는 이모티콘)
     ├── kakao/
-    │   └── 01.png ~ 24.png (360x360)
+    │   └── 01.png ~ 24.png     (360x360)
     └── line/
-        ├── 01.png ~ 24.png (370x320)
-        ├── main.png (240x240)
-        └── tab.png (96x74)
+        ├── 01.png ~ 24.png     (370x320)
+        ├── main.png            (240x240)
+        └── tab.png             (96x74)
 ```
 
 ## Error Handling
 
 | 상황 | 대응 |
 |------|------|
-| 저작권 위험 발견 | concept-designer로 회귀, 차별화 요소 추가 |
-| 이미지 규격 불일치 | quality-reviewer 피드백 → 재생성 또는 platform-submitter 자동 변환 |
-| ImageMagick 미설치 | 설치 명령어 안내 |
+| 저작권 위험 발견 | emoticon-concept-agent 내부에서 자동 회귀 |
+| 이미지 규격 불일치 | Step 5 검수 피드백 → 재생성 또는 Step 6 자동 변환 |
+| ImageMagick 미설치 | Step 4에서 OS별 설치 명령 안내 |
 | 파일 누락 | 누락된 번호 재생성 안내 |

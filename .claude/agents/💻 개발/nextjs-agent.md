@@ -1,5 +1,5 @@
 ---
-name: nextjs-expert-agent
+name: nextjs-agent
 description: |
   Next.js 프로젝트의 설계, 구현, 테스트를 지원하는 종합 Expert Agent.
   Clean Architecture + TanStack Query + Zustand + shadcn/ui + TDD 기반의 현대적 Next.js 개발.

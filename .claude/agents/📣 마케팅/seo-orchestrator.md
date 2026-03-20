@@ -1,5 +1,5 @@
 ---
-name: seo-orchestrator-agent
+name: seo-orchestrator
 description: |
   1인 유니콘을 위한 SEO 및 콘텐츠 마케팅 자동화 Agent.
   키워드 리서치, 콘텐츠 최적화, GA4 분석, 콘텐츠 파이프라인, 소셜 스케줄링까지 통합 관리합니다.

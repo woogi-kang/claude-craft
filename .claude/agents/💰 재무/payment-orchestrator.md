@@ -1,5 +1,5 @@
 ---
-name: payment-orchestrator-agent
+name: payment-orchestrator
 description: |
   1인 유니콘을 위한 결제 자동화 Agent.
   글로벌 결제(Lemon Squeezy), 한국 결제(포트원), 구독 관리, 수익 분석까지 통합 관리합니다.

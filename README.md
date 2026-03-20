@@ -54,16 +54,16 @@ docs/                 # 프로젝트 문서 (YYMMDD- prefix)
 
 | 에이전트 | 역할 |
 |----------|------|
-| `fastapi-expert-agent` | FastAPI 앱 설계/구현/테스트 |
-| `flutter-expert-agent` | Flutter 앱 설계/구현/테스트 |
-| `nextjs-expert-agent` | Next.js 웹 앱 설계/구현/테스트 |
+| `fastapi-agent` | FastAPI 앱 설계/구현/테스트 |
+| `flutter-agent` | Flutter 앱 설계/구현/테스트 |
+| `nextjs-agent` | Next.js 웹 앱 설계/구현/테스트 |
 | `figma-to-nextjs` | Figma → Next.js 코드 변환 |
 | `figma-to-flutter` | Figma → Flutter 코드 변환 |
-| `flutter-to-nextjs-agent` | Flutter → Next.js 마이그레이션 |
-| `tdd-ralph` | 테스트 100% 통과까지 자율 루프 |
-| `build-error-resolver` | 최소 diff로 빌드 에러 수정 |
-| `refactor-cleaner` | 데드코드/미사용 의존성 제거 |
-| `loop-operator` | 자율 루프 모니터링/안전 관리 |
+| `flutter-to-nextjs` | Flutter → Next.js 마이그레이션 |
+| `tdd-loop-agent` | 테스트 100% 통과까지 자율 루프 |
+| `build-resolver-agent` | 최소 diff로 빌드 에러 수정 |
+| `deadcode-cleaner-agent` | 데드코드/미사용 의존성 제거 |
+| `loop-monitor-agent` | 자율 루프 모니터링/안전 관리 |
 
 ### 🎯 기획
 
@@ -75,24 +75,24 @@ docs/                 # 프로젝트 문서 (YYMMDD- prefix)
 
 | 에이전트 | 역할 |
 |----------|------|
-| `frontend-design-agent` | 독창적 웹/모바일 UI 디자인 생성 |
-| `mcp-figma` | Figma MCP 통합 디자인 추출 |
+| `ui-design-agent` | 독창적 웹/모바일 UI 디자인 생성 |
+| `figma-flutter-agent` | Figma MCP 통합 디자인 추출 |
 
 ### 📝 콘텐츠
 
 | 에이전트 | 역할 |
 |----------|------|
-| `ppt-agent` | PPT 리서치 → 제작 전 과정 |
+| `presentation-agent` | PPT 리서치 → 제작 전 과정 |
 | `social-media-agent` | 멀티 플랫폼 소셜 콘텐츠 제작 |
 | `tech-blog-agent` | 기술 블로그 작성 → Hashnode 발행 |
-| `Emoticon Orchestrator` | AI 캐릭터 이모티콘 제작 |
+| `emoticon-orchestrator` | AI 캐릭터 이모티콘 제작 |
 
 ### 📣 마케팅
 
 | 에이전트 | 역할 |
 |----------|------|
 | `marketing-agent` | 마케팅 전략 → 실행 산출물 |
-| `seo-orchestrator-agent` | SEO + 콘텐츠 마케팅 통합 |
+| `seo-orchestrator` | SEO + 콘텐츠 마케팅 통합 |
 
 ### ⚖️ 법무
 
@@ -105,8 +105,8 @@ docs/                 # 프로젝트 문서 (YYMMDD- prefix)
 
 | 에이전트 | 역할 |
 |----------|------|
-| `payment-orchestrator-agent` | 결제 시스템 (Lemon Squeezy, 포트원) |
-| `finance-orchestrator-agent` | 재무 보고/영수증/세금계산서 |
+| `payment-orchestrator` | 결제 시스템 (Lemon Squeezy, 포트원) |
+| `finance-orchestrator` | 재무 보고/영수증/세금계산서 |
 
 ### 🔍 리뷰
 

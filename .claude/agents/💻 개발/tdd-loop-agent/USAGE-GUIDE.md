@@ -1,9 +1,9 @@
 ---
-name: "TDD-Ralph Usage Guide"
+name: "TDD-Loop-Agent Usage Guide"
 description: "Self-referential TDD loop until 100% test pass"
 ---
 
-# TDD-Ralph 사용 가이드
+# TDD-Loop-Agent 사용 가이드
 
 > **v1.0.0** - Ralph Wiggum 방법론 기반 TDD 자동화
 
@@ -11,7 +11,7 @@ description: "Self-referential TDD loop until 100% test pass"
 
 ## 개요
 
-TDD-Ralph는 **테스트가 100% 통과할 때까지 자동으로 반복**하는 에이전트입니다.
+TDD-Loop-Agent는 **테스트가 100% 통과할 때까지 자동으로 반복**하는 에이전트입니다.
 
 ```
 ┌─────────────────────────────────────────────┐
@@ -35,28 +35,28 @@ TDD-Ralph는 **테스트가 100% 통과할 때까지 자동으로 반복**하는
 
 ```bash
 # 모든 테스트가 통과할 때까지 반복
-@tdd-ralph
+@tdd-loop-agent
 
 # 전략 지정
-@tdd-ralph --strategy pure      # Promise 기반 (권장)
-@tdd-ralph --strategy hybrid    # 커버리지 기반
+@tdd-loop-agent --strategy pure      # Promise 기반 (권장)
+@tdd-loop-agent --strategy hybrid    # 커버리지 기반
 ```
 
 ### 특정 테스트 파일 대상
 
 ```bash
 # 특정 파일만 대상
-@tdd-ralph --target test/auth_test.dart
+@tdd-loop-agent --target test/auth_test.dart
 
 # 특정 디렉토리
-@tdd-ralph --target test/features/auth/
+@tdd-loop-agent --target test/features/auth/
 ```
 
 ### 커버리지 목표 (Hybrid 전략)
 
 ```bash
 # 80% 커버리지 + 100% 통과 목표
-@tdd-ralph --strategy hybrid --coverage 80
+@tdd-loop-agent --strategy hybrid --coverage 80
 ```
 
 ---
@@ -192,7 +192,7 @@ TDD_RALPH_STOPPED: <reason>
 # 사용자: "로그인 기능 TDD로 구현해줘"
 
 # 1. 테스트 먼저 작성 (Red)
-# 2. @tdd-ralph 실행
+# 2. @tdd-loop-agent 실행
 # 3. 에이전트가 코드 구현 (Green)
 # 4. 100% 통과 시 자동 종료
 ```
@@ -202,7 +202,7 @@ TDD_RALPH_STOPPED: <reason>
 ```bash
 # 현재 상태: 10개 중 3개 실패
 
-@tdd-ralph
+@tdd-loop-agent
 
 # 에이전트가:
 # 1. flutter test 실행
@@ -217,7 +217,7 @@ TDD_RALPH_STOPPED: <reason>
 # 현재: 테스트 통과, 커버리지 60%
 # 목표: 커버리지 80%
 
-@tdd-ralph --strategy hybrid --coverage 80
+@tdd-loop-agent --strategy hybrid --coverage 80
 
 # 에이전트가:
 # 1. 커버리지 낮은 파일 식별

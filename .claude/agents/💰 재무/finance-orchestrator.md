@@ -1,5 +1,5 @@
 ---
-name: finance-orchestrator-agent
+name: finance-orchestrator
 description: |
   1인 유니콘을 위한 재무 자동화 Agent.
   영수증 OCR, 세금계산서 발행, 재무제표 생성, 비용 분석까지 전 과정을 관리합니다.

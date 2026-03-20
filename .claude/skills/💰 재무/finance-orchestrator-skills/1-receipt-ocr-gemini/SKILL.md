@@ -144,7 +144,7 @@ fi
 ## 통합 예시
 
 ```python
-# finance-agent 내부에서 호출
+# finance-orchestrator 내부에서 호출
 async def process_receipt(image_path: str) -> dict:
     # 1. Gemini CLI로 OCR 시도
     result = await gemini_ocr(image_path)

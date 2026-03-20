@@ -174,7 +174,7 @@ git commit -m "chore(finance): add $TARGET_MONTH financial statements"
    - Validate: no missing required fields
 
 4. Generate financial statements:
-   - Use finance-orchestrator-agent or direct Claude prompts
+   - Use finance-orchestrator or direct Claude prompts
    - Create Markdown files in `operations/finance/statements/$TARGET_MONTH/`
 
 5. Generate PDF reports (if Playwright available):

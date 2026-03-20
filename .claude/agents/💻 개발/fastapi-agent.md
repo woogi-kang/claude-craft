@@ -1,5 +1,5 @@
 ---
-name: fastapi-expert-agent
+name: fastapi-agent
 description: |
   FastAPI 프로젝트의 설계, 구현, 테스트를 지원하는 종합 Expert Agent.
   Clean Architecture + SQLAlchemy/SQLModel + OAuth2/JWT + pytest 기반의 현대적 FastAPI 개발.

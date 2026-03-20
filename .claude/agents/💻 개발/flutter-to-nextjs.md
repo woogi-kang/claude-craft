@@ -1,5 +1,5 @@
 ---
-name: flutter-to-nextjs-agent
+name: flutter-to-nextjs
 description: |
   Flutter 프로젝트를 Next.js로 마이그레이션하는 종합 Agent.
   점진적 변환 방식으로 화면 단위 마이그레이션을 수행합니다.

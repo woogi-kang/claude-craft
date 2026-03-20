@@ -67,7 +67,7 @@ metadata:
 
 | 유형 | 경로 | 예시 |
 |------|------|------|
-| 에이전트 전용 스킬 | `.claude/skills/{카테고리}/{agent}-skills/{skill}/` | `💻 개발/fastapi-expert-agent-skills/1-project-setup/` |
+| 에이전트 전용 스킬 | `.claude/skills/{카테고리}/{agent}-skills/{skill}/` | `💻 개발/fastapi-agent-skills/1-project-setup/` |
 | 독립 스킬 | `.claude/skills/{skill-name}/` | `design/`, `social-content/` |
 | 참조 파일 | 스킬 디렉토리 내 `references/` | `design/references/logo-design.md` |
 
@@ -343,7 +343,7 @@ python scripts/skill-catalog.py
 |------|------|------|
 | 스킬 디렉토리 | kebab-case | `my-new-skill/` |
 | 스킬 파일 | 고정 | `SKILL.md` |
-| 에이전트 (단일) | `{domain}-agent.md` | `fastapi-expert-agent.md` |
+| 에이전트 (단일) | `{domain}-agent.md` | `fastapi-agent.md` |
 | 에이전트 (디렉토리) | `{domain}/{domain}-unified.md` | `figma-to-flutter/figma-to-flutter-unified.md` |
 | 커맨드 | kebab-case | `financial-report.md` |
 | 팀 템플릿 | kebab-case `.toml` | `fullstack-dev.toml` |

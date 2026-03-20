@@ -13,116 +13,116 @@
 
 | Skill | Description | Version | Path |
 |-------|-------------|---------|------|
-| accessibility | 앱 접근성(a11y) 설정 및 베스트 프랙티스를 적용합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/31-accessibility |
+| accessibility | 앱 접근성(a11y) 설정 및 베스트 프랙티스를 적용합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/31-accessibility |
 | agent-browser-test | Vercel agent-browser CLI를 활용한 AI 친화적 E2E 테스트 자동화 스킬. 접근성 트리 기반 Refs 시스템으로 결정론적 요소 선택. "e2e 테스트", "브라우저 테스트", "agent-b... | — | 💻 개발/agent-browser-test-skill |
-| analytics | Google Analytics 4와 Vercel Analytics를 설정합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/28-analytics |
+| analytics | Google Analytics 4와 Vercel Analytics를 설정합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/28-analytics |
 | analyze | Flutter 프로젝트를 분석하여 마이그레이션에 필요한 정보를 추출합니다. 프로젝트 구조, 위젯, 상태관리, API 엔드포인트를 파악합니다. | — | 💻 개발/flutter-to-nextjs-skills/1-analyze |
-| api-client | TanStack Query를 사용하여 데이터 fetching 및 캐싱을 설정합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/9-api-client |
-| api-keys | API Key 인증 및 웹훅 서명 검증을 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/14-api-keys |
-| api-versioning | URL Path, Header 기반 API 버저닝 전략을 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/26-api-versioning |
-| architecture | Clean Architecture 기반 프로젝트 구조를 설계합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/2-architecture |
-| architecture | Clean Architecture 기반 프로젝트 구조를 설계합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/2-architecture |
-| architecture | Clean Architecture 기반 프로젝트 구조를 설계합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/2-architecture |
-| auth | 인증 시스템을 설정합니다 (Auth.js v5 또는 Clerk). | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/5-auth |
-| authentication | OAuth2 Password flow, JWT access/refresh 토큰을 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/12-authentication |
-| authorization | RBAC (Role-Based Access Control), Scopes, Permissions를 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/13-authorization |
-| background-tasks | Celery, ARQ, FastAPI BackgroundTasks를 활용한 비동기 작업을 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/23-background-tasks |
-| caching | Redis 캐싱 및 fastapi-cache2 패턴을 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/10-caching |
-| cicd | GitHub Actions 기반 Flutter CI/CD 파이프라인을 구성합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/22-cicd |
-| cicd | GitHub Actions와 Vercel을 사용하여 CI/CD를 설정합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/26-cicd |
-| cicd | GitHub Actions, GitLab CI 파이프라인을 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/33-cicd |
-| code-review | 코드 리뷰 및 품질 검증을 수행합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/21-code-review |
+| api-client | TanStack Query를 사용하여 데이터 fetching 및 캐싱을 설정합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/9-api-client |
+| api-keys | API Key 인증 및 웹훅 서명 검증을 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/14-api-keys |
+| api-versioning | URL Path, Header 기반 API 버저닝 전략을 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/26-api-versioning |
+| architecture | Clean Architecture 기반 프로젝트 구조를 설계합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/2-architecture |
+| architecture | Clean Architecture 기반 프로젝트 구조를 설계합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/2-architecture |
+| architecture | Clean Architecture 기반 프로젝트 구조를 설계합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/2-architecture |
+| auth | 인증 시스템을 설정합니다 (Auth.js v5 또는 Clerk). | 1.0.0 | 💻 개발/nextjs-agent-skills/5-auth |
+| authentication | OAuth2 Password flow, JWT access/refresh 토큰을 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/12-authentication |
+| authorization | RBAC (Role-Based Access Control), Scopes, Permissions를 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/13-authorization |
+| background-tasks | Celery, ARQ, FastAPI BackgroundTasks를 활용한 비동기 작업을 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/23-background-tasks |
+| caching | Redis 캐싱 및 fastapi-cache2 패턴을 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/10-caching |
+| cicd | GitHub Actions 기반 Flutter CI/CD 파이프라인을 구성합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/22-cicd |
+| cicd | GitHub Actions와 Vercel을 사용하여 CI/CD를 설정합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/26-cicd |
+| cicd | GitHub Actions, GitLab CI 파이프라인을 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/33-cicd |
+| code-review | 코드 리뷰 및 품질 검증을 수행합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/21-code-review |
 | components | Flutter 위젯을 React 컴포넌트로 변환합니다. WIDGET-MAP.md를 참조하여 일관된 변환을 수행합니다. | — | 💻 개발/flutter-to-nextjs-skills/4-components |
-| crud-operations | Generic CRUD, pagination, filtering, sorting을 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/17-crud-operations |
-| database | Drift 로컬 데이터베이스를 구현합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/12-database |
-| database | Drizzle ORM + PostgreSQL 데이터베이스를 설정합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/4-database |
-| database-setup | SQLAlchemy 2.0 async + Alembic 마이그레이션을 설정합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/3-database-setup |
-| deeplink | 딥링크 및 유니버셜 링크 설정을 구성합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/29-deeplink |
-| deployment | Fastlane을 활용한 자동 배포 파이프라인을 구성합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/30-deployment |
-| design-system | Atomic Design 기반 디자인 시스템을 구축합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/3-design-system |
-| design-system | shadcn/ui + Tailwind CSS v4 기반 디자인 시스템을 구성합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/3-design-system |
-| di-container | Dependency Injection 패턴을 설정합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/5-di-container |
-| docker | 멀티스테이지 빌드, Docker Compose 구성을 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/31-docker |
-| e2e-test | Patrol을 사용한 E2E 통합 테스트를 작성합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/17-e2e-test |
-| e2e-test | Playwright를 사용하여 E2E 테스트를 작성합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/22-e2e-test |
-| e2e-test | Playwright, Docker를 활용한 End-to-End 테스트를 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/30-e2e-test |
-| easy-localization | easy_localization 패키지를 사용한 다국어 지원(국제화)을 구성합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/24-easy-localization |
-| email | Resend와 React Email을 사용하여 이메일을 발송합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/29-email |
-| email | 이메일 발송, 템플릿 관리, SMTP/SendGrid/Resend 연동을 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/35-email |
-| entity | Freezed 기반 Domain Entity를 생성합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/5-entity |
-| env | T3 Env를 사용하여 타입 안전한 환경 변수를 설정합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/6-env |
-| environment | Pydantic Settings를 사용한 환경 변수 및 다중 환경 설정을 구성합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/4-environment |
-| error-handling | Error Boundary와 Sentry를 사용하여 에러를 처리합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/12-error-handling |
-| error-handling | 예외 처리 및 HTTP Exception handlers를 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/6-error-handling |
-| feature | Feature 기반 모듈을 생성합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/14-feature |
-| feature-design | Feature 단위 도메인 설계를 수행합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/4-feature-design |
-| feature-implementation | Clean Architecture 기반 피처 구현 패턴을 제공합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/20-feature-implementation |
-| file-upload | 파일 업로드 기능을 구현합니다 (Vercel Blob, S3, Cloudflare R2). | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/18-file-upload |
-| file-upload | 파일 업로드, S3 연동, 이미지 처리를 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/21-file-upload |
-| firebase | Flutter 프로젝트에 Firebase 서비스를 설정하고 통합합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/26-firebase |
-| flavor | Flutter 프로젝트의 환경별 빌드 구성 (dev, staging, prod)을 설정합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/25-flavor |
-| form | React Hook Form + Zod를 사용하여 폼을 구현합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/15-form |
-| golden-test | Golden Test (시각적 회귀 테스트)를 작성합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/16-golden-test |
-| http-client | httpx async client, retry, timeout 패턴을 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/9-http-client |
-| i18n | next-intl을 사용하여 다국어 지원을 설정합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/7-i18n |
-| integration-test | 컴포넌트 통합 테스트를 작성합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/21-integration-test |
-| integration-test | 실제 데이터베이스와 연동한 통합 테스트를 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/29-integration-test |
-| kubernetes | Kubernetes 배포 설정, Helm 차트를 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/32-kubernetes |
-| logging | Talker 로깅 시스템을 설정합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/20-logging |
+| crud-operations | Generic CRUD, pagination, filtering, sorting을 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/17-crud-operations |
+| database | Drift 로컬 데이터베이스를 구현합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/12-database |
+| database | Drizzle ORM + PostgreSQL 데이터베이스를 설정합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/4-database |
+| database-setup | SQLAlchemy 2.0 async + Alembic 마이그레이션을 설정합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/3-database-setup |
+| deeplink | 딥링크 및 유니버셜 링크 설정을 구성합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/29-deeplink |
+| deployment | Fastlane을 활용한 자동 배포 파이프라인을 구성합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/30-deployment |
+| design-system | Atomic Design 기반 디자인 시스템을 구축합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/3-design-system |
+| design-system | shadcn/ui + Tailwind CSS v4 기반 디자인 시스템을 구성합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/3-design-system |
+| di-container | Dependency Injection 패턴을 설정합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/5-di-container |
+| docker | 멀티스테이지 빌드, Docker Compose 구성을 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/31-docker |
+| e2e-test | Patrol을 사용한 E2E 통합 테스트를 작성합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/17-e2e-test |
+| e2e-test | Playwright를 사용하여 E2E 테스트를 작성합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/22-e2e-test |
+| e2e-test | Playwright, Docker를 활용한 End-to-End 테스트를 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/30-e2e-test |
+| easy-localization | easy_localization 패키지를 사용한 다국어 지원(국제화)을 구성합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/24-easy-localization |
+| email | Resend와 React Email을 사용하여 이메일을 발송합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/29-email |
+| email | 이메일 발송, 템플릿 관리, SMTP/SendGrid/Resend 연동을 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/35-email |
+| entity | Freezed 기반 Domain Entity를 생성합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/5-entity |
+| env | T3 Env를 사용하여 타입 안전한 환경 변수를 설정합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/6-env |
+| environment | Pydantic Settings를 사용한 환경 변수 및 다중 환경 설정을 구성합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/4-environment |
+| error-handling | Error Boundary와 Sentry를 사용하여 에러를 처리합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/12-error-handling |
+| error-handling | 예외 처리 및 HTTP Exception handlers를 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/6-error-handling |
+| feature | Feature 기반 모듈을 생성합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/14-feature |
+| feature-design | Feature 단위 도메인 설계를 수행합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/4-feature-design |
+| feature-implementation | Clean Architecture 기반 피처 구현 패턴을 제공합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/20-feature-implementation |
+| file-upload | 파일 업로드 기능을 구현합니다 (Vercel Blob, S3, Cloudflare R2). | 1.0.0 | 💻 개발/nextjs-agent-skills/18-file-upload |
+| file-upload | 파일 업로드, S3 연동, 이미지 처리를 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/21-file-upload |
+| firebase | Flutter 프로젝트에 Firebase 서비스를 설정하고 통합합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/26-firebase |
+| flavor | Flutter 프로젝트의 환경별 빌드 구성 (dev, staging, prod)을 설정합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/25-flavor |
+| form | React Hook Form + Zod를 사용하여 폼을 구현합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/15-form |
+| golden-test | Golden Test (시각적 회귀 테스트)를 작성합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/16-golden-test |
+| http-client | httpx async client, retry, timeout 패턴을 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/9-http-client |
+| i18n | next-intl을 사용하여 다국어 지원을 설정합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/7-i18n |
+| integration-test | 컴포넌트 통합 테스트를 작성합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/21-integration-test |
+| integration-test | 실제 데이터베이스와 연동한 통합 테스트를 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/29-integration-test |
+| kubernetes | Kubernetes 배포 설정, Helm 차트를 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/32-kubernetes |
+| logging | Talker 로깅 시스템을 설정합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/20-logging |
 | mapping | Flutter 분석 결과를 바탕으로 Next.js 변환 전략을 수립합니다. 위젯-컴포넌트 매핑, 상태-스토어 매핑, 변환 우선순위를 결정합니다. | — | 💻 개발/flutter-to-nextjs-skills/2-mapping |
-| middleware | Next.js Edge Middleware를 설정합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/13-middleware |
-| middleware | CORS, Request logging, Timing 등 미들웨어를 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/8-middleware |
-| monorepo | Turborepo를 사용하여 모노레포를 설정합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/27-monorepo |
-| network | Dio + Retrofit 기반 네트워크 레이어를 구현합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/11-network |
+| middleware | Next.js Edge Middleware를 설정합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/13-middleware |
+| middleware | CORS, Request logging, Timing 등 미들웨어를 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/8-middleware |
+| monorepo | Turborepo를 사용하여 모노레포를 설정합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/27-monorepo |
+| network | Dio + Retrofit 기반 네트워크 레이어를 구현합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/11-network |
 | nextjs-boilerplate | Next.js 프로젝트 Boilerplate 생성 Skill. AI 시대에 최적화된 Next.js 15/16 프로젝트 구조를 자동 생성. "Next.js 프로젝트 만들어줘", "보일러플레이트 생성", "새 프로... | — | 💻 개발/nextjs-boilerplate-skill |
-| notifier | Riverpod 3 Notifier를 구현합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/8-notifier |
-| observability | 로깅, 메트릭, 트레이싱 기반 관측성을 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/34-observability |
-| openapi-docs | Swagger UI, ReDoc을 활용한 API 문서화를 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/25-openapi-docs |
-| pagination | Offset 및 Cursor 기반 페이지네이션을 구현합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/17-pagination |
-| payment | Stripe를 사용하여 결제 기능을 구현합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/30-payment |
-| performance | 성능 최적화를 분석하고 적용합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/18-performance |
-| performance | Next.js 애플리케이션 성능을 최적화합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/24-performance |
-| performance | API 성능 최적화, 프로파일링, 캐싱 전략을 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/37-performance |
-| platform-channel | Pigeon 기반 네이티브 플랫폼 통신을 구현합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/13-platform-channel |
-| project-setup | Flutter 프로젝트 초기 설정 및 의존성 구성을 수행합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/1-project-setup |
-| project-setup | Next.js 프로젝트 초기 설정 및 의존성 구성을 수행합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/1-project-setup |
-| project-setup | FastAPI 프로젝트 초기 설정 및 의존성 구성을 수행합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/1-project-setup |
-| query-optimization | N+1 문제 방지, 인덱싱, EXPLAIN 분석을 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/19-query-optimization |
-| rate-limiting | SlowAPI, Token Bucket, 분산 Rate Limiting을 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/11-rate-limiting |
-| realtime | 실시간 기능을 구현합니다 (Server-Sent Events, WebSocket, Pusher). | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/19-realtime |
-| refactor | 코드 리팩토링을 수행합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/19-refactor |
-| relationships | 1:N, N:M 관계 및 eager/lazy loading을 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/18-relationships |
+| notifier | Riverpod 3 Notifier를 구현합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/8-notifier |
+| observability | 로깅, 메트릭, 트레이싱 기반 관측성을 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/34-observability |
+| openapi-docs | Swagger UI, ReDoc을 활용한 API 문서화를 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/25-openapi-docs |
+| pagination | Offset 및 Cursor 기반 페이지네이션을 구현합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/17-pagination |
+| payment | Stripe를 사용하여 결제 기능을 구현합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/30-payment |
+| performance | 성능 최적화를 분석하고 적용합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/18-performance |
+| performance | Next.js 애플리케이션 성능을 최적화합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/24-performance |
+| performance | API 성능 최적화, 프로파일링, 캐싱 전략을 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/37-performance |
+| platform-channel | Pigeon 기반 네이티브 플랫폼 통신을 구현합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/13-platform-channel |
+| project-setup | Flutter 프로젝트 초기 설정 및 의존성 구성을 수행합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/1-project-setup |
+| project-setup | Next.js 프로젝트 초기 설정 및 의존성 구성을 수행합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/1-project-setup |
+| project-setup | FastAPI 프로젝트 초기 설정 및 의존성 구성을 수행합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/1-project-setup |
+| query-optimization | N+1 문제 방지, 인덱싱, EXPLAIN 분석을 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/19-query-optimization |
+| rate-limiting | SlowAPI, Token Bucket, 분산 Rate Limiting을 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/11-rate-limiting |
+| realtime | 실시간 기능을 구현합니다 (Server-Sent Events, WebSocket, Pusher). | 1.0.0 | 💻 개발/nextjs-agent-skills/19-realtime |
+| refactor | 코드 리팩토링을 수행합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/19-refactor |
+| relationships | 1:N, N:M 관계 및 eager/lazy loading을 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/18-relationships |
 | remotion-video-production | Remotion 기반 영상 제작과 오디오 편집을 위한 Skill. React/Remotion으로 입장곡 편집, 자막 영상, 장면 전환, 음성/효과음, 데이터 시각화, Lottie/3D/지도 장면, 렌더링 설정을... | 1.0.0 | 💻 개발/remotion-video-production-skill |
-| repository | Repository 패턴을 구현합니다 (Interface + Implementation). | 1.0.0 | 💻 개발/flutter-expert-agent-skills/6-repository |
-| repository-pattern | Repository 추상화 및 Unit of Work 패턴을 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/16-repository-pattern |
-| response-design | 일관된 API 응답 형식 및 에러 처리를 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/27-response-design |
+| repository | Repository 패턴을 구현합니다 (Interface + Implementation). | 1.0.0 | 💻 개발/flutter-agent-skills/6-repository |
+| repository-pattern | Repository 추상화 및 Unit of Work 패턴을 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/16-repository-pattern |
+| response-design | 일관된 API 응답 형식 및 에러 처리를 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/27-response-design |
 | review | 변환된 프로젝트의 최종 품질을 검토합니다. 기능 동일성, 코드 품질, 성능을 평가하고 최종 리포트를 생성합니다. | — | 💻 개발/flutter-to-nextjs-skills/8-review |
-| routing | GoRouter 라우팅을 설정합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/10-routing |
-| routing | Next.js App Router 기반 라우팅을 구현합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/16-routing |
+| routing | GoRouter 라우팅을 설정합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/10-routing |
+| routing | Next.js App Router 기반 라우팅을 구현합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/16-routing |
 | routing | Flutter 라우팅(GoRouter/Navigator)을 Next.js App Router로 변환합니다. 동적 라우트, 중첩 레이아웃, 미들웨어를 설정합니다. | — | 💻 개발/flutter-to-nextjs-skills/6-routing |
 | scaffold | 매핑 전략을 기반으로 Next.js 프로젝트 뼈대를 생성합니다. nextjs-boilerplate-skill을 활용하여 프로젝트를 초기화합니다. | — | 💻 개발/flutter-to-nextjs-skills/3-scaffold |
-| scheduled-jobs | APScheduler, Celery Beat를 활용한 정기 작업 스케줄링을 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/24-scheduled-jobs |
-| schema | Zod를 사용하여 타입 안전한 스키마를 정의합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/8-schema |
-| security | 앱 보안 설정 및 보안 베스트 프랙티스를 적용합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/28-security |
-| security | 보안 기능을 구현합니다 (Rate Limiting, CSRF, 입력 검증). | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/31-security |
-| security-hardening | HTTPS, 입력 검증, SQL Injection 방지 등 보안 강화를 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/15-security-hardening |
-| seo | Next.js 애플리케이션 SEO를 최적화합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/25-seo |
-| server-action | next-safe-action을 사용하여 타입 안전한 Server Actions를 구현합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/11-server-action |
-| service-layer | Clean Architecture의 Application Service 레이어 패턴을 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/36-service-layer |
-| state | Zustand를 사용하여 클라이언트 상태를 관리합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/10-state |
+| scheduled-jobs | APScheduler, Celery Beat를 활용한 정기 작업 스케줄링을 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/24-scheduled-jobs |
+| schema | Zod를 사용하여 타입 안전한 스키마를 정의합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/8-schema |
+| security | 앱 보안 설정 및 보안 베스트 프랙티스를 적용합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/28-security |
+| security | 보안 기능을 구현합니다 (Rate Limiting, CSRF, 입력 검증). | 1.0.0 | 💻 개발/nextjs-agent-skills/31-security |
+| security-hardening | HTTPS, 입력 검증, SQL Injection 방지 등 보안 강화를 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/15-security-hardening |
+| seo | Next.js 애플리케이션 SEO를 최적화합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/25-seo |
+| server-action | next-safe-action을 사용하여 타입 안전한 Server Actions를 구현합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/11-server-action |
+| service-layer | Clean Architecture의 Application Service 레이어 패턴을 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/36-service-layer |
+| state | Zustand를 사용하여 클라이언트 상태를 관리합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/10-state |
 | state | Flutter 상태관리(BLoC/Riverpod/Provider/GetX)를 Zustand로 변환합니다. 비동기 데이터는 React Query와 조합합니다. | — | 💻 개발/flutter-to-nextjs-skills/5-state |
-| supabase | Flutter 프로젝트에 Supabase 백엔드 서비스를 설정하고 통합합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/27-supabase |
-| unit-test | Unit Test를 작성합니다 (Repository, UseCase, Notifier). | 1.0.0 | 💻 개발/flutter-expert-agent-skills/14-unit-test |
-| unit-test | Vitest를 사용하여 단위 테스트를 작성합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/20-unit-test |
-| unit-test | pytest를 활용한 유닛 테스트를 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/28-unit-test |
-| usecase | UseCase/Interactor를 구현합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/7-usecase |
+| supabase | Flutter 프로젝트에 Supabase 백엔드 서비스를 설정하고 통합합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/27-supabase |
+| unit-test | Unit Test를 작성합니다 (Repository, UseCase, Notifier). | 1.0.0 | 💻 개발/flutter-agent-skills/14-unit-test |
+| unit-test | Vitest를 사용하여 단위 테스트를 작성합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/20-unit-test |
+| unit-test | pytest를 활용한 유닛 테스트를 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/28-unit-test |
+| usecase | UseCase/Interactor를 구현합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/7-usecase |
 | validate | 변환된 Next.js 프로젝트의 타입, 린트, 빌드를 검증합니다. 오류 발생 시 수정 방안을 제시합니다. | — | 💻 개발/flutter-to-nextjs-skills/7-validate |
-| validation | Pydantic V2 validators 및 커스텀 검증 패턴을 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/7-validation |
-| view | Atomic Design 기반 UI Widget/Page를 구현합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/9-view |
-| visual-test | 시각적 회귀 테스트와 Storybook을 설정합니다. | 1.0.0 | 💻 개발/nextjs-expert-agent-skills/23-visual-test |
-| websocket | 실시간 통신, WebSocket 연결 관리를 구현합니다. | 1.0.0 | 💻 개발/fastapi-expert-agent-skills/22-websocket |
-| widget-test | Widget Test를 작성합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/15-widget-test |
-| widgetbook | Widgetbook을 사용한 컴포넌트 카탈로그 및 디자인 시스템 문서화를 구성합니다. | 1.0.0 | 💻 개발/flutter-expert-agent-skills/23-widgetbook |
+| validation | Pydantic V2 validators 및 커스텀 검증 패턴을 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/7-validation |
+| view | Atomic Design 기반 UI Widget/Page를 구현합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/9-view |
+| visual-test | 시각적 회귀 테스트와 Storybook을 설정합니다. | 1.0.0 | 💻 개발/nextjs-agent-skills/23-visual-test |
+| websocket | 실시간 통신, WebSocket 연결 관리를 구현합니다. | 1.0.0 | 💻 개발/fastapi-agent-skills/22-websocket |
+| widget-test | Widget Test를 작성합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/15-widget-test |
+| widgetbook | Widgetbook을 사용한 컴포넌트 카탈로그 및 디자인 시스템 문서화를 구성합니다. | 1.0.0 | 💻 개발/flutter-agent-skills/23-widgetbook |
 
 ### 🎯 기획 (83)
 
@@ -216,24 +216,24 @@
 
 | Skill | Description | Version | Path |
 |-------|-------------|---------|------|
-| accessibility | 웹 접근성(a11y) 검증 및 WCAG 2.2 준수를 위한 종합 가이드입니다. | 1.0.0 | 🎨 디자인/frontend-design-agent-skills/16-accessibility |
-| color | 프로젝트의 디자인 방향에 맞는 색상 팔레트와 테마 시스템을 구성합니다. | 1.0.0 | 🎨 디자인/frontend-design-agent-skills/5-color |
-| content | 콘텐츠 및 에디토리얼 페이지 디자인을 위한 종합 스킬입니다. | 1.0.0 | 🎨 디자인/frontend-design-agent-skills/14-content |
-| dashboard | 대시보드 및 SaaS 관리자 UI 디자인을 위한 종합 스킬입니다. | 1.0.0 | 🎨 디자인/frontend-design-agent-skills/13-dashboard |
-| effects | 시각적 효과 및 배경 디자인 스킬입니다. 모던 웹 디자인의 Gradient Mesh, Glassmorphism, Neumorphism 등을 구현합니다. | 1.0.0 | 🎨 디자인/frontend-design-agent-skills/10-effects |
-| fd-context-intake | 프론트엔드 디자인 프로젝트의 기초를 다지는 핵심 스킬. 목적, 타겟 사용자, 브랜드 톤, 제약 조건, 경쟁사 정보를 체계적으로 수집합니다. | — | 🎨 디자인/frontend-design-agent-skills/1-context |
-| fd-direction | 12가지 미적 방향(Aesthetic Direction) 템플릿을 기반으로 프로젝트의 디자인 방향을 결정합니다. 컨텍스트와 인스피레이션을 바탕으로 최적의 스타일을 선택하고 조합합니다. | — | 🎨 디자인/frontend-design-agent-skills/3-direction |
-| fd-inspiration | 디자인 영감과 레퍼런스를 수집하는 스킬. Awwwards, Dribbble, SiteInspire 등에서 트렌드 분석 및 무드보드 생성을 지원합니다. | — | 🎨 디자인/frontend-design-agent-skills/2-inspiration |
-| interactions | 마이크로 인터랙션 및 애니메이션 디자인 스킬입니다. Framer Motion 기반 hover, tap, focus, loading, scroll 애니메이션을 구현합니다. | 1.0.0 | 🎨 디자인/frontend-design-agent-skills/11-interactions |
-| landing | 랜딩 페이지 디자인 및 구성을 위한 종합 스킬입니다. | 1.0.0 | 🎨 디자인/frontend-design-agent-skills/12-landing |
-| mobile | 모바일 퍼스트 디자인 및 앱 같은 웹 경험을 위한 종합 스킬입니다. | 1.0.0 | 🎨 디자인/frontend-design-agent-skills/15-mobile |
-| motion | 프로젝트의 애니메이션 시스템과 모션 언어를 구성합니다. | 1.0.0 | 🎨 디자인/frontend-design-agent-skills/7-motion |
-| patterns | 복합 UI 패턴 (Molecules, Organisms) 설계 및 구현 스킬입니다. Atomic Design의 조합 단계로, 재사용 가능한 복합 컴포넌트를 제공합니다. | 1.0.0 | 🎨 디자인/frontend-design-agent-skills/9-patterns |
-| performance | 프론트엔드 성능 최적화 및 Core Web Vitals 달성을 위한 종합 가이드입니다. | 1.0.0 | 🎨 디자인/frontend-design-agent-skills/18-performance |
-| primitives | Primitive UI 컴포넌트 (Atoms) 설계 및 구현 스킬입니다. shadcn/ui 기반으로 커스터마이징된 기본 빌딩 블록을 제공합니다. | 1.0.0 | 🎨 디자인/frontend-design-agent-skills/8-primitives |
-| responsive | 반응형 디자인 검증 및 최적화를 위한 종합 가이드입니다. | 1.0.0 | 🎨 디자인/frontend-design-agent-skills/17-responsive |
-| spacing | 프로젝트의 레이아웃과 간격 시스템을 구성합니다. | 1.0.0 | 🎨 디자인/frontend-design-agent-skills/6-spacing |
-| typography | 프로젝트의 디자인 방향에 맞는 타이포그래피 시스템을 구성합니다. | 1.0.0 | 🎨 디자인/frontend-design-agent-skills/4-typography |
+| accessibility | 웹 접근성(a11y) 검증 및 WCAG 2.2 준수를 위한 종합 가이드입니다. | 1.0.0 | 🎨 디자인/ui-design-agent-skills/16-accessibility |
+| color | 프로젝트의 디자인 방향에 맞는 색상 팔레트와 테마 시스템을 구성합니다. | 1.0.0 | 🎨 디자인/ui-design-agent-skills/5-color |
+| content | 콘텐츠 및 에디토리얼 페이지 디자인을 위한 종합 스킬입니다. | 1.0.0 | 🎨 디자인/ui-design-agent-skills/14-content |
+| dashboard | 대시보드 및 SaaS 관리자 UI 디자인을 위한 종합 스킬입니다. | 1.0.0 | 🎨 디자인/ui-design-agent-skills/13-dashboard |
+| effects | 시각적 효과 및 배경 디자인 스킬입니다. 모던 웹 디자인의 Gradient Mesh, Glassmorphism, Neumorphism 등을 구현합니다. | 1.0.0 | 🎨 디자인/ui-design-agent-skills/10-effects |
+| fd-context-intake | 프론트엔드 디자인 프로젝트의 기초를 다지는 핵심 스킬. 목적, 타겟 사용자, 브랜드 톤, 제약 조건, 경쟁사 정보를 체계적으로 수집합니다. | — | 🎨 디자인/ui-design-agent-skills/1-context |
+| fd-direction | 12가지 미적 방향(Aesthetic Direction) 템플릿을 기반으로 프로젝트의 디자인 방향을 결정합니다. 컨텍스트와 인스피레이션을 바탕으로 최적의 스타일을 선택하고 조합합니다. | — | 🎨 디자인/ui-design-agent-skills/3-direction |
+| fd-inspiration | 디자인 영감과 레퍼런스를 수집하는 스킬. Awwwards, Dribbble, SiteInspire 등에서 트렌드 분석 및 무드보드 생성을 지원합니다. | — | 🎨 디자인/ui-design-agent-skills/2-inspiration |
+| interactions | 마이크로 인터랙션 및 애니메이션 디자인 스킬입니다. Framer Motion 기반 hover, tap, focus, loading, scroll 애니메이션을 구현합니다. | 1.0.0 | 🎨 디자인/ui-design-agent-skills/11-interactions |
+| landing | 랜딩 페이지 디자인 및 구성을 위한 종합 스킬입니다. | 1.0.0 | 🎨 디자인/ui-design-agent-skills/12-landing |
+| mobile | 모바일 퍼스트 디자인 및 앱 같은 웹 경험을 위한 종합 스킬입니다. | 1.0.0 | 🎨 디자인/ui-design-agent-skills/15-mobile |
+| motion | 프로젝트의 애니메이션 시스템과 모션 언어를 구성합니다. | 1.0.0 | 🎨 디자인/ui-design-agent-skills/7-motion |
+| patterns | 복합 UI 패턴 (Molecules, Organisms) 설계 및 구현 스킬입니다. Atomic Design의 조합 단계로, 재사용 가능한 복합 컴포넌트를 제공합니다. | 1.0.0 | 🎨 디자인/ui-design-agent-skills/9-patterns |
+| performance | 프론트엔드 성능 최적화 및 Core Web Vitals 달성을 위한 종합 가이드입니다. | 1.0.0 | 🎨 디자인/ui-design-agent-skills/18-performance |
+| primitives | Primitive UI 컴포넌트 (Atoms) 설계 및 구현 스킬입니다. shadcn/ui 기반으로 커스터마이징된 기본 빌딩 블록을 제공합니다. | 1.0.0 | 🎨 디자인/ui-design-agent-skills/8-primitives |
+| responsive | 반응형 디자인 검증 및 최적화를 위한 종합 가이드입니다. | 1.0.0 | 🎨 디자인/ui-design-agent-skills/17-responsive |
+| spacing | 프로젝트의 레이아웃과 간격 시스템을 구성합니다. | 1.0.0 | 🎨 디자인/ui-design-agent-skills/6-spacing |
+| typography | 프로젝트의 디자인 방향에 맞는 타이포그래피 시스템을 구성합니다. | 1.0.0 | 🎨 디자인/ui-design-agent-skills/4-typography |
 
 ### 📝 콘텐츠 (30)
 
@@ -243,17 +243,17 @@
 | blog-publish | Publishing skill for Hashnode blog. Publishes approved drafts via Hashnode GraphQL API. Activated by: "/blog-publish"... | — | 📝 콘텐츠/tech-blog-agent-skills/4-publish |
 | blog-research | Research skill for tech blog writing. Gathers information from web searches and local codebase analysis. Activated by... | — | 📝 콘텐츠/tech-blog-agent-skills/1-research |
 | blog-review | Interactive review skill for blog post drafts. Presents draft for feedback, processes edits, and refines content. Act... | — | 📝 콘텐츠/tech-blog-agent-skills/3-review |
-| export-pdf | HTML 슬라이드를 고품질 PDF로 변환하는 Export Skill. Playwright 브라우저 렌더링 + pdf-lib 병합을 통한 정밀한 출력. "PDF 만들어줘", "PDF 변환", "PDF 출력" 요청... | — | 📝 콘텐츠/ppt-agent-skills/11-export-pdf |
-| export-pptx | HTML 슬라이드를 고품질 PPTX로 변환하는 Export Skill. HTML → PPTX 변환, 썸네일 생성, 검증 시스템 제공. "PPT 만들어줘", "PPTX 생성", "파워포인트 변환" 요청 시 활성화. | — | 📝 콘텐츠/ppt-agent-skills/10-export-pptx |
-| ppt-content | 슬라이드별 텍스트 콘텐츠를 최적화하는 Skill. 헤드라인 작성, 불릿 포인트 압축, 발표 스크립트 생성 시 활성화. "내용 작성해줘", "헤드라인 만들어줘", "스크립트 써줘" 등의 요청에 반응. | — | 📝 콘텐츠/ppt-agent-skills/4-content |
-| ppt-design-system | 전문 프레젠테이션 디자인 시스템. 정밀한 타이포그래피, 10가지 토픽별 테마, 10가지 슬라이드 템플릿 제공. "디자인 적용", "템플릿", "스타일 시스템" 요청 시 활성화. | — | 📝 콘텐츠/ppt-agent-skills/5-design-system |
-| ppt-image-gen | PPT 슬라이드용 AI 이미지 생성 Skill. Gemini CLI(Nano Banana)를 활용하여 프레젠테이션에 최적화된 비주얼 이미지를 자동 생성합니다. 모든 슬라이드에 대해 테마와 일관된 스타일의 이미지... | — | 📝 콘텐츠/ppt-agent-skills/7-image-gen |
-| ppt-refinement | 피드백을 분석하고 PPT를 반복적으로 개선하는 Skill. 피드백 파싱, 버전 관리, A/B 대안 제시 시 활성화. "피드백 반영해줘", "수정해줘", "대안 보여줘" 등의 요청에 반응. | — | 📝 콘텐츠/ppt-agent-skills/9-refinement |
-| ppt-research | PPT 제작을 위한 리서치 및 자료 수집 Skill. 웹 검색, 문서 분석, 경쟁사 조사, 통계 데이터 수집 시 활성화. "자료 조사해줘", "트렌드 분석해줘", "경쟁사 PPT 분석" 등의 요청에 반응. | — | 📝 콘텐츠/ppt-agent-skills/1-research |
-| ppt-review | 완성된 PPT의 품질을 검토하고 개선점을 도출하는 Skill. 맞춤법 검사, 논리 흐름 검증, 디자인 감사, 접근성 체크 시 활성화. "PPT 검토해줘", "품질 체크", "리뷰해줘" 등의 요청에 반응. | — | 📝 콘텐츠/ppt-agent-skills/8-review |
-| ppt-structure | 검증된 데이터를 바탕으로 PPT의 스토리라인과 논리 구조를 설계하는 Skill. 청중 분석, 핵심 메시지 도출, 슬라이드 아웃라인 구성 시 활성화. "구조 잡아줘", "스토리라인 만들어줘", "아웃라인 설계해줘... | — | 📝 콘텐츠/ppt-agent-skills/3-structure |
-| ppt-validation | 리서치 단계에서 수집한 데이터의 신뢰성과 정확성을 검증하는 Skill. 팩트체크, 출처 검증, 최신성 확인, 교차 검증 시 활성화. "데이터 검증해줘", "팩트체크 해줘", "출처 확인해줘" 등의 요청에 반응.... | — | 📝 콘텐츠/ppt-agent-skills/2-validation |
-| ppt-visual | 2025 최신 데이터 시각화 트렌드를 반영한 차트, 다이어그램, 인포그래픽 생성 Skill. 데이터 시각화, 차트 추천, 다이어그램 생성, 아이콘 선택 시 활성화. "차트 만들어줘", "인포그래픽 디자인", "... | — | 📝 콘텐츠/ppt-agent-skills/6-visual |
+| export-pdf | HTML 슬라이드를 고품질 PDF로 변환하는 Export Skill. Playwright 브라우저 렌더링 + pdf-lib 병합을 통한 정밀한 출력. "PDF 만들어줘", "PDF 변환", "PDF 출력" 요청... | — | 📝 콘텐츠/presentation-agent-skills/11-export-pdf |
+| export-pptx | HTML 슬라이드를 고품질 PPTX로 변환하는 Export Skill. HTML → PPTX 변환, 썸네일 생성, 검증 시스템 제공. "PPT 만들어줘", "PPTX 생성", "파워포인트 변환" 요청 시 활성화. | — | 📝 콘텐츠/presentation-agent-skills/10-export-pptx |
+| ppt-content | 슬라이드별 텍스트 콘텐츠를 최적화하는 Skill. 헤드라인 작성, 불릿 포인트 압축, 발표 스크립트 생성 시 활성화. "내용 작성해줘", "헤드라인 만들어줘", "스크립트 써줘" 등의 요청에 반응. | — | 📝 콘텐츠/presentation-agent-skills/4-content |
+| ppt-design-system | 전문 프레젠테이션 디자인 시스템. 정밀한 타이포그래피, 10가지 토픽별 테마, 10가지 슬라이드 템플릿 제공. "디자인 적용", "템플릿", "스타일 시스템" 요청 시 활성화. | — | 📝 콘텐츠/presentation-agent-skills/5-design-system |
+| ppt-image-gen | PPT 슬라이드용 AI 이미지 생성 Skill. Gemini CLI(Nano Banana)를 활용하여 프레젠테이션에 최적화된 비주얼 이미지를 자동 생성합니다. 모든 슬라이드에 대해 테마와 일관된 스타일의 이미지... | — | 📝 콘텐츠/presentation-agent-skills/7-image-gen |
+| ppt-refinement | 피드백을 분석하고 PPT를 반복적으로 개선하는 Skill. 피드백 파싱, 버전 관리, A/B 대안 제시 시 활성화. "피드백 반영해줘", "수정해줘", "대안 보여줘" 등의 요청에 반응. | — | 📝 콘텐츠/presentation-agent-skills/9-refinement |
+| ppt-research | PPT 제작을 위한 리서치 및 자료 수집 Skill. 웹 검색, 문서 분석, 경쟁사 조사, 통계 데이터 수집 시 활성화. "자료 조사해줘", "트렌드 분석해줘", "경쟁사 PPT 분석" 등의 요청에 반응. | — | 📝 콘텐츠/presentation-agent-skills/1-research |
+| ppt-review | 완성된 PPT의 품질을 검토하고 개선점을 도출하는 Skill. 맞춤법 검사, 논리 흐름 검증, 디자인 감사, 접근성 체크 시 활성화. "PPT 검토해줘", "품질 체크", "리뷰해줘" 등의 요청에 반응. | — | 📝 콘텐츠/presentation-agent-skills/8-review |
+| ppt-structure | 검증된 데이터를 바탕으로 PPT의 스토리라인과 논리 구조를 설계하는 Skill. 청중 분석, 핵심 메시지 도출, 슬라이드 아웃라인 구성 시 활성화. "구조 잡아줘", "스토리라인 만들어줘", "아웃라인 설계해줘... | — | 📝 콘텐츠/presentation-agent-skills/3-structure |
+| ppt-validation | 리서치 단계에서 수집한 데이터의 신뢰성과 정확성을 검증하는 Skill. 팩트체크, 출처 검증, 최신성 확인, 교차 검증 시 활성화. "데이터 검증해줘", "팩트체크 해줘", "출처 확인해줘" 등의 요청에 반응.... | — | 📝 콘텐츠/presentation-agent-skills/2-validation |
+| ppt-visual | 2025 최신 데이터 시각화 트렌드를 반영한 차트, 다이어그램, 인포그래픽 생성 Skill. 데이터 시각화, 차트 추천, 다이어그램 생성, 아이콘 선택 시 활성화. "차트 만들어줘", "인포그래픽 디자인", "... | — | 📝 콘텐츠/presentation-agent-skills/6-visual |
 | social-analytics | 소셜미디어 콘텐츠 성과를 분석하고 인사이트를 도출합니다. 활성화 조건: - "성과 분석해줘" - "인사이트 리포트" - "A/B 테스트 결과" - "KPI 확인" - "콘텐츠 성과 비교" | — | 📝 콘텐츠/social-media-agent-skills/11-analytics |
 | social-approval | 소셜미디어 콘텐츠의 승인 워크플로우를 관리합니다. 활성화 조건: - "콘텐츠 승인해줘" - "승인 요청" - "리뷰 요청" - "최종 확인" | — | 📝 콘텐츠/social-media-agent-skills/7-approval |
 | social-compliance | 소셜미디어 콘텐츠의 법적 준수사항을 검토합니다. 활성화 조건: - "법적 검토해줘" - "광고 표시 확인해줘" - "저작권 체크해줘" - "컴플라이언스 검토" - "규정 준수 확인" | — | 📝 콘텐츠/social-media-agent-skills/3-compliance |

@@ -1,5 +1,5 @@
 ---
-name: frontend-design-agent
+name: ui-design-agent
 description: |
   독창적이고 트렌디한 웹/모바일 프론트엔드 디자인을 생성하는 Expert Agent.
   "AI 생성물 느낌"을 배제하고 맥락에 맞는 독특한 디자인 구현.
@@ -11,7 +11,7 @@ progressive_disclosure:
   level_3_tokens: 10000
 triggers:
   keywords: [디자인, UI, UX, 프론트엔드, 랜딩, design, frontend, landing, dashboard, 대시보드]
-  agents: [frontend-design-agent]
+  agents: [ui-design-agent]
   phases: [design, foundation, components, pages, polish]
 ---
 

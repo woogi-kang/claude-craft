@@ -58,10 +58,10 @@ python3 scripts/orchestrate-worktrees.py .orchestration/{session}/plan.json --cl
 
 | 작업 유형 | 참조 에이전트 | 태스크에 포함할 지식 |
 |-----------|--------------|---------------------|
-| API/백엔드 | fastapi-expert-agent | Clean Architecture, SQLAlchemy |
-| 프론트엔드 | nextjs-expert-agent | App Router, TanStack Query, shadcn/ui |
-| Flutter | flutter-expert-agent | Riverpod, GoRouter |
-| 테스트 | tdd-ralph | TDD RED-GREEN-REFACTOR |
+| API/백엔드 | fastapi-agent | Clean Architecture, SQLAlchemy |
+| 프론트엔드 | nextjs-agent | App Router, TanStack Query, shadcn/ui |
+| Flutter | flutter-agent | Riverpod, GoRouter |
+| 테스트 | tdd-loop-agent | TDD RED-GREEN-REFACTOR |
 | 리뷰 | review-orchestrator | 멀티 관점 리뷰 |
 
 ### 3b. 의존성 자동 추론

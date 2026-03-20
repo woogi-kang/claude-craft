@@ -1,5 +1,5 @@
 ---
-name: build-error-resolver
+name: build-resolver-agent
 description: |
   빌드/타입 에러를 최소 diff로 수정하는 전문 에이전트.
   TypeScript, Python, Flutter 빌드 에러에 반응.

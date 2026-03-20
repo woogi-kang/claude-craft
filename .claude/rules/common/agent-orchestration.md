@@ -25,15 +25,15 @@
 
 | 키워드/의도 | 에이전트 | 언제 사용 |
 |-------------|----------|-----------|
-| FastAPI, Python API, async API | `fastapi-expert-agent` | API 설계/구현/테스트 전 과정 |
-| Flutter, Dart, Riverpod, 모바일 앱 | `flutter-expert-agent` | Flutter 앱 설계/구현/테스트 |
-| Next.js, React, App Router, 웹 앱 | `nextjs-expert-agent` | Next.js 웹 앱 설계/구현/테스트 |
+| FastAPI, Python API, async API | `fastapi-agent` | API 설계/구현/테스트 전 과정 |
+| Flutter, Dart, Riverpod, 모바일 앱 | `flutter-agent` | Flutter 앱 설계/구현/테스트 |
+| Next.js, React, App Router, 웹 앱 | `nextjs-agent` | Next.js 웹 앱 설계/구현/테스트 |
 | Figma → Next.js, 피그마 웹 변환 | `figma-to-nextjs` | Figma 디자인을 Next.js 코드로 변환 |
 | Figma → Flutter, 피그마 앱 변환 | `figma-to-flutter` | Figma 디자인을 Flutter 코드로 변환 |
-| Flutter → Next.js, 마이그레이션 | `flutter-to-nextjs-agent` | Flutter 앱을 Next.js로 전환 |
-| TDD, 테스트 루프, 100% 패스 | `tdd-ralph` | 테스트가 모두 통과할 때까지 자율 루프 |
-| 빌드 에러, 타입 에러, 컴파일 에러 | `build-error-resolver` | 최소 diff로 빌드 에러 수정 |
-| 데드코드, 정리, cleanup | `refactor-cleaner` | 미사용 코드/임포트/의존성 제거 |
+| Flutter → Next.js, 마이그레이션 | `flutter-to-nextjs` | Flutter 앱을 Next.js로 전환 |
+| TDD, 테스트 루프, 100% 패스 | `tdd-loop-agent` | 테스트가 모두 통과할 때까지 자율 루프 |
+| 빌드 에러, 타입 에러, 컴파일 에러 | `build-resolver-agent` | 최소 diff로 빌드 에러 수정 |
+| 데드코드, 정리, cleanup | `deadcode-cleaner-agent` | 미사용 코드/임포트/의존성 제거 |
 
 ### 🎯 기획
 
@@ -47,24 +47,24 @@
 
 | 키워드/의도 | 에이전트 | 언제 사용 |
 |-------------|----------|-----------|
-| UI/UX 디자인, 프론트엔드 디자인 | `frontend-design-agent` | 독창적 웹/모바일 UI 디자인 생성 |
-| Figma MCP, 디자인 추출 | `mcp-figma` | Figma에서 디자인 컨텍스트 추출 → Flutter 코드 |
+| UI/UX 디자인, 프론트엔드 디자인 | `ui-design-agent` | 독창적 웹/모바일 UI 디자인 생성 |
+| Figma MCP, 디자인 추출 | `figma-flutter-agent` | Figma에서 디자인 컨텍스트 추출 → Flutter 코드 |
 
 ### 📝 콘텐츠
 
 | 키워드/의도 | 에이전트 | 언제 사용 |
 |-------------|----------|-----------|
-| PPT, 발표자료, 프레젠테이션 | `ppt-agent` | PPT 리서치 → 제작 전 과정 |
+| PPT, 발표자료, 프레젠테이션 | `presentation-agent` | PPT 리서치 → 제작 전 과정 |
 | 소셜 미디어, SNS 콘텐츠 | `social-media-agent` | 멀티 플랫폼 소셜 콘텐츠 제작 |
 | 기술 블로그, Hashnode | `tech-blog-agent` | 블로그 글 작성 → 발행 |
-| 이모티콘, 캐릭터, 스티커 | `Emoticon Orchestrator Agent` | AI 이모티콘 제작 워크플로우 |
+| 이모티콘, 캐릭터, 스티커 | `emoticon-orchestrator` | AI 이모티콘 제작 워크플로우 |
 
 ### 📣 마케팅
 
 | 키워드/의도 | 에이전트 | 언제 사용 |
 |-------------|----------|-----------|
 | 마케팅 전략, 광고 카피, 캠페인 | `marketing-agent` | 마케팅 리서치 → 실행 산출물 |
-| SEO, 키워드, 트래픽, 콘텐츠 최적화 | `seo-orchestrator-agent` | SEO + 콘텐츠 마케팅 통합 |
+| SEO, 키워드, 트래픽, 콘텐츠 최적화 | `seo-orchestrator` | SEO + 콘텐츠 마케팅 통합 |
 
 ### ⚖️ 법무
 
@@ -77,8 +77,8 @@
 
 | 키워드/의도 | 에이전트 | 언제 사용 |
 |-------------|----------|-----------|
-| 결제, 구독, 매출, Lemon Squeezy | `payment-orchestrator-agent` | 결제 시스템 구축/관리 |
-| 재무, 영수증, 세금계산서, 비용 분석 | `finance-orchestrator-agent` | 재무 보고/영수증 처리 |
+| 결제, 구독, 매출, Lemon Squeezy | `payment-orchestrator` | 결제 시스템 구축/관리 |
+| 재무, 영수증, 세금계산서, 비용 분석 | `finance-orchestrator` | 재무 보고/영수증 처리 |
 
 ### 🔍 리뷰
 
@@ -164,8 +164,8 @@
 ### 새 서비스 기획 → 구현
 ```
 planning-agent (기획)
-  → frontend-design-agent (UI 디자인)
-  → nextjs-expert-agent 또는 flutter-expert-agent (구현)
+  → ui-design-agent (UI 디자인)
+  → nextjs-agent 또는 flutter-agent (구현)
   → /verify (검증)
   → /review (리뷰)
 ```
@@ -179,8 +179,8 @@ figma-to-nextjs 또는 figma-to-flutter (변환)
 
 ### 기존 코드 개선
 ```
-refactor-cleaner (데드코드 정리)
-  → build-error-resolver (빌드 에러 수정)
+deadcode-cleaner-agent (데드코드 정리)
+  → build-resolver-agent (빌드 에러 수정)
   → /verify → /commit
 ```
 
@@ -189,7 +189,7 @@ refactor-cleaner (데드코드 정리)
 marketing-agent (전략 수립)
   → social-media-agent (SNS 콘텐츠)
   → tech-blog-agent (블로그)
-  → seo-orchestrator-agent (SEO 최적화)
+  → seo-orchestrator (SEO 최적화)
 ```
 
 ---

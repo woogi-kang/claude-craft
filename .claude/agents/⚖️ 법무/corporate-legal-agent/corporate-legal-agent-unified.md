@@ -284,7 +284,7 @@ penalties:
 | 상황 | 연계 Agent |
 |------|-----------|
 | 계약서 검토 필요 | legal-contract-agent |
-| 재무제표 필요 | finance-orchestrator-agent |
+| 재무제표 필요 | finance-orchestrator |
 | 세무 연계 | tax-calendar skill |
 | 전자서명 필요 | 모두싸인 MCP |
 

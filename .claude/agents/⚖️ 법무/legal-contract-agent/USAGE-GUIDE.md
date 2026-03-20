@@ -180,7 +180,7 @@ workspace/work-legal/
 
 | 연동 Agent | 사용 시나리오 |
 |------------|--------------|
-| `ppt-agent` | 법무 검토 결과를 경영진 보고용 프레젠테이션으로 |
+| `presentation-agent` | 법무 검토 결과를 경영진 보고용 프레젠테이션으로 |
 | `marketing-agent` | 파트너십 계약 마케팅 자료 작성 |
 | `tech-blog-agent` | 계약 관련 법률 해설 블로그 |
 

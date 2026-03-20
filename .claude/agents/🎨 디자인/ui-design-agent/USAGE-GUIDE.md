@@ -1,4 +1,4 @@
-# Frontend Design Agent 사용 가이드
+# UI Design Agent 사용 가이드
 
 독창적이고 프로덕션 수준의 프론트엔드 디자인을 생성하는 Agent 사용법입니다.
 

@@ -83,7 +83,7 @@ Design Phase 완료 후 연계:
 
 ```
 Design Direction
-    └─→ frontend-design-agent
+    └─→ ui-design-agent
         - wireframe-guide 기반 UI 디자인
         - brand-direction 기반 스타일 적용
 ```
