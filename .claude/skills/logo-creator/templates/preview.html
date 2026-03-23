@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Logo Preview Gallery</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #1a1a1a;
+      padding: 20px 20px 80px;
+      color: white;
+    }
+    h1 { text-align: center; margin-bottom: 6px; font-size: 24px; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 20px; font-size: 13px; }
+
+    .toolbar {
+      display: flex; justify-content: center; gap: 12px;
+      margin-bottom: 20px; flex-wrap: wrap; align-items: center;
+    }
+    .toolbar input {
+      padding: 8px 14px; font-size: 13px;
+      border: 1px solid #444; border-radius: 6px;
+      background: #2a2a2a; color: white; width: 240px;
+    }
+    .toolbar input:focus { outline: none; border-color: #666; }
+    .bg-toggle {
+      display: flex; border-radius: 6px; overflow: hidden;
+      border: 1px solid #444;
+    }
+    .bg-toggle button {
+      padding: 8px 12px; font-size: 12px; border: none;
+      cursor: pointer; background: #2a2a2a; color: #aaa;
+      transition: all 0.2s;
+    }
+    .bg-toggle button.active { background: #444; color: white; }
+    .bg-toggle button:hover { background: #333; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 14px; max-width: 1400px; margin: 0 auto;
+    }
+    .logo-card {
+      border-radius: 10px; padding: 14px; text-align: center;
+      cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+    .logo-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+    }
+    .logo-card img {
+      width: 100%; height: 130px; object-fit: contain; margin-bottom: 8px;
+      border-radius: 4px;
+    }
+    .logo-card p {
+      margin: 0; font-size: 13px; font-weight: 600;
+    }
+    .logo-card.favorite { box-shadow: 0 0 0 3px #4CAF50; }
+    .logo-card .fav-badge {
+      display: none; position: absolute; top: 8px; right: 8px;
+      width: 20px; height: 20px; background: #4CAF50; border-radius: 50%;
+      color: white; font-size: 11px; line-height: 20px; text-align: center;
+    }
+    .logo-card.favorite .fav-badge { display: block; }
+
+    /* Background modes */
+    .bg-white .logo-card { background: #fff; }
+    .bg-white .logo-card p { color: #333; }
+    .bg-dark .logo-card { background: #2a2a2a; }
+    .bg-dark .logo-card p { color: #ccc; }
+    .bg-checker .logo-card {
+      background: repeating-conic-gradient(#e0e0e0 0% 25%, #fff 0% 50%) 50% / 16px 16px;
+    }
+    .bg-checker .logo-card p { color: #333; }
+
+    /* Favorites bar */
+    .favorites-bar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #222; padding: 14px 20px;
+      display: flex; align-items: center; gap: 14px;
+      border-top: 1px solid #444; z-index: 100;
+    }
+    .favorites-bar span { color: #888; font-size: 13px; white-space: nowrap; }
+    .favorites-list { flex: 1; color: #4CAF50; font-weight: 600; font-size: 13px; }
+
+    /* Modal */
+    .modal {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.92); z-index: 1000;
+      align-items: center; justify-content: center; flex-direction: column;
+    }
+    .modal.active { display: flex; }
+    .modal img {
+      max-width: min(500px, 80vw); max-height: min(500px, 70vh);
+      padding: 24px; border-radius: 12px;
+    }
+    .modal.bg-white img { background: white; }
+    .modal.bg-dark img { background: #2a2a2a; }
+    .modal.bg-checker img {
+      background: repeating-conic-gradient(#e0e0e0 0% 25%, #fff 0% 50%) 50% / 20px 20px;
+    }
+    .modal-info { margin-top: 16px; text-align: center; }
+    .modal-info p { margin: 4px 0; }
+    .modal-info .hint { color: #666; font-size: 12px; }
+    .modal-close {
+      position: absolute; top: 16px; right: 24px;
+      color: white; font-size: 36px; cursor: pointer;
+    }
+    .modal-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      color: white; font-size: 48px; cursor: pointer;
+      user-select: none; padding: 16px;
+    }
+    .modal-nav:hover { color: #4CAF50; }
+    .modal-nav.prev { left: 16px; }
+    .modal-nav.next { right: 16px; }
+  </style>
+</head>
+<body class="bg-white">
+  <h1>Logo Preview Gallery</h1>
+  <p class="subtitle">Click to enlarge &middot; Double-click to favorite &middot; Arrow keys to navigate</p>
+
+  <div class="toolbar">
+    <input type="text" id="search" placeholder="Filter... (e.g. 05, v1)">
+    <div class="bg-toggle">
+      <button class="active" onclick="setBg('white')">White</button>
+      <button onclick="setBg('dark')">Dark</button>
+      <button onclick="setBg('checker')">Checker</button>
+    </div>
+  </div>
+
+  <div class="grid" id="grid">
+    <!-- LOGO_CARDS_PLACEHOLDER -->
+  </div>
+
+  <div class="favorites-bar">
+    <span>Favorites:</span>
+    <div class="favorites-list" id="favorites-list">None selected</div>
+  </div>
+
+  <div class="modal" id="modal" onclick="if(event.target===this)hideModal()">
+    <span class="modal-close" onclick="hideModal()">&times;</span>
+    <span class="modal-nav prev" onclick="navModal(-1)">&#8249;</span>
+    <span class="modal-nav next" onclick="navModal(1)">&#8250;</span>
+    <img id="modal-img" src="">
+    <div class="modal-info">
+      <p id="modal-name"></p>
+      <p class="hint">F = favorite &middot; &larr;&rarr; = navigate &middot; Esc = close</p>
+    </div>
+  </div>
+
+  <script>
+    let currentCard = null;
+    const favorites = new Set();
+    let currentBg = 'white';
+
+    function getVisibleCards() {
+      return [...document.querySelectorAll('.logo-card')].filter(c => c.style.display !== 'none');
+    }
+
+    function setBg(mode) {
+      document.body.classList.remove('bg-white', 'bg-dark', 'bg-checker');
+      document.body.classList.add('bg-' + mode);
+      document.getElementById('modal').classList.remove('bg-white', 'bg-dark', 'bg-checker');
+      document.getElementById('modal').classList.add('bg-' + mode);
+      currentBg = mode;
+      document.querySelectorAll('.bg-toggle button').forEach(b => {
+        b.classList.toggle('active', b.textContent.toLowerCase() === mode);
+      });
+    }
+
+    function showModal(card) {
+      currentCard = card;
+      document.getElementById('modal-img').src = card.dataset.src;
+      document.getElementById('modal-name').textContent = card.querySelector('p').textContent;
+      document.getElementById('modal').classList.add('active');
+    }
+
+    function hideModal() {
+      document.getElementById('modal').classList.remove('active');
+      currentCard = null;
+    }
+
+    function navModal(dir) {
+      if (!currentCard) return;
+      const cards = getVisibleCards();
+      const idx = cards.indexOf(currentCard);
+      const next = (idx + dir + cards.length) % cards.length;
+      showModal(cards[next]);
+    }
+
+    function toggleFavorite(card) {
+      const name = card.querySelector('p').textContent;
+      if (favorites.has(name)) {
+        favorites.delete(name);
+        card.classList.remove('favorite');
+      } else {
+        favorites.add(name);
+        card.classList.add('favorite');
+      }
+      const list = document.getElementById('favorites-list');
+      list.textContent = favorites.size === 0
+        ? 'None selected'
+        : [...favorites].sort().join(', ');
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') hideModal();
+      if (e.key === 'ArrowLeft') navModal(-1);
+      if (e.key === 'ArrowRight') navModal(1);
+      if ((e.key === 'f' || e.key === 'F') && currentCard) toggleFavorite(currentCard);
+    });
+
+    document.querySelectorAll('.logo-card').forEach(card => {
+      card.addEventListener('dblclick', () => toggleFavorite(card));
+    });
+
+    document.getElementById('search').addEventListener('input', e => {
+      const q = e.target.value.toLowerCase();
+      document.querySelectorAll('.logo-card').forEach(card => {
+        const name = card.querySelector('p').textContent.toLowerCase();
+        const src = card.dataset.src.toLowerCase();
+        card.style.display = (name.includes(q) || src.includes(q)) ? '' : 'none';
+      });
+    });
+
+    setBg('white');
+  </script>
+</body>
+</html>
