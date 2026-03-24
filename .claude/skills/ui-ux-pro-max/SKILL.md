@@ -657,3 +657,195 @@ Scope notice: This checklist is for App UI (iOS/Android/React Native/Flutter).
 - [ ] Color is not the only indicator
 - [ ] Reduced motion and dynamic text size are supported without layout breakage
 - [ ] Accessibility traits/roles/states (selected, disabled, expanded) are announced correctly
+
+---
+
+## Korean Locale Design Layer (한국어 디자인 레이어)
+
+한국어 콘텐츠가 포함된 프로젝트에서 자동 적용되는 디자인 규칙.
+`lang="ko"` 또는 한국어 콘텐츠가 감지되면 아래 규칙이 기존 규칙 위에 오버라이드된다.
+
+### Korean Typography
+
+**필수 폰트 스택:**
+```css
+font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+```
+- Pretendard가 한국어 본문의 기본 폰트 (CDN 필수)
+- 영문 디스플레이 헤딩은 Geist, Outfit, Cabinet Grotesk, Satoshi 중 선택 가능
+- `@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.min.css');`
+
+**한국어 텍스트 필수 속성:**
+
+| 속성 | 값 | 이유 |
+|------|-----|------|
+| `word-break` | `keep-all` (Tailwind: `break-keep-all`) | 한글 음절 중간 줄바꿈 방지 |
+| `line-height` (heading) | `leading-tight` ~ `leading-snug` | 한글은 라틴보다 수직 여백 필요 (`leading-none` 금지) |
+| `line-height` (body) | `leading-relaxed` | 한글 본문 가독성 확보 |
+| `text-wrap` (heading) | `balance` | 제목 끝 고아 단어(orphan) 방지 |
+| `font-variant-numeric` | `tabular-nums` | 가격/통계 정렬용 고정폭 숫자 |
+| `max-width` (body) | `max-w-[65ch]` | 한국어 본문 최적 줄 길이 |
+
+**금지 폰트 (한국어 프로젝트):**
+- Noto Sans KR — Pretendard로 대체
+- Inter, Roboto, Arial, Open Sans, Helvetica, Malgun Gothic
+
+### Korean Copywriting Rules
+
+**톤 & 존칭:**
+- 합니다/하세요 체 일관 유지 — 반말과 존댓말 혼용 금지
+- 번역투 금지: "시작을 하세요 지금" → "지금 시작하세요" (자연스러운 어순)
+
+**CTA 패턴 (검증된 한국어 전환율 패턴):**
+- "무료로 시작하기", "3분만에 만들어보기", "지금 바로 체험하기"
+- 동사 종결형 + 구체적 혜택/시간 조합
+
+**금지 카피 패턴 (AI 클리셰):**
+
+| 금지 표현 | 대체 방향 |
+|-----------|----------|
+| "혁신적인" | 구체적 기능/결과를 명시 |
+| "획기적인" | 수치 기반 차별점 서술 |
+| "차세대" | 기존 대비 개선점 구체화 |
+| "원활한" | 실제 사용 경험 묘사 |
+| "게임 체인저" | 한국어 표현으로 대체 |
+| "솔루션" (단독 사용) | 구체적 문제 해결 방식 서술 |
+
+**소셜 프루프 & 숫자:**
+- 반올림 숫자 금지: "50,000+" → "47,200+", "5.0" → "4.87"
+- 자연스러운 지표: "47,200+ 페이지 생성", "4.87/5.0 만족도"
+
+**이름 & 브랜드:**
+- 기본 플레이스홀더: 한국어 (Lorem Ipsum 금지)
+- 현실적 이름: "하윤서", "박도현", "이서진" (김철수/이영희 금지)
+- 프리미엄 가상 브랜드: "스텔라랩스", "베리파이", "루미너스", "플로우캔버스"
+
+### Korean Mobile-First Rules
+
+한국 웹 트래픽의 70%+가 모바일. 아래 규칙을 강제 적용:
+
+| 규칙 | 구현 | 이유 |
+|------|------|------|
+| Dynamic viewport | `min-h-[100dvh]` | iOS Safari 주소창 리사이즈 대응 (`h-screen` 금지) |
+| 모바일 우선 설계 | `grid-cols-1` → `md:grid-cols-2` → `lg:grid-cols-3` | 모바일에서 먼저 완성, 데스크톱으로 확장 |
+| CTA 최소 높이 | `min-h-[48px]` + `px-8 py-4 text-lg` | 모바일 터치 타겟 확보 |
+| 컨테이너 | `max-w-7xl mx-auto px-4 sm:px-6 lg:px-8` | 일관된 좌우 여백 |
+| HTML lang | `lang="ko"` | 스크린리더 + SEO |
+
+### Korean Design Anti-Patterns
+
+| 카테고리 | 금지 | 대안 |
+|----------|------|------|
+| 색상 | 보라/파랑 "AI 그라데이션", 네온 글로우 | 단일 액센트 (채도 < 80%) |
+| 배경 | 순수 `#000000` | `#0a0a0a`, `zinc-950`, `slate-950` |
+| 레이아웃 | 3열 동일 카드 반복 | 벤토 그리드, 지그재그, 비대칭 |
+| 레이아웃 | 매 섹션 동일 패턴 | 인접 섹션마다 다른 레이아웃 |
+| 이미지 | Unsplash URL (깨짐) | `picsum.photos/seed/{name}/{w}/{h}` |
+| 아바타 | 기본 placeholder | `i.pravatar.cc/150?u={name}` |
+| 콘텐츠 | 이모지를 UI 아이콘으로 사용 | SVG 아이콘 (Iconify Solar, Lucide, Heroicons) |
+| 트랜지션 | `linear`, `ease-in-out` | `ease-out` (진입), `ease-in` (퇴장) |
+
+### Design Variance Parameters
+
+프로젝트 요구사항에 따라 조절 가능한 디자인 파라미터.
+`--design-system` 실행 시 또는 프로젝트 `MASTER.md`에 명시:
+
+```
+DESIGN_VARIANCE: 8    (1=완전 대칭, 10=비대칭 아트)
+MOTION_INTENSITY: 6   (1=정적, 10=시네마틱)
+VISUAL_DENSITY: 3     (1=에어리/갤러리, 10=데이터 집약)
+LANDING_PURPOSE: conversion  (conversion | brand | portfolio | saas | ecommerce)
+```
+
+- `DESIGN_VARIANCE > 4` → 중앙 정렬 히어로 금지 (스플릿 스크린, 비대칭 권장)
+- `MOTION_INTENSITY > 5` → IntersectionObserver 스크롤 애니메이션 활성화
+- `VISUAL_DENSITY < 4` → 섹션 간 `py-24 md:py-32 lg:py-40` 여백
+
+---
+
+## Premium Component Patterns
+
+에이전시급 품질의 공통 UI 패턴. 한국/글로벌 공통 적용.
+
+### Double-Bezel Card
+
+"유리 위의 금속" 느낌. 외부 쉘 + 내부 코어 2중 구조:
+
+```html
+<!-- Outer shell -->
+<div class="bg-white/5 ring-1 ring-white/10 p-1.5 rounded-[2rem]">
+  <!-- Inner core -->
+  <div class="bg-zinc-900/80 rounded-[calc(2rem-0.375rem)]
+              shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]
+              p-6">
+    <!-- content -->
+  </div>
+</div>
+```
+
+### Floating Glass Navigation
+
+상단 고정 바 대신 부유하는 필(pill) 내비게이션:
+
+```html
+<nav class="fixed top-4 left-1/2 -translate-x-1/2 z-40
+            w-max rounded-full backdrop-blur-xl
+            bg-white/10 border border-white/10
+            px-6 py-3">
+  <!-- nav items -->
+</nav>
+```
+
+### Magnetic CTA Button
+
+스프링 물리 기반 호버/클릭 피드백:
+
+```html
+<button class="rounded-full px-8 py-4 bg-accent text-white
+               transition-all duration-500
+               [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
+               hover:scale-[1.02] active:scale-[0.98]">
+  <span>시작하기</span>
+  <span class="ml-2 inline-flex w-8 h-8 rounded-full bg-black/5
+               items-center justify-center
+               transition-transform duration-300
+               group-hover:translate-x-1">→</span>
+</button>
+```
+
+### Scroll Reveal Animation
+
+IntersectionObserver 기반 진입 애니메이션 (stagger):
+
+```css
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(2rem); filter: blur(4px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+```
+- 형제 요소 간 `animation-delay: calc(var(--index) * 80ms)` 적용
+- GPU 안전: `transform`과 `opacity`만 애니메이션
+- `backdrop-blur`는 fixed/sticky 요소에만 사용
+
+### Eyebrow Tag
+
+섹션 상단 카테고리 라벨:
+
+```html
+<span class="inline-block rounded-full px-3 py-1
+             text-[11px] uppercase tracking-[0.15em]
+             bg-accent/10 text-accent">
+  카테고리
+</span>
+```
+
+### Spatial Standards
+
+| 요소 | 값 |
+|------|-----|
+| 섹션 간 여백 | `py-24 md:py-32 lg:py-40` |
+| Z-index: nav | 40 |
+| Z-index: overlay | 50 |
+| Z-index: decorative | 60 |
+| 노이즈/그레인 텍스처 | `position: fixed; pointer-events: none` |
+| 모바일 접힘 | `w-full px-4 py-8` (< 768px) |
