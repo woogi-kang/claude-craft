@@ -1,6 +1,6 @@
 ---
 name: ckm:slides
-description: Create strategic HTML presentations with Chart.js, design tokens, responsive layouts, copywriting formulas, and contextual slide strategies.
+description: "전략적 HTML 프레젠테이션 — Chart.js, 디자인 토큰, 반응형 레이아웃 기반 슬라이드"
 argument-hint: "[topic] [slide-count]"
 metadata:
   author: claudekit

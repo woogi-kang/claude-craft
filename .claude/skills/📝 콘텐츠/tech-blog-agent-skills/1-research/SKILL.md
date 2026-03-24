@@ -1,12 +1,11 @@
 ---
 name: blog-research
-description: |
-  Research skill for tech blog writing.
-  Gathers information from web searches and local codebase analysis.
-  Activated by: "/blog-research [topic]" or "research [topic] for blog"
+description: "기술 블로그 리서치 — 주제 분석, 참고 자료 수집, SEO 키워드 조사"
 ---
 
 # Blog Research Skill
+
+Extends: `../../_shared/research/SKILL.md` (공통 리서치 프로세스 참조)
 
 Researches topics for woogi's tech blog posts using web search and code analysis.
 

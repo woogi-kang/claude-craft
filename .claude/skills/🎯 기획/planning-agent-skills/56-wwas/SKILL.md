@@ -1,6 +1,6 @@
 ---
 name: wwas
-description: "Create product backlog items in Why-What-Acceptance format — independent, valuable, testable items with strategic context. Use when writing structured backlog items, breaking features into work items, or using the WWA format."
+description: "WWAS 백로그 — Why-What-Acceptance 형식의 독립적/검증 가능한 백로그 생성"
 ---
 # Why-What-Acceptance (WWA)
 

@@ -1,6 +1,6 @@
 ---
 name: porters-five-forces
-description: "Perform Porter's Five Forces analysis — competitive rivalry, supplier power, buyer power, threat of substitutes, and threat of new entrants. Use when analyzing industry dynamics, assessing competitive forces, or evaluating market attractiveness."
+description: "포터 5 Forces 분석 — 경쟁 강도, 공급자/구매자 파워, 대체재/진입 위협"
 ---
 # Porter's Five Forces
 

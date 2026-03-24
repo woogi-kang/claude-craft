@@ -1,6 +1,6 @@
 ---
 name: ckm:design
-description: "Comprehensive design skill: brand identity, design tokens, UI styling, logo generation (55 styles, Gemini AI), corporate identity program (50 deliverables, CIP mockups), HTML presentations (Chart.js), banner design (22 styles, social/ads/web/print), icon design (15 styles, SVG, Gemini 3.1 Pro), social photos (HTML→screenshot, multi-platform). Actions: design logo, create CIP, generate mockups, build slides, design banner, generate icon, create social photos, social media images, brand identity, design system. Platforms: Facebook, Twitter, LinkedIn, YouTube, Instagram, Pinterest, TikTok, Threads, Google Ads."
+description: "종합 디자인 스킬 — 브랜드 아이덴티티, 로고, CIP, 배너, 아이콘, 소셜 이미지 생성"
 argument-hint: "[design-type] [context]"
 license: MIT
 metadata:
@@ -10,7 +10,43 @@ metadata:
 
 # Design
 
-Unified design skill: brand, tokens, UI, logo, CIP, slides, banners, social photos, icons.
+종합 디자인 오케스트레이터. 요청을 분석하여 적절한 전문 스킬로 분배하고, CIP/슬라이드/아이콘/소셜 포토는 자체 처리한다.
+
+## 범위 (Scope)
+
+**이 스킬의 핵심 역할:**
+- **오케스트레이션** — 종합 디자인 요청을 적절한 전문 스킬로 라우팅
+- **CIP (Corporate Identity Program)** — 명함, 레터헤드, 봉투 등 50+ 기업 아이덴티티 산출물
+- **슬라이드/프레젠테이션** — Chart.js 기반 HTML 발표자료
+- **아이콘 생성** — SVG 아이콘 (Gemini 3.1 Pro)
+- **소셜 포토** — 멀티 플랫폼 소셜 이미지 (HTML → 스크린샷)
+- **브랜드 패키지 워크플로우** — 로고 → CIP → 배너 전체 파이프라인 조율
+
+**이 스킬이 직접 처리하지 않는 것:**
+- UI 컴포넌트 코드 작성 → `ui-styling`
+- 스타일/컬러/폰트 의사결정 → `ui-ux-pro-max`
+- 디자인 토큰/CSS 변수 → `design-system`
+- 로고 생성 → `logo-creator`
+- 배너 디자인 → `banner-design`
+
+## 위임 (Delegates to)
+
+| 요청 내용 | 위임 대상 | 조건 |
+|-----------|-----------|------|
+| 로고가 필요한 경우 | `logo-creator` | CIP 작업 전 로고가 없을 때 |
+| 배너/커버/헤더 요청 | `banner-design` | 배너 전용 요청 시 |
+| 브랜드 정의 (보이스, 톤) | `brand` | 브랜드 가이드가 없을 때 |
+| 토큰/CSS 변수 필요 | `design-system` | 슬라이드에 토큰 시스템 적용 시 |
+| UI 코드 구현 | `ui-styling` | HTML/CSS 컴포넌트 코딩 시 |
+| 디자인 리서치/스타일 선택 | `ui-ux-pro-max` | 소셜 포토 아트 디렉션 시 |
+
+## 이 스킬을 사용하지 않는 경우
+
+- 로고만 만들 때 → `logo-creator` 직접 호출
+- 배너만 만들 때 → `banner-design` 직접 호출
+- UI 컴포넌트를 코딩할 때 → `ui-styling` 직접 호출
+- 스타일/컬러/폰트를 추천받을 때 → `ui-ux-pro-max` 직접 호출
+- 디자인 토큰을 정의할 때 → `design-system` 직접 호출
 
 ## When to Use
 

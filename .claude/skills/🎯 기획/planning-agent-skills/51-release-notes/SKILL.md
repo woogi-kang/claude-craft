@@ -1,6 +1,6 @@
 ---
 name: release-notes
-description: "Generate user-facing release notes from tickets, PRDs, or changelogs. Creates clear, engaging summaries organized by category (new features, improvements, fixes). Use when writing release notes, creating changelogs, announcing product updates, or summarizing what shipped."
+description: "릴리즈 노트 생성 — 티켓/PRD/변경 로그 기반 사용자향 릴리즈 요약"
 ---
 
 ## Release Notes Generator

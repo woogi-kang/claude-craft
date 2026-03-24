@@ -8,6 +8,8 @@ metadata:
 ---
 # Architecture Skill
 
+Extends: `../../_shared/architecture/SKILL.md` (공통 아키텍처 원칙 참조)
+
 Clean Architecture 기반 프로젝트 구조를 설계합니다.
 
 ## Triggers

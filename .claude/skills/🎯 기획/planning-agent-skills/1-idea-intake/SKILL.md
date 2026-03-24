@@ -1,6 +1,6 @@
 ---
 name: brainstorm-ideas-existing
-description: "Brainstorm product ideas for an existing product using multi-perspective ideation from PM, Designer, and Engineer viewpoints. Use when generating new feature ideas, brainstorming solutions for an identified opportunity, or ideating with a product trio."
+description: "기존 제품 아이디어 브레인스토밍 — PM/디자이너/엔지니어 멀티 관점 아이디에이션"
 ---
 
 ## Brainstorm Product Ideas (Existing Product)

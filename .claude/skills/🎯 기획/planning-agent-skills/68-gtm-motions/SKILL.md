@@ -1,6 +1,6 @@
 ---
 name: gtm-motions
-description: "Identify the best GTM motions and tools across 7 motion types: Inbound, Outbound, Paid Digital, Community, Partners, ABM, and PLG. Use when selecting marketing channels, choosing between inbound and outbound strategy, or planning cross-channel campaigns."
+description: "GTM 모션 식별 — 인바운드/아웃바운드/유료/커뮤니티 등 7개 모션 전략"
 ---
 # GTM Motions
 

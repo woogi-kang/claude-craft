@@ -1,6 +1,6 @@
 ---
 name: swot-analysis
-description: "Perform a detailed SWOT analysis — strengths, weaknesses, opportunities, and threats with actionable recommendations. Use when doing strategic assessment, competitive analysis, or evaluating a product or business position."
+description: "SWOT 분석 — 강점/약점/기회/위협 상세 분석과 실행 가능한 권고안"
 ---
 # SWOT Analysis
 

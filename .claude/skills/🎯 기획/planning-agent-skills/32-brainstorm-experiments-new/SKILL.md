@@ -1,6 +1,6 @@
 ---
 name: brainstorm-experiments-new
-description: "Design lean startup experiments (pretotypes) for a new product. Creates XYZ hypotheses and suggests low-effort validation methods like landing pages, explainer videos, and pre-orders. Use when validating a new product idea, creating pretotypes, or testing market demand."
+description: "신규 제품 린스타트업 실험 — XYZ 가설과 프리토타입 기반 검증 설계"
 ---
 
 ## Design Lean Startup Experiments (New Product)

@@ -8,6 +8,8 @@ metadata:
 ---
 # Design System Skill
 
+Extends: `../../../design-system/SKILL.md` (공통 디자인 시스템 토큰 아키텍처 참조)
+
 shadcn/ui + Tailwind CSS v4 기반 디자인 시스템을 구성합니다.
 
 > **Reference**: `_references/UI-GUIDELINES.md` - UI 접근성 및 성능 가이드라인 참조

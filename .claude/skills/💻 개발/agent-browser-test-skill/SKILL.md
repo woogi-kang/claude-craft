@@ -1,9 +1,6 @@
 ---
 name: agent-browser-test
-description: |
-  Vercel agent-browser CLI를 활용한 AI 친화적 E2E 테스트 자동화 스킬.
-  접근성 트리 기반 Refs 시스템으로 결정론적 요소 선택.
-  "e2e 테스트", "브라우저 테스트", "agent-browser" 요청에 반응.
+description: "Vercel agent-browser 기반 E2E 테스트 — 접근성 트리 Refs 시스템 활용"
 triggers:
   - "agent-browser"
   - "e2e 테스트"

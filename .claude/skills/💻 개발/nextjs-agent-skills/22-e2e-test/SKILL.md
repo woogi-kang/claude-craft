@@ -8,6 +8,8 @@ metadata:
 ---
 # E2E Test Skill
 
+Extends: `../../_shared/e2e-test/SKILL.md` (공통 E2E 테스트 원칙 참조)
+
 Playwright를 사용하여 E2E 테스트를 작성합니다.
 
 ## Triggers

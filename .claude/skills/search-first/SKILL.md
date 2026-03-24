@@ -1,9 +1,6 @@
 ---
 name: search-first
-description: |
-  구현 전 기존 솔루션 탐색을 강제하는 스킬.
-  새 코드를 작성하기 전에 패키지, MCP 서버, 기존 스킬, GitHub를 먼저 확인.
-  "search first", "기존 솔루션", "바퀴 재발명 방지" 요청에 반응.
+description: "구현 전 기존 솔루션 탐색 — 패키지, MCP 서버, 스킬, GitHub 우선 검색"
 metadata:
   category: "standalone"
   version: "1.0.0"

@@ -1,9 +1,6 @@
 ---
 name: ppt-structure
-description: |
-  검증된 데이터를 바탕으로 PPT의 스토리라인과 논리 구조를 설계하는 Skill.
-  청중 분석, 핵심 메시지 도출, 슬라이드 아웃라인 구성 시 활성화.
-  "구조 잡아줘", "스토리라인 만들어줘", "아웃라인 설계해줘" 등의 요청에 반응.
+description: "PPT 구조 설계 — 슬라이드 순서, 섹션 구성, 스토리 아크 기획"
 ---
 
 # PPT Structure Skill

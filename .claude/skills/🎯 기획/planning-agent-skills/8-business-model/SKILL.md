@@ -1,6 +1,6 @@
 ---
 name: business-model
-description: "Generate a Business Model Canvas with all 9 building blocks. Use when creating a business model, documenting how a business creates value, or analyzing an existing business model."
+description: "비즈니스 모델 캔버스 — 9개 빌딩 블록으로 사업 모델 문서화"
 ---
 # Business Model Canvas
 

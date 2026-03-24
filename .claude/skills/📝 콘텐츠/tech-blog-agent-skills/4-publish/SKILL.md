@@ -1,9 +1,6 @@
 ---
 name: blog-publish
-description: |
-  Publishing skill for Hashnode blog.
-  Publishes approved drafts via Hashnode GraphQL API.
-  Activated by: "/blog-publish" or "publish the post"
+description: "기술 블로그 발행 — Hashnode 등 플랫폼 발행 준비 및 메타데이터 설정"
 ---
 
 # Blog Publish Skill

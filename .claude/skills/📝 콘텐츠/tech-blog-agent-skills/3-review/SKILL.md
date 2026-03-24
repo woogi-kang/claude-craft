@@ -1,9 +1,6 @@
 ---
 name: blog-review
-description: |
-  Interactive review skill for blog post drafts.
-  Presents draft for feedback, processes edits, and refines content.
-  Activated by: "/blog-review" or "review the draft"
+description: "기술 블로그 리뷰 — 정확성/가독성/SEO/톤앤매너 종합 검수"
 ---
 
 # Blog Review Skill

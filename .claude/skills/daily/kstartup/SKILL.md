@@ -1,10 +1,6 @@
 ---
 name: daily-kstartup
-description: >
-  K-Startup (k-startup.go.kr) announcement crawler skill.
-  Fetches business announcements via curl + Python HTML parsing.
-  Supports multi-page crawling, date filtering, and category grouping.
-  Server-side rendered pages, no browser automation needed.
+description: "K-Startup 사업공고 크롤링 — 창업지원 공고 수집 및 카테고리별 분류"
 license: Apache-2.0
 compatibility: Designed for Claude Code
 allowed-tools: Bash Read

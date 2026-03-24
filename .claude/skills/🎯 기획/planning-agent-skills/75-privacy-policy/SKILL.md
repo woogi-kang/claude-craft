@@ -1,6 +1,6 @@
 ---
 name: privacy-policy
-description: "Draft a detailed privacy policy covering data types, jurisdiction, GDPR and compliance considerations, and clauses needing legal review. Use when creating a privacy policy, updating data protection documentation, or preparing for compliance."
+description: "개인정보 처리방침 초안 — 데이터 유형, 관할권, GDPR 준수 조항 작성"
 ---
 # Privacy Policy Generator
 

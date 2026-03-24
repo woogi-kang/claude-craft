@@ -1,6 +1,6 @@
 ---
 name: summarize-meeting
-description: "Summarize a meeting transcript into structured notes with date, participants, topic, key decisions, summary points, and action items. Use when processing meeting recordings, creating meeting notes, writing meeting minutes, or recapping discussions."
+description: "회의록 요약 — 날짜/참석자/주제/핵심 결정/요약/액션 아이템 구조화"
 ---
 
 # Summarize Meeting

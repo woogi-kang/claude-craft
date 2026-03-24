@@ -13,6 +13,8 @@ description: |
 
 # 1. Research: 트렌드 & 소재 리서치
 
+Extends: `../../_shared/research/SKILL.md` (공통 리서치 프로세스 참조)
+
 ## 핵심 기능
 
 ### 1. trend_monitoring: 실시간 트렌드 분석

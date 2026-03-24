@@ -96,11 +96,12 @@
 
 | 키워드 | 스킬 | 설명 |
 |--------|------|------|
-| UI 구현, 컴포넌트, shadcn, Tailwind, 다크모드 | `ui-ux-pro-max` | 10개 스택 대응 UI/UX 인텔리전스 |
-| 디자인 시스템, 토큰, 컴포넌트 스펙 | `design-system` | 3-레이어 토큰 아키텍처 |
-| 로고 만들기, logo, brand mark, favicon, 앱 아이콘 | `logo-creator` | AI 로고 생성 전용 (배치 20개 + 프리뷰 + 후처리) |
-| 브랜드 아이덴티티, CIP, 배너, 아이콘 | `design` | 종합 디자인 (CIP, 배너, 아이콘 등) |
-| 배너, 소셜 배너, 광고 배너 | `banner-design` | 22가지 스타일 배너 디자인 |
+| 스타일 추천, 컬러 팔레트, 폰트 페어링, UX 리뷰, 접근성 검토, 디자인 의사결정 | `ui-ux-pro-max` | 설계 단계: 무엇을 만들지 결정 (스타일/컬러/폰트/UX) |
+| shadcn, Tailwind, 컴포넌트 코드, 다크모드 구현, 반응형 구현 | `ui-styling` | 구현 단계: shadcn/ui + Tailwind CSS 코드 작성 |
+| 디자인 토큰, CSS 변수, 컴포넌트 스펙, 토큰 검증 | `design-system` | 시스템 단계: 3-레이어 토큰 아키텍처 정의 |
+| 로고 만들기, logo, brand mark, favicon, 앱 아이콘 | `logo-creator` | 전문 특화: AI 로고 생성 End-to-End |
+| 배너, 소셜 배너, 광고 배너, 커버, 헤더 이미지 | `banner-design` | 전문 특화: 22가지 스타일 배너 디자인 |
+| CIP, 명함, 레터헤드, 아이콘 생성, 소셜 포토, 브랜드 패키지 | `design` | 오케스트레이터: CIP/아이콘/소셜포토 자체 처리 + 라우팅 |
 | 슬라이드, 프레젠테이션 | `slides` | Chart.js 기반 HTML 프레젠테이션 |
 | 브랜드 보이스, 톤앤매너, 메시징 | `brand` | 브랜드 일관성 관리 |
 | LinkedIn, Twitter, SNS, 바이럴, 게시물 | `social-content` | 소셜 미디어 콘텐츠 제작 |

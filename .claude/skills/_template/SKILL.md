@@ -1,8 +1,6 @@
 ---
 name: skill-name
-description: |
-  One-line description of what this skill does.
-  When to use: specific triggers or use cases.
+description: "스킬 템플릿 — 새 스킬 생성 시 복사하여 사용하는 기본 구조"
 argument-hint: "[optional-args]"
 metadata:
   category: "💻 개발|🎯 기획|🎨 디자인|📝 콘텐츠|📣 마케팅|⚖️ 법무|💰 재무|standalone"

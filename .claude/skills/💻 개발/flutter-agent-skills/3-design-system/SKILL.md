@@ -8,6 +8,8 @@ metadata:
 ---
 # Design System Skill
 
+Extends: `../../../design-system/SKILL.md` (공통 디자인 시스템 토큰 아키텍처 참조)
+
 Atomic Design 기반 디자인 시스템을 구축합니다.
 
 ## Triggers

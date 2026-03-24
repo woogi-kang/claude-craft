@@ -1,11 +1,45 @@
 ---
 name: ui-ux-pro-max
-description: "UI/UX design intelligence for web and mobile. Includes 50+ styles, 161 color palettes, 57 font pairings, 161 product types, 99 UX guidelines, and 25 chart types across 10 stacks (React, Next.js, Vue, Svelte, SwiftUI, React Native, Flutter, Tailwind, shadcn/ui, and HTML/CSS). Actions: plan, build, create, design, implement, review, fix, improve, optimize, enhance, refactor, and check UI/UX code. Projects: website, landing page, dashboard, admin panel, e-commerce, SaaS, portfolio, blog, and mobile app. Elements: button, modal, navbar, sidebar, card, table, form, and chart. Styles: glassmorphism, claymorphism, minimalism, brutalism, neumorphism, bento grid, dark mode, responsive, skeuomorphism, and flat design. Topics: color systems, accessibility, animation, layout, typography, font pairing, spacing, interaction states, shadow, and gradient. Integrations: shadcn/ui MCP for component search and examples."
+description: "웹/모바일 UI/UX 디자인 인텔리전스 — 50+ 스타일, 161 팔레트, 10개 스택 대응"
 ---
 
 # UI/UX Pro Max - Design Intelligence
 
 Comprehensive design guide for web and mobile applications. Contains 50+ styles, 161 color palettes, 57 font pairings, 161 product types with reasoning rules, 99 UX guidelines, and 25 chart types across 10 technology stacks. Searchable database with priority-based recommendations.
+
+## 범위 (Scope)
+
+**이 스킬의 핵심 역할: 설계 단계 (PLANNING)**
+- **스타일 추천** — 제품 유형/산업에 맞는 UI 스타일 선택 (50+ 스타일)
+- **컬러 팔레트** — 161개 팔레트에서 최적 컬러 시스템 추천
+- **폰트 페어링** — 57개 폰트 조합 추천 (Google Fonts 포함)
+- **UX 가이드라인** — 99개 규칙 기반 접근성/인터랙션/레이아웃 검증
+- **디자인 시스템 생성** — `--design-system` 플래그로 종합 추천 생성
+- **UX 리뷰** — 기존 UI의 품질/접근성/사용성 검토
+- **차트/데이터 시각화** — 25개 차트 타입 추천
+
+**이 스킬이 직접 처리하지 않는 것:**
+- shadcn/ui 컴포넌트 코드 작성 → `ui-styling`
+- Tailwind CSS 실제 구현 → `ui-styling`
+- 디자인 토큰 정의/검증 → `design-system`
+- CSS 변수 시스템 구축 → `design-system`
+- 로고/배너/CIP/아이콘 생성 → `design`, `logo-creator`, `banner-design`
+
+## 위임 (Delegates to)
+
+| 요청 내용 | 위임 대상 | 조건 |
+|-----------|-----------|------|
+| 추천한 스타일을 코드로 구현 | `ui-styling` | 설계 완료 후 구현 단계 |
+| 토큰 아키텍처 구축 | `design-system` | 추천한 컬러/폰트를 토큰화할 때 |
+| 로고/배너/CIP 제작 | `design`, `logo-creator`, `banner-design` | 비주얼 에셋 생성 시 |
+
+## 이 스킬을 사용하지 않는 경우
+
+- shadcn/ui 컴포넌트를 설치/코딩할 때 → `ui-styling`
+- Tailwind 유틸리티 클래스로 스타일링할 때 → `ui-styling`
+- 디자인 토큰을 JSON/CSS로 정의할 때 → `design-system`
+- 로고/배너/CIP/명함을 만들 때 → `logo-creator`, `banner-design`, `design`
+- 순수 백엔드/API/인프라 작업일 때 → 이 스킬 불필요
 
 ## When to Apply
 

@@ -1,9 +1,6 @@
 ---
 name: autonomous-loops
-description: |
-  자율 에이전트 루프 패턴 아키텍처 레퍼런스.
-  6가지 루프 패턴과 의사결정 매트릭스를 제공.
-  자율 작업, 루프, 배치 처리, 병렬 실행 설계 시 참조.
+description: "자율 에이전트 루프 패턴 레퍼런스 — 6가지 루프 패턴과 의사결정 매트릭스 제공"
 metadata:
   category: "standalone"
   version: "1.0.0"

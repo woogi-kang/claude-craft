@@ -8,6 +8,8 @@ metadata:
 ---
 # Unit Test Skill
 
+Extends: `../../_shared/unit-test/SKILL.md` (공통 테스트 원칙 참조)
+
 pytest를 활용한 유닛 테스트를 구현합니다.
 
 ## Triggers

@@ -1,9 +1,6 @@
 ---
 name: remotion-video-production
-description: |
-  Remotion 기반 영상 제작과 오디오 편집을 위한 Skill.
-  React/Remotion으로 입장곡 편집, 자막 영상, 장면 전환, 음성/효과음, 데이터 시각화, Lottie/3D/지도 장면, 렌더링 설정을 구현할 때 사용.
-  "remotion", "리모션", "입장곡 편집", "오디오 페이드", "fade in", "fade out", "bgm 편집", "자막 영상", "transition", "Sequence", "calculateMetadata", "voiceover" 요청에 반응.
+description: "Remotion 영상 제작 — React 기반 자막/전환/오디오/데이터 시각화 영상 구현"
 metadata:
   version: 1.0.0
   source: remotion-dev/remotion/packages/skills@4186404 (v4.0.435), adapted

@@ -1,9 +1,6 @@
 ---
 name: ppt-image-gen
-description: |
-  PPT 슬라이드용 AI 이미지 생성 Skill. Gemini CLI(Nano Banana)를 활용하여
-  프레젠테이션에 최적화된 비주얼 이미지를 자동 생성합니다.
-  모든 슬라이드에 대해 테마와 일관된 스타일의 이미지를 생성하고 저장합니다.
+description: "PPT 이미지 생성 — AI 기반 프레젠테이션용 이미지/차트 자동 생성"
 triggers:
   - "이미지 생성"
   - "비주얼 만들어"

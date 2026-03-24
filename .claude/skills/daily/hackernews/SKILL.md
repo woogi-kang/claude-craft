@@ -1,9 +1,6 @@
 ---
 name: daily-hackernews
-description: >
-  Hacker News top stories crawler using Firebase API.
-  Fetches top/best/new stories with scores, comments, and links.
-  Pure Python with urllib, no dependencies required.
+description: "Hacker News 톱 스토리 크롤링 — Firebase API로 최신 기술 뉴스 수집"
 license: Apache-2.0
 compatibility: Designed for Claude Code
 allowed-tools: Bash

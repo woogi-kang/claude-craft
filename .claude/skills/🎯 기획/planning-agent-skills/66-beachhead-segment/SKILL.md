@@ -1,6 +1,6 @@
 ---
 name: beachhead-segment
-description: "Identify the first beachhead market segment for a product launch. Evaluates segments against burning pain, willingness to pay, winnable market share, and referral potential. Use when choosing a first market, targeting an initial customer segment, or planning market entry strategy."
+description: "비치헤드 세그먼트 선정 — 첫 시장 진입점의 고통/지불의향/도달성 평가"
 ---
 # Beachhead Segment
 

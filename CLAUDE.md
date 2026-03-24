@@ -9,6 +9,9 @@ Claude Code, Gemini CLI, Codex CLI, OpenCode에서 동일한 에이전트/스킬
 .claude/
 ├── agents/      # 도메인 에이전트 (8개 카테고리)
 ├── skills/      # 스킬 원본 (Single Source of Truth)
+│   ├── {카테고리}/_shared/  # 공유 스킬 (에이전트 간 중복 제거)
+│   │                        # 💻 개발: project-setup, architecture, unit-test, e2e-test, cicd, performance
+│   │                        # 📝 콘텐츠: research, validation
 ├── commands/    # 슬래시 커맨드 (18개)
 ├── hooks/       # 라이프사이클 훅 (3개)
 ├── rules/       # 모듈형 규칙 (common, python, typescript)

@@ -1,6 +1,6 @@
 ---
 name: ckm:banner-design
-description: "Design banners for social media, ads, website heroes, creative assets, and print. Multiple art direction options with AI-generated visuals. Actions: design, create, generate banner. Platforms: Facebook, Twitter/X, LinkedIn, YouTube, Instagram, Google Display, website hero, print. Styles: minimalist, gradient, bold typography, photo-based, illustrated, geometric, retro, glassmorphism, 3D, neon, duotone, editorial, collage. Uses ui-ux-pro-max, frontend-design, ai-artist, ai-multimodal skills."
+description: "멀티 포맷 배너 디자인 — 소셜/광고/웹/인쇄용 22가지 스타일 배너 생성"
 argument-hint: "[platform] [style] [dimensions]"
 license: MIT
 metadata:
@@ -11,6 +11,43 @@ metadata:
 # Banner Design - Multi-Format Creative Banner System
 
 Design banners across social, ads, web, and print formats. Generates multiple art direction options per request with AI-powered visual elements. This skill handles banner design only. Does NOT handle video editing, full website design, or print production.
+
+## 범위 (Scope)
+
+**이 스킬의 핵심 역할: 배너 전문 특화 (SPECIALIZED)**
+- **소셜 미디어 배너** — Facebook 커버, Twitter/X 헤더, LinkedIn, YouTube 채널 아트
+- **광고 배너** — Google Ads, 디스플레이 광고 (300x250, 728x90 등)
+- **웹사이트 히어로** — 랜딩 페이지 히어로 섹션 비주얼
+- **인쇄 배너** — 300 DPI, CMYK 대응
+- **아트 디렉션** — 22가지 스타일 옵션 (미니멀, 그라디언트, 볼드 타이포 등)
+- **AI 비주얼 생성** — Gemini Flash/Pro로 배경/비주얼 요소 생성
+- **PNG 내보내기** — chrome-devtools 스크린샷으로 정확한 픽셀 크기 출력
+
+**이 스킬이 절대 처리하지 않는 것:**
+- 로고 생성 → `logo-creator`
+- CIP (명함, 레터헤드 등) → `design`
+- UI 컴포넌트 코드 → `ui-styling`
+- 디자인 토큰/시스템 → `design-system`
+- 전체 웹사이트 디자인 → `ui-ux-pro-max` + `ui-styling`
+- 동영상 편집 → 이 스킬 범위 외
+
+## 위임 (Delegates to)
+
+| 요청 내용 | 위임 대상 | 조건 |
+|-----------|-----------|------|
+| 디자인 리서치/스타일 결정 | `ui-ux-pro-max` | 아트 디렉션 리서치 시 |
+| HTML/CSS 배너 제작 | `frontend-design` | HTML 기반 배너 레이아웃 시 |
+| AI 이미지 생성 | `ai-artist`, `ai-multimodal` | 비주얼 요소 생성 시 |
+| 스크린샷 내보내기 | `chrome-devtools` | PNG 익스포트 시 |
+| 브랜드 컨텍스트 주입 | `brand` | 브랜드 가이드 적용 시 |
+
+## 이 스킬을 사용하지 않는 경우
+
+- 로고를 만들 때 → `logo-creator`
+- CIP/명함/레터헤드를 만들 때 → `design`
+- 웹 UI 컴포넌트를 코딩할 때 → `ui-styling`
+- 소셜 포토 (배너가 아닌 게시물 이미지)를 만들 때 → `design`
+- 프레젠테이션/슬라이드를 만들 때 → `design` 또는 `slides`
 
 ## When to Activate
 

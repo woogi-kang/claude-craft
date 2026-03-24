@@ -1,6 +1,6 @@
 ---
 name: brainstorm-ideas-new
-description: "Brainstorm feature ideas for a new product in initial discovery from PM, Designer, and Engineer perspectives. Use when starting product discovery for a new product, exploring features for a startup idea, or doing initial ideation."
+description: "신규 제품 아이디어 브레인스토밍 — PM/디자이너/엔지니어 관점 초기 발견"
 ---
 
 ## Brainstorm Product Ideas (New Product)

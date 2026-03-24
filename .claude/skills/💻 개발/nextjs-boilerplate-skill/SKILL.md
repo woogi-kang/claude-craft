@@ -1,9 +1,6 @@
 ---
 name: nextjs-boilerplate
-description: |
-  Next.js 프로젝트 Boilerplate 생성 Skill.
-  AI 시대에 최적화된 Next.js 15/16 프로젝트 구조를 자동 생성.
-  "Next.js 프로젝트 만들어줘", "보일러플레이트 생성", "새 프로젝트 시작" 등의 요청에 반응.
+description: "Next.js 보일러플레이트 생성 — App Router, 인증, DB, 결제 통합 초기 설정"
 triggers:
   - "next.js 프로젝트"
   - "nextjs 프로젝트"

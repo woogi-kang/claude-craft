@@ -1,9 +1,6 @@
 ---
 name: export-pdf
-description: |
-  HTML 슬라이드를 고품질 PDF로 변환하는 Export Skill.
-  Playwright 브라우저 렌더링 + pdf-lib 병합을 통한 정밀한 출력.
-  "PDF 만들어줘", "PDF 변환", "PDF 출력" 요청 시 활성화.
+description: "PPT PDF 내보내기 — HTML 프레젠테이션을 PDF 파일로 변환"
 ---
 
 # PPT PDF Export Skill

@@ -1,10 +1,6 @@
 ---
 name: daily-blog-idea
-description: >
-  Blog topic idea generator using trending data from multiple sources.
-  Combines HN top stories, dev.to trending articles, and Reddit r/programming.
-  Suggests topics with context, angle, and keywords for blog posts.
-  Pure Python with urllib, no dependencies required.
+description: "블로그 주제 아이디어 생성 — HN, dev.to, Reddit 트렌드 기반 글감 추천"
 license: Apache-2.0
 compatibility: Designed for Claude Code
 allowed-tools: Bash

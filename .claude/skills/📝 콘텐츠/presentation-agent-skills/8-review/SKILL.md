@@ -1,9 +1,6 @@
 ---
 name: ppt-review
-description: |
-  완성된 PPT의 품질을 검토하고 개선점을 도출하는 Skill.
-  맞춤법 검사, 논리 흐름 검증, 디자인 감사, 접근성 체크 시 활성화.
-  "PPT 검토해줘", "품질 체크", "리뷰해줘" 등의 요청에 반응.
+description: "PPT 리뷰 — 콘텐츠/디자인/흐름/접근성 종합 품질 검수"
 ---
 
 # PPT Review Skill

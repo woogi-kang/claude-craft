@@ -1,6 +1,6 @@
 ---
 name: product-name
-description: "Brainstorm 5 unique, memorable product names with rationale aligned to brand values and target audience. Use when naming a new product, rebranding, or exploring product name ideas."
+description: "제품 이름 브레인스토밍 — 브랜드 가치와 타겟 정렬 5개 네이밍 후보"
 ---
 # Product Name
 

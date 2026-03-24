@@ -1,6 +1,6 @@
 ---
 name: retro
-description: "Facilitate a structured sprint retrospective — what went well, what didn't, and prioritized action items with owners and deadlines. Use when running a retrospective, reflecting on a sprint, creating action items from team feedback, or learning how to run effective retros."
+description: "스프린트 회고 — 잘한 점/개선점/액션 아이템 구조화 퍼실리테이션"
 ---
 
 ## Sprint Retrospective Facilitator

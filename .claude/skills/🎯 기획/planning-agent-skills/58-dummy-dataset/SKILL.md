@@ -1,6 +1,6 @@
 ---
 name: dummy-dataset
-description: "Generate realistic dummy datasets for testing with customizable columns, constraints, and output formats (CSV, JSON, SQL, Python script). Use when creating test data, building mock datasets, or generating sample data for development and demos."
+description: "더미 데이터셋 생성 — 커스텀 컬럼/제약 조건, CSV/JSON/SQL 출력"
 ---
 # Dummy Dataset Generation
 

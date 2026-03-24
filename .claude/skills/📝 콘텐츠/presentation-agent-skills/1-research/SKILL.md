@@ -1,12 +1,11 @@
 ---
 name: ppt-research
-description: |
-  PPT 제작을 위한 리서치 및 자료 수집 Skill.
-  웹 검색, 문서 분석, 경쟁사 조사, 통계 데이터 수집 시 활성화.
-  "자료 조사해줘", "트렌드 분석해줘", "경쟁사 PPT 분석" 등의 요청에 반응.
+description: "PPT 리서치 — 주제 심층 분석, 웹 리서치, 경쟁사 조사, 통계 데이터 수집"
 ---
 
 # PPT Research Skill
+
+Extends: `../../_shared/research/SKILL.md` (공통 리서치 프로세스 참조)
 
 PPT 제작을 위한 리서치 및 자료 수집을 담당하는 Skill입니다.
 

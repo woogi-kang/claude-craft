@@ -7,6 +7,8 @@ description: |
 
 # PPT Design System Skill
 
+Extends: `../../../design-system/SKILL.md` (공통 디자인 시스템 토큰 아키텍처 참조)
+
 전문적인 프레젠테이션 디자인을 위한 정밀 시스템입니다.
 **"Less is More"** 철학을 기반으로 불필요한 요소를 제거하고 콘텐츠에 집중합니다.
 

@@ -8,6 +8,8 @@ metadata:
 ---
 # CI/CD Skill
 
+Extends: `../../_shared/cicd/SKILL.md` (공통 CI/CD 원칙 참조)
+
 GitHub Actions와 Vercel을 사용하여 CI/CD를 설정합니다.
 
 ## Triggers

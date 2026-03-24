@@ -1,6 +1,6 @@
 ---
 name: user-stories
-description: "Create user stories following the 3 C's (Card, Conversation, Confirmation) and INVEST criteria with descriptions, design links, and acceptance criteria. Use when writing user stories, breaking down features into backlog items, or defining acceptance criteria."
+description: "유저 스토리 작성 — 3C/INVEST 기준, 디자인 노트, 수용 기준 포함"
 ---
 # User Stories
 

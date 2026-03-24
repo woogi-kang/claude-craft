@@ -1,6 +1,6 @@
 ---
 name: ckm:ui-styling
-description: Create beautiful, accessible user interfaces with shadcn/ui components (built on Radix UI + Tailwind), Tailwind CSS utility-first styling, and canvas-based visual designs. Use when building user interfaces, implementing design systems, creating responsive layouts, adding accessible components (dialogs, dropdowns, forms, tables), customizing themes and colors, implementing dark mode, generating visual designs and posters, or establishing consistent styling patterns across applications.
+description: "UI 스타일링 — shadcn/ui, Tailwind CSS 기반 접근성 높은 인터페이스 구현"
 argument-hint: "[component or layout]"
 license: MIT
 metadata:
@@ -11,6 +11,36 @@ metadata:
 # UI Styling Skill
 
 Comprehensive skill for creating beautiful, accessible user interfaces combining shadcn/ui components, Tailwind CSS utility styling, and canvas-based visual design systems.
+
+## 범위 (Scope)
+
+**이 스킬의 핵심 역할: 구현 단계 (IMPLEMENTATION)**
+- **shadcn/ui 컴포넌트** — 설치, 구성, 조합, 커스터마이징
+- **Tailwind CSS 스타일링** — 유틸리티 클래스 기반 레이아웃/색상/타이포그래피
+- **다크모드 구현** — next-themes + CSS 변수 기반 테마 전환
+- **반응형 레이아웃** — 모바일 퍼스트 브레이크포인트 시스템
+- **접근성 구현** — Radix UI 프리미티브 기반 키보드/스크린리더 지원
+- **캔버스 비주얼 디자인** — HTML Canvas 기반 시각적 구성
+
+**이 스킬이 직접 처리하지 않는 것:**
+- 스타일/컬러/폰트 선택 의사결정 → `ui-ux-pro-max`
+- 디자인 토큰 아키텍처 정의 → `design-system`
+- 로고/배너/CIP/아이콘 제작 → `design`, `logo-creator`, `banner-design`
+
+## 위임 (Delegates to)
+
+| 요청 내용 | 위임 대상 | 조건 |
+|-----------|-----------|------|
+| 어떤 스타일/컬러를 사용할지 모를 때 | `ui-ux-pro-max` | 디자인 의사결정이 필요한 경우 |
+| 토큰 시스템을 정의해야 할 때 | `design-system` | CSS 변수 아키텍처 설계 시 |
+| UX 접근성 검토가 필요할 때 | `ui-ux-pro-max` | 구현 후 UX 리뷰 시 |
+
+## 이 스킬을 사용하지 않는 경우
+
+- 어떤 스타일이 적합한지 추천받고 싶을 때 → `ui-ux-pro-max`
+- 디자인 토큰을 정의하고 검증할 때 → `design-system`
+- 로고/배너/CIP를 만들 때 → `logo-creator`, `banner-design`, `design`
+- UX 리뷰/접근성 감사만 할 때 → `ui-ux-pro-max`
 
 ## Reference
 

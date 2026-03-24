@@ -1,6 +1,6 @@
 ---
 name: prioritize-assumptions
-description: "Prioritize assumptions using an Impact × Risk matrix and suggest experiments for each. Use when triaging a list of assumptions, deciding what to test first, or applying the assumption prioritization canvas."
+description: "가정 우선순위 — Impact x Risk 매트릭스로 가정 트리아지 및 실험 제안"
 ---
 
 ## Prioritize Assumptions

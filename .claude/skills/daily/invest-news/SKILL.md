@@ -1,10 +1,6 @@
 ---
 name: daily-invest-news
-description: >
-  Korean startup investment news crawler.
-  Fetches latest funding rounds from Platum (primary) and VentureSquare (supplementary).
-  Platum investment category is the best source for Korean startup funding news.
-  Pure Python with urllib + regex, no dependencies required.
+description: "한국 스타트업 투자 뉴스 크롤링 — Platum, VentureSquare 펀딩 소식 수집"
 license: Apache-2.0
 compatibility: Designed for Claude Code
 allowed-tools: Bash

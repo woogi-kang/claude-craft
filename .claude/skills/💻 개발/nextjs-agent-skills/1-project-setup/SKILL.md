@@ -8,6 +8,8 @@ metadata:
 ---
 # Project Setup Skill
 
+Extends: `../../_shared/project-setup/SKILL.md` (공통 프로세스 참조)
+
 Next.js 프로젝트 초기 설정 및 의존성 구성을 수행합니다.
 
 ## Triggers

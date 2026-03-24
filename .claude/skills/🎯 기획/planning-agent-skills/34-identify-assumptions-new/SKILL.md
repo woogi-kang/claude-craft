@@ -1,6 +1,6 @@
 ---
 name: identify-assumptions-new
-description: "Identify risky assumptions for a new product idea across 8 risk categories including Go-to-Market, Strategy, and Team. Use when evaluating startup risks, assessing a new product concept, or mapping assumptions for a new venture."
+description: "신규 제품 가정 식별 — GTM/전략/팀 포함 8개 리스크 카테고리 분석"
 ---
 
 ## Identify Assumptions (New Product)

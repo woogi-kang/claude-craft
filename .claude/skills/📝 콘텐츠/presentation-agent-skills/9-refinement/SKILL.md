@@ -1,9 +1,6 @@
 ---
 name: ppt-refinement
-description: |
-  피드백을 분석하고 PPT를 반복적으로 개선하는 Skill.
-  피드백 파싱, 버전 관리, A/B 대안 제시 시 활성화.
-  "피드백 반영해줘", "수정해줘", "대안 보여줘" 등의 요청에 반응.
+description: "PPT 정제 — 피드백 기반 슬라이드 개선 및 디테일 보완"
 ---
 
 # PPT Refinement Skill

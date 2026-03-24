@@ -1,10 +1,6 @@
 ---
 name: blog-draft
-description: |
-  Draft writing skill for tech blog.
-  Creates blog post draft based on research, with woogi's voice and selected tone.
-  Follows STYLE_GUIDE.md for writing patterns inspired by Dan Abramov, Josh Comeau, and Kent C. Dodds.
-  Activated by: "/blog-draft" or "write draft for [topic]"
+description: "기술 블로그 초안 작성 — 구조화된 블로그 글 드래프트 생성"
 ---
 
 # Blog Draft Skill

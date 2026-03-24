@@ -1,6 +1,6 @@
 ---
 name: competitive-battlecard
-description: "Create sales-ready competitive battlecards comparing your product against a specific competitor — positioning, feature comparison, objection handling, and win/loss patterns. Use when preparing sales teams, creating competitive materials, or responding to 'why not competitor X?'"
+description: "경쟁 배틀카드 — 영업용 경쟁사 비교, 포지셔닝, 기능 대비, 반박 포인트"
 ---
 
 ## Competitive Battlecard

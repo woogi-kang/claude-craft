@@ -1,6 +1,6 @@
 ---
 name: gtm-strategy
-description: "Create a go-to-market strategy covering marketing channels, messaging, success metrics, and launch timeline. Use when planning a product launch, creating a GTM plan from scratch, or defining a launch strategy for a new market."
+description: "GTM 전략 수립 — 마케팅 채널, 메시징, 성공 지표, 런칭 타임라인 설계"
 ---
 # GTM Strategy
 

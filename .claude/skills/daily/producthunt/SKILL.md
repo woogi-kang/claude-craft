@@ -1,9 +1,6 @@
 ---
 name: daily-producthunt
-description: >
-  Product Hunt daily launches crawler using Atom feed.
-  Fetches recent featured products with names, taglines, authors, and links.
-  Pure Python with urllib + xml.etree, no dependencies required.
+description: "Product Hunt 신규 런칭 크롤링 — Atom 피드로 피처드 제품 정보 수집"
 license: Apache-2.0
 compatibility: Designed for Claude Code
 allowed-tools: Bash

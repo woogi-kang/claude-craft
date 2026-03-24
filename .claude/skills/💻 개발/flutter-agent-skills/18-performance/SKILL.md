@@ -8,6 +8,8 @@ metadata:
 ---
 # Performance Skill
 
+Extends: `../../_shared/performance/SKILL.md` (공통 성능 최적화 원칙 참조)
+
 성능 최적화를 분석하고 적용합니다.
 
 ## Triggers

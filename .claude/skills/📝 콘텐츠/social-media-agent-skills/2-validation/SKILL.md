@@ -13,6 +13,8 @@ description: |
 
 # 2. Validation: 콘텐츠 검증
 
+Extends: `../../_shared/validation/SKILL.md` (공통 검증 프레임워크 참조)
+
 ## 개요
 
 콘텐츠 발행 전 정확성, 브랜드 일관성, 민감도를 검증하여 리스크를 최소화합니다.

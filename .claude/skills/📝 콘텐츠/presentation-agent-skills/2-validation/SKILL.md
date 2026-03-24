@@ -1,13 +1,11 @@
 ---
 name: ppt-validation
-description: |
-  리서치 단계에서 수집한 데이터의 신뢰성과 정확성을 검증하는 Skill.
-  팩트체크, 출처 검증, 최신성 확인, 교차 검증 시 활성화.
-  "데이터 검증해줘", "팩트체크 해줘", "출처 확인해줘" 등의 요청에 반응.
-  Structure Skill 이전에 반드시 실행되어 탄탄한 기반 확보.
+description: "PPT 자료 검증 — 수집 자료의 신뢰성/최신성/관련성/출처 크로스체크"
 ---
 
 # PPT Validation Skill
+
+Extends: `../../_shared/validation/SKILL.md` (공통 검증 프레임워크 참조)
 
 리서치 단계에서 수집한 데이터의 신뢰성과 정확성을 검증하는 Skill입니다.
 Structure Skill 이전에 반드시 실행되어 탄탄한 데이터 기반을 확보합니다.

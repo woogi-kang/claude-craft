@@ -1,6 +1,6 @@
 ---
 name: lean-canvas
-description: "Generate a Lean Canvas with problem, solution, metrics, cost structure, UVP, unfair advantage, channels, segments, and revenue. Use when exploring a lean startup canvas, testing a business hypothesis, or modeling a new venture."
+description: "린 캔버스 생성 — 문제/솔루션/지표/비용/UVP 등 9개 블록 작성"
 ---
 # Lean Canvas
 

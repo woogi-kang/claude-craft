@@ -1,6 +1,6 @@
 ---
 name: identify-assumptions-existing
-description: "Identify risky assumptions for a feature idea in an existing product across Value, Usability, Viability, and Feasibility. Uses multi-perspective devil's advocate thinking. Use when stress-testing a feature idea, doing risk assessment, or preparing for assumption mapping."
+description: "기존 제품 가정 식별 — 가치/사용성/실행가능성/기술 4개 리스크 카테고리"
 ---
 
 ## Identify Assumptions (Existing Product)

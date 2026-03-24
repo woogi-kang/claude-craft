@@ -1,6 +1,6 @@
 ---
 name: user-segmentation
-description: "Segment users from feedback data based on behavior, JTBD, and needs. Identifies at least 3 distinct user segments. Use when segmenting a user base, analyzing diverse user feedback, or building a segmentation model."
+description: "유저 세그먼테이션 — 피드백 데이터 기반 행동/JTBD/니즈별 세그먼트 분류"
 ---
 
 # User Segmentation

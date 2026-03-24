@@ -8,6 +8,8 @@ metadata:
 ---
 # Unit Test Skill
 
+Extends: `../../_shared/unit-test/SKILL.md` (공통 테스트 원칙 참조)
+
 Vitest를 사용하여 단위 테스트를 작성합니다.
 
 ## Triggers

@@ -1,6 +1,6 @@
 ---
 name: market-segments
-description: "Identify 3-5 potential customer segments with demographics, JTBD, and product fit analysis. Use when exploring market segments, identifying target audiences, evaluating new markets, or learning how to segment a market."
+description: "시장 세그먼트 발굴 — 인구통계/JTBD/제품 핏 기반 3~5개 고객 세그먼트"
 ---
 
 # Market Segments

@@ -8,6 +8,8 @@ metadata:
 ---
 # Performance Skill
 
+Extends: `../../_shared/performance/SKILL.md` (공통 성능 최적화 원칙 참조)
+
 Next.js 애플리케이션 성능을 최적화합니다.
 
 > **Reference**: `_references/REACT-PERF-RULES.md` - Vercel 45개 성능 규칙 참조

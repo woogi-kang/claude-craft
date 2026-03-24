@@ -1,9 +1,6 @@
 ---
 name: eval-harness
-description: |
-  Eval-Driven Development (EDD) 프레임워크.
-  구현 전 pass/fail 기준을 정의하고, pass@k 메트릭으로 품질을 측정.
-  "eval", "평가", "검증 기준", "pass rate" 요청에 반응.
+description: "Eval 기반 개발 프레임워크 — pass/fail 기준 정의와 pass@k 품질 측정"
 metadata:
   category: "standalone"
   version: "1.0.0"
