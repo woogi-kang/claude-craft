@@ -59,3 +59,32 @@ task_template = """
 - 선행 워커들의 handoff.md를 참고하여 테스트 대상 파악
 - tests/ 디렉토리만 수정
 """
+
+[[agents]]
+name = "QA"
+role = "라이브 QA — Playwright로 기능 검증 및 버그 리포트"
+blocked_by = ["Backend", "Frontend", "Tester"]
+task_template = """
+구현된 기능을 Playwright로 라이브 테스트하세요.
+
+## 검증 대상
+- 선행 워커들의 handoff.md에서 구현 내용 확인
+- 각 워커의 success_criteria를 기준으로 테스트
+
+## 도구
+Playwright MCP를 사용하여:
+1. 앱을 브라우저에서 실행하고 접속
+2. 주요 사용자 플로우를 실제로 수행
+3. 각 단계에서 스크린샷 촬영
+4. API 응답 상태 코드 확인
+
+## 판정 기준
+- critical FAIL 1개 → 전체 FAIL
+- major FAIL 2개+ → 전체 FAIL
+- 문제 발견 시 즉시 FAIL로 기록 (자기 설득 금지)
+- 표면적 테스트 금지 — 반드시 사용자 플로우를 끝까지 수행
+
+## 산출물
+- handoff.md에 기준별 PASS/FAIL + 상세 버그 리포트 기록
+- 재작업 필요 항목 목록 (워커별로 분류)
+"""

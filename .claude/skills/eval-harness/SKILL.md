@@ -104,8 +104,21 @@ bash .claude/evals/auth-login/grader.sh input.json output.json
 echo '{"timestamp":"...","pass":true,"notes":"..."}' >> .claude/evals/auth-login/results/latest.json
 ```
 
+## 도메인별 Eval 프리셋
+
+사전 정의된 평가 루브릭을 사용하여 도메인별 품질을 측정:
+
+| 프리셋 | 파일 | 용도 |
+|--------|------|------|
+| UI/Design | `.claude/evals/presets/ui-design.md` | 4축 평가 (Design Quality, Originality, Craft, Functionality) |
+| API Backend | `.claude/evals/presets/api-backend.md` | 4축 평가 (Correctness, Robustness, Security, Performance) |
+| Content | `.claude/evals/presets/content-quality.md` | 4축 평가 (Clarity, Completeness, Accuracy, Engagement) |
+
+프리셋은 `live-qa-agent`의 `eval_type` 파라미터와 연동됩니다.
+
 ## 기존 도구와 연동
 
 - `/verify`: 코드 품질 검증 (린트, 테스트)
 - `/tdd`: 단위 테스트 기반 개발
+- `live-qa-agent`: Playwright 기반 라이브 QA (eval 프리셋 사용)
 - **eval-harness**: 행동/결과 기반 검증 (보완적)
