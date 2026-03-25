@@ -57,14 +57,14 @@ After:  AI 진단으로 문제를 발견하고, SEO/GEO/AEO 최적화로
 | 타겟 시장 | 외국인 환자 유치 등록 의료기관 3,154개소 |
 | SAM | 72억~346억원 |
 | 종합 점수 | 8.0/10 (GO) |
-| MVP 목표 | 3개월 내 첫 유료 고객 확보 |
+| MVP 목표 | 3.5개월(14주) 내 첫 유료 고객 확보 |
 
 ### 1.5 성공 조건
 
-1. 월 100회 이상 진단 실행 (Month 2)
-2. 진단 -> 상담 전환율 5% 이상 (Month 3)
-3. 3개 이상 유료 계약 체결 (Month 4)
-4. MRR 150만원 이상 달성 (Month 6)
+1. 월 100회 이상 진단 실행 (Month 3)
+2. 진단 -> 상담 전환율 5% 이상 (Month 4)
+3. 3개 이상 유료 계약 체결 (Month 5, 진입가 200-300만원)
+4. MRR 150만원 이상 달성 (Month 7)
 
 ---
 
@@ -73,29 +73,40 @@ After:  AI 진단으로 문제를 발견하고, SEO/GEO/AEO 최적화로
 ### 2.1 제품 단계 (Phase 구분)
 
 ```
-Phase A: 진단 도구 MVP (Week 1-6)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Phase A: 진단 도구 MVP v1.0 (Week 1-7)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 핵심 가치: "병원 홈페이지의 문제를 보여주는 것"
-- 무료 진단 도구 (URL 입력 -> 리포트)
+- 무료 진단 도구 (URL 입력 -> 기술SEO+성능 15개 항목 리포트)
 - 랜딩페이지 + 리드 수집
 - 기본 관리자 대시보드
+- 보안 설계 (RLS, SSRF 방지, Rate Limit 다중 방어)
 
-Phase B: 최적화 서비스 도구 (Week 7-10)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Phase A+: GEO/AEO + 벤치마크 v1.1 (Week 8-9)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+핵심 가치: "AI 검색 시대에 준비된 상태인지 보여주는 것"
+- GEO/AEO 진단 추가 (MVP: ChatGPT + Perplexity 2개 엔진)
+- 경량 벌크 크롤링 (상위 500개, 기술 SEO만)
+- 익명화 분포 기반 벤치마크
+- 법무 검토 (리포트 면책, 벤치마크 표현, 크롤링 정책)
+
+Phase B: 최적화 서비스 도구 (Week 10-11)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 핵심 가치: "문제를 해결하는 것"
 - 고객별 프로젝트 관리
 - 최적화 작업 추적 대시보드
 - Before/After 비교 리포트
+- 영업 시작 (콘텐츠 마케팅 + B2B 콜드콜)
 
-Phase C: 구독 모니터링 (Week 11-12)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Phase C: 구독 모니터링 + 첫 고객 (Week 12-14)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 핵심 가치: "지속적으로 관리하는 것"
 - 주간/월간 자동 진단
 - 순위 변동 알림
-- 경쟁사 벤치마크 트래킹
+- 경쟁사 분포 트래킹 (익명화)
+- 첫 3-5개 유료 고객 확보 (진입가 200-300만원)
 
-Phase D: LINE/WeChat 대시보드 (Post-MVP, Month 4+)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Phase D: LINE/WeChat 대시보드 (Post-MVP, Month 5+)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 핵심 가치: "해외 환자와 소통하는 것"
 - LINE Messaging API 통합
 - WeChat Official Account 통합
@@ -473,23 +484,36 @@ Phase D: LINE/WeChat 대시보드 (Post-MVP, Month 4+)
 | Before/After | 최적화 전후 점수 비교 |
 | 타임라인 | 작업 히스토리 |
 
-### 5.5 F5: 경쟁사 벤치마크
+### 5.5 F5: 경쟁사 벤치마크 (익명화 분포 기반)
+
+> **법적 검토 반영**: 병원 실명 비교는 의료법 제56조(의료광고 금지) 위반 소지.
+> 실명 대신 **분포 기반 비교**로 변경 (상위 25%/중위/하위 25%).
 
 | 기능 | 설명 | 구현 |
 |------|------|------|
-| 동일 진료과 자동 매칭 | 진단 시 해당 진료과 상위 병원 3개 자동 선정 | 사전 크롤링 DB |
-| 비교 레이더 차트 | 5개 카테고리 비교 시각화 | Chart.js |
+| 동일 진료과 분포 비교 | "귀원은 동일 진료과 **상위 65%** 위치" (실명 미공개) | 사전 크롤링 DB |
+| 비교 레이더 차트 | 5개 카테고리 × 본원 vs 동일 진료과 상위25%/중위/하위25% | Chart.js |
 | 순위 추정 | 해당 키워드 구글 검색 순위 추정 | Google Search Console API (향후) |
-| 벤치마크 DB | 3,154개 등록 기관 사전 크롤링 결과 | 배치 크롤링 |
+| 벤치마크 DB | 상위 500개 기관 경량 크롤링 (기술 SEO만, LLM 제외) → 점진 확대 | 배치 크롤링 |
 
-### 5.6 F6: 벌크 진단 (사전 크롤링)
+**금지 사항**:
+- 경쟁 병원 실명/URL을 리포트에 직접 노출하지 않음
+- "XX피부과는 78점"과 같은 실명 비교 금지
+- 공개 순위표에 병원 실명 포함 금지 (익명화 통계만 가능)
+
+### 5.6 F6: 벌크 진단 (사전 크롤링) — 경량 모드
+
+> **비용/기술 검토 반영**: 전수 크롤링(3,154개 × LLM 60회) = $6,000-9,000으로 비현실적.
+> **경량 모드**(기술 SEO만, LLM 제외)로 비용 1/10 절감.
 
 | 기능 | 설명 | 용도 |
 |------|------|------|
-| 등록 기관 전수 크롤링 | 3,154개 기관 홈페이지 일괄 진단 | 벤치마크 DB + 콜드 아웃리치 |
-| 스케줄링 | 월 1회 자동 재크롤링 | 데이터 최신화 |
-| 순위 생성 | 진료과별 SEO 점수 순위 | 콘텐츠 마케팅 (공개 순위표) |
-| 아웃리치 타겟 | 점수 하위 30% 병원 리스트 추출 | 영업 리드 |
+| 경량 벌크 크롤링 | 상위 500개 기관 (서울 피부과/성형외과) → 점진 확대 | 벤치마크 DB |
+| 경량 모드 범위 | httpx + BeautifulSoup만 (Lighthouse/LLM 제외) → 비용 ~$0/건 | 비용 절감 |
+| 스케줄링 | 월 1회 자동 재크롤링 (상시 배경 작업) | 데이터 최신화 |
+| 익명 통계 | 진료과별 SEO 현황 리포트 (병원 실명 미포함) | 콘텐츠 마케팅 |
+| ~~아웃리치 이메일~~ | ~~점수 하위 30% 병원에 이메일~~ → **폐기** (정보통신망법) | ~~영업 리드~~ |
+| B2B 콜드콜 타겟 | 사업자 공개 전화번호 기반 리스트 (합법) | 영업 리드 |
 
 ---
 
@@ -669,25 +693,53 @@ CREATE INDEX idx_audit_items_category ON audit_items(category);
 
 ### 6.3 Supabase RLS (Row Level Security) 정책
 
+> **보안 리뷰 반영 (2026-03-25)**: 초기 설계의 취약점을 보완한 버전.
+> - `current_setting` 기반 조회 → JWT claim 기반으로 변경
+> - anon INSERT 무제한 → Edge Function 서버 사이드 검증 추가
+> - admin role claim → `app_metadata` 기반으로 변경
+
 ```sql
--- 관리자만 모든 데이터 접근 (초기 MVP는 단일 관리자)
+-- 모든 테이블에 RLS 활성화
 ALTER TABLE hospitals ENABLE ROW LEVEL SECURITY;
 ALTER TABLE audits ENABLE ROW LEVEL SECURITY;
 ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
 
--- 공개 진단: 누구나 진단 생성 가능
-CREATE POLICY "Anyone can create audit" ON audits
-    FOR INSERT TO anon WITH CHECK (true);
+-- 공개 진단: Edge Function을 통해서만 생성 (직접 INSERT 차단)
+-- anon 역할에 직접 INSERT 권한을 주지 않음
+-- 진단 생성은 반드시 /api/audits → Supabase Edge Function → service_role로 처리
+-- Edge Function 내에서 rate limit 검증 (Redis + fallback 인메모리)
 
--- 진단 결과 조회: 자신의 진단만
+-- 진단 결과 조회: audit_id를 포함한 단기 JWT 토큰 기반
+-- POST /api/audits 응답에서 audit_token(JWT, exp: 24h)을 발급
+-- 클라이언트는 이 토큰으로 상세 조회
 CREATE POLICY "Users can view own audit" ON audits
-    FOR SELECT TO anon USING (id = current_setting('app.audit_id')::uuid);
-
--- 관리자: 전체 접근
-CREATE POLICY "Admin full access" ON audits
-    FOR ALL TO authenticated USING (
-        auth.jwt() ->> 'role' = 'admin'
+    FOR SELECT TO anon USING (
+        id = (auth.jwt() -> 'audit_claims' ->> 'audit_id')::uuid
     );
+
+-- 관리자: app_metadata 기반 전체 접근
+-- Supabase Dashboard에서 관리자 유저의 app_metadata에 {"role": "admin"} 설정
+CREATE POLICY "Admin full access on audits" ON audits
+    FOR ALL TO authenticated USING (
+        (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+    );
+
+CREATE POLICY "Admin full access on leads" ON leads
+    FOR ALL TO authenticated USING (
+        (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+    );
+
+CREATE POLICY "Admin full access on hospitals" ON hospitals
+    FOR ALL TO authenticated USING (
+        (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+    );
+```
+
+**Rate Limit 다중 방어**:
+```
+1차: Upstash Redis (IP당 5회/시간, 20회/일)
+2차: Edge Function 인메모리 카운터 (Redis 장애 시 fallback)
+3차: Supabase RLS (anon INSERT 직접 차단, service_role만 허용)
 ```
 
 ---
@@ -785,13 +837,14 @@ Response (200):
         ...
     ],
     "benchmark": {
-        "competitors": [
-            { "name": "XX피부과", "score": 78, "rank": 1 },
-            { "name": "YY피부과", "score": 65, "rank": 2 },
-            { "name": "ZZ피부과", "score": 52, "rank": 3 }
-        ],
-        "your_rank": 15,
-        "total_in_category": 23
+        "distribution": {
+            "top_25_percent_avg": 78,
+            "median": 55,
+            "bottom_25_percent_avg": 32
+        },
+        "your_percentile": 35,
+        "total_in_category": 23,
+        "note": "동일 진료과 등록 기관 대비 분포 (병원 실명 미공개, 의료법 준수)"
     },
     "report_url": "https://storage.../report.pdf"
 }
@@ -964,12 +1017,16 @@ POST   /api/admin/emails/send           # 수동 이메일 발송
 |------|------|----------|
 | **Vercel** (Pro) | Next.js 호스팅, Edge Functions | ~$20 |
 | **Supabase** (Pro) | PostgreSQL, Auth, Storage, Realtime | ~$25 |
-| **Railway** 또는 **Fly.io** | FastAPI Worker 호스팅 | ~$10-20 |
+| **Railway** Pro 또는 **Fly.io** | FastAPI Worker 호스팅 (**1GB+ RAM 필수**) | ~$25-30 |
 | **Upstash Redis** | 작업 큐 브로커, 캐시, Rate Limit | ~$10 |
 | **Resend** | 트랜잭셔널 이메일 | ~$20 (5K emails) |
 | **Vercel Analytics** | 웹 분석 | 무료 |
 | **Sentry** | 에러 모니터링 | 무료 (Dev) |
-| **합계** | | **~$85-95/월 (~12만원)** |
+| **합계** | | **~$100-110/월 (~14만원)** |
+
+> **Worker 메모리 요구사항**: Lighthouse(Chromium) 400-500MB + OS/FastAPI/Python 200MB = 최소 **1GB RAM**.
+> Railway 기본 플랜(512MB)으로는 부족. Pro 플랜 이상 필요.
+> MVP 동시 진단 제한: **3건** (Worker 수평 스케일링은 첫 수익 후)
 
 ### 8.3 모노레포 구조
 
@@ -1151,12 +1208,41 @@ User          Next.js API       Redis Queue       FastAPI Worker       Supabase
 - IP당: 5회/시간, 20회/일
 - 동일 URL: 1회/24시간 (캐시 반환)
 - 구현: Upstash Redis Rate Limiter (@upstash/ratelimit)
+- Redis 장애 시: Edge Function 인메모리 카운터 fallback (보수적 제한)
 
 크롤링 예의:
 - robots.txt 준수 (단, 진단 목적이므로 전체 사이트 크롤링은 아님)
 - 크롤링 간격: 1초/요청
 - User-Agent: MediScope Bot/1.0
-- 동시 크롤링: 최대 5개 병렬
+- 동시 크롤링: 최대 5개 병렬 (MVP: 3개)
+```
+
+### 9.4 SSRF (Server-Side Request Forgery) 방지
+
+> 사용자가 입력한 URL로 크롤링하는 구조상 SSRF 공격에 취약.
+> DNS rebinding으로 클라우드 메타데이터(169.254.169.254) 접근 → API 키 유출 가능.
+
+```
+방어 레이어:
+
+1. URL 검증 (입력 시점)
+   - 허용 스킴: https:// 만 (http는 https로 리다이렉트 확인 후)
+   - 금지 호스트: localhost, 127.0.0.0/8, 10.0.0.0/8, 172.16.0.0/12,
+                 192.168.0.0/16, 169.254.0.0/16, [::1], fc00::/7
+   - 금지 포트: 80, 443 외 모든 포트
+
+2. DNS Rebinding 방지
+   - URL 검증 후 DNS 해석 → 해석된 IP가 내부 대역이면 거부
+   - 해석된 IP를 캐시하고, 크롤링 시 도메인 대신 IP로 직접 연결
+   - Playwright: --host-resolver-rules 플래그로 내부 IP 차단
+
+3. 네트워크 레벨 방어
+   - Worker 컨테이너에서 169.254.169.254 (메타데이터) 접근 방화벽 차단
+   - Railway/Fly.io 네트워크 정책으로 내부 서비스 접근 제한
+
+4. 리다이렉트 추적
+   - HTTP 리다이렉트 최대 3회, 매 리다이렉트마다 IP 재검증
+   - JavaScript 리다이렉트는 Playwright에서 navigation 이벤트 모니터링
 ```
 
 ---
@@ -1671,100 +1757,124 @@ CREATE TABLE medical_terms (
 
 ---
 
-## 12. 12주 MVP 로드맵
+## 12. 14주 MVP 로드맵
+
+> **타임라인 리뷰 반영 (2026-03-25)**: 12주→14주로 확장.
+> 근거: Phase A Must 21.5일/30근무일(72%) + 테스트/디버깅/배포 미반영.
+> 특히 과소평가 영역: Playwright 엣지케이스(+3일), PDF 리포트(+2일), Realtime(+1일).
+> MVP v1.0은 기술 SEO + 성능 15개 항목으로 런칭, GEO/AEO는 v1.1에서 추가.
 
 ### 12.1 주차별 상세 계획
 
 ```
-Week 1: 프로젝트 셋업 + 크롤링 엔진 기초
+Week 1: 프로젝트 셋업 + 보안 설계
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 [Day 1-2]  모노레포 초기화 (Turborepo + Next.js + FastAPI)
            Supabase 프로젝트 생성, DB 스키마 마이그레이션
-           Vercel + Railway 배포 파이프라인 구성
-[Day 3-5]  Playwright 크롤러 기본 구조
-           HTTP 요청 기반 분석 (robots.txt, sitemap, meta)
+           RLS 정책 구현 (audit_token JWT 기반)
+[Day 3-4]  Vercel + Railway Pro(1GB+) 배포 파이프라인 구성
+           SSRF 방지 로직 구현 (URL 검증 + DNS rebinding 방어)
+[Day 5]    Worker 메모리 프로파일링 (Lighthouse + Playwright 순차 실행 테스트)
+
+Week 2: 기술 SEO 크롤링 엔진
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Day 1-3]  HTTP 요청 기반 분석 (robots.txt, sitemap, meta, heading, alt)
+           BeautifulSoup HTML 파싱 + httpx 비동기 크롤링
+[Day 4-5]  Playwright 크롤러 기본 구조 (스크린샷, JS 렌더링)
            단위 테스트 작성
 
-Week 2: 기술 SEO 진단 엔진 완성
+Week 3: 기술 SEO 완성 + 성능 분석
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[Day 1-3]  나머지 기술 SEO 항목 구현
-           (heading, alt, links, HTTPS, canonical, URL, 4xx)
-[Day 4-5]  PageSpeed Insights API 연동 (Core Web Vitals)
+[Day 1-3]  나머지 기술 SEO 항목 (links, HTTPS, canonical, URL, 4xx)
+           Playwright 엣지케이스 처리 (팝업, 쿠키 배너, iframe)
+[Day 4-5]  Lighthouse 직접 실행 (Node.js 모듈) → Core Web Vitals
            종합 점수 산출 로직 (가중치 기반)
 
-Week 3: GEO/AEO + 다국어 진단
+Week 4: 다국어 진단 + 프론트엔드 시작
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[Day 1-3]  구조화 데이터 분석 (JSON-LD, MedicalClinic 스키마)
-           LLM 기반 콘텐츠 분석 (E-E-A-T, 명확성)
-[Day 4-5]  다국어 페이지 감지 + hreflang 검증
+[Day 1-2]  다국어 페이지 감지 + hreflang 검증
            해외 채널 링크 감지 (LINE, WeChat, WhatsApp)
+[Day 3-4]  랜딩페이지 (히어로, URL 입력, 가치 제안)
+[Day 5]    진단 진행 페이지 (실시간 단계별 프로그레스)
 
-Week 4: 프론트엔드 - 진단 UI
+Week 5: 프론트엔드 결과 + 리포트
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[Day 1-2]  랜딩페이지 (히어로, URL 입력, 가치 제안)
-[Day 3-4]  진단 진행 페이지 (실시간 프로그레스)
-           Supabase Realtime 연동
-[Day 5]    프리뷰 결과 페이지 (점수, 바 차트, 등급)
+[Day 1-2]  Supabase Realtime 연동 (연결 끊김/재연결 처리)
+           프리뷰 결과 페이지 (점수, 바 차트, 등급)
+[Day 3-4]  리드 수집 폼 (게이트) + 상세 리포트 페이지
+[Day 5]    PDF 리포트 생성 기초 (HTML 템플릿 구조)
 
-Week 5: 리포트 + 리드 수집
+Week 6: PDF 리포트 완성 + 이메일
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[Day 1-2]  리드 수집 폼 (게이트)
-           상세 리포트 페이지 (항목별 Pass/Warn/Fail)
-[Day 3-4]  PDF 리포트 생성 (HTML 템플릿 -> Playwright PDF)
-           스크린샷 포함
-[Day 5]    이메일 발송 (Resend + React Email 템플릿)
+[Day 1-3]  PDF 리포트 생성 완성 (차트 렌더링, 한/일/중 폰트, 페이지 브레이크)
+           스크린샷 포함 + Supabase Storage 업로드
+[Day 4-5]  이메일 발송 (Resend + React Email 템플릿)
+           자동 이메일 시퀀스 (Vercel Cron, 수신거부 링크 필수)
 
-Week 6: 관리자 대시보드 + 이메일 자동화 + 런칭 준비
+Week 7: 관리자 대시보드 + 보안 + v1.0 런칭
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 [Day 1-2]  관리자 대시보드 (통계, 진단 목록, 리드 목록)
-           Supabase Auth (관리자 로그인)
-[Day 3]    자동 이메일 시퀀스 (Vercel Cron)
-[Day 4]    Rate Limiting, 에러 처리, 보안 점검
+           Supabase Auth (관리자 로그인, app_metadata 기반 역할)
+[Day 3]    Rate Limiting (Redis + 인메모리 fallback) + Edge Function 검증
+[Day 4]    보안 점검 (SSRF, RLS, HTTPS, 환경변수)
 [Day 5]    QA, 버그 수정, 소프트 런칭
 
-         ──────── Phase A 완료 (MVP v1.0) ────────
+         ──────── Phase A 완료 (MVP v1.0: 기술SEO+성능 15개 항목) ────────
 
-Week 7-8: 경쟁사 벤치마크 + 벌크 진단
+Week 8: GEO/AEO 진단 추가
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[W7 D1-3]  등록 기관 리스트 수집 + DB 임포트
-           배치 크롤링 시스템 구축
-[W7 D4-5]  경쟁사 벤치마크 기능 (레이더 차트)
-[W8 D1-3]  벌크 진단 실행 (3,154개 기관)
-[W8 D4-5]  콜드 아웃리치 타겟 리스트 추출
-           아웃리치 이메일 템플릿 작성
+[Day 1-3]  구조화 데이터 분석 (JSON-LD, MedicalClinic 스키마)
+           FAQ 콘텐츠 + E-E-A-T 프록시 신호 체크
+[Day 4-5]  AI 검색 노출 확인 (MVP: ChatGPT + Perplexity 2개 엔진)
+           LLM 캘리브레이션 (10개 기준 사이트 ground truth)
 
-Week 9-10: 프로젝트 관리 도구 (Phase B)
+Week 9: 벤치마크 + 법무 검토
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[W9 D1-3]  프로젝트 CRUD + 체크리스트
-[W9 D4-5]  Before/After 비교 리포트
-[W10 D1-2] 점수 추이 차트
-[W10 D3-5] 클라이언트 공유 링크 + QA
+[Day 1-3]  경량 벌크 크롤링 시작 (상위 500개, 기술 SEO만, LLM 제외)
+           익명화 분포 기반 벤치마크 기능 (레이더 차트)
+[Day 4-5]  법무 검토 의뢰 (리포트 면책, 벤치마크 표현, 크롤링 정책)
+           베타 테스트 시작: 10개 병원 무료 진단
 
-         ──────── Phase B 완료 (v1.1) ────────
+         ──────── v1.1 런칭 (GEO/AEO + 벤치마크) ────────
 
-Week 11-12: 구독 모니터링 (Phase C) + 첫 고객 확보
+Week 10-11: 프로젝트 관리 도구 (Phase B) + 영업 시작
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[W11 D1-3] 자동 재진단 시스템 (주간/월간)
-[W11 D4-5] 점수 변동 알림 + 월간 리포트
-[W12 D1-3] 경쟁사 순위 트래킹
-[W12 D4-5] 최종 QA, 성능 최적화
+[W10 D1-3] 프로젝트 CRUD + 체크리스트
+[W10 D4-5] Before/After 비교 리포트
+[W11 D1-2] 점수 추이 차트 + 클라이언트 공유 링크
+[W11 D3-5] 콘텐츠 마케팅 ("진료과별 SEO 현황" 익명화 리포트 발행)
+           B2B 콜드콜 시작 (사업자 공개 전화, 합법)
 
-         ──────── Phase C 완료 (v1.2) ────────
+         ──────── Phase B 완료 (v1.2) ────────
+
+Week 12-14: 구독 모니터링 (Phase C) + 첫 고객 확보
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[W12 D1-3] 자동 재진단 시스템 (주간/월간)
+[W12 D4-5] 점수 변동 알림 + 월간 리포트
+[W13 D1-3] 경쟁사 분포 트래킹
+[W13 D4-5] 첫 3~5개 유료 고객 계약 (진입가 200-300만원)
+[W14 D1-5] 최종 QA, 성능 최적화, 성공 사례 확보
+
+         ──────── Phase C 완료 (v1.3), 첫 수익 ────────
 ```
 
 ### 12.2 마일스톤 요약
 
 | 마일스톤 | 시점 | 산출물 | 핵심 지표 |
 |---------|------|--------|----------|
-| M1: 크롤링 엔진 완성 | Week 3 | 25개 진단 항목 동작 | 1개 URL 60초 내 진단 |
-| M2: MVP v1.0 런칭 | Week 6 | 진단 도구 + 리드 수집 + 관리자 | 첫 100회 진단 |
-| M3: 벤치마크 DB 구축 | Week 8 | 3,154개 기관 진단 완료 | 아웃리치 리스트 확보 |
-| M4: 프로젝트 관리 v1.1 | Week 10 | 유료 고객용 대시보드 | 첫 유료 계약 |
-| M5: 모니터링 v1.2 | Week 12 | 구독 모니터링 서비스 | MRR 시작 |
+| M1: 크롤링 엔진 완성 | Week 3 | 기술SEO+성능 15개 항목 동작 | 1개 URL 60초 내 진단 |
+| M2: MVP v1.0 런칭 | Week 7 | 진단 도구 + 리드 수집 + 관리자 | 첫 100회 진단 |
+| M3: GEO/AEO + 벤치마크 | Week 9 | v1.1 (25개 전 항목 + 익명화 벤치마크) | 법무 검토 완료 |
+| M4: 프로젝트 관리 v1.2 | Week 11 | 유료 고객용 대시보드 + 영업 시작 | 첫 상담 예약 |
+| M5: 모니터링 v1.3 | Week 14 | 구독 모니터링 서비스 | 첫 유료 계약, MRR 시작 |
 
-### 12.3 주간 버퍼
+### 12.3 주간 버퍼 및 리스크 대응
 
-각 Phase에 1일 정도의 버퍼를 포함. 예상치 못한 기술적 이슈, 외부 API 장애, LLM 프롬프트 튜닝 등에 대응.
+각 Phase에 2일 정도의 버퍼를 포함. 특히 아래 영역에서 추가 시간 소요 예상:
+- Playwright 엣지케이스 (팝업, 쿠키 배너, Flash/iframe 사이트): +2-3일
+- PDF 리포트 (한/일/중 폰트, 페이지 브레이크, 차트 렌더링): +2일
+- Supabase Realtime (연결 끊김, 재연결, 상태 동기화): +1일
+- LLM 캘리브레이션 (프롬프트 튜닝, 분산 검증): +1-2일
 
 ---
 
@@ -1774,11 +1884,11 @@ Week 11-12: 구독 모니터링 (Phase C) + 첫 고객 확보
 
 | 항목 | 목표 | 비고 |
 |------|------|------|
-| 진단 완료 시간 | 60초 이내 (기본), 120초 이내 (GEO 포함) | Playwright 최적화 |
+| 진단 완료 시간 | 60초 이내 (기술SEO), 120초 이내 (GEO 포함) | Playwright 최적화 |
 | 랜딩페이지 로드 | LCP 2.5초 이내 | Next.js SSG |
 | 관리자 대시보드 로드 | FCP 1.5초 이내 | Server Components |
 | PDF 생성 | 10초 이내 | 템플릿 사전 준비 |
-| 동시 진단 처리 | 10건 | Worker 스케일링 |
+| 동시 진단 처리 | **3건** (MVP), 10건 (Worker 수평 스케일링 후) | 단일 Worker 1GB RAM 기준 |
 
 ### 13.2 보안
 
@@ -1788,9 +1898,9 @@ Week 11-12: 구독 모니터링 (Phase C) + 첫 고객 확보
 | API 인증 | JWT (리드 토큰), API Key (관리자) |
 | Worker API 인증 | API Key + Private Network (이중 보안) |
 | 데이터 암호화 | HTTPS 전송, Supabase 저장소 암호화 |
-| Rate Limiting | Upstash Redis (@upstash/ratelimit) — IP/URL 단위 |
+| Rate Limiting | Upstash Redis + 인메모리 fallback (Redis 장애 시) — IP/URL 단위 |
 | CORS | Vercel 도메인만 허용 |
-| SSRF 방지 | 크롤링 URL 입력 시 내부 IP 대역 차단 (localhost, 10.x, 172.16-31.x, 169.254.x), HTTPS만 허용 |
+| SSRF 방지 | 9.4절 상세 참조: URL 검증 + DNS rebinding 방지 + 메타데이터 방화벽 차단 |
 | 입력 검증 | Pydantic(Worker) / Zod(Next.js)로 모든 사용자 입력 검증 |
 | 민감정보 | 환경변수 (.env), Vercel Secrets |
 
@@ -1853,7 +1963,16 @@ Week 11-12: 구독 모니터링 (Phase C) + 첫 고객 확보
 
 모든 리포트(무료/유료)에 아래 면책 문구 필수 삽입:
 
-> "본 리포트는 웹사이트의 기술적 SEO/GEO 지표를 자동 분석한 것이며, 의료 서비스의 품질이나 안전성을 평가한 것이 아닙니다. 리포트의 점수와 권장 사항은 검색 엔진 최적화 관점의 기술적 분석이며, 의료광고 심의를 대체하지 않습니다. 검색 순위는 외부 요인에 의해 결정되므로 특정 결과를 보장하지 않습니다."
+> "본 리포트는 웹사이트의 기술적 SEO/GEO 지표를 자동 분석한 것이며, 의료 서비스의 품질이나 안전성을 평가한 것이 아닙니다. 리포트의 점수와 권장 사항은 검색 엔진 최적화 관점의 기술적 분석이며, 의료광고 심의를 대체하지 않습니다. 검색 순위는 외부 요인에 의해 결정되므로 특정 결과를 보장하지 않습니다. AI 검색 노출 측정은 측정 시점의 스냅샷이며, AI 모델 업데이트에 따라 결과가 변동될 수 있습니다."
+
+**추가 법적 주의사항 (리뷰 반영)**:
+
+| 항목 | 리스크 | 대응 |
+|------|--------|------|
+| 경쟁사 벤치마크 | 병원 실명 비교는 의료법 제56조 위반 소지 | 익명화 분포 기반 비교만 사용 (5.5절 참조) |
+| 공개 순위표 | 병원 실명 순위 공개는 의료광고 해당 가능 | 익명화 통계만 발행, 실명 미포함 |
+| "의료법 위반 우려" 탐지 | MediScope가 법적 판단을 내리는 것으로 오해 가능 | "주의가 필요한 표현"으로 완화, "법률 자문이 아님" 면책 추가 |
+| LLM 측정 변동성 | 동일 사이트 재진단 시 점수 변동 | "AI 모델 업데이트에 따른 변동 가능" 고지, LLM 버전 리포트에 명시 |
 
 #### 13.3.6 외국인환자유치사업자 등록
 
@@ -1876,13 +1995,24 @@ Week 11-12: 구독 모니터링 (Phase C) + 첫 고객 확보
 | 데이터 백업 | Supabase 일일 자동 백업 |
 | 모니터링 | Sentry (에러), Vercel Analytics (트래픽) |
 
-### 13.4 확장성
+### 13.5 단일 장애점(SPOF) 대응 (리뷰 반영)
+
+| 장애 지점 | 영향 범위 | 현재 대응 | 추가 대응 |
+|-----------|----------|-----------|----------|
+| FastAPI Worker | 모든 진단 불가 | Railway 자동 재시작 | `/health` 엔드포인트 + Uptime 모니터링 + Slack 알림 |
+| Supabase | 전체 서비스 중단 | Supabase SLA 99.9% | 진행 중 audit 상태를 Redis에 임시 보관, 복구 후 동기화 |
+| Redis (Upstash) | 큐 중단, Rate limit 무력화 | Upstash SLA | Rate limit 인메모리 fallback, 큐 실패 시 동기 처리 모드 |
+| LLM API (OpenAI/Google) | GEO/AEO 진단 불가 | 없음 | Gemini↔GPT fallback, LLM 항목 스킵하고 나머지로 점수 정규화 |
+| Resend (이메일) | 리포트 발송 불가 | 없음 | 이메일 큐에 저장 후 재시도 (max 3회), 대체 서비스(SendGrid) 준비 |
+| Lighthouse/Playwright | 크롤링 불가 | 없음 | Chromium 프로세스 타임아웃(120초) + 좀비 프로세스 정리 cron |
+
+### 13.6 확장성
 
 | 시기 | 동시 사용자 | 일일 진단 | 인프라 |
 |------|-----------|----------|--------|
-| 초기 (Month 1-3) | ~50 | ~30 | 기본 플랜 |
-| 중기 (Month 4-6) | ~200 | ~100 | Worker 스케일업 |
-| 후기 (Month 7-12) | ~500 | ~300 | Worker 복수 인스턴스 |
+| 초기 (Month 1-3) | ~50 | ~30 | Railway Pro 1GB (동시 진단 3건) |
+| 중기 (Month 4-6) | ~200 | ~100 | Worker 스케일업 2GB |
+| 후기 (Month 7-12) | ~500 | ~300 | Worker 복수 인스턴스 (수평 스케일링) |
 
 ---
 
@@ -1890,7 +2020,7 @@ Week 11-12: 구독 모니터링 (Phase C) + 첫 고객 확보
 
 ### 14.1 Product Metrics
 
-| 지표 | Month 2 | Month 3 | Month 6 | 측정 방법 |
+| 지표 | Month 3 | Month 4 | Month 7 | 측정 방법 |
 |------|---------|---------|---------|----------|
 | 월 진단 실행 수 | 100+ | 300+ | 1,000+ | DB COUNT |
 | 진단 완료율 | 80%+ | 85%+ | 90%+ | completed / total |
