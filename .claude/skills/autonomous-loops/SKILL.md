@@ -22,6 +22,8 @@ metadata:
 | 4 | Continuous PR Loop | 중간 | 없음 | CI 게이트 반복 개선 |
 | 5 | De-Sloppify | 낮음 | 없음 | 구현 후 품질 정리 |
 | 6 | RFC-DAG | 높음 | 높음 | 대규모 기능, 의존성 복잡 |
+| 7 | Sprint-Reset Loop | 중간 | 없음 | 장기 순차 작업, 컨텍스트 초과 |
+| 8 | GAN-Loop | 높음 | 중간 | UI/풀스택 품질 정제, 독립 검증 |
 
 ## 패턴 상세
 
@@ -102,9 +104,34 @@ RFC 작성 → 작업 분해 → 의존성 DAG 생성
 └── No → 반복 개선이 필요한가?
     ├── Yes → CI가 있는가?
     │   ├── Yes → Continuous PR Loop
-    │   └── No → Persistent REPL + /verify
+    │   └── No → 컨텍스트 윈도우 초과 예상?
+    │       ├── Yes → Sprint-Reset Loop
+    │       └── No → Persistent REPL + /verify
     └── No → 단순 구현 후 De-Sloppify
 ```
+
+### 7. Sprint-Reset Loop (컨텍스트 리셋)
+```bash
+bash scripts/sprint-reset-loop.sh --session {name} --input {initial_input}
+bash scripts/sprint-reset-loop.sh --session {name} --status
+bash scripts/sprint-reset-loop.sh --session {name} --resume
+```
+- 각 스프린트가 독립 Claude 인스턴스에서 실행 (컨텍스트 완전 리셋)
+- 이전 결과를 구조화된 파일로 전달 (핸드오프)
+- 컨텍스트 불안감 제거 — 항상 깨끗한 컨텍스트에서 시작
+- 순차 의존성 작업에 적합 (기획, 마이그레이션, 긴 리팩토링)
+- **주의**: 각 스프린트 시작에 토큰 오버헤드 발생
+- 자동 조기 종료: "남은 작업 없음" 감지 시 루프 종료
+
+### 8. GAN-Loop (Generator-Evaluator)
+```
+Generator 구현 → Evaluator 라이브 테스트 → 피드백 → 재구현 (반복)
+```
+- Anthropic 하네스 패턴에서 영감
+- Generator와 Evaluator가 독립 에이전트 (자체 평가 편향 제거)
+- Evaluator는 Playwright로 라이브 상호작용 + 스크린샷
+- 도메인별 평가 루브릭 적용 (`.claude/evals/presets/`)
+- fullstack-dev.toml, figma-to-prod.toml에 QA 워커로 통합
 
 ## 안전 장치
 
