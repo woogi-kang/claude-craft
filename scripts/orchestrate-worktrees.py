@@ -280,6 +280,8 @@ class WorkerInfo:
             "claude --dangerously-skip-permissions -p {task} --cwd {worktree}",
         )
         self.depends_on: list[str] = worker.get("depends_on", [])
+        self.success_criteria: list[str] = worker.get("success_criteria", [])
+        self.eval_type: str = worker.get("eval_type", "")
 
     def launcher_cmd(self) -> str:
         """Expand template variables in the launcher string with shell escaping."""
@@ -314,7 +316,7 @@ TASK_TEMPLATE = textwrap.dedent("""\
     - Worker: {worker_name}
     - Branch: {branch}
     - Worktree: {worktree_path}
-    {dependency_section}
+    {dependency_section}{success_criteria_section}
     ## Objective
     {task_description}
 
@@ -355,6 +357,13 @@ def write_coordination_files(worker: WorkerInfo) -> None:
     else:
         dependency_section = ""
 
+    # Build success criteria section
+    if worker.success_criteria:
+        criteria_lines = "\n".join(f"    - [ ] {c}" for c in worker.success_criteria)
+        success_criteria_section = f"\n    ## Success Criteria\n{criteria_lines}\n"
+    else:
+        success_criteria_section = ""
+
     worker.task_file.write_text(
         TASK_TEMPLATE.format(
             worker_name=worker.name,
@@ -364,6 +373,7 @@ def write_coordination_files(worker: WorkerInfo) -> None:
             task_description=worker.task,
             worker_slug=worker.slug,
             dependency_section=dependency_section,
+            success_criteria_section=success_criteria_section,
         ),
         encoding="utf-8",
     )

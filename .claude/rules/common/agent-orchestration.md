@@ -34,6 +34,7 @@
 | TDD, 테스트 루프, 100% 패스 | `tdd-loop-agent` | 테스트가 모두 통과할 때까지 자율 루프 |
 | 빌드 에러, 타입 에러, 컴파일 에러 | `build-resolver-agent` | 최소 diff로 빌드 에러 수정 |
 | 데드코드, 정리, cleanup | `deadcode-cleaner-agent` | 미사용 코드/임포트/의존성 제거 |
+| 라이브 QA, Playwright 테스트, 기능 검증 | `live-qa-agent` | Playwright로 라이브 브라우저 QA |
 
 ### 🎯 기획
 
