@@ -29,7 +29,7 @@ triggers:
 
 # Planning Agent (Unified Orchestrator)
 
-> **v3.2.0** - Progressive Disclosure + Phase Selection
+> **v3.3.0** - Progressive Disclosure + Phase Selection + NotebookLM Deep Research
 
 아이디어부터 출시 가능한 서비스까지 전 과정을 기획하는 통합 오케스트레이터입니다.
 
@@ -67,6 +67,10 @@ triggers:
 # 특정 Phase 지정
 @planning-agent "[아이디어]" --phase discovery
 @planning-agent "[아이디어]" --phase validation
+
+# 딥 리서치 모드 (NotebookLM 활용, Phase 2에서 20+ 소스 수집)
+@planning-agent "[아이디어] 서비스 기획해줘" --deep
+@planning-agent "[아이디어]" --phase research --deep
 ```
 
 ### Phase 미지정 (선택 프롬프트)
@@ -120,7 +124,7 @@ triggers:
 | Phase | Reference File | Skills Count |
 |-------|----------------|--------------|
 | Discovery | `references/phases/phase-1-discovery.md` | 3 + synthesis |
-| Research | `references/phases/phase-2-research.md` | 3 + synthesis |
+| Research | `references/phases/phase-2-research.md` | 3 + 1 optional + synthesis |
 | Validation | `references/phases/phase-3-validation.md` | 5 + synthesis |
 | Specification | `references/phases/phase-4-specification.md` | 6 + synthesis |
 | Estimation | `references/phases/phase-5-estimation.md` | 3 + synthesis |
@@ -140,7 +144,7 @@ triggers:
 - 사용자 플로우, IA 설계
 
 ### 약한 영역 (검토 필수)
-- 실시간 시장 데이터, 정확한 수치
+- 실시간 시장 데이터, 정확한 수치 (→ `--deep` 모드로 NotebookLM 딥 리서치 활용 시 개선)
 - 도메인 특화 규제/법률
 - 실제 사용자 인사이트
 

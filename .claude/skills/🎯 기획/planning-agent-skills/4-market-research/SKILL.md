@@ -17,6 +17,23 @@ Your task is to estimate the market size for **$ARGUMENTS** within the specified
 
 If the user provides market research, industry reports, financial data, or competitor information, read and analyze them directly. Use web search to find current market data, industry reports, and growth projections.
 
+### NotebookLM Integration (Deep Research Mode)
+
+If `NOTEBOOKLM_CONTEXT` is available from the preceding `notebooklm-research` skill:
+
+1. **소스 기반 분석 우선**: NotebookLM에 수집된 20+ 소스를 활용한다
+   ```bash
+   notebooklm ask "이 시장의 TAM을 추정해주세요. 수집된 소스의 데이터와 출처를 포함해서 답변해주세요." --notebook {notebook_id} --json
+   ```
+2. **구조화 리포트 생성**: 시장 분석 브리핑 문서를 자동 생성한다
+   ```bash
+   notebooklm generate report --format briefing-doc --append "Focus on: TAM/SAM/SOM estimation, market growth trends, key market drivers" --notebook {notebook_id}
+   ```
+3. **WebSearch로 보완**: NotebookLM 소스에 없는 최신 데이터(최근 1~3개월)만 WebSearch로 보완한다
+4. **출처 교차 검증**: NotebookLM 소스와 WebSearch 결과를 교차 검증하여 신뢰도를 높인다
+
+NotebookLM을 사용할 수 없거나 `NOTEBOOKLM_CONTEXT`가 없으면 기존 WebSearch만으로 진행한다.
+
 ### Analysis Steps (Think Step by Step)
 
 1. **Market Definition**: Define the market boundaries — what problem space, which customer segments, what geography or constraints apply
@@ -73,6 +90,7 @@ If the user provides market research, industry reports, financial data, or compe
 
 - Always provide both top-down and bottom-up estimates to triangulate
 - Use web search for current industry data, analyst reports, and market benchmarks
+- When NotebookLM sources are available, cite them with source ID for traceability
 - Cite sources for market data — avoid unsupported numbers
 - Be explicit about assumptions; label estimates vs. data
 - Distinguish between value-based (revenue) and volume-based (users/units) sizing

@@ -17,6 +17,23 @@ Your task is to analyze the competitive landscape for **$ARGUMENTS** in the **[m
 
 Conduct web research to identify direct competitors. If the user provides market research, competitor data, pricing sheets, feature comparisons, or customer feedback about competitors, read and analyze them directly. Synthesize data into a comprehensive competitive view.
 
+### NotebookLM Integration (Deep Research Mode)
+
+If `NOTEBOOKLM_CONTEXT` is available from the preceding `notebooklm-research` skill:
+
+1. **경쟁사 식별**: NotebookLM 소스에서 경쟁사 정보를 먼저 추출한다
+   ```bash
+   notebooklm ask "수집된 자료에서 직접 경쟁사 5곳을 식별해주세요. 각 경쟁사의 제품, 가격, 포지셔닝, 강점, 약점을 정리해주세요." --notebook {notebook_id} --json
+   ```
+2. **심층 분석**: 개별 경쟁사에 대해 추가 질의한다
+   ```bash
+   notebooklm ask "{경쟁사명}의 비즈니스 모델, 최근 동향, 고객 리뷰 기반 강점/약점을 분석해주세요." --notebook {notebook_id} --json
+   ```
+3. **WebSearch로 보완**: 각 경쟁사의 최신 가격 페이지, 최근 뉴스, 펀딩 정보는 WebSearch로 보완한다
+4. **차별화 기회 도출**: NotebookLM + WebSearch 결과를 종합하여 차별화 포인트를 식별한다
+
+NotebookLM을 사용할 수 없거나 `NOTEBOOKLM_CONTEXT`가 없으면 기존 WebSearch만으로 진행한다.
+
 ### Analysis Steps (Think Step by Step)
 
 1. **Market Scoping**: Define the market, industry, and addressable customer base for $ARGUMENTS
@@ -94,6 +111,7 @@ For each of the 5 competitors:
 
 - Research current competitor websites, pricing pages, and customer reviews
 - Use web search to identify product launches, funding, executive moves
+- When NotebookLM sources are available, cross-reference with web search for validation
 - Distinguish between direct competitors and adjacent alternatives
 - Validate competitive insights across multiple sources
 - Identify both obvious and subtle differentiation opportunities
