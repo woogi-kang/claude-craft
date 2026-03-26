@@ -28,6 +28,9 @@ class Settings(BaseSettings):
     # Perplexity API (optional, for GEO/AEO AI search checks)
     perplexity_api_key: str = ""
 
+    # Supabase Storage
+    supabase_storage_bucket: str = "reports"
+
     # LINE Messaging API (optional)
     line_channel_secret: str = ""
     line_channel_access_token: str = ""

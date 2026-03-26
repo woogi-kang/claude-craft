@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     // 2. Fetch audit data for email
     const { data: audit } = await supabase
       .from("audits")
-      .select("url, total_score, grade")
+      .select("url, total_score, grade, report_url")
       .eq("id", parsed.data.audit_id)
       .single();
 
@@ -65,6 +65,7 @@ export async function POST(request: NextRequest) {
         totalScore: audit.total_score ?? 0,
         grade: audit.grade ?? "F",
         reportUrl: `${origin}/api/reports/${parsed.data.audit_id}`,
+        pdfUrl: audit.report_url ?? undefined,
       }).catch(() => {});
 
       // Log email sent

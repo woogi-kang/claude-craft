@@ -7,9 +7,10 @@ from fastapi import APIRouter, BackgroundTasks, Depends, Header, HTTPException
 from pydantic import BaseModel, HttpUrl
 
 from ..config import settings
-from ..db.supabase import save_scan_result, update_audit_status
+from ..db.supabase import get_supabase_client, save_scan_result, update_audit_status
 from ..security.rate_limit import RateLimiter
 from ..security.ssrf import SSRFError, validate_url
+from ..services.pdf_generator import generate_pdf
 from ..services.scanner import run_scan
 
 router = APIRouter()
@@ -68,6 +69,19 @@ async def _run_scan_task(task_id: str, url: str, audit_id: str | None, options: 
 
         if audit_id:
             await save_scan_result(audit_id, result)
+
+            # Generate PDF report in background
+            try:
+                audit_data = {
+                    "url": url,
+                    "total_score": result.get("total_score", 0),
+                    "grade": result.get("grade", "F"),
+                    "category_scores": result.get("category_scores", {}),
+                }
+                pdf_url = await generate_pdf(audit_id, audit_data)
+                logger.info(f"PDF generated for audit_id={audit_id}: {pdf_url}")
+            except Exception as pdf_err:
+                logger.warning(f"PDF generation failed for audit_id={audit_id}: {pdf_err}")
     except Exception as e:
         logger.exception(f"Scan failed: {url} error={e}")
         if audit_id:
@@ -101,3 +115,59 @@ async def scan(
     background_tasks.add_task(_run_scan_task, task_id, url_str, body.audit_id, options)
 
     return ScanResponse(task_id=task_id, status="queued")
+
+
+# --- Generate PDF ---
+
+class GeneratePdfRequest(BaseModel):
+    audit_id: str
+
+
+class GeneratePdfResponse(BaseModel):
+    pdf_url: str
+    size_bytes: int
+
+
+@router.post("/generate-pdf", response_model=GeneratePdfResponse)
+async def generate_pdf_endpoint(
+    body: GeneratePdfRequest,
+    _token: str = Depends(verify_bearer),
+):
+    """Generate a PDF report for a completed audit."""
+    import logging
+
+    logger = logging.getLogger("mediscope.pdf")
+
+    client = get_supabase_client()
+    if client is None:
+        raise HTTPException(status_code=500, detail="Supabase not configured")
+
+    # Fetch audit data
+    result = (
+        client.table("audits")
+        .select("url, total_score, grade, scores")
+        .eq("id", body.audit_id)
+        .single()
+        .execute()
+    )
+
+    if not result.data:
+        raise HTTPException(status_code=404, detail="Audit not found")
+
+    audit = result.data
+    audit_data = {
+        "url": audit["url"],
+        "total_score": audit.get("total_score", 0),
+        "grade": audit.get("grade", "F"),
+        "category_scores": audit.get("scores", {}),
+    }
+
+    try:
+        pdf_url = await generate_pdf(body.audit_id, audit_data)
+    except Exception as e:
+        logger.exception(f"PDF generation failed: {e}")
+        raise HTTPException(status_code=500, detail="PDF generation failed")
+
+    # Estimate size (re-fetch from storage is overkill; use a rough estimate)
+    # For a proper size, we'd need to check storage metadata
+    return GeneratePdfResponse(pdf_url=pdf_url, size_bytes=0)

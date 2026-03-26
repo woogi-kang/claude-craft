@@ -12,6 +12,7 @@ interface SendReportEmailParams {
   totalScore: number;
   grade: string;
   reportUrl: string;
+  pdfUrl?: string;
 }
 
 export async function sendReportEmail({
@@ -22,6 +23,7 @@ export async function sendReportEmail({
   totalScore,
   grade,
   reportUrl,
+  pdfUrl,
 }: SendReportEmailParams) {
   return getResend().emails.send({
     from: "CheckYourHospital <onboarding@resend.dev>",
@@ -46,6 +48,7 @@ export async function sendReportEmail({
         <a href="${reportUrl}" style="display: block; background: #2563eb; color: white; text-align: center; padding: 14px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 24px 0;">
           상세 리포트 보기
         </a>
+        ${pdfUrl ? `<a href="${pdfUrl}" style="display: block; background: #16a34a; color: white; text-align: center; padding: 14px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 0 0 24px 0;">PDF 리포트 다운로드</a>` : ""}
 
         <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 32px 0;" />
 
