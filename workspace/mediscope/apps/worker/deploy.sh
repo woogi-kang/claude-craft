@@ -3,24 +3,21 @@
 #
 # Prerequisites:
 #   gcloud auth login
-#   gcloud config set project YOUR_PROJECT_ID
+#   gcloud config set project memoriz-b5ba9
 #
 # Usage:
-#   bash deploy.sh
+#   cd apps/worker && bash deploy.sh
 
 set -euo pipefail
 
-PROJECT_ID=$(gcloud config get-value project)
-REGION="asia-northeast3"  # Seoul
 SERVICE_NAME="cyh-worker"
-IMAGE="gcr.io/${PROJECT_ID}/${SERVICE_NAME}"
+REGION="asia-northeast3"
+PROJECT="memoriz-b5ba9"
 
-echo "=== Building Docker image ==="
-gcloud builds submit --tag "$IMAGE" .
+echo "=== Deploying ${SERVICE_NAME} to Cloud Run (${REGION}) ==="
 
-echo "=== Deploying to Cloud Run ==="
 gcloud run deploy "$SERVICE_NAME" \
-  --image "$IMAGE" \
+  --source . \
   --region "$REGION" \
   --platform managed \
   --memory 1Gi \
@@ -29,12 +26,9 @@ gcloud run deploy "$SERVICE_NAME" \
   --concurrency 5 \
   --min-instances 0 \
   --max-instances 3 \
-  --set-env-vars "SUPABASE_URL=${SUPABASE_URL}" \
-  --set-env-vars "SUPABASE_SECRET_KEY=${SUPABASE_SECRET_KEY}" \
-  --set-env-vars "WORKER_API_KEY=${WORKER_API_KEY}" \
-  --set-env-vars "PAGESPEED_API_KEY=${PAGESPEED_API_KEY}" \
-  --allow-unauthenticated
+  --allow-unauthenticated \
+  --project "$PROJECT"
 
 echo ""
 echo "=== Deployment complete ==="
-gcloud run services describe "$SERVICE_NAME" --region "$REGION" --format="value(status.url)"
+gcloud run services describe "$SERVICE_NAME" --region "$REGION" --project "$PROJECT" --format="value(status.url)"
