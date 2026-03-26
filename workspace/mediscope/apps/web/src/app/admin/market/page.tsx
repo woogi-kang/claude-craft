@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   BarChart,
@@ -14,6 +15,7 @@ import {
   Pie,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 const SIDOS = [
   "서울",
@@ -73,6 +75,37 @@ interface RegionData {
 }
 
 export default function MarketPage() {
+  const [batchScanning, setBatchScanning] = useState(false);
+  const [batchResult, setBatchResult] = useState<{
+    total: number;
+    scanned: number;
+    failed: number;
+  } | null>(null);
+  const [batchError, setBatchError] = useState("");
+
+  async function handleBatchScan() {
+    setBatchScanning(true);
+    setBatchError("");
+    setBatchResult(null);
+    try {
+      const res = await fetch("/api/admin/batch-scan", { method: "POST" });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "벌크 스캔 실패");
+      }
+      const data = await res.json();
+      setBatchResult({
+        total: data.total,
+        scanned: data.scanned,
+        failed: data.failed,
+      });
+    } catch (e) {
+      setBatchError(e instanceof Error ? e.message : "벌크 스캔 실패");
+    } finally {
+      setBatchScanning(false);
+    }
+  }
+
   const { data: regionsData, isLoading } = useQuery<RegionData[]>({
     queryKey: ["market-overview"],
     queryFn: async () => {
@@ -123,7 +156,23 @@ export default function MarketPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold">전국 시장 현황</h1>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold">전국 시장 현황</h1>
+        <div className="flex items-center gap-3">
+          {batchResult && (
+            <span className="text-sm text-muted-foreground">
+              스캔 완료: {batchResult.scanned}/{batchResult.total}
+              {batchResult.failed > 0 && ` (실패 ${batchResult.failed})`}
+            </span>
+          )}
+          {batchError && (
+            <span className="text-sm text-destructive">{batchError}</span>
+          )}
+          <Button onClick={handleBatchScan} disabled={batchScanning}>
+            {batchScanning ? "스캔 중..." : "벌크 스캔 시작"}
+          </Button>
+        </div>
+      </div>
 
       {/* Stats Cards */}
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

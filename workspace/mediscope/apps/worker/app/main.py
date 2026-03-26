@@ -3,6 +3,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from .api.batch_routes import router as batch_router
+from .api.benchmark_routes import router as benchmark_router
 from .api.routes import router
 from .config import settings
 
@@ -20,6 +22,8 @@ app.add_middleware(
 )
 
 app.include_router(router, prefix="/worker")
+app.include_router(batch_router, prefix="/worker")
+app.include_router(benchmark_router, prefix="/worker")
 
 
 @app.get("/")
