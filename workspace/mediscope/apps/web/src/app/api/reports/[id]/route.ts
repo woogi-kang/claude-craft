@@ -23,6 +23,9 @@ function generateReportHtml(audit: {
     cls: "CLS",
     performance_score: "성능 점수",
     mobile: "모바일 반응형",
+    geo_aeo: "GEO/AEO",
+    multilingual: "다국어 지원",
+    competitiveness: "경쟁력",
   };
 
   const gradeColor =

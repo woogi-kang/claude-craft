@@ -5,12 +5,12 @@ from app.services.scorer import WEIGHTS, calculate_grade, calculate_score
 
 
 class TestWeights:
-    def test_weights_sum_is_095(self):
+    def test_weights_sum_is_100(self):
         total = sum(WEIGHTS.values())
-        assert abs(total - 0.95) < 0.001, f"WEIGHTS sum = {total}, expected 0.95"
+        assert abs(total - 1.0) < 0.001, f"WEIGHTS sum = {total}, expected 1.0"
 
-    def test_weights_has_20_items(self):
-        assert len(WEIGHTS) == 20
+    def test_weights_has_21_items(self):
+        assert len(WEIGHTS) == 21
 
 
 class TestCalculateGrade:
@@ -51,7 +51,7 @@ class TestCalculateScore:
         result = calculate_score(results)
         assert result["total_score"] == 100
         assert result["grade"] == "A"
-        assert result["items_checked"] == 20
+        assert result["items_checked"] == 21
 
     def test_all_zero(self):
         results = [

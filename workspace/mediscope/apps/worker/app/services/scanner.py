@@ -11,6 +11,7 @@ from ..checks.https_check import check_https
 from ..checks.images import check_images
 from ..checks.links import check_links
 from ..checks.meta_tags import check_meta_tags
+from ..checks.multilingual import check_multilingual
 from ..checks.mobile import check_mobile
 from ..checks.performance import check_performance
 from ..checks.robots import check_robots
@@ -87,6 +88,9 @@ async def run_scan(
     all_results.append(check_canonical(main_page.html, url))
     all_results.append(check_url_structure(url, crawled_urls))
     all_results.append(check_mobile(main_page.html))
+
+    # Multilingual check (sync)
+    all_results.append(check_multilingual(main_page.html, crawled_urls, url))
 
     # GEO/AEO: HTML-based checks (sync)
     if check_geo:

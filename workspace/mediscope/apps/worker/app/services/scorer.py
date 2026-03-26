@@ -26,9 +26,11 @@ WEIGHTS: dict[str, float] = {
     "ai_search_mention": 0.05,
     "eeat_signals": 0.05,
     "content_clarity": 0.04,
+    # Multilingual (0.05)
+    "multilingual": 0.05,
 }
 
-# Total weight: 0.95 (remaining 0.05 reserved for future phases)
+# Total weight: 1.00
 
 
 def calculate_grade(score: float) -> str:
