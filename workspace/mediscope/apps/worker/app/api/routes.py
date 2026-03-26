@@ -19,12 +19,12 @@ rate_limiter = RateLimiter(max_requests=settings.rate_limit_rpm, window_seconds=
 # --- Auth ---
 
 async def verify_bearer(authorization: Annotated[str | None, Header()] = None) -> str:
-    if not settings.bearer_token:
+    if not settings.worker_api_key:
         return "anonymous"  # No auth configured
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Missing or invalid Bearer token")
     token = authorization.removeprefix("Bearer ")
-    if token != settings.bearer_token:
+    if token != settings.worker_api_key:
         raise HTTPException(status_code=401, detail="Invalid Bearer token")
     return token
 

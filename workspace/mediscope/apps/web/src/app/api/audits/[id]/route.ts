@@ -1,33 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
+  const supabase = createAdminClient();
 
-  // TODO: Supabase query
-  // For now, return mock data
-  const mockAudit = {
-    id,
-    hospital_id: null,
-    url: "https://example-clinic.com",
-    status: "completed" as const,
-    total_score: 38,
-    grade: "D" as const,
-    scores: {
-      technical_seo: 32,
-      performance: 45,
-      geo_aeo: 18,
-      multilingual: 0,
-      competitiveness: 22,
-    },
-    details: {},
-    report_url: null,
-    scan_duration_ms: 45000,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  };
+  const { data: audit, error } = await supabase
+    .from("audits")
+    .select(
+      "id, hospital_id, url, status, total_score, grade, scores, details, report_url, scan_duration_ms, created_at, updated_at",
+    )
+    .eq("id", id)
+    .single();
 
-  return NextResponse.json(mockAudit);
+  if (error || !audit) {
+    return NextResponse.json(
+      { error: "진단을 찾을 수 없습니다" },
+      { status: 404 },
+    );
+  }
+
+  return NextResponse.json(audit);
 }

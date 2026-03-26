@@ -2,17 +2,17 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    model_config = {"env_prefix": "MEDISCOPE_"}
+    model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
     app_name: str = "MediScope Worker"
     debug: bool = False
 
     # Auth
-    bearer_token: str = ""
+    worker_api_key: str = ""
 
     # Supabase
     supabase_url: str = ""
-    supabase_service_key: str = ""
+    supabase_secret_key: str = ""
 
     # Crawler limits
     crawler_timeout: int = 30
