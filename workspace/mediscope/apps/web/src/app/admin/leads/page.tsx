@@ -1,8 +1,10 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 const STATUS_BADGE: Record<
   string,
@@ -70,7 +72,8 @@ export default function AdminLeadsPage() {
                     <th className="pb-3 pr-4 font-medium">병원명</th>
                     <th className="pb-3 pr-4 font-medium">상태</th>
                     <th className="pb-3 pr-4 font-medium">이메일</th>
-                    <th className="pb-3 font-medium">등록일</th>
+                    <th className="pb-3 pr-4 font-medium">등록일</th>
+                    <th className="pb-3 font-medium">액션</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -91,9 +94,21 @@ export default function AdminLeadsPage() {
                         <td className="py-3 pr-4 text-muted-foreground">
                           {lead.emails_sent}건
                         </td>
-                        <td className="py-3 text-muted-foreground">
+                        <td className="py-3 pr-4 text-muted-foreground">
                           {new Date(lead.created_at).toLocaleDateString(
                             "ko-KR",
+                          )}
+                        </td>
+                        <td className="py-3">
+                          {(lead.status === "new" ||
+                            lead.status === "contacted") && (
+                            <Link
+                              href={`/admin/projects/new?lead_id=${lead.id}`}
+                            >
+                              <Button variant="outline" size="sm">
+                                프로젝트 전환
+                              </Button>
+                            </Link>
                           )}
                         </td>
                       </tr>
