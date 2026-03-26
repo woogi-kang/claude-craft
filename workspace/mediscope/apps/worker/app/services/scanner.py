@@ -35,6 +35,7 @@ async def run_scan(
     hospital_name: str = "",
     specialty: str = "",
     region: str = "",
+    hospital_id: str | None = None,
 ) -> dict:
     """Run full SEO + GEO/AEO scan on a URL. Returns scored results."""
     crawler = Crawler(max_pages=max_pages, max_depth=max_depth)
@@ -97,8 +98,21 @@ async def run_scan(
     # Score
     score_data = calculate_score(all_results)
 
-    return {
+    scan_result = {
         "url": url,
         "pages_crawled": len(pages),
         **score_data,
     }
+
+    if hospital_id:
+        from .monitoring import record_score_history
+
+        await record_score_history(
+            hospital_id=hospital_id,
+            audit_id=None,
+            total_score=score_data.get("total_score", 0),
+            grade=score_data.get("grade", "F"),
+            category_scores=score_data.get("category_scores", {}),
+        )
+
+    return scan_result
