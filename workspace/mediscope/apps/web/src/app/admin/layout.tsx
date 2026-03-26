@@ -1,20 +1,29 @@
 import Link from "next/link";
+import { getAdminUser } from "@/lib/auth";
+import { AdminLogout } from "@/components/admin-logout";
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const user = await getAdminUser();
+
+  // Login page — render without sidebar
+  if (!user) {
+    return <>{children}</>;
+  }
+
   return (
     <div className="flex min-h-screen">
-      <aside className="w-56 border-r bg-muted/30 p-4">
+      <aside className="flex w-56 flex-col border-r bg-muted/30 p-4">
         <Link
           href="/admin/dashboard"
           className="mb-6 block text-lg font-bold text-primary"
         >
           CYH Admin
         </Link>
-        <nav className="space-y-1">
+        <nav className="flex-1 space-y-1">
           {[
             { href: "/admin/dashboard", label: "대시보드" },
             { href: "/admin/audits", label: "진단 목록" },
@@ -33,6 +42,7 @@ export default function AdminLayout({
             </Link>
           ))}
         </nav>
+        <AdminLogout email={user.email ?? ""} />
       </aside>
       <main className="flex-1 p-6">{children}</main>
     </div>
