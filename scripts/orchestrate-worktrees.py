@@ -248,7 +248,7 @@ def load_plan(path: str) -> dict:
     plan.setdefault("base_ref", "HEAD")
     plan.setdefault(
         "launcher",
-        "claude --dangerously-skip-permissions -p {task} --cwd {worktree}",
+        "cd {worktree} && cat {task_file} | claude --dangerously-skip-permissions -p -",
     )
 
     return plan
@@ -277,7 +277,7 @@ class WorkerInfo:
         self.base_ref: str = plan.get("base_ref", "HEAD")
         self.launcher_template: str = plan.get(
             "launcher",
-            "claude --dangerously-skip-permissions -p {task} --cwd {worktree}",
+            "cd {worktree} && cat {task_file} | claude --dangerously-skip-permissions -p -",
         )
         self.depends_on: list[str] = worker.get("depends_on", [])
         self.success_criteria: list[str] = worker.get("success_criteria", [])
