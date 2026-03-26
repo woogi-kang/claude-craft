@@ -92,7 +92,7 @@ export default function ProceduresPage() {
               {data?.length ?? 0}개
             </p>
           </button>
-          {Object.entries(BEAUTY_CATEGORIES).map(([key, label]) => {
+          {Object.entries(BEAUTY_CATEGORIES).map(([key, cat]) => {
             const count = data?.filter((p) => p.category === key).length ?? 0;
             return (
               <button
@@ -106,8 +106,10 @@ export default function ProceduresPage() {
                     : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"
                 }`}
               >
-                <span className="text-xl">{CATEGORY_ICONS[key] ?? "💊"}</span>
-                <p className="mt-1 text-sm font-medium">{label}</p>
+                <span className="text-xl">
+                  {CATEGORY_ICONS[key] ?? cat.icon ?? "💊"}
+                </span>
+                <p className="mt-1 text-sm font-medium">{cat.name}</p>
                 <p className="text-xs text-muted-foreground">{count}개</p>
               </button>
             );
@@ -136,7 +138,7 @@ export default function ProceduresPage() {
           <div key={category} className="mb-8">
             <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold">
               <span>{CATEGORY_ICONS[category] ?? "💊"}</span>
-              {BEAUTY_CATEGORIES[category] ?? category}
+              {BEAUTY_CATEGORIES[Number(category)]?.name ?? category}
               <Badge variant="secondary">{procedures.length}</Badge>
             </h2>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

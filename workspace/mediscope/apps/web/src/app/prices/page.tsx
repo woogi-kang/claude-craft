@@ -12,7 +12,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
-import { ArrowLeft, TrendingDown } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import {
   Card,
@@ -28,25 +28,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import type { PriceCompareResponse } from "@/lib/types/beauty";
 import { COUNTRY_LABELS, COUNTRY_COLORS } from "@/lib/types/beauty";
 
-function formatUSD(value: number) {
-  return `$${value.toLocaleString("en-US")}`;
+interface PriceData {
+  procedure_id: number;
+  procedure_name: string;
+  prices: Array<{
+    country: string;
+    currency: string;
+    price_min: number | null;
+    price_max: number | null;
+  }>;
 }
 
-function PriceChart({ data }: { data: PriceCompareResponse }) {
-  const chartData = data.prices.map((p) => ({
-    country: COUNTRY_LABELS[p.country] ?? p.country,
-    countryCode: p.country,
-    min: p.price_usd_min,
-    max: p.price_usd_max,
-    avg: Math.round((p.price_usd_min + p.price_usd_max) / 2),
-  }));
+function PriceChart({ data }: { data: PriceData }) {
+  const chartData = data.prices
+    .filter((p) => p.price_min != null)
+    .map((p) => ({
+      country: COUNTRY_LABELS[p.country] ?? p.country,
+      countryCode: p.country,
+      avg: Math.round(((p.price_min ?? 0) + (p.price_max ?? 0)) / 2),
+    }))
+    .sort((a, b) => b.avg - a.avg);
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer
+      width="100%"
+      height={Math.max(200, chartData.length * 60)}
+    >
       <BarChart
         data={chartData}
         layout="vertical"
@@ -55,12 +64,12 @@ function PriceChart({ data }: { data: PriceCompareResponse }) {
         <CartesianGrid strokeDasharray="3 3" horizontal={false} />
         <XAxis
           type="number"
-          tickFormatter={(v) => `$${v.toLocaleString()}`}
+          tickFormatter={(v) => v.toLocaleString()}
           fontSize={12}
         />
-        <YAxis type="category" dataKey="country" width={60} fontSize={14} />
+        <YAxis type="category" dataKey="country" width={80} fontSize={14} />
         <Tooltip
-          formatter={(value: number) => [formatUSD(value), "평균 가격 (USD)"]}
+          formatter={(value: number) => [value.toLocaleString(), "평균 가격"]}
           contentStyle={{ borderRadius: 8 }}
         />
         <Bar dataKey="avg" radius={[0, 6, 6, 0]} barSize={32}>
@@ -80,7 +89,7 @@ function PriceChart({ data }: { data: PriceCompareResponse }) {
 export default function PricesPage() {
   const [selectedIdx, setSelectedIdx] = useState<string>("0");
 
-  const { data, isLoading, error } = useQuery<PriceCompareResponse[]>({
+  const { data, isLoading, error } = useQuery<PriceData[]>({
     queryKey: ["prices-compare"],
     queryFn: () => fetch("/api/prices/compare").then((r) => r.json()),
   });
@@ -94,8 +103,7 @@ export default function PricesPage() {
           href="/"
           className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4" />
-          홈으로
+          <ArrowLeft className="h-4 w-4" /> 홈으로
         </Link>
 
         <div className="mb-8">
@@ -103,8 +111,7 @@ export default function PricesPage() {
             한국 미용시술 가격비교
           </h1>
           <p className="mt-2 text-muted-foreground">
-            한국, 일본, 중국의 주요 미용시술 가격을 비교해보세요. 한국에서 최대
-            70% 이상 절약할 수 있습니다.
+            한국, 일본, 중국의 주요 미용시술 가격을 비교해보세요.
           </p>
         </div>
 
@@ -137,7 +144,7 @@ export default function PricesPage() {
                   <SelectContent>
                     {data.map((item, idx) => (
                       <SelectItem key={idx} value={String(idx)}>
-                        {item.procedure_name} ({item.procedure_name_en})
+                        {item.procedure_name}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -149,14 +156,9 @@ export default function PricesPage() {
               <>
                 <Card className="mb-6">
                   <CardHeader>
-                    <CardTitle>
-                      {selected.procedure_name}
-                      <span className="ml-2 text-base font-normal text-muted-foreground">
-                        {selected.procedure_name_en}
-                      </span>
-                    </CardTitle>
+                    <CardTitle>{selected.procedure_name}</CardTitle>
                     <CardDescription>
-                      국가별 평균 가격 비교 (USD)
+                      국가별 가격 비교 (현지 통화 기준)
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -164,44 +166,7 @@ export default function PricesPage() {
                   </CardContent>
                 </Card>
 
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {selected.savings_vs_japan_pct != null && (
-                    <Card className="border-blue-200 bg-blue-50">
-                      <CardContent className="flex items-center gap-3 pt-6">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500 text-white">
-                          <TrendingDown className="h-5 w-5" />
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground">
-                            일본 대비 절약
-                          </p>
-                          <p className="text-2xl font-bold text-blue-700">
-                            최대 {selected.savings_vs_japan_pct}% 절약
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-                  {selected.savings_vs_china_pct != null && (
-                    <Card className="border-amber-200 bg-amber-50">
-                      <CardContent className="flex items-center gap-3 pt-6">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-500 text-white">
-                          <TrendingDown className="h-5 w-5" />
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground">
-                            중국 대비 절약
-                          </p>
-                          <p className="text-2xl font-bold text-amber-700">
-                            최대 {selected.savings_vs_china_pct}% 절약
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-                </div>
-
-                <Card className="mt-6">
+                <Card>
                   <CardHeader>
                     <CardTitle className="text-lg">상세 가격표</CardTitle>
                   </CardHeader>
@@ -211,8 +176,9 @@ export default function PricesPage() {
                         <thead>
                           <tr className="border-b text-left">
                             <th className="pb-2 font-medium">국가</th>
-                            <th className="pb-2 font-medium">현지 통화</th>
-                            <th className="pb-2 font-medium">USD 환산</th>
+                            <th className="pb-2 font-medium">최저가</th>
+                            <th className="pb-2 font-medium">최고가</th>
+                            <th className="pb-2 font-medium">통화</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -231,21 +197,15 @@ export default function PricesPage() {
                                     }}
                                   />
                                   {COUNTRY_LABELS[p.country] ?? p.country}
-                                  {p.country === "KR" && (
-                                    <Badge variant="success" className="ml-1">
-                                      최저가
-                                    </Badge>
-                                  )}
                                 </div>
                               </td>
                               <td className="py-3">
-                                {p.price_min.toLocaleString()} ~{" "}
-                                {p.price_max.toLocaleString()} {p.currency}
+                                {p.price_min?.toLocaleString() ?? "-"}
                               </td>
-                              <td className="py-3 font-medium">
-                                {formatUSD(p.price_usd_min)} ~{" "}
-                                {formatUSD(p.price_usd_max)}
+                              <td className="py-3">
+                                {p.price_max?.toLocaleString() ?? "-"}
                               </td>
+                              <td className="py-3 font-medium">{p.currency}</td>
                             </tr>
                           ))}
                         </tbody>

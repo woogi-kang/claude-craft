@@ -9,20 +9,20 @@ export async function GET(
     const { id } = await params;
     const supabase = createAdminClient();
 
-    // Fetch procedure and details in parallel
-    const [procedureResult, detailsResult, priceResult] = await Promise.all([
-      supabase.from("procedures").select("*").eq("id", id).single(),
-      supabase
-        .from("procedure_details")
-        .select("*")
-        .eq("procedure_id", id)
-        .order("lang"),
-      supabase
-        .from("price_comparison")
-        .select("*")
-        .eq("procedure_id", id)
-        .maybeSingle(),
-    ]);
+    const [procedureResult, detailsResult, translationsResult] =
+      await Promise.all([
+        supabase.from("procedures").select("*").eq("id", id).single(),
+        supabase
+          .from("procedure_details")
+          .select("*")
+          .eq("procedure_id", id)
+          .single(),
+        supabase
+          .from("procedure_intl")
+          .select("*")
+          .eq("procedure_id", id)
+          .order("language_code"),
+      ]);
 
     if (procedureResult.error || !procedureResult.data) {
       return NextResponse.json(
@@ -33,13 +33,11 @@ export async function GET(
 
     return NextResponse.json({
       procedure: procedureResult.data,
-      details: detailsResult.data ?? [],
-      price_comparison: priceResult.data,
+      details: detailsResult.data,
+      translations: translationsResult.data ?? [],
+      prices: [],
     });
   } catch {
-    return NextResponse.json(
-      { error: "서버 오류가 발생했습니다" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "서버 오류" }, { status: 500 });
   }
 }
