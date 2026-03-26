@@ -24,7 +24,7 @@ export async function sendReportEmail({
   reportUrl,
 }: SendReportEmailParams) {
   return getResend().emails.send({
-    from: "CheckYourHospital <noreply@checkyourhospital.com>",
+    from: "CheckYourHospital <onboarding@resend.dev>",
     to,
     subject: `[CheckYourHospital] ${hospitalName || auditUrl} 진단 리포트 (${totalScore}점 ${grade}등급)`,
     html: `
@@ -125,7 +125,7 @@ export async function sendFollowUpEmail({
   const tmpl = FOLLOW_UP_TEMPLATES[template] ?? FOLLOW_UP_TEMPLATES.followup_1;
 
   return getResend().emails.send({
-    from: "CheckYourHospital <noreply@checkyourhospital.com>",
+    from: "CheckYourHospital <onboarding@resend.dev>",
     to,
     subject: tmpl.subject(hospitalName),
     html: `
