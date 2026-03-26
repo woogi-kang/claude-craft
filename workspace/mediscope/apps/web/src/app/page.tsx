@@ -66,7 +66,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <header className="border-b">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-          <h1 className="text-xl font-bold text-primary">MediScope</h1>
+          <h1 className="text-xl font-bold text-primary">CheckYourHospital</h1>
           <nav className="flex gap-4">
             <a
               href="#features"
@@ -204,7 +204,7 @@ export default function LandingPage() {
       </main>
 
       <footer className="border-t py-8 text-center text-sm text-muted-foreground">
-        &copy; 2026 MediScope. All rights reserved.
+        &copy; 2026 CheckYourHospital. All rights reserved.
       </footer>
     </div>
   );

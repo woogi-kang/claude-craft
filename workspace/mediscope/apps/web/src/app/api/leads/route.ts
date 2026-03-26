@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sendReportEmail } from "@/lib/resend";
 
 const createLeadSchema = z.object({
   audit_id: z.string().uuid(),
@@ -25,6 +26,7 @@ export async function POST(request: NextRequest) {
 
     const supabase = createAdminClient();
 
+    // 1. Create lead
     const { data: lead, error } = await supabase
       .from("leads")
       .insert({
@@ -45,7 +47,37 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // TODO: Resend 이메일 발송 트리거
+    // 2. Fetch audit data for email
+    const { data: audit } = await supabase
+      .from("audits")
+      .select("url, total_score, grade")
+      .eq("id", parsed.data.audit_id)
+      .single();
+
+    // 3. Send report email (fire-and-forget)
+    if (audit) {
+      const origin = request.nextUrl.origin;
+      sendReportEmail({
+        to: parsed.data.email,
+        name: parsed.data.name,
+        hospitalName: parsed.data.hospital_name ?? "",
+        auditUrl: audit.url,
+        totalScore: audit.total_score ?? 0,
+        grade: audit.grade ?? "F",
+        reportUrl: `${origin}/api/reports/${parsed.data.audit_id}`,
+      }).catch(() => {});
+
+      // Log email sent
+      await supabase.from("email_logs").insert({
+        lead_id: lead.id,
+        template: "report_delivery",
+      });
+
+      await supabase
+        .from("leads")
+        .update({ emails_sent: 1, last_email_at: new Date().toISOString() })
+        .eq("id", lead.id);
+    }
 
     return NextResponse.json(
       { id: lead.id, status: lead.status },
