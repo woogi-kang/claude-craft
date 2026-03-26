@@ -46,18 +46,22 @@ async def compute_benchmark(
     if sb is None:
         return None
 
-    query = sb.table("beauty_clinics").select("latest_score")
+    # Check if latest_score column exists by attempting the query
+    try:
+        query = sb.table("beauty_clinics").select("latest_score")
 
-    if sido:
-        query = query.eq("sido", sido)
-    if sggu:
-        query = query.eq("sggu", sggu)
+        if sido:
+            query = query.eq("sido", sido)
+        if sggu:
+            query = query.eq("sggu", sggu)
 
-    # Only include clinics that have been scanned (non-null score)
-    query = query.not_.is_("latest_score", "null")
+        query = query.not_.is_("latest_score", "null")
 
-    result = query.execute()
-    rows = result.data or []
+        result = query.execute()
+        rows = result.data or []
+    except Exception:
+        # Column doesn't exist yet — no benchmark data available
+        return None
 
     if not rows:
         return None
