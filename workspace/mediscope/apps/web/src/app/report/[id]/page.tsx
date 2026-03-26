@@ -100,11 +100,42 @@ export default function ReportPage() {
     );
   }
 
-  const scores = audit.scores;
-  const chartData = (Object.entries(scores) as [Category, number][]).map(
-    ([key, value], i) => ({
-      name: CATEGORY_LABELS[key] ?? key,
-      score: value,
+  const scores = audit.scores ?? {};
+
+  // scores can be either { category: number } or { item_key: { score, weight, grade, ... } }
+  // Aggregate by category for the chart
+  const CATEGORY_MAP: Record<string, string> = {
+    robots_txt: "technical_seo",
+    sitemap: "technical_seo",
+    meta_tags: "technical_seo",
+    headings: "technical_seo",
+    images_alt: "technical_seo",
+    links: "technical_seo",
+    https: "technical_seo",
+    canonical: "technical_seo",
+    url_structure: "technical_seo",
+    errors_404: "technical_seo",
+    lcp: "performance",
+    inp: "performance",
+    cls: "performance",
+    performance_score: "performance",
+    mobile: "performance",
+  };
+
+  const categoryScores: Record<string, { total: number; count: number }> = {};
+  for (const [key, val] of Object.entries(scores)) {
+    const cat = CATEGORY_MAP[key] ?? key;
+    const numScore =
+      typeof val === "number" ? val : ((val as { score?: number })?.score ?? 0);
+    if (!categoryScores[cat]) categoryScores[cat] = { total: 0, count: 0 };
+    categoryScores[cat].total += numScore;
+    categoryScores[cat].count += 1;
+  }
+
+  const chartData = Object.entries(categoryScores).map(
+    ([key, { total, count }], i) => ({
+      name: CATEGORY_LABELS[key as Category] ?? key,
+      score: Math.round(count > 0 ? total / count : 0),
       fill: BAR_COLORS[i % BAR_COLORS.length],
     }),
   );

@@ -51,6 +51,9 @@ class ScanResponse(BaseModel):
 
 async def _run_scan_task(task_id: str, url: str, audit_id: str | None, options: dict):
     """Background task: run scan and save results."""
+    import logging
+    logger = logging.getLogger("mediscope.scan")
+
     max_pages = options.get("max_pages", 50)
     max_depth = options.get("depth", 3)
 
@@ -58,13 +61,15 @@ async def _run_scan_task(task_id: str, url: str, audit_id: str | None, options: 
         if audit_id:
             await update_audit_status(audit_id, "scanning")
 
+        logger.info(f"Scan started: {url} (audit_id={audit_id})")
         result = await run_scan(url, max_pages=max_pages, max_depth=max_depth)
         result["task_id"] = task_id
+        logger.info(f"Scan completed: {url} score={result.get('total_score')}")
 
         if audit_id:
             await save_scan_result(audit_id, result)
-            await update_audit_status(audit_id, "completed")
-    except Exception:
+    except Exception as e:
+        logger.exception(f"Scan failed: {url} error={e}")
         if audit_id:
             await update_audit_status(audit_id, "failed")
 

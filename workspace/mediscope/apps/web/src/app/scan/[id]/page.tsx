@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Progress } from "@/components/ui/progress";
@@ -51,9 +52,11 @@ export default function ScanPage() {
   const scores = audit?.scores ?? {};
   const progress = getProgress(status, scores);
 
-  if (status === "completed" && audit) {
-    router.replace(`/report/${id}`);
-  }
+  useEffect(() => {
+    if (status === "completed" && audit) {
+      router.replace(`/report/${id}`);
+    }
+  }, [status, audit, router, id]);
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">

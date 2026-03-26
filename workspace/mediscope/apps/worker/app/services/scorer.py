@@ -83,7 +83,7 @@ def calculate_score(results: list[CheckResult]) -> dict:
     total_score = max(0.0, min(100.0, total_score))
 
     return {
-        "total_score": total_score,
+        "total_score": int(round(total_score)),
         "grade": calculate_grade(total_score),
         "items_checked": len([r for r in results if r.name in WEIGHTS]),
         "items_total": len(WEIGHTS),

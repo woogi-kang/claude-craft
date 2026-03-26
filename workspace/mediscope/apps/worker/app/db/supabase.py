@@ -26,9 +26,10 @@ async def save_scan_result(audit_id: str, result: dict) -> bool:
         return False
 
     # Update audits table
+    total_score = result.get("total_score", 0)
     client.table("audits").update({
         "status": "completed",
-        "total_score": result.get("total_score", 0),
+        "total_score": int(round(total_score)) if total_score is not None else 0,
         "grade": result.get("grade", "F"),
         "scores": result.get("category_scores", {}),
         "details": result.get("details", {}),
