@@ -12,6 +12,8 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
+  PieChart,
+  Pie,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,6 +24,18 @@ import type { Audit, Category } from "@/lib/types";
 import { CATEGORY_LABELS, GRADE_COLORS, getGrade } from "@/lib/types";
 
 const BAR_COLORS = ["#4f46e5", "#0ea5e9", "#8b5cf6", "#f59e0b", "#10b981"];
+const PIE_COLORS = ["#4f46e5", "#e5e7eb"];
+
+interface CompetitionData {
+  audit_id: string;
+  region: { sido: string; sggu: string } | null;
+  total_clinics: number;
+  region_clinics: number;
+  foreign_patient_facilitators: number;
+  foreign_patient_rate: number;
+  website_count: number;
+  website_rate: number;
+}
 
 function ScoreGauge({ score, grade }: { score: number; grade: string }) {
   return (
@@ -60,6 +74,16 @@ export default function ReportPage() {
       if (!res.ok) throw new Error("Failed to fetch");
       return res.json();
     },
+  });
+
+  const { data: competition } = useQuery<CompetitionData>({
+    queryKey: ["competition", id],
+    queryFn: async () => {
+      const res = await fetch(`/api/competition/${id}`);
+      if (!res.ok) return null;
+      return res.json();
+    },
+    enabled: !!audit,
   });
 
   async function handleLeadSubmit(e: React.FormEvent) {
@@ -196,6 +220,114 @@ export default function ReportPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Competition Analysis */}
+      {competition && competition.region_clinics > 0 && (
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle className="text-lg">경쟁 분석</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              {competition.region
+                ? `${competition.region.sido} ${competition.region.sggu ?? ""} 지역`
+                : "전체"}{" "}
+              피부과 현황
+            </p>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <div className="rounded-lg border p-4 text-center">
+                <div className="text-3xl font-bold text-primary">
+                  {competition.region_clinics}
+                </div>
+                <div className="mt-1 text-sm text-muted-foreground">
+                  같은 지역 피부과
+                </div>
+              </div>
+              <div className="rounded-lg border p-4 text-center">
+                <div className="text-3xl font-bold text-orange-600">
+                  {competition.foreign_patient_rate}%
+                </div>
+                <div className="mt-1 text-sm text-muted-foreground">
+                  외국인유치기관 비율
+                </div>
+              </div>
+              <div className="rounded-lg border p-4 text-center">
+                <div className="text-3xl font-bold text-blue-600">
+                  {competition.website_rate}%
+                </div>
+                <div className="mt-1 text-sm text-muted-foreground">
+                  웹사이트 보유율
+                </div>
+              </div>
+            </div>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <div>
+                <p className="mb-2 text-sm font-medium">웹사이트 보유</p>
+                <ResponsiveContainer width="100%" height={160}>
+                  <PieChart>
+                    <Pie
+                      data={[
+                        { name: "보유", value: competition.website_count },
+                        {
+                          name: "미보유",
+                          value:
+                            competition.region_clinics -
+                            competition.website_count,
+                        },
+                      ]}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={40}
+                      outerRadius={60}
+                      dataKey="value"
+                      label={({ name, percent }) =>
+                        `${name} ${(percent * 100).toFixed(0)}%`
+                      }
+                    >
+                      <Cell fill={PIE_COLORS[0]} />
+                      <Cell fill={PIE_COLORS[1]} />
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div>
+                <p className="mb-2 text-sm font-medium">외국인유치기관</p>
+                <ResponsiveContainer width="100%" height={160}>
+                  <PieChart>
+                    <Pie
+                      data={[
+                        {
+                          name: "유치기관",
+                          value: competition.foreign_patient_facilitators,
+                        },
+                        {
+                          name: "일반",
+                          value:
+                            competition.region_clinics -
+                            competition.foreign_patient_facilitators,
+                        },
+                      ]}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={40}
+                      outerRadius={60}
+                      dataKey="value"
+                      label={({ name, percent }) =>
+                        `${name} ${(percent * 100).toFixed(0)}%`
+                      }
+                    >
+                      <Cell fill="#f59e0b" />
+                      <Cell fill={PIE_COLORS[1]} />
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Lead Collection Form */}
       <Card className="mt-8">
