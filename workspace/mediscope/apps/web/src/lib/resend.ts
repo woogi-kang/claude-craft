@@ -1,6 +1,8 @@
 import { Resend } from "resend";
 
-export const resend = new Resend(process.env.RESEND_API_KEY);
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY ?? "");
+}
 
 interface SendReportEmailParams {
   to: string;
@@ -21,7 +23,7 @@ export async function sendReportEmail({
   grade,
   reportUrl,
 }: SendReportEmailParams) {
-  return resend.emails.send({
+  return getResend().emails.send({
     from: "CheckYourHospital <noreply@checkyourhospital.com>",
     to,
     subject: `[CheckYourHospital] ${hospitalName || auditUrl} 진단 리포트 (${totalScore}점 ${grade}등급)`,
@@ -67,7 +69,7 @@ export async function sendFollowUpEmail({
   hospitalName: string;
   totalScore: number;
 }) {
-  return resend.emails.send({
+  return getResend().emails.send({
     from: "CheckYourHospital <noreply@checkyourhospital.com>",
     to,
     subject: `[CheckYourHospital] ${hospitalName} 개선 방안을 알려드립니다`,
