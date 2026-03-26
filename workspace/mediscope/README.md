@@ -82,12 +82,34 @@ uvicorn app.main:app --port 8000 --reload
 ## 배포
 
 ```bash
-# Frontend → Vercel
-cd apps/web && vercel deploy
+# Frontend → Cloud Run
+cd apps/web && bash deploy.sh
 
 # Worker → Cloud Run
 cd apps/worker && bash deploy.sh
+
+# Email follow-up cron → Cloud Scheduler
+bash scripts/setup-scheduler.sh
 ```
+
+## 프로덕션 URL
+
+| 서비스 | URL |
+|--------|-----|
+| Frontend | https://cyh-web-124503144711.asia-northeast3.run.app |
+| Worker | https://cyh-worker-124503144711.asia-northeast3.run.app |
+
+## 이메일 시퀀스
+
+| 시점 | 템플릿 | 내용 |
+|------|--------|------|
+| 즉시 | report_delivery | 진단 리포트 발송 |
+| +3일 | followup_1 | 리포트 확인 여부 |
+| +7일 | followup_2 | 무료 30분 상담 제안 |
+| +14일 | followup_3 | 경쟁사 사례 공유 |
+| +30일 | rediagnose | 재진단 알림 |
+
+Cloud Scheduler로 매일 오전 9시(KST) 자동 실행.
 
 ## 환경변수
 
@@ -99,6 +121,7 @@ SUPABASE_SECRET_KEY=
 WORKER_URL=
 WORKER_API_KEY=
 RESEND_API_KEY=
+CRON_SECRET=
 ```
 
 ### Worker (apps/worker/.env)
