@@ -13,7 +13,7 @@ async def check_performance(
     results: list[CheckResult] = []
 
     api_key = settings.pagespeed_api_key
-    psi_url = "https://www.googleapis.com/pagespeedonline/v5/runPagespeedTests"
+    psi_url = "https://www.googleapis.com/pagespeedonline/v5/runPagespeed"
     params: dict = {"url": url, "strategy": "mobile", "category": "PERFORMANCE"}
     if api_key:
         params["key"] = api_key
