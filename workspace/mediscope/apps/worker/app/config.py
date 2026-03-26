@@ -28,5 +28,14 @@ class Settings(BaseSettings):
     # Perplexity API (optional, for GEO/AEO AI search checks)
     perplexity_api_key: str = ""
 
+    # LINE Messaging API (optional)
+    line_channel_secret: str = ""
+    line_channel_access_token: str = ""
+
+    # WeChat Official Account (optional)
+    wechat_token: str = ""
+    wechat_app_id: str = ""
+    wechat_app_secret: str = ""
+
 
 settings = Settings()

@@ -20,6 +20,7 @@ export default function AdminLayout({
             { href: "/admin/audits", label: "진단 목록" },
             { href: "/admin/leads", label: "리드 관리" },
             { href: "/admin/subscriptions", label: "구독 관리" },
+            { href: "/admin/integrations", label: "메신저 연동" },
             { href: "/admin/alerts", label: "알림 이력" },
             { href: "/admin/market", label: "시장 현황" },
           ].map((item) => (
