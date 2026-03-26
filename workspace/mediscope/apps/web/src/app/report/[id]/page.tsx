@@ -145,7 +145,17 @@ export default function ReportPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-12">
-      <h1 className="mb-2 text-3xl font-bold">진단 리포트</h1>
+      <div className="flex items-center justify-between mb-2">
+        <h1 className="text-3xl font-bold">진단 리포트</h1>
+        <a
+          href={`/api/reports/${id}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+        >
+          상세 리포트 보기 / 인쇄
+        </a>
+      </div>
       <p className="mb-8 text-muted-foreground">{audit.url}</p>
 
       <div className="grid gap-6 md:grid-cols-[1fr_2fr]">

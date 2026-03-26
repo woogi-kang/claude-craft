@@ -12,7 +12,7 @@ export default function AdminLayout({
           href="/admin/dashboard"
           className="mb-6 block text-lg font-bold text-primary"
         >
-          MediScope Admin
+          CYH Admin
         </Link>
         <nav className="space-y-1">
           {[
