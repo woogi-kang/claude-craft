@@ -2,8 +2,9 @@
 
 from ..checks.base import CheckResult
 
-# 15 items with weights (must sum to ~1.0)
+# 20 items with weights (must sum to ~1.0)
 WEIGHTS: dict[str, float] = {
+    # Technical SEO (0.70)
     "robots_txt": 0.05,
     "sitemap": 0.05,
     "meta_tags": 0.10,
@@ -19,10 +20,15 @@ WEIGHTS: dict[str, float] = {
     "cls": 0.03,
     "performance_score": 0.04,
     "mobile": 0.05,
+    # GEO/AEO (0.25)
+    "structured_data": 0.08,
+    "faq_content": 0.03,
+    "ai_search_mention": 0.05,
+    "eeat_signals": 0.05,
+    "content_clarity": 0.04,
 }
 
-# Total technical SEO weight (for normalization if items are missing)
-# Sum = 0.70 (remaining 0.30 is for GEO/AEO/multilingual in future phases)
+# Total weight: 0.95 (remaining 0.05 reserved for future phases)
 
 
 def calculate_grade(score: float) -> str:

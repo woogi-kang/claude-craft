@@ -26,6 +26,17 @@ import { CATEGORY_LABELS, GRADE_COLORS, getGrade } from "@/lib/types";
 const BAR_COLORS = ["#4f46e5", "#0ea5e9", "#8b5cf6", "#f59e0b", "#10b981"];
 const PIE_COLORS = ["#4f46e5", "#e5e7eb"];
 
+interface BenchmarkData {
+  audit_id: string;
+  region: { sido: string; sggu: string } | null;
+  top_25_avg: number;
+  median: number;
+  bottom_25_avg: number;
+  total_count: number;
+  your_score: number | null;
+  your_percentile: number | null;
+}
+
 interface CompetitionData {
   audit_id: string;
   region: { sido: string; sggu: string } | null;
@@ -74,6 +85,16 @@ export default function ReportPage() {
       if (!res.ok) throw new Error("Failed to fetch");
       return res.json();
     },
+  });
+
+  const { data: benchmark } = useQuery<BenchmarkData>({
+    queryKey: ["benchmark", id],
+    queryFn: async () => {
+      const res = await fetch(`/api/benchmark/${id}`);
+      if (!res.ok) return null;
+      return res.json();
+    },
+    enabled: !!audit,
   });
 
   const { data: competition } = useQuery<CompetitionData>({
@@ -323,6 +344,74 @@ export default function ReportPage() {
                     <Tooltip />
                   </PieChart>
                 </ResponsiveContainer>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Benchmark Section */}
+      {benchmark && benchmark.total_count > 0 && (
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle className="text-lg">지역 벤치마크</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              {benchmark.region
+                ? `${benchmark.region.sido} ${benchmark.region.sggu ?? ""} 지역`
+                : "전체"}{" "}
+              {benchmark.total_count}개 병원 대비 위치
+            </p>
+          </CardHeader>
+          <CardContent>
+            {benchmark.your_percentile !== null && (
+              <div className="mb-6 rounded-lg bg-primary/5 p-4 text-center">
+                <p className="text-lg font-semibold text-primary">
+                  귀원은 동일 지역 상위{" "}
+                  <span className="text-2xl">
+                    {Math.max(1, 100 - benchmark.your_percentile)}%
+                  </span>
+                  에 위치합니다
+                </p>
+              </div>
+            )}
+            <div className="space-y-3">
+              {/* Distribution bar */}
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>하위 25% 평균: {benchmark.bottom_25_avg}점</span>
+                  <span>중위값: {benchmark.median}점</span>
+                  <span>상위 25% 평균: {benchmark.top_25_avg}점</span>
+                </div>
+                <div className="relative h-8 w-full overflow-hidden rounded-full bg-muted">
+                  {/* Bottom 25% zone */}
+                  <div
+                    className="absolute inset-y-0 left-0 bg-red-200"
+                    style={{ width: "25%" }}
+                  />
+                  {/* Middle 50% zone */}
+                  <div
+                    className="absolute inset-y-0 bg-yellow-200"
+                    style={{ left: "25%", width: "50%" }}
+                  />
+                  {/* Top 25% zone */}
+                  <div
+                    className="absolute inset-y-0 right-0 bg-green-200"
+                    style={{ width: "25%" }}
+                  />
+                  {/* Your position marker */}
+                  {benchmark.your_percentile !== null && (
+                    <div
+                      className="absolute inset-y-0 w-1 bg-primary shadow-md"
+                      style={{
+                        left: `${Math.min(99, Math.max(1, benchmark.your_percentile))}%`,
+                      }}
+                    >
+                      <div className="absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+                        {benchmark.your_score}점
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </CardContent>

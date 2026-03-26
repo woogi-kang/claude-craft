@@ -25,5 +25,8 @@ class Settings(BaseSettings):
     # PageSpeed Insights API (optional)
     pagespeed_api_key: str = ""
 
+    # Perplexity API (optional, for GEO/AEO AI search checks)
+    perplexity_api_key: str = ""
+
 
 settings = Settings()
