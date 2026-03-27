@@ -85,11 +85,10 @@ export default function ReportPage() {
   const totalScore = audit.total_score ?? 0;
   const grade = audit.grade ?? getGrade(totalScore);
 
-  // Extract category_scores from audit.details
-  const categoryScores = (audit.details?.category_scores ?? {}) as Record<
-    string,
-    CheckItemData
-  >;
+  // Extract check item data — scores contains the enriched data from Worker
+  const categoryScores = (audit.scores ??
+    audit.details?.category_scores ??
+    {}) as Record<string, CheckItemData>;
 
   // Compute pass/warn/fail counts
   let passCount = 0;
