@@ -61,6 +61,21 @@ async def run_scan(
     crawled_urls = [p.url for p in pages]
     all_results: list[CheckResult] = []
 
+    # Auto-extract hospital name from page title if not provided
+    if not hospital_name:
+        from bs4 import BeautifulSoup
+
+        soup = BeautifulSoup(main_page.html, "lxml")
+        title_tag = soup.find("title")
+        if title_tag and title_tag.string:
+            # Clean title: remove common suffixes like " - 홈페이지", " | 공식 사이트"
+            raw_title = title_tag.string.strip()
+            for sep in [" - ", " | ", " :: ", " – ", " — "]:
+                if sep in raw_title:
+                    raw_title = raw_title.split(sep)[0].strip()
+                    break
+            hospital_name = raw_title
+
     # Run checks — async checks need an HTTP client
     async with httpx.AsyncClient(
         timeout=settings.crawler_timeout,
