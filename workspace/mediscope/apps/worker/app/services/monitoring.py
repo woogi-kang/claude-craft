@@ -3,6 +3,9 @@
 import logging
 from datetime import datetime, timedelta, timezone
 
+import httpx
+
+from ..config import settings
 from ..db.supabase import get_supabase_client
 from .scanner import run_scan
 
@@ -107,6 +110,57 @@ async def create_alert(
     return result.data[0] if result.data else None
 
 
+async def send_alert_email(
+    email: str,
+    hospital_name: str,
+    prev_score: int,
+    new_score: int,
+) -> bool:
+    """Send score change alert email via Resend API."""
+    if not settings.resend_api_key:
+        logger.debug("resend_api_key not configured, skipping email")
+        return False
+
+    diff = new_score - prev_score
+    direction = "상승" if diff > 0 else "하락"
+    color = "#22c55e" if diff > 0 else "#ef4444"
+
+    html_body = f"""
+    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+      <h2 style="color: #1e293b;">CheckYourHospital 점수 변동 알림</h2>
+      <p><strong>{hospital_name}</strong>의 SEO 점수가 변동되었습니다.</p>
+      <div style="background: #f8fafc; border-radius: 8px; padding: 20px; margin: 16px 0;">
+        <p style="font-size: 18px; margin: 0;">
+          <span>{prev_score}점</span>
+          <span style="color: {color}; font-weight: bold;"> → {new_score}점</span>
+          <span style="color: {color};"> ({abs(diff)}점 {direction})</span>
+        </p>
+      </div>
+      <p style="color: #64748b; font-size: 14px;">CheckYourHospital에서 발송된 자동 알림입니다.</p>
+    </div>
+    """
+
+    try:
+        async with httpx.AsyncClient(timeout=10) as client:
+            resp = await client.post(
+                "https://api.resend.com/emails",
+                headers={"Authorization": f"Bearer {settings.resend_api_key}"},
+                json={
+                    "from": "CheckYourHospital <noreply@checkyourhospital.com>",
+                    "to": email,
+                    "subject": f"[CheckYourHospital] {hospital_name} 점수 변동 알림",
+                    "html": html_body,
+                },
+            )
+            if resp.status_code >= 400:
+                logger.warning(f"Resend API error {resp.status_code}: {resp.text}")
+                return False
+            return True
+    except httpx.HTTPError as exc:
+        logger.warning(f"Failed to send alert email: {exc}")
+        return False
+
+
 async def process_subscription(subscription: dict) -> dict:
     hospital_id = subscription["hospital_id"]
     subscription_id = subscription["id"]
@@ -146,6 +200,15 @@ async def process_subscription(subscription: dict) -> dict:
         message = f"SEO 점수가 {prev_score}점에서 {new_score}점으로 {abs(diff)}점 {direction}했습니다."
         await create_alert(
             subscription_id, hospital_id, alert_type, message, prev_score, new_score
+        )
+
+        # Send alert email
+        hospital_name = subscription.get("name", "병원")
+        await send_alert_email(
+            email=subscription["email"],
+            hospital_name=hospital_name,
+            prev_score=int(round(prev_score)),
+            new_score=int(round(new_score)),
         )
 
     # Update next_scan_at

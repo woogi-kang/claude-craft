@@ -31,6 +31,9 @@ class Settings(BaseSettings):
     # Supabase Storage
     supabase_storage_bucket: str = "reports"
 
+    # Resend API (optional, for alert emails)
+    resend_api_key: str = ""
+
     # LINE Messaging API (optional)
     line_channel_secret: str = ""
     line_channel_access_token: str = ""

@@ -9,8 +9,8 @@ class TestWeights:
         total = sum(WEIGHTS.values())
         assert abs(total - 1.0) < 0.001, f"WEIGHTS sum = {total}, expected 1.0"
 
-    def test_weights_has_21_items(self):
-        assert len(WEIGHTS) == 21
+    def test_weights_has_23_items(self):
+        assert len(WEIGHTS) == 23
 
 
 class TestCalculateGrade:
@@ -51,7 +51,7 @@ class TestCalculateScore:
         result = calculate_score(results)
         assert result["total_score"] == 100
         assert result["grade"] == "A"
-        assert result["items_checked"] == 21
+        assert result["items_checked"] == 23
 
     def test_all_zero(self):
         results = [

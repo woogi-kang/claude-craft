@@ -1,4 +1,4 @@
-"""Multilingual / overseas patient readiness check."""
+"""Multilingual / overseas patient readiness checks (3 separate checks)."""
 
 import re
 from urllib.parse import parse_qs, urlparse
@@ -16,24 +16,11 @@ _LANG_PATH_RE = re.compile(
 _LANG_QUERY_RE = re.compile(r"lang=(en|ja|zh|vi|th|ru|ar)", re.I)
 
 
-def _hreflang_check(soup: BeautifulSoup) -> tuple[float, list[str]]:
-    """Check <link rel="alternate" hreflang="..."> tags."""
-    tags = soup.find_all("link", attrs={"rel": "alternate", "hreflang": True})
-    langs = [tag["hreflang"] for tag in tags if tag.get("hreflang")]
-    count = len(langs)
-    if count >= 2:
-        score = 1.0
-    elif count == 1:
-        score = 0.5
-    else:
-        score = 0.0
-    return score, langs
-
-
-def _lang_pages_check(
-    soup: BeautifulSoup, crawled_urls: list[str],
-) -> tuple[float, list[str]]:
-    """Detect supported languages from URLs and HTML meta."""
+def check_multilingual_pages(
+    main_html: str, crawled_urls: list[str],
+) -> CheckResult:
+    """Check for multi-language page availability."""
+    soup = BeautifulSoup(main_html, "html.parser")
     detected: set[str] = set()
 
     # Check <html lang="...">
@@ -72,11 +59,67 @@ def _lang_pages_check(
     else:
         score = 0.0
 
-    return score, sorted(detected)
+    issues: list[str] = []
+    if score == 0.0:
+        issues.append("외국어 페이지가 감지되지 않았습니다")
+
+    if score >= 0.8:
+        grade = Grade.PASS
+    elif score >= 0.4:
+        grade = Grade.WARN
+    else:
+        grade = Grade.FAIL
+
+    return CheckResult(
+        name="multilingual_pages",
+        score=score,
+        grade=grade,
+        issues=issues,
+        details={
+            "detected_languages": sorted(detected),
+        },
+    )
 
 
-def _overseas_channel_check(soup: BeautifulSoup) -> tuple[float, list[str]]:
+def check_hreflang(main_html: str) -> CheckResult:
+    """Check <link rel="alternate" hreflang="..."> tags."""
+    soup = BeautifulSoup(main_html, "html.parser")
+    tags = soup.find_all("link", attrs={"rel": "alternate", "hreflang": True})
+    langs = [tag["hreflang"] for tag in tags if tag.get("hreflang")]
+    count = len(langs)
+
+    if count >= 2:
+        score = 1.0
+    elif count == 1:
+        score = 0.5
+    else:
+        score = 0.0
+
+    issues: list[str] = []
+    if score == 0.0:
+        issues.append("hreflang 태그가 없습니다")
+
+    if score >= 0.8:
+        grade = Grade.PASS
+    elif score >= 0.5:
+        grade = Grade.WARN
+    else:
+        grade = Grade.FAIL
+
+    return CheckResult(
+        name="hreflang",
+        score=score,
+        grade=grade,
+        issues=issues,
+        details={
+            "hreflang_tags": langs,
+        },
+    )
+
+
+def check_overseas_channels(main_html: str) -> CheckResult:
     """Detect overseas messaging channel links (LINE, WeChat, WhatsApp)."""
+    soup = BeautifulSoup(main_html, "html.parser")
     channels: set[str] = set()
     text = soup.get_text()
 
@@ -102,32 +145,8 @@ def _overseas_channel_check(soup: BeautifulSoup) -> tuple[float, list[str]]:
     else:
         score = 0.0
 
-    return score, found
-
-
-def check_multilingual(
-    main_html: str,
-    crawled_urls: list[str],
-    base_url: str,
-) -> CheckResult:
-    """Check multilingual / overseas patient readiness."""
-    soup = BeautifulSoup(main_html, "html.parser")
-
-    hreflang_score, hreflang_tags = _hreflang_check(soup)
-    lang_score, detected_languages = _lang_pages_check(soup, crawled_urls)
-    channel_score, overseas_channels = _overseas_channel_check(soup)
-
-    score = round(
-        hreflang_score * 0.30 + lang_score * 0.50 + channel_score * 0.20,
-        2,
-    )
-
     issues: list[str] = []
-    if hreflang_score == 0.0:
-        issues.append("hreflang 태그가 없습니다")
-    if lang_score == 0.0:
-        issues.append("외국어 페이지가 감지되지 않았습니다")
-    if channel_score == 0.0:
+    if score == 0.0:
         issues.append("해외 환자용 메신저 채널이 없습니다 (LINE/WeChat/WhatsApp)")
 
     if score >= 0.8:
@@ -138,18 +157,11 @@ def check_multilingual(
         grade = Grade.FAIL
 
     return CheckResult(
-        name="multilingual",
+        name="overseas_channels",
         score=score,
         grade=grade,
         issues=issues,
         details={
-            "hreflang_tags": hreflang_tags,
-            "detected_languages": detected_languages,
-            "overseas_channels": overseas_channels,
-            "sub_scores": {
-                "hreflang": hreflang_score,
-                "lang_pages": lang_score,
-                "overseas_channels": channel_score,
-            },
+            "overseas_channels": found,
         },
     )

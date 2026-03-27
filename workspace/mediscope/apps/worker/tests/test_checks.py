@@ -24,7 +24,11 @@ from app.checks.structured_data import (
     check_faq_content,
     check_structured_data,
 )
-from app.checks.multilingual import check_multilingual
+from app.checks.multilingual import (
+    check_hreflang,
+    check_multilingual_pages,
+    check_overseas_channels,
+)
 from app.checks.url_structure import check_url_structure
 
 
@@ -470,55 +474,97 @@ class TestAiSearchMention:
         assert "API" in r.issues[0]
 
 
-# ── Multilingual ──────────────────────────────────────────────────────
+# ── Multilingual Pages ────────────────────────────────────────────────
 
 
-class TestMultilingual:
-    def test_multilingual_pass(self):
-        html = """<html lang="ko"><head>
-        <link rel="alternate" hreflang="ko" href="https://example.com/">
-        <link rel="alternate" hreflang="en" href="https://example.com/en/">
-        <link rel="alternate" hreflang="ja" href="https://example.com/ja/">
-        </head><body>
-        <a href="https://line.me/ti/p/@clinic">LINE 상담</a>
-        <a href="https://wa.me/821012345678">WhatsApp</a>
-        </body></html>"""
+class TestMultilingualPages:
+    def test_pass_multiple_languages(self):
+        html = '<html lang="ko"><head></head><body></body></html>'
         urls = [
             "https://example.com/",
             "https://example.com/en/",
             "https://example.com/ja/about",
             "https://example.com/zh/services",
         ]
-        r = check_multilingual(html, urls, "https://example.com")
+        r = check_multilingual_pages(html, urls)
+        assert r.name == "multilingual_pages"
         assert r.grade == Grade.PASS
-        assert r.score >= 0.8
-        assert "en" in r.details["hreflang_tags"]
-        assert len(r.details["overseas_channels"]) >= 2
-        assert r.details["sub_scores"]["hreflang"] == 1.0
-        assert r.details["sub_scores"]["overseas_channels"] == 1.0
+        assert r.score == 1.0
 
-    def test_multilingual_fail(self):
-        html = """<html lang="ko"><head></head><body>
-        <p>한국어만 있는 사이트</p>
-        </body></html>"""
+    def test_fail_korean_only(self):
+        html = '<html lang="ko"><head></head><body></body></html>'
         urls = ["https://example.com/", "https://example.com/about"]
-        r = check_multilingual(html, urls, "https://example.com")
+        r = check_multilingual_pages(html, urls)
         assert r.grade == Grade.FAIL
         assert r.score == 0.0
-        assert len(r.issues) == 3
+        assert len(r.issues) == 1
 
-    def test_multilingual_partial(self):
-        html = """<html lang="ko"><head>
+    def test_warn_one_language(self):
+        html = '<html lang="ko"><head></head><body></body></html>'
+        urls = ["https://example.com/", "https://example.com/en/"]
+        r = check_multilingual_pages(html, urls)
+        assert r.grade == Grade.WARN
+        assert r.score == 0.4
+
+
+# ── Hreflang ─────────────────────────────────────────────────────────
+
+
+class TestHreflang:
+    def test_pass_multiple_hreflang(self):
+        html = """<html><head>
         <link rel="alternate" hreflang="ko" href="https://example.com/">
         <link rel="alternate" hreflang="en" href="https://example.com/en/">
-        </head><body>
-        <p>hreflang만 있고 실제 다국어 페이지 없음</p>
-        </body></html>"""
-        urls = ["https://example.com/"]
-        r = check_multilingual(html, urls, "https://example.com")
-        # hreflang=1.0*0.3 + lang_pages=0.0*0.5 + channels=0.0*0.2 = 0.3
+        <link rel="alternate" hreflang="ja" href="https://example.com/ja/">
+        </head><body></body></html>"""
+        r = check_hreflang(html)
+        assert r.name == "hreflang"
+        assert r.grade == Grade.PASS
+        assert r.score == 1.0
+        assert "en" in r.details["hreflang_tags"]
+
+    def test_fail_no_hreflang(self):
+        html = "<html><head></head><body></body></html>"
+        r = check_hreflang(html)
         assert r.grade == Grade.FAIL
-        assert r.score == 0.3
-        assert r.details["sub_scores"]["hreflang"] == 1.0
-        assert r.details["sub_scores"]["lang_pages"] == 0.0
-        assert r.details["sub_scores"]["overseas_channels"] == 0.0
+        assert r.score == 0.0
+        assert len(r.issues) == 1
+
+    def test_warn_single_hreflang(self):
+        html = """<html><head>
+        <link rel="alternate" hreflang="ko" href="https://example.com/">
+        </head><body></body></html>"""
+        r = check_hreflang(html)
+        assert r.grade == Grade.WARN
+        assert r.score == 0.5
+
+
+# ── Overseas Channels ────────────────────────────────────────────────
+
+
+class TestOverseasChannels:
+    def test_pass_multiple_channels(self):
+        html = """<html><body>
+        <a href="https://line.me/ti/p/@clinic">LINE 상담</a>
+        <a href="https://wa.me/821012345678">WhatsApp</a>
+        </body></html>"""
+        r = check_overseas_channels(html)
+        assert r.name == "overseas_channels"
+        assert r.grade == Grade.PASS
+        assert r.score == 1.0
+        assert len(r.details["overseas_channels"]) >= 2
+
+    def test_fail_no_channels(self):
+        html = "<html><body><p>No channels</p></body></html>"
+        r = check_overseas_channels(html)
+        assert r.grade == Grade.FAIL
+        assert r.score == 0.0
+        assert len(r.issues) == 1
+
+    def test_warn_single_channel(self):
+        html = """<html><body>
+        <a href="https://line.me/ti/p/@clinic">LINE</a>
+        </body></html>"""
+        r = check_overseas_channels(html)
+        assert r.grade == Grade.WARN
+        assert r.score == 0.5
