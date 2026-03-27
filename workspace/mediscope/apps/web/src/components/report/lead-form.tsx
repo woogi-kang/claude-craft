@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { MessageSquareHeart, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -39,25 +39,44 @@ export function LeadForm({ auditId }: { auditId: string }) {
   }
 
   return (
-    <Card className="mt-8">
-      <CardHeader>
-        <CardTitle className="text-lg">상세 리포트를 받아보세요</CardTitle>
-        <p className="text-sm text-muted-foreground">
-          정보를 입력하시면 PDF 상세 리포트를 이메일로 보내드립니다.
-        </p>
-      </CardHeader>
-      <CardContent>
+    <section className="mt-10">
+      <div className="rounded-2xl border-2 border-primary/20 bg-gradient-to-br from-slate-50 to-blue-50/40 p-6 sm:p-8">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+            <MessageSquareHeart
+              className="h-5 w-5 text-primary"
+              aria-hidden="true"
+            />
+          </div>
+          <div>
+            <h2 className="text-lg font-bold text-slate-900">
+              전문가의 도움이 필요하신가요?
+            </h2>
+            <p className="text-sm text-slate-500">
+              정보를 입력하시면 맞춤 개선안을 이메일로 보내드립니다
+            </p>
+          </div>
+        </div>
+
         {submitted ? (
-          <div className="rounded-lg bg-green-50 p-4 text-center text-green-800">
-            신청이 완료되었습니다. 이메일로 상세 리포트를 보내드리겠습니다.
+          <div className="mt-4 rounded-xl bg-green-50 border border-green-200 p-5 text-center">
+            <p className="text-green-800 font-medium">신청이 완료되었습니다.</p>
+            <p className="text-sm text-green-600 mt-1">
+              이메일로 맞춤 개선안을 보내드리겠습니다.
+            </p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="mt-5 space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="email">이메일 *</Label>
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="lead-email"
+                  className="text-sm font-medium text-slate-700"
+                >
+                  이메일 *
+                </Label>
                 <Input
-                  id="email"
+                  id="lead-email"
                   type="email"
                   placeholder="you@hospital.kr"
                   value={form.email}
@@ -65,24 +84,36 @@ export function LeadForm({ auditId }: { auditId: string }) {
                     setForm((p) => ({ ...p, email: e.target.value }))
                   }
                   required
+                  className="bg-white"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="name">담당자명 *</Label>
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="lead-name"
+                  className="text-sm font-medium text-slate-700"
+                >
+                  담당자명 *
+                </Label>
                 <Input
-                  id="name"
+                  id="lead-name"
                   placeholder="홍길동"
                   value={form.name}
                   onChange={(e) =>
                     setForm((p) => ({ ...p, name: e.target.value }))
                   }
                   required
+                  className="bg-white"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="hospital_name">병원명</Label>
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="lead-hospital"
+                  className="text-sm font-medium text-slate-700"
+                >
+                  병원명
+                </Label>
                 <Input
-                  id="hospital_name"
+                  id="lead-hospital"
                   placeholder="OO병원"
                   value={form.hospital_name}
                   onChange={(e) =>
@@ -91,28 +122,36 @@ export function LeadForm({ auditId }: { auditId: string }) {
                       hospital_name: e.target.value,
                     }))
                   }
+                  className="bg-white"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="phone">전화번호</Label>
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="lead-phone"
+                  className="text-sm font-medium text-slate-700"
+                >
+                  전화번호
+                </Label>
                 <Input
-                  id="phone"
+                  id="lead-phone"
                   type="tel"
                   placeholder="02-1234-5678"
                   value={form.phone}
                   onChange={(e) =>
                     setForm((p) => ({ ...p, phone: e.target.value }))
                   }
+                  className="bg-white"
                 />
               </div>
             </div>
             {error && <p className="text-sm text-destructive">{error}</p>}
-            <Button type="submit" className="w-full">
-              무료 상세 리포트 받기
+            <Button type="submit" size="lg" className="w-full text-base">
+              <Send className="h-4 w-4" aria-hidden="true" />
+              무료 상담 받기
             </Button>
           </form>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </section>
   );
 }

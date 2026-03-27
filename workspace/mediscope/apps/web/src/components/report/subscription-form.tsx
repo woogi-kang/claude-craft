@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -57,58 +57,67 @@ export function SubscriptionForm({ auditId }: { auditId: string }) {
   }
 
   return (
-    <Card className="mt-8">
-      <CardHeader>
-        <CardTitle className="text-lg">모니터링 구독</CardTitle>
-        <p className="text-sm text-muted-foreground">
+    <section className="mt-6">
+      <div className="rounded-xl border border-slate-200 bg-white p-5 sm:p-6">
+        <div className="flex items-center gap-2 mb-1">
+          <Bell className="h-4 w-4 text-slate-500" aria-hidden="true" />
+          <h3 className="text-base font-semibold text-slate-900">
+            모니터링 구독
+          </h3>
+        </div>
+        <p className="text-sm text-slate-500 mb-4">
           정기적으로 사이트를 재진단하여 점수 변동 알림을 받아보세요.
         </p>
-      </CardHeader>
-      <CardContent>
+
         {submitted ? (
-          <div className="rounded-lg bg-green-50 p-4 text-center text-green-800">
+          <div className="rounded-lg bg-green-50 border border-green-200 p-4 text-center text-green-800">
             구독이 완료되었습니다. 점수 변동 시 이메일로 알림을 보내드립니다.
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="sub-email">이메일 *</Label>
-                <Input
-                  id="sub-email"
-                  type="email"
-                  placeholder="you@hospital.kr"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="sub-frequency">진단 빈도</Label>
-                <Select value={frequency} onValueChange={setFrequency}>
-                  <SelectTrigger id="sub-frequency">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="weekly">주간</SelectItem>
-                    <SelectItem value="biweekly">격주</SelectItem>
-                    <SelectItem value="monthly">월간</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col sm:flex-row gap-3"
+          >
+            <div className="flex-1 space-y-1">
+              <Label htmlFor="sub-email" className="sr-only">
+                이메일
+              </Label>
+              <Input
+                id="sub-email"
+                type="email"
+                placeholder="이메일 주소를 입력하세요"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
-            {error && <p className="text-sm text-destructive">{error}</p>}
+            <div className="w-full sm:w-28 space-y-1">
+              <Label htmlFor="sub-frequency" className="sr-only">
+                진단 빈도
+              </Label>
+              <Select value={frequency} onValueChange={setFrequency}>
+                <SelectTrigger id="sub-frequency">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="weekly">주간</SelectItem>
+                  <SelectItem value="biweekly">격주</SelectItem>
+                  <SelectItem value="monthly">월간</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <Button
               type="submit"
               variant="outline"
-              className="w-full"
               disabled={loading}
+              className="shrink-0"
             >
-              {loading ? "처리중..." : "점수 변동 알림 받기"}
+              {loading ? "처리중..." : "알림 받기"}
             </Button>
           </form>
         )}
-      </CardContent>
-    </Card>
+        {error && <p className="mt-2 text-sm text-destructive">{error}</p>}
+      </div>
+    </section>
   );
 }
