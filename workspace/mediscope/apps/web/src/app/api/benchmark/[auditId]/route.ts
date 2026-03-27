@@ -70,15 +70,14 @@ export async function GET(
 
   if (audit.url) {
     const domain = new URL(audit.url).hostname.replace("www.", "");
-    const { data: clinic } = await supabase
+    const { data: clinics } = await supabase
       .from("beauty_clinics")
       .select("sido, sggu")
       .ilike("website", `%${domain}%`)
-      .limit(1)
-      .maybeSingle();
-    if (clinic) {
-      sido = clinic.sido ?? undefined;
-      sggu = clinic.sggu ?? undefined;
+      .limit(1);
+    if (clinics && clinics.length > 0) {
+      sido = clinics[0].sido ?? undefined;
+      sggu = clinics[0].sggu ?? undefined;
     }
   }
 
