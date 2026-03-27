@@ -73,7 +73,7 @@ export async function GET(
     const { data: clinic } = await supabase
       .from("beauty_clinics")
       .select("sido, sggu")
-      .or(`website.ilike.%${domain}%,clinic_final_url.ilike.%${domain}%`)
+      .ilike("website", `%${domain}%`)
       .limit(1)
       .maybeSingle();
     if (clinic) {
