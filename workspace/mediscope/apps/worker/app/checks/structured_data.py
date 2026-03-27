@@ -209,20 +209,49 @@ def check_faq_content(html: str) -> CheckResult:
     )
 
 
-def check_eeat_signals(html: str, url: str) -> CheckResult:
-    """Check E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness) signals."""
+def check_eeat_signals(
+    html: str, url: str, crawled_pages: list | None = None,
+) -> CheckResult:
+    """Check E-E-A-T signals across main page and crawled sub-pages.
+
+    Args:
+        html: Main page HTML
+        url: Main page URL
+        crawled_pages: List of CrawlResult objects from crawler (optional)
+    """
     soup = BeautifulSoup(html, "html.parser")
     text = soup.get_text().lower()
 
+    # Also analyze relevant sub-pages (doctor/about/intro pages)
+    _DOCTOR_URL_RE = re.compile(
+        r"(doctor|staff|team|의료진|원장|소개|intro|about|member|professor)",
+        re.I,
+    )
+    sub_texts: list[str] = []
+    doctor_page_found = False
+    if crawled_pages:
+        for page in crawled_pages:
+            page_url = getattr(page, "url", "")
+            page_html = getattr(page, "html", "")
+            if _DOCTOR_URL_RE.search(page_url):
+                doctor_page_found = True
+                sub_soup = BeautifulSoup(page_html, "html.parser")
+                sub_texts.append(sub_soup.get_text().lower())
+
+    # Combine all text for analysis
+    all_text = text + " " + " ".join(sub_texts)
+
     score = 0.0
     issues: list[str] = []
-    details: dict = {}
+    details: dict = {"doctor_page_found": doctor_page_found}
 
-    # Author/Doctor profiles
+    # Author/Doctor profiles — check across all pages
     author_patterns = re.compile(
-        r"(의사|원장|대표원장|전문의|교수|박사|dr\.|doctor|physician|specialist)", re.I
+        r"(의사|원장|대표원장|전문의|교수|박사|부원장|피부과\s*전문의|성형외과\s*전문의"
+        r"|dr\.|doctor|physician|specialist|대표\s*원장|담당\s*의료진)",
+        re.I,
     )
-    author_matches = author_patterns.findall(text)
+    author_matches = author_patterns.findall(all_text)
     details["author_signal_count"] = len(author_matches)
     if author_matches:
         score += 0.25
@@ -231,9 +260,12 @@ def check_eeat_signals(html: str, url: str) -> CheckResult:
 
     # Credentials & qualifications
     credential_patterns = re.compile(
-        r"(자격증|면허|인증|학력|경력|수련|전공|board.?certified|fellowship|residency)", re.I
+        r"(자격증|면허|인증|학력|경력|수련|전공|졸업|수료|학회|대한|의학과|의대"
+        r"|연세대|서울대|고려대|성균관|경희대|이화여대|한양대|중앙대|가톨릭대"
+        r"|board.?certified|fellowship|residency|university|degree)",
+        re.I,
     )
-    credential_matches = credential_patterns.findall(text)
+    credential_matches = credential_patterns.findall(all_text)
     details["credential_signal_count"] = len(credential_matches)
     if credential_matches:
         score += 0.2
@@ -242,34 +274,53 @@ def check_eeat_signals(html: str, url: str) -> CheckResult:
 
     # Contact & trust signals
     contact_patterns = re.compile(
-        r"(전화|연락처|주소|찾아오시는|오시는\s*길|contact|address|phone|tel)", re.I
+        r"(전화|연락처|주소|찾아오시는|오시는\s*길|contact|address|phone|tel"
+        r"|대표번호|상담전화|카카오\s*상담)",
+        re.I,
     )
-    contact_matches = contact_patterns.findall(text)
+    contact_matches = contact_patterns.findall(all_text)
     details["contact_signal_count"] = len(contact_matches)
     if contact_matches:
         score += 0.15
 
     # Reviews/testimonials
     review_patterns = re.compile(
-        r"(후기|리뷰|환자\s*경험|치료\s*사례|review|testimonial|before.?after)", re.I
+        r"(후기|리뷰|환자\s*경험|치료\s*사례|시술\s*후기|전후\s*사진|전후사진"
+        r"|review|testimonial|before.?after)",
+        re.I,
     )
-    review_matches = review_patterns.findall(text)
+    review_matches = review_patterns.findall(all_text)
     details["review_signal_count"] = len(review_matches)
     if review_matches:
         score += 0.15
 
-    # About/team page links
+    # About/team page links — expanded Korean patterns
     links = soup.find_all("a", href=True)
+    _ABOUT_HREF_RE = re.compile(
+        r"(about|team|doctor|staff|intro|member|professor"
+        r"|의료진|소개|원장|의사|전문의|대표원장)",
+        re.I,
+    )
+    _ABOUT_TEXT_RE = re.compile(
+        r"(소개|의료진|원장|원장님|의사|전문의|대표원장|팀|스태프"
+        r"|about|team|doctor|our\s+team|meet\s+the\s+doctor)",
+        re.I,
+    )
     about_links = [
         a for a in links
-        if re.search(r"(about|team|doctor|의료진|소개|원장)", a.get("href", ""), re.I)
-        or re.search(r"(소개|의료진|원장|팀|about|team|doctor)", a.get_text(), re.I)
+        if _ABOUT_HREF_RE.search(a.get("href", ""))
+        or _ABOUT_TEXT_RE.search(a.get_text())
     ]
     details["about_link_count"] = len(about_links)
-    if about_links:
+    if about_links or doctor_page_found:
         score += 0.15
     else:
         issues.append("의료진/소개 페이지 링크가 없습니다")
+        if not doctor_page_found:
+            issues.append(
+                "💡 의료진 소개 페이지를 별도로 만들고, 메인 메뉴에서 접근 가능하게 하세요. "
+                "URL에 'doctor' 또는 '의료진'을 포함하면 검색엔진이 더 잘 인식합니다."
+            )
 
     # Schema.org Person/Physician
     json_ld = _extract_json_ld(html)
@@ -286,6 +337,13 @@ def check_eeat_signals(html: str, url: str) -> CheckResult:
         grade = Grade.WARN
     else:
         grade = Grade.FAIL
+
+    # Add warning if site structure makes it hard to find doctor info
+    if not doctor_page_found and about_links:
+        details["structure_warning"] = (
+            "의료진 소개 링크는 있지만 크롤러가 해당 페이지를 찾지 못했습니다. "
+            "URL 구조를 개선하면 검색엔진이 의사 정보를 더 잘 수집할 수 있습니다."
+        )
 
     return CheckResult(
         name="eeat_signals",

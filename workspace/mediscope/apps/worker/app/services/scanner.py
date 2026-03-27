@@ -123,7 +123,7 @@ async def run_scan(
     if check_geo:
         all_results.append(check_structured_data(main_page.html))
         all_results.append(check_faq_content(main_page.html))
-        all_results.append(check_eeat_signals(main_page.html, url))
+        all_results.append(check_eeat_signals(main_page.html, url, pages))
         all_results.append(check_content_clarity(main_page.html))
 
     # Score
