@@ -175,6 +175,11 @@ export default function ReportPage() {
 
         <TopIssues issues={topIssues} blurred={!isUnlocked} />
 
+        {/* === Gate 전: 벤치마크 티저 === */}
+        {!isUnlocked && (
+          <BenchmarkSection auditId={id} enabled={!!audit} teaser />
+        )}
+
         {/* === Gate: 이메일 입력 폼 === */}
         {!isUnlocked && (
           <GateOverlay
@@ -310,7 +315,7 @@ export default function ReportPage() {
               </section>
             )}
 
-            <BenchmarkSection auditId={id} enabled={!!audit} />
+            <BenchmarkSection auditId={id} enabled={!!audit} teaser={false} />
 
             {!!audit.details?.international_search && (
               <IntlSearchSection
