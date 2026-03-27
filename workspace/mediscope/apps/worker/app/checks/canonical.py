@@ -6,6 +6,10 @@ from bs4 import BeautifulSoup
 
 from .base import CheckResult, Grade
 
+_DISPLAY_NAME = "대표 URL 지정"
+_DESCRIPTION = "같은 내용의 페이지가 여러 주소로 접근될 때, 어떤 것이 진짜인지 알려줍니다"
+_RECOMMENDATION = '웹 개발자에게 "각 페이지에 canonical 태그를 추가해달라"고 요청하세요'
+
 
 def check_canonical(html: str, url: str) -> CheckResult:
     soup = BeautifulSoup(html, "lxml")
@@ -17,7 +21,10 @@ def check_canonical(html: str, url: str) -> CheckResult:
     if not canonical:
         issues.append("canonical 태그가 없습니다")
         return CheckResult(
-            name="canonical", score=0.0, grade=Grade.FAIL, details=details, issues=issues
+            name="canonical", score=0.0, grade=Grade.FAIL,
+            display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
+            details=details, issues=issues,
         )
 
     href = canonical.get("href", "")
@@ -28,7 +35,10 @@ def check_canonical(html: str, url: str) -> CheckResult:
     if not href:
         issues.append("canonical 태그에 href가 없습니다")
         return CheckResult(
-            name="canonical", score=0.0, grade=Grade.FAIL, details=details, issues=issues
+            name="canonical", score=0.0, grade=Grade.FAIL,
+            display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
+            details=details, issues=issues,
         )
 
     # Check if canonical points to itself (good) or elsewhere
@@ -40,7 +50,15 @@ def check_canonical(html: str, url: str) -> CheckResult:
 
     if issues:
         return CheckResult(
-            name="canonical", score=0.5, grade=Grade.WARN, details=details, issues=issues
+            name="canonical", score=0.5, grade=Grade.WARN,
+            display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
+            details=details, issues=issues,
         )
 
-    return CheckResult(name="canonical", score=1.0, grade=Grade.PASS, details=details)
+    return CheckResult(
+        name="canonical", score=1.0, grade=Grade.PASS,
+        display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+        recommendation=_RECOMMENDATION,
+        details=details,
+    )

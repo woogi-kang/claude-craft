@@ -7,6 +7,12 @@ import httpx
 
 from .base import CheckResult, Grade
 
+_DISPLAY_NAME = "보안 연결 (자물쇠)"
+_DESCRIPTION = "홈페이지가 암호화된 안전한 연결을 사용하는지 확인합니다"
+_RECOMMENDATION = (
+    '호스팅 업체에 "SSL 인증서 설치"를 요청하세요. 무료 인증서(Let\'s Encrypt)도 있습니다'
+)
+
 
 async def check_https(client: httpx.AsyncClient, url: str) -> CheckResult:
     parsed = urlparse(url)
@@ -25,7 +31,10 @@ async def check_https(client: httpx.AsyncClient, url: str) -> CheckResult:
             details["https_available"] = False
             issues.append("HTTPS를 사용할 수 없습니다")
             return CheckResult(
-                name="https", score=0.0, grade=Grade.FAIL, details=details, issues=issues
+                name="https", score=0.0, grade=Grade.FAIL,
+                display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+                recommendation=_RECOMMENDATION,
+                details=details, issues=issues,
             )
 
     # Check HTTP → HTTPS redirect
@@ -50,9 +59,24 @@ async def check_https(client: httpx.AsyncClient, url: str) -> CheckResult:
         pass
 
     if parsed.scheme != "https":
-        return CheckResult(name="https", score=0.0, grade=Grade.FAIL, details=details, issues=issues)
+        return CheckResult(
+            name="https", score=0.0, grade=Grade.FAIL,
+            display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
+            details=details, issues=issues,
+        )
 
     if issues:
-        return CheckResult(name="https", score=0.5, grade=Grade.WARN, details=details, issues=issues)
+        return CheckResult(
+            name="https", score=0.5, grade=Grade.WARN,
+            display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
+            details=details, issues=issues,
+        )
 
-    return CheckResult(name="https", score=1.0, grade=Grade.PASS, details=details)
+    return CheckResult(
+        name="https", score=1.0, grade=Grade.PASS,
+        display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+        recommendation=_RECOMMENDATION,
+        details=details,
+    )

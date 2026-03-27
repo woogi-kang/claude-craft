@@ -66,6 +66,20 @@ def calculate_score(results: list[CheckResult]) -> dict:
     for name, weight in WEIGHTS.items():
         check = result_map.get(name)
         if check:
+            if check.fail_type in ("system_limit", "api_error"):
+                # 시스템 한계/API 오류는 가중치에서 제외
+                category_scores[name] = {
+                    "score": None,
+                    "weight": weight,
+                    "grade": check.grade.value,
+                    "fail_type": check.fail_type,
+                    "display_name": check.display_name,
+                    "description": check.description,
+                    "recommendation": check.recommendation,
+                    "issues": check.issues,
+                    "details": check.details,
+                }
+                continue
             item_score = check.score * 100  # Convert 0.0-1.0 to 0-100
             weighted_sum += check.score * weight
             weight_sum += weight
@@ -73,6 +87,10 @@ def calculate_score(results: list[CheckResult]) -> dict:
                 "score": round(item_score, 1),
                 "weight": weight,
                 "grade": check.grade.value,
+                "fail_type": check.fail_type,
+                "display_name": check.display_name,
+                "description": check.description,
+                "recommendation": check.recommendation,
                 "issues": check.issues,
                 "details": check.details,
             }
@@ -81,6 +99,10 @@ def calculate_score(results: list[CheckResult]) -> dict:
                 "score": None,
                 "weight": weight,
                 "grade": "skip",
+                "fail_type": "not_applicable",
+                "display_name": "",
+                "description": "",
+                "recommendation": "",
                 "issues": ["측정되지 않음"],
                 "details": {},
             }
@@ -97,7 +119,10 @@ def calculate_score(results: list[CheckResult]) -> dict:
     return {
         "total_score": int(round(total_score)),
         "grade": calculate_grade(total_score),
-        "items_checked": len([r for r in results if r.name in WEIGHTS]),
+        "items_checked": len([
+            r for r in results
+            if r.name in WEIGHTS and r.fail_type not in ("system_limit", "api_error")
+        ]),
         "items_total": len(WEIGHTS),
         "category_scores": category_scores,
     }

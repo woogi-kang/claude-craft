@@ -39,20 +39,26 @@ async def save_scan_result(audit_id: str, result: dict) -> bool:
     # Insert audit_items
     items = result.get("items", [])
     if items:
-        rows = [
-            {
+        rows = []
+        for item in items:
+            row = {
                 "audit_id": audit_id,
                 "category": item["category"],
                 "item_key": item["item_key"],
                 "status": item["status"],
                 "score": item.get("score"),
                 "weight": item.get("weight"),
-                "details": item.get("details"),
+                "details": item.get("details", {}),
                 "suggestion": item.get("suggestion"),
                 "priority": item.get("priority"),
             }
-            for item in items
-        ]
+            # Include customer-friendly fields in details
+            details = dict(row.get("details") or {})
+            for field in ("display_name", "description", "recommendation", "fail_type"):
+                if item.get(field):
+                    details[field] = item[field]
+            row["details"] = details
+            rows.append(row)
         client.table("audit_items").insert(rows).execute()
 
     # Update hospital's latest score

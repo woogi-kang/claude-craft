@@ -4,6 +4,10 @@ import httpx
 
 from .base import CheckResult, Grade
 
+_DISPLAY_NAME = "깨진 페이지 (링크 오류)"
+_DESCRIPTION = '클릭하면 "페이지를 찾을 수 없습니다" 오류가 나는 링크입니다'
+_RECOMMENDATION = "웹 개발자에게 깨진 링크 목록을 전달하고 수정 또는 삭제를 요청하세요"
+
 
 async def check_errors(
     client: httpx.AsyncClient, crawled_urls: list[str], *, max_check: int = 50
@@ -46,12 +50,23 @@ async def check_errors(
 
     if error_count >= 6:
         return CheckResult(
-            name="errors_404", score=0.0, grade=Grade.FAIL, details=details, issues=issues
+            name="errors_404", score=0.0, grade=Grade.FAIL,
+            display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
+            details=details, issues=issues,
         )
 
     if error_count >= 1 or redirect_chains >= 1:
         return CheckResult(
-            name="errors_404", score=0.5, grade=Grade.WARN, details=details, issues=issues
+            name="errors_404", score=0.5, grade=Grade.WARN,
+            display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
+            details=details, issues=issues,
         )
 
-    return CheckResult(name="errors_404", score=1.0, grade=Grade.PASS, details=details)
+    return CheckResult(
+        name="errors_404", score=1.0, grade=Grade.PASS,
+        display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+        recommendation=_RECOMMENDATION,
+        details=details,
+    )

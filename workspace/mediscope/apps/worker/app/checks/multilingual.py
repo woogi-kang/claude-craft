@@ -15,6 +15,29 @@ _LANG_PATH_RE = re.compile(
 )
 _LANG_QUERY_RE = re.compile(r"lang=(en|ja|zh|vi|th|ru|ar)", re.I)
 
+# --- multilingual_pages ---
+_ML_DISPLAY_NAME = "외국어 페이지"
+_ML_DESCRIPTION = "영어, 일본어, 중국어 등 외국어로 된 페이지가 있는지 확인합니다"
+_ML_RECOMMENDATION = (
+    "주요 타겟 국가 언어(영어, 일본어, 중국어)로 핵심 페이지(시술 소개, 가격, 오시는 길)를 번역하세요"
+)
+
+# --- hreflang ---
+_HL_DISPLAY_NAME = "다국어 페이지 연결 표시"
+_HL_DESCRIPTION = (
+    '검색엔진에 "이 페이지는 한국어 버전이고, 영어 버전은 여기 있습니다"를 알려줍니다'
+)
+_HL_RECOMMENDATION = (
+    '웹 개발자에게 "각 언어별 페이지에 hreflang 태그를 추가해달라"고 요청하세요'
+)
+
+# --- overseas_channels ---
+_OC_DISPLAY_NAME = "해외 메신저 연결"
+_OC_DESCRIPTION = "LINE, WeChat, WhatsApp 등 해외 메신저 채널이 있는지 확인합니다"
+_OC_RECOMMENDATION = (
+    "타겟 국가에 맞는 메신저(일본: LINE, 중국: WeChat, 동남아: WhatsApp) 공식 계정을 만들고 홈페이지에 링크하세요"
+)
+
 
 def check_multilingual_pages(
     main_html: str, crawled_urls: list[str],
@@ -74,6 +97,9 @@ def check_multilingual_pages(
         name="multilingual_pages",
         score=score,
         grade=grade,
+        display_name=_ML_DISPLAY_NAME,
+        description=_ML_DESCRIPTION,
+        recommendation=_ML_RECOMMENDATION,
         issues=issues,
         details={
             "detected_languages": sorted(detected),
@@ -110,6 +136,9 @@ def check_hreflang(main_html: str) -> CheckResult:
         name="hreflang",
         score=score,
         grade=grade,
+        display_name=_HL_DISPLAY_NAME,
+        description=_HL_DESCRIPTION,
+        recommendation=_HL_RECOMMENDATION,
         issues=issues,
         details={
             "hreflang_tags": langs,
@@ -160,6 +189,9 @@ def check_overseas_channels(main_html: str) -> CheckResult:
         name="overseas_channels",
         score=score,
         grade=grade,
+        display_name=_OC_DISPLAY_NAME,
+        description=_OC_DESCRIPTION,
+        recommendation=_OC_RECOMMENDATION,
         issues=issues,
         details={
             "overseas_channels": found,

@@ -4,6 +4,10 @@ import httpx
 
 from .base import CheckResult, Grade
 
+_DISPLAY_NAME = "검색엔진 접근 허용"
+_DESCRIPTION = "구글/네이버가 홈페이지를 읽어도 되는지 알려주는 설정 파일입니다"
+_RECOMMENDATION = "웹 개발자에게 robots.txt 파일을 생성하고 검색엔진 접근을 허용해달라고 요청하세요"
+
 
 async def check_robots(client: httpx.AsyncClient, base_url: str) -> CheckResult:
     url = f"{base_url.rstrip('/')}/robots.txt"
@@ -15,6 +19,9 @@ async def check_robots(client: httpx.AsyncClient, base_url: str) -> CheckResult:
             name="robots_txt",
             score=0.0,
             grade=Grade.FAIL,
+            display_name=_DISPLAY_NAME,
+            description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
             issues=["robots.txt를 가져올 수 없습니다"],
         )
 
@@ -23,13 +30,15 @@ async def check_robots(client: httpx.AsyncClient, base_url: str) -> CheckResult:
             name="robots_txt",
             score=0.0,
             grade=Grade.FAIL,
+            display_name=_DISPLAY_NAME,
+            description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
             issues=[f"robots.txt가 존재하지 않습니다 (HTTP {resp.status_code})"],
         )
 
     text = resp.text
     issues: list[str] = []
     has_sitemap = "sitemap:" in text.lower()
-    has_disallow_all = "disallow: /" in text.lower() and "disallow: //" not in text.lower()
 
     # Check for full block
     lines = text.lower().splitlines()
@@ -43,6 +52,9 @@ async def check_robots(client: httpx.AsyncClient, base_url: str) -> CheckResult:
             name="robots_txt",
             score=0.0,
             grade=Grade.FAIL,
+            display_name=_DISPLAY_NAME,
+            description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
             issues=["robots.txt가 전체 사이트를 차단하고 있습니다 (Disallow: /)"],
         )
 
@@ -63,6 +75,9 @@ async def check_robots(client: httpx.AsyncClient, base_url: str) -> CheckResult:
             name="robots_txt",
             score=0.5,
             grade=Grade.WARN,
+            display_name=_DISPLAY_NAME,
+            description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
             details={"has_sitemap_directive": has_sitemap, "disallow_count": disallow_count},
             issues=issues,
         )
@@ -71,5 +86,8 @@ async def check_robots(client: httpx.AsyncClient, base_url: str) -> CheckResult:
         name="robots_txt",
         score=1.0,
         grade=Grade.PASS,
+        display_name=_DISPLAY_NAME,
+        description=_DESCRIPTION,
+        recommendation=_RECOMMENDATION,
         details={"has_sitemap_directive": has_sitemap, "disallow_count": disallow_count},
     )

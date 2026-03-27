@@ -7,6 +7,12 @@ from bs4 import BeautifulSoup
 
 from .base import CheckResult, Grade
 
+_DISPLAY_NAME = "내부 링크 상태"
+_DESCRIPTION = "홈페이지 내 링크들이 정상적으로 작동하는지 확인합니다"
+_RECOMMENDATION = (
+    "웹 개발자에게 깨진 링크를 수정하고, 주요 페이지 간 내부 링크를 추가해달라고 요청하세요"
+)
+
 
 async def check_links(
     client: httpx.AsyncClient, html: str, base_url: str, *, max_check: int = 30
@@ -46,13 +52,33 @@ async def check_links(
     }
 
     if broken >= 6:
-        return CheckResult(name="links", score=0.0, grade=Grade.FAIL, details=details, issues=issues)
+        return CheckResult(
+            name="links", score=0.0, grade=Grade.FAIL,
+            display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
+            details=details, issues=issues,
+        )
 
     if broken >= 1:
-        return CheckResult(name="links", score=0.5, grade=Grade.WARN, details=details, issues=issues)
+        return CheckResult(
+            name="links", score=0.5, grade=Grade.WARN,
+            display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
+            details=details, issues=issues,
+        )
 
     if len(internal_links) < 3:
         issues.append("내부 링크가 부족합니다 (3개 미만)")
-        return CheckResult(name="links", score=0.5, grade=Grade.WARN, details=details, issues=issues)
+        return CheckResult(
+            name="links", score=0.5, grade=Grade.WARN,
+            display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
+            details=details, issues=issues,
+        )
 
-    return CheckResult(name="links", score=1.0, grade=Grade.PASS, details=details)
+    return CheckResult(
+        name="links", score=1.0, grade=Grade.PASS,
+        display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+        recommendation=_RECOMMENDATION,
+        details=details,
+    )

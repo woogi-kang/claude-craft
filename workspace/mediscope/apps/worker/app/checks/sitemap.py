@@ -7,6 +7,12 @@ from .base import CheckResult, Grade
 
 SITEMAP_NS = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
 
+_DISPLAY_NAME = "페이지 목록 제출"
+_DESCRIPTION = "홈페이지의 모든 페이지 목록을 검색엔진에 알려주는 파일입니다"
+_RECOMMENDATION = (
+    "웹 개발자에게 sitemap.xml 파일을 만들고 Google Search Console에 등록해달라고 요청하세요"
+)
+
 
 async def check_sitemap(client: httpx.AsyncClient, base_url: str) -> CheckResult:
     url = f"{base_url.rstrip('/')}/sitemap.xml"
@@ -19,6 +25,9 @@ async def check_sitemap(client: httpx.AsyncClient, base_url: str) -> CheckResult
             name="sitemap",
             score=0.0,
             grade=Grade.FAIL,
+            display_name=_DISPLAY_NAME,
+            description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
             issues=["sitemap.xml을 가져올 수 없습니다"],
         )
 
@@ -27,6 +36,9 @@ async def check_sitemap(client: httpx.AsyncClient, base_url: str) -> CheckResult
             name="sitemap",
             score=0.0,
             grade=Grade.FAIL,
+            display_name=_DISPLAY_NAME,
+            description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
             issues=["sitemap.xml이 존재하지 않습니다"],
         )
 
@@ -37,6 +49,9 @@ async def check_sitemap(client: httpx.AsyncClient, base_url: str) -> CheckResult
             name="sitemap",
             score=0.0,
             grade=Grade.FAIL,
+            display_name=_DISPLAY_NAME,
+            description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
             issues=["sitemap.xml XML 파싱 실패"],
         )
 
@@ -51,6 +66,9 @@ async def check_sitemap(client: httpx.AsyncClient, base_url: str) -> CheckResult
             name="sitemap",
             score=0.0,
             grade=Grade.FAIL,
+            display_name=_DISPLAY_NAME,
+            description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
             issues=["sitemap.xml에 URL이 없습니다"],
         )
 
@@ -71,6 +89,9 @@ async def check_sitemap(client: httpx.AsyncClient, base_url: str) -> CheckResult
             name="sitemap",
             score=0.5,
             grade=Grade.WARN,
+            display_name=_DISPLAY_NAME,
+            description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
             details={"url_count": url_count, "has_lastmod": has_lastmod},
             issues=issues,
         )
@@ -79,5 +100,8 @@ async def check_sitemap(client: httpx.AsyncClient, base_url: str) -> CheckResult
         name="sitemap",
         score=1.0,
         grade=Grade.PASS,
+        display_name=_DISPLAY_NAME,
+        description=_DESCRIPTION,
+        recommendation=_RECOMMENDATION,
         details={"url_count": url_count, "has_lastmod": has_lastmod},
     )

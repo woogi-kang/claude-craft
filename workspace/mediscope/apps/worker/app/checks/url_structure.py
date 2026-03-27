@@ -5,6 +5,12 @@ from urllib.parse import urlparse
 
 from .base import CheckResult, Grade
 
+_DISPLAY_NAME = "주소(URL) 가독성"
+_DESCRIPTION = "페이지 주소가 깔끔하고 의미 있는 단어로 구성되어 있는지 확인합니다"
+_RECOMMENDATION = (
+    '웹 개발자에게 "URL에 의미 있는 영문 단어를 사용하고 깊이를 3단계 이내로 유지해달라"고 요청하세요'
+)
+
 
 def check_url_structure(url: str, crawled_urls: list[str] | None = None) -> CheckResult:
     issues: list[str] = []
@@ -51,12 +57,23 @@ def check_url_structure(url: str, crawled_urls: list[str] | None = None) -> Chec
 
     if problem_ratio > 0.5:
         return CheckResult(
-            name="url_structure", score=0.0, grade=Grade.FAIL, details=details, issues=issues
+            name="url_structure", score=0.0, grade=Grade.FAIL,
+            display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
+            details=details, issues=issues,
         )
 
     if issues:
         return CheckResult(
-            name="url_structure", score=0.5, grade=Grade.WARN, details=details, issues=issues
+            name="url_structure", score=0.5, grade=Grade.WARN,
+            display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
+            details=details, issues=issues,
         )
 
-    return CheckResult(name="url_structure", score=1.0, grade=Grade.PASS, details=details)
+    return CheckResult(
+        name="url_structure", score=1.0, grade=Grade.PASS,
+        display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+        recommendation=_RECOMMENDATION,
+        details=details,
+    )

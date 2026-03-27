@@ -4,6 +4,12 @@ from bs4 import BeautifulSoup
 
 from .base import CheckResult, Grade
 
+_DISPLAY_NAME = "이미지 설명 텍스트"
+_DESCRIPTION = "이미지에 대체 텍스트(설명)가 있는지 확인합니다"
+_RECOMMENDATION = (
+    '웹 개발자에게 "모든 이미지에 내용을 설명하는 alt 텍스트를 넣어달라"고 요청하세요'
+)
+
 
 def check_images(html: str) -> CheckResult:
     soup = BeautifulSoup(html, "lxml")
@@ -15,6 +21,9 @@ def check_images(html: str) -> CheckResult:
             name="images_alt",
             score=1.0,
             grade=Grade.PASS,
+            display_name=_DISPLAY_NAME,
+            description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
             details={"total_images": 0, "with_alt": 0},
         )
 
@@ -45,11 +54,26 @@ def check_images(html: str) -> CheckResult:
 
     if alt_ratio < 0.6:
         issues.insert(0, f"ALT 태그 존재율이 낮습니다 ({alt_ratio:.0%})")
-        return CheckResult(name="images_alt", score=0.0, grade=Grade.FAIL, details=details, issues=issues)
+        return CheckResult(
+            name="images_alt", score=0.0, grade=Grade.FAIL,
+            display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
+            details=details, issues=issues,
+        )
 
     if alt_ratio < 0.9 or generic_alt > total * 0.2:
         if alt_ratio < 0.9:
             issues.insert(0, f"ALT 태그 존재율: {alt_ratio:.0%} (90% 이상 권장)")
-        return CheckResult(name="images_alt", score=0.5, grade=Grade.WARN, details=details, issues=issues)
+        return CheckResult(
+            name="images_alt", score=0.5, grade=Grade.WARN,
+            display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
+            details=details, issues=issues,
+        )
 
-    return CheckResult(name="images_alt", score=1.0, grade=Grade.PASS, details=details)
+    return CheckResult(
+        name="images_alt", score=1.0, grade=Grade.PASS,
+        display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+        recommendation=_RECOMMENDATION,
+        details=details,
+    )

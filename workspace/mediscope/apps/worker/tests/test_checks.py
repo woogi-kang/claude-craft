@@ -568,3 +568,111 @@ class TestOverseasChannels:
         r = check_overseas_channels(html)
         assert r.grade == Grade.WARN
         assert r.score == 0.5
+
+
+# ── fail_type validation ─────────────────────────────────────────────
+
+
+class TestFailType:
+    """Verify fail_type is correctly set across check modules."""
+
+    def test_default_fail_type_is_site_issue(self, good_html):
+        r = check_meta_tags(good_html, "https://example.com")
+        assert r.fail_type == "site_issue"
+
+    def test_headings_fail_type_site_issue(self, bad_html):
+        r = check_headings(bad_html)
+        assert r.fail_type == "site_issue"
+
+    def test_canonical_fail_type_site_issue(self, bad_html):
+        r = check_canonical(bad_html, "https://example.com")
+        assert r.fail_type == "site_issue"
+
+    def test_mobile_fail_type_site_issue(self, bad_html):
+        r = check_mobile(bad_html)
+        assert r.fail_type == "site_issue"
+
+    @pytest.mark.asyncio
+    async def test_ai_search_no_hospital_name_system_limit(self):
+        async with httpx.AsyncClient() as client:
+            r = await check_ai_search_mention(client, "https://example.com", "")
+        assert r.fail_type == "system_limit"
+
+    @pytest.mark.asyncio
+    async def test_ai_search_no_api_key_system_limit(self):
+        async with httpx.AsyncClient() as client:
+            r = await check_ai_search_mention(
+                client, "https://example.com", "TestHospital"
+            )
+        assert r.fail_type == "system_limit"
+
+    @pytest.mark.asyncio
+    async def test_performance_api_error_fail_type(self):
+        async with respx.mock:
+            respx.get("https://www.googleapis.com/pagespeedonline/v5/runPagespeed").mock(
+                return_value=httpx.Response(500)
+            )
+            async with httpx.AsyncClient() as client:
+                results = await check_performance(client, "https://example.com")
+        for r in results:
+            assert r.fail_type == "api_error"
+
+    @pytest.mark.asyncio
+    async def test_performance_success_site_issue(self):
+        psi_response = {
+            "lighthouseResult": {
+                "audits": {
+                    "largest-contentful-paint": {"numericValue": 1500},
+                    "interaction-to-next-paint": {"numericValue": 100},
+                    "cumulative-layout-shift": {"numericValue": 0.05},
+                },
+                "categories": {
+                    "performance": {"score": 0.95},
+                },
+            }
+        }
+        async with respx.mock:
+            respx.get("https://www.googleapis.com/pagespeedonline/v5/runPagespeed").mock(
+                return_value=httpx.Response(200, json=psi_response)
+            )
+            async with httpx.AsyncClient() as client:
+                results = await check_performance(client, "https://example.com")
+        for r in results:
+            assert r.fail_type == "site_issue"
+
+    @pytest.mark.asyncio
+    async def test_robots_pass_has_display_name(self):
+        async with respx.mock:
+            respx.get("https://example.com/robots.txt").mock(
+                return_value=httpx.Response(
+                    200,
+                    text="User-Agent: *\nAllow: /\nSitemap: https://example.com/sitemap.xml\n",
+                )
+            )
+            async with httpx.AsyncClient() as client:
+                r = await check_robots(client, "https://example.com")
+        assert r.display_name == "검색엔진 접근 허용"
+        assert r.description != ""
+        assert r.recommendation != ""
+
+    def test_all_checks_have_display_name(self, good_html):
+        """All sync check modules should populate display_name."""
+        checks = [
+            check_meta_tags(good_html, "https://example.com"),
+            check_headings(good_html),
+            check_images(good_html),
+            check_canonical(good_html, "https://example.com/"),
+            check_url_structure("https://example.com/"),
+            check_mobile(good_html),
+            check_structured_data(good_html),
+            check_faq_content(good_html),
+            check_eeat_signals(good_html, "https://example.com"),
+            check_content_clarity(good_html),
+            check_hreflang(good_html),
+            check_multilingual_pages(good_html, ["https://example.com/"]),
+            check_overseas_channels(good_html),
+        ]
+        for r in checks:
+            assert r.display_name != "", f"{r.name} missing display_name"
+            assert r.description != "", f"{r.name} missing description"
+            assert r.recommendation != "", f"{r.name} missing recommendation"

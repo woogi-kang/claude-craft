@@ -4,6 +4,12 @@ from bs4 import BeautifulSoup
 
 from .base import CheckResult, Grade
 
+_DISPLAY_NAME = "모바일 최적화"
+_DESCRIPTION = "스마트폰에서 홈페이지가 제대로 보이는지 확인합니다"
+_RECOMMENDATION = (
+    '웹 개발자에게 "반응형 웹 디자인(viewport 설정 포함)을 적용해달라"고 요청하세요'
+)
+
 
 def check_mobile(html: str) -> CheckResult:
     soup = BeautifulSoup(html, "lxml")
@@ -45,12 +51,23 @@ def check_mobile(html: str) -> CheckResult:
 
     if not has_viewport:
         return CheckResult(
-            name="mobile", score=0.0, grade=Grade.FAIL, details=details, issues=issues
+            name="mobile", score=0.0, grade=Grade.FAIL,
+            display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
+            details=details, issues=issues,
         )
 
     if issues:
         return CheckResult(
-            name="mobile", score=0.5, grade=Grade.WARN, details=details, issues=issues
+            name="mobile", score=0.5, grade=Grade.WARN,
+            display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
+            details=details, issues=issues,
         )
 
-    return CheckResult(name="mobile", score=1.0, grade=Grade.PASS, details=details)
+    return CheckResult(
+        name="mobile", score=1.0, grade=Grade.PASS,
+        display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+        recommendation=_RECOMMENDATION,
+        details=details,
+    )

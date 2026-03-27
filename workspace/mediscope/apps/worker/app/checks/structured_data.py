@@ -7,6 +7,29 @@ from bs4 import BeautifulSoup
 
 from ..checks.base import CheckResult, Grade
 
+# --- structured_data ---
+_SD_DISPLAY_NAME = "검색 강화 데이터"
+_SD_DESCRIPTION = "구글에 병원 정보(진료시간, 위치, 전화번호 등)를 구조화된 형태로 제공합니다"
+_SD_RECOMMENDATION = (
+    '웹 개발자에게 "Schema.org의 MedicalClinic 타입 JSON-LD를 추가해달라"고 요청하세요'
+)
+
+# --- faq_content ---
+_FAQ_DISPLAY_NAME = "자주 묻는 질문 (FAQ)"
+_FAQ_DESCRIPTION = "FAQ 콘텐츠와 구조화 데이터가 있는지 확인합니다"
+_FAQ_RECOMMENDATION = (
+    "환자들이 자주 묻는 질문 10-20개를 정리하여 FAQ 페이지를 만들고, FAQPage 스키마를 추가하세요"
+)
+
+# --- eeat_signals ---
+_EEAT_DISPLAY_NAME = "전문성/신뢰도 표시"
+_EEAT_DESCRIPTION = (
+    "의사 프로필, 자격 정보, 환자 후기 등 전문성을 보여주는 콘텐츠가 있는지 확인합니다"
+)
+_EEAT_RECOMMENDATION = (
+    "의사 경력/학력/전문의 자격, 환자 후기, 시술 전후 사진을 홈페이지에 게시하세요"
+)
+
 
 def _extract_json_ld(html: str) -> list[dict]:
     """Extract all JSON-LD structured data from HTML."""
@@ -105,6 +128,9 @@ def check_structured_data(html: str) -> CheckResult:
         name="structured_data",
         score=round(score, 2),
         grade=grade,
+        display_name=_SD_DISPLAY_NAME,
+        description=_SD_DESCRIPTION,
+        recommendation=_SD_RECOMMENDATION,
         issues=issues,
         details={
             "json_ld_count": len(json_ld),
@@ -175,6 +201,9 @@ def check_faq_content(html: str) -> CheckResult:
         name="faq_content",
         score=round(score, 2),
         grade=grade,
+        display_name=_FAQ_DISPLAY_NAME,
+        description=_FAQ_DESCRIPTION,
+        recommendation=_FAQ_RECOMMENDATION,
         issues=issues,
         details=details,
     )
@@ -262,6 +291,9 @@ def check_eeat_signals(html: str, url: str) -> CheckResult:
         name="eeat_signals",
         score=round(score, 2),
         grade=grade,
+        display_name=_EEAT_DISPLAY_NAME,
+        description=_EEAT_DESCRIPTION,
+        recommendation=_EEAT_RECOMMENDATION,
         issues=issues,
         details=details,
     )

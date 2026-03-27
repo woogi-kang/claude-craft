@@ -4,6 +4,12 @@ from bs4 import BeautifulSoup
 
 from .base import CheckResult, Grade
 
+_DISPLAY_NAME = "페이지 구조 (제목 체계)"
+_DESCRIPTION = "페이지의 대제목-소제목 구조가 논리적인지 확인합니다"
+_RECOMMENDATION = (
+    '웹 개발자에게 "H1 태그에 페이지 핵심 주제를 1개만 넣고, H2/H3로 소주제를 정리해달라"고 요청하세요'
+)
+
 
 def check_headings(html: str) -> CheckResult:
     soup = BeautifulSoup(html, "lxml")
@@ -18,7 +24,12 @@ def check_headings(html: str) -> CheckResult:
 
     if h1_count == 0:
         issues.append("H1 태그가 없습니다")
-        return CheckResult(name="headings", score=0.0, grade=Grade.FAIL, details=details, issues=issues)
+        return CheckResult(
+            name="headings", score=0.0, grade=Grade.FAIL,
+            display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
+            details=details, issues=issues,
+        )
 
     if h1_count > 1:
         issues.append(f"H1 태그가 {h1_count}개입니다 (1개 권장)")
@@ -36,6 +47,16 @@ def check_headings(html: str) -> CheckResult:
                 break
 
     if issues:
-        return CheckResult(name="headings", score=0.5, grade=Grade.WARN, details=details, issues=issues)
+        return CheckResult(
+            name="headings", score=0.5, grade=Grade.WARN,
+            display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
+            details=details, issues=issues,
+        )
 
-    return CheckResult(name="headings", score=1.0, grade=Grade.PASS, details=details)
+    return CheckResult(
+        name="headings", score=1.0, grade=Grade.PASS,
+        display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+        recommendation=_RECOMMENDATION,
+        details=details,
+    )

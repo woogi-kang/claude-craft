@@ -99,3 +99,62 @@ class TestCalculateScore:
         result = calculate_score(results)
         assert result["total_score"] == 100
         assert result["items_checked"] == 1
+
+    def test_system_limit_excluded_from_weight(self):
+        """system_limit items should be excluded from weighted score calculation."""
+        results = [
+            CheckResult(name="robots_txt", score=1.0, grade=Grade.PASS),
+            CheckResult(name="sitemap", score=1.0, grade=Grade.PASS),
+            CheckResult(
+                name="ai_search_mention", score=0.0, grade=Grade.FAIL,
+                fail_type="system_limit",
+                issues=["병원명 정보가 없어 AI 검색 체크를 수행할 수 없습니다"],
+            ),
+            CheckResult(
+                name="international_search", score=0.0, grade=Grade.FAIL,
+                fail_type="system_limit",
+                issues=["병원명 정보가 없어 국제 검색 체크를 수행할 수 없습니다"],
+            ),
+        ]
+        result = calculate_score(results)
+        # Only robots_txt and sitemap should count (both perfect)
+        assert result["total_score"] == 100
+        assert result["items_checked"] == 2
+        # system_limit items should have score=None in category_scores
+        assert result["category_scores"]["ai_search_mention"]["score"] is None
+        assert result["category_scores"]["ai_search_mention"]["fail_type"] == "system_limit"
+        assert result["category_scores"]["international_search"]["score"] is None
+
+    def test_api_error_excluded_from_weight(self):
+        """api_error items should be excluded from weighted score calculation."""
+        results = [
+            CheckResult(name="robots_txt", score=1.0, grade=Grade.PASS),
+            CheckResult(
+                name="lcp", score=0.5, grade=Grade.WARN,
+                fail_type="api_error",
+                issues=["PageSpeed API 호출 실패"],
+            ),
+        ]
+        result = calculate_score(results)
+        # Only robots_txt should count
+        assert result["total_score"] == 100
+        assert result["items_checked"] == 1
+        assert result["category_scores"]["lcp"]["score"] is None
+        assert result["category_scores"]["lcp"]["fail_type"] == "api_error"
+
+    def test_display_name_in_category_scores(self):
+        """display_name, description, recommendation should appear in category_scores."""
+        results = [
+            CheckResult(
+                name="robots_txt", score=1.0, grade=Grade.PASS,
+                display_name="검색엔진 접근 허용",
+                description="구글/네이버가 홈페이지를 읽어도 되는지 알려주는 설정 파일입니다",
+                recommendation="웹 개발자에게 robots.txt 파일을 생성하고 검색엔진 접근을 허용해달라고 요청하세요",
+            ),
+        ]
+        result = calculate_score(results)
+        cs = result["category_scores"]["robots_txt"]
+        assert cs["display_name"] == "검색엔진 접근 허용"
+        assert cs["description"] != ""
+        assert cs["recommendation"] != ""
+        assert cs["fail_type"] == "site_issue"

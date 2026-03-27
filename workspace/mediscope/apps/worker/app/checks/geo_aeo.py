@@ -10,6 +10,21 @@ from ..config import settings
 
 logger = logging.getLogger("mediscope.checks.geo_aeo")
 
+# --- ai_search_mention ---
+_AI_DISPLAY_NAME = "AI 검색 노출"
+_AI_DESCRIPTION = "ChatGPT, Perplexity 등 AI 검색에서 병원이 언급되는지 확인합니다"
+_AI_RECOMMENDATION = (
+    "홈페이지에 시술별 상세 설명, FAQ, 환자 후기를 충실히 작성하세요. "
+    "AI가 참고할 수 있는 근거를 제공합니다"
+)
+
+# --- content_clarity ---
+_CC_DISPLAY_NAME = "콘텐츠 명확성"
+_CC_DESCRIPTION = "페이지 내용이 AI와 검색엔진이 이해하기 좋은 구조인지 확인합니다"
+_CC_RECOMMENDATION = (
+    "Q&A 형식의 콘텐츠, 목록형 정리, 충분한 분량(300단어 이상)의 상세 설명을 추가하세요"
+)
+
 
 def _build_queries(hospital_name: str, specialty: str = "", region: str = "") -> list[str]:
     """Build search queries from hospital info."""
@@ -92,6 +107,10 @@ async def check_ai_search_mention(
             name="ai_search_mention",
             score=0.0,
             grade=Grade.FAIL,
+            fail_type="system_limit",
+            display_name=_AI_DISPLAY_NAME,
+            description=_AI_DESCRIPTION,
+            recommendation=_AI_RECOMMENDATION,
             issues=["병원명 정보가 없어 AI 검색 체크를 수행할 수 없습니다"],
             details={"skipped": True},
         )
@@ -102,6 +121,10 @@ async def check_ai_search_mention(
             name="ai_search_mention",
             score=0.0,
             grade=Grade.FAIL,
+            fail_type="system_limit",
+            display_name=_AI_DISPLAY_NAME,
+            description=_AI_DESCRIPTION,
+            recommendation=_AI_RECOMMENDATION,
             issues=["검색 쿼리를 생성할 수 없습니다"],
         )
 
@@ -122,6 +145,10 @@ async def check_ai_search_mention(
             name="ai_search_mention",
             score=0.0,
             grade=Grade.FAIL,
+            fail_type="system_limit",
+            display_name=_AI_DISPLAY_NAME,
+            description=_AI_DESCRIPTION,
+            recommendation=_AI_RECOMMENDATION,
             issues=["AI 검색 API를 사용할 수 없습니다 (PERPLEXITY_API_KEY 필요)"],
             details={"skipped": True, "reason": "no_api_key"},
         )
@@ -142,6 +169,9 @@ async def check_ai_search_mention(
         name="ai_search_mention",
         score=round(avg_score, 2),
         grade=grade,
+        display_name=_AI_DISPLAY_NAME,
+        description=_AI_DESCRIPTION,
+        recommendation=_AI_RECOMMENDATION,
         issues=issues,
         details={
             "queries_used": queries[:2],
@@ -222,6 +252,9 @@ def check_content_clarity(html: str) -> CheckResult:
         name="content_clarity",
         score=round(score, 2),
         grade=grade,
+        display_name=_CC_DISPLAY_NAME,
+        description=_CC_DESCRIPTION,
+        recommendation=_CC_RECOMMENDATION,
         issues=issues,
         details=details,
     )

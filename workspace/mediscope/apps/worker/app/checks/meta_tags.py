@@ -4,6 +4,12 @@ from bs4 import BeautifulSoup, Tag
 
 from .base import CheckResult, Grade
 
+_DISPLAY_NAME = "검색 결과 미리보기"
+_DESCRIPTION = "검색 결과에 보이는 제목과 설명문입니다"
+_RECOMMENDATION = (
+    '웹 개발자에게 "title 태그에 병원명+진료과목, description에 핵심 강점을 넣어달라"고 요청하세요'
+)
+
 
 def check_meta_tags(html: str, url: str) -> CheckResult:
     soup = BeautifulSoup(html, "lxml")
@@ -51,9 +57,24 @@ def check_meta_tags(html: str, url: str) -> CheckResult:
 
     # Score
     if not title_text and not desc_text:
-        return CheckResult(name="meta_tags", score=0.0, grade=Grade.FAIL, details=details, issues=issues)
+        return CheckResult(
+            name="meta_tags", score=0.0, grade=Grade.FAIL,
+            display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
+            details=details, issues=issues,
+        )
 
     if issues:
-        return CheckResult(name="meta_tags", score=0.5, grade=Grade.WARN, details=details, issues=issues)
+        return CheckResult(
+            name="meta_tags", score=0.5, grade=Grade.WARN,
+            display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
+            details=details, issues=issues,
+        )
 
-    return CheckResult(name="meta_tags", score=1.0, grade=Grade.PASS, details=details)
+    return CheckResult(
+        name="meta_tags", score=1.0, grade=Grade.PASS,
+        display_name=_DISPLAY_NAME, description=_DESCRIPTION,
+        recommendation=_RECOMMENDATION,
+        details=details,
+    )

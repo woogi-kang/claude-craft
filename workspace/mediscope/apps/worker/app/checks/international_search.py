@@ -10,6 +10,12 @@ from ..config import settings
 
 logger = logging.getLogger("mediscope.checks.international_search")
 
+_DISPLAY_NAME = "해외 검색엔진 노출"
+_DESCRIPTION = "일본/대만/동남아 구글, 네이버, 바이두에서 병원이 검색되는지 확인합니다"
+_RECOMMENDATION = (
+    "타겟 국가 언어로 페이지를 만들고, Google Search Console에서 해당 국가 타겟팅을 설정하세요"
+)
+
 # Country configurations: (engine_key, country_code, language, search_category_template)
 GOOGLE_COUNTRIES: list[dict] = [
     {
@@ -302,6 +308,10 @@ async def check_international_search(
             name="international_search",
             score=0.0,
             grade=Grade.FAIL,
+            fail_type="system_limit",
+            display_name=_DISPLAY_NAME,
+            description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
             issues=["병원명 정보가 없어 국제 검색 체크를 수행할 수 없습니다"],
             details={"skipped": True},
         )
@@ -353,6 +363,10 @@ async def check_international_search(
             name="international_search",
             score=0.0,
             grade=Grade.FAIL,
+            fail_type="system_limit",
+            display_name=_DISPLAY_NAME,
+            description=_DESCRIPTION,
+            recommendation=_RECOMMENDATION,
             issues=["사용 가능한 검색 API가 없습니다 (GOOGLE_CSE_ID, NAVER_CLIENT_ID 설정 필요)"],
             details={
                 "skipped": True,
@@ -363,6 +377,9 @@ async def check_international_search(
         )
 
     avg_score = sum(checked_scores) / len(checked_scores)
+
+    # Check for API errors in individual engines
+    has_api_errors = any(r.get("error") for r in results.values())
 
     # Generate issues
     issues: list[str] = []
@@ -390,6 +407,11 @@ async def check_international_search(
     else:
         grade = Grade.FAIL
 
+    # Determine fail_type based on API errors
+    fail_type = "site_issue"
+    if has_api_errors:
+        fail_type = "api_error"
+
     # Summary
     found_count = sum(
         1
@@ -402,6 +424,10 @@ async def check_international_search(
         name="international_search",
         score=round(avg_score, 2),
         grade=grade,
+        fail_type=fail_type,
+        display_name=_DISPLAY_NAME,
+        description=_DESCRIPTION,
+        recommendation=_RECOMMENDATION,
         issues=issues,
         details={
             "engines_checked": engines_checked,
