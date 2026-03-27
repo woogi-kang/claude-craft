@@ -26,6 +26,54 @@ function getStatusIcon(score: number, failType: string) {
   return { Icon: XCircle, color: "text-red-500" };
 }
 
+function ScoreRing({
+  score,
+  status,
+}: {
+  score: number;
+  status: ReturnType<typeof getScoreStatus>;
+}) {
+  const radius = 18;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (score / 100) * circumference;
+
+  return (
+    <div className="relative flex h-12 w-12 shrink-0 items-center justify-center">
+      <svg
+        className="-rotate-90"
+        width="48"
+        height="48"
+        viewBox="0 0 48 48"
+        aria-hidden="true"
+      >
+        <circle
+          cx="24"
+          cy="24"
+          r={radius}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="3"
+          className="text-slate-100"
+        />
+        <circle
+          cx="24"
+          cy="24"
+          r={radius}
+          fill="none"
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          className={`${status.barClass.replace("bg-", "stroke-")} transition-[stroke-dashoffset] duration-700`}
+        />
+      </svg>
+      <span className="absolute text-xs font-bold tabular-nums text-slate-700">
+        {score}
+      </span>
+    </div>
+  );
+}
+
 export function CheckItemCard({ data }: CheckItemCardProps) {
   const [showRec, setShowRec] = useState(false);
 
@@ -88,37 +136,37 @@ export function CheckItemCard({ data }: CheckItemCardProps) {
       className={`rounded-lg border p-4 transition-colors ${status.borderClass} ${status.bgClass}`}
     >
       <div className="flex items-start gap-3">
-        <Icon
-          className={`h-5 w-5 shrink-0 mt-0.5 ${color}`}
-          aria-hidden="true"
-        />
+        <ScoreRing score={data.score} status={status} />
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2 mb-1">
-            <h4 className="font-medium text-slate-900">{data.display_name}</h4>
-            <div className="flex items-center gap-2 shrink-0">
-              <span className={`text-xs font-semibold ${status.colorClass}`}>
-                {status.label}
-              </span>
-              <span className="text-sm font-bold tabular-nums text-slate-700">
-                {data.score}점
-              </span>
+            <div className="flex items-center gap-2">
+              <Icon
+                className={`h-4 w-4 shrink-0 ${color}`}
+                aria-hidden="true"
+              />
+              <h4 className="font-medium text-slate-900">
+                {data.display_name}
+              </h4>
             </div>
-          </div>
-          {/* Score bar */}
-          <div className="h-1.5 w-full rounded-full bg-white/60 mb-2">
-            <div
-              className={`h-full rounded-full transition-all duration-500 ${status.barClass}`}
-              style={{
-                width: `${Math.min(100, Math.max(0, data.score))}%`,
-              }}
-            />
+            <span
+              className={`text-xs font-semibold shrink-0 ${status.colorClass}`}
+            >
+              {status.label}
+            </span>
           </div>
           <p className="text-sm text-slate-600">{data.description}</p>
           {data.issues.length > 0 && (
             <ul className="mt-2 space-y-0.5">
               {data.issues.map((issue, i) => (
-                <li key={i} className="text-xs text-red-600">
-                  - {issue}
+                <li
+                  key={i}
+                  className="flex items-start gap-1.5 text-xs text-red-600"
+                >
+                  <XCircle
+                    className="h-3 w-3 shrink-0 mt-0.5"
+                    aria-hidden="true"
+                  />
+                  <span>{issue}</span>
                 </li>
               ))}
             </ul>

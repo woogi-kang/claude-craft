@@ -6,14 +6,17 @@ import type { CheckItemData } from "@/lib/report-config";
 
 interface TopIssuesProps {
   issues: (CheckItemData & { key: string; impact: number })[];
+  blurred?: boolean;
 }
 
 function IssueCard({
   issue,
   index,
+  blurred = false,
 }: {
   issue: CheckItemData & { key: string; impact: number };
   index: number;
+  blurred?: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
   const isUrgent = issue.score < 40;
@@ -41,39 +44,50 @@ function IssueCard({
               {issue.score}점
             </span>
           </div>
-          <p className="text-sm text-slate-600 mb-2">{issue.description}</p>
-          {issue.issues.length > 0 && (
-            <ul className="mb-2 space-y-1">
-              {issue.issues.map((iss, i) => (
-                <li
-                  key={i}
-                  className={`text-xs ${isUrgent ? "text-red-700" : "text-orange-700"}`}
+          <div className={blurred ? "select-none blur-sm print:blur-none" : ""}>
+            <p className="text-sm text-slate-600 mb-2">{issue.description}</p>
+            {issue.issues.length > 0 && (
+              <ul className="mb-2 space-y-1">
+                {issue.issues.map((iss, i) => (
+                  <li
+                    key={i}
+                    className={`text-xs ${isUrgent ? "text-red-700" : "text-orange-700"}`}
+                  >
+                    - {iss}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {!blurred && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setExpanded(!expanded)}
+                  className="inline-flex items-center gap-1 text-xs font-medium text-slate-600 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-500 rounded"
                 >
-                  - {iss}
-                </li>
-              ))}
-            </ul>
-          )}
-          <button
-            type="button"
-            onClick={() => setExpanded(!expanded)}
-            className="inline-flex items-center gap-1 text-xs font-medium text-slate-600 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-500 rounded"
-          >
-            {expanded ? (
-              <>
-                접기 <ChevronUp className="h-3 w-3" aria-hidden="true" />
-              </>
-            ) : (
-              <>
-                개선 방법 보기{" "}
-                <ChevronDown className="h-3 w-3" aria-hidden="true" />
+                  {expanded ? (
+                    <>
+                      접기 <ChevronUp className="h-3 w-3" aria-hidden="true" />
+                    </>
+                  ) : (
+                    <>
+                      개선 방법 보기{" "}
+                      <ChevronDown className="h-3 w-3" aria-hidden="true" />
+                    </>
+                  )}
+                </button>
+                {expanded && (
+                  <div className="mt-2 rounded-lg bg-white/80 p-3 text-sm text-slate-700">
+                    {issue.recommendation}
+                  </div>
+                )}
               </>
             )}
-          </button>
-          {expanded && (
-            <div className="mt-2 rounded-lg bg-white/80 p-3 text-sm text-slate-700">
-              {issue.recommendation}
-            </div>
+          </div>
+          {blurred && (
+            <p className="mt-2 text-xs font-medium text-slate-400">
+              상세 내용을 확인하려면 이메일을 입력하세요
+            </p>
           )}
         </div>
       </div>
@@ -81,7 +95,7 @@ function IssueCard({
   );
 }
 
-export function TopIssues({ issues }: TopIssuesProps) {
+export function TopIssues({ issues, blurred = false }: TopIssuesProps) {
   if (issues.length === 0) return null;
 
   return (
@@ -94,7 +108,12 @@ export function TopIssues({ issues }: TopIssuesProps) {
       </div>
       <div className="grid gap-3">
         {issues.map((issue, i) => (
-          <IssueCard key={issue.key} issue={issue} index={i} />
+          <IssueCard
+            key={issue.key}
+            issue={issue}
+            index={i}
+            blurred={blurred}
+          />
         ))}
       </div>
       <p className="mt-3 text-center text-sm font-medium text-slate-500">
