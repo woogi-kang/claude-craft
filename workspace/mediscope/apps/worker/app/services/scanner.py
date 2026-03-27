@@ -6,6 +6,7 @@ from ..checks.base import CheckResult
 from ..checks.canonical import check_canonical
 from ..checks.errors import check_errors
 from ..checks.geo_aeo import check_ai_search_mention, check_content_clarity
+from ..checks.international_search import check_international_search
 from ..checks.headings import check_headings
 from ..checks.https_check import check_https
 from ..checks.images import check_images
@@ -81,6 +82,11 @@ async def run_scan(
         if check_geo:
             all_results.append(
                 await check_ai_search_mention(
+                    client, url, hospital_name, specialty, region
+                )
+            )
+            all_results.append(
+                await check_international_search(
                     client, url, hospital_name, specialty, region
                 )
             )

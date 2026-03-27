@@ -2,7 +2,7 @@
 
 from ..checks.base import CheckResult
 
-# 23 items with weights (must sum to ~1.0)
+# 24 items with weights (must sum to ~1.0)
 WEIGHTS: dict[str, float] = {
     # Technical SEO (0.50)
     "robots_txt": 0.05,
@@ -24,9 +24,10 @@ WEIGHTS: dict[str, float] = {
     # GEO/AEO (0.25)
     "structured_data": 0.08,
     "faq_content": 0.03,
-    "ai_search_mention": 0.05,
-    "eeat_signals": 0.05,
-    "content_clarity": 0.04,
+    "ai_search_mention": 0.04,
+    "eeat_signals": 0.03,
+    "content_clarity": 0.02,
+    "international_search": 0.05,
     # Multilingual (0.05) — split into 3 sub-checks
     "multilingual_pages": 0.025,
     "hreflang": 0.015,

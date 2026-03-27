@@ -12,6 +12,7 @@ import {
   type ChartDataItem,
 } from "@/components/report/category-chart";
 import { BenchmarkSection } from "@/components/report/benchmark-section";
+import { IntlSearchSection } from "@/components/report/intl-search-section";
 import { LeadForm } from "@/components/report/lead-form";
 import { SubscriptionForm } from "@/components/report/subscription-form";
 
@@ -252,6 +253,28 @@ export default function ReportPage() {
 
       {/* Benchmark Section */}
       <BenchmarkSection auditId={id} enabled={!!audit} />
+
+      {/* International Search Exposure */}
+      {!!audit.details?.international_search && (
+        <IntlSearchSection
+          data={
+            audit.details.international_search as {
+              engines_checked: number;
+              engines_available: number;
+              results: Record<
+                string,
+                {
+                  rank: number | null;
+                  score: number;
+                  query: string;
+                  error?: string;
+                }
+              >;
+              summary: string;
+            }
+          }
+        />
+      )}
 
       <LeadForm auditId={id} />
       <SubscriptionForm auditId={id} />

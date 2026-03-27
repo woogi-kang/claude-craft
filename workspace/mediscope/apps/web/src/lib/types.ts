@@ -92,6 +92,7 @@ export const ITEM_LABELS: Record<string, string> = {
   geo_aeo: "GEO/AEO",
   multilingual: "다국어 지원",
   competitiveness: "경쟁력",
+  international_search: "해외 검색 노출",
 };
 
 export const CATEGORY_LABELS: Record<Category, string> = {
