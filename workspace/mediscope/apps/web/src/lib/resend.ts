@@ -135,7 +135,7 @@ export async function sendFollowUpEmail({
       <div style="font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px;">
         <h1 style="color: #2563eb; margin-bottom: 8px;">CheckYourHospital</h1>
         ${tmpl.body({ name, hospitalName, totalScore })}
-        <a href="https://cyh-web-124503144711.asia-northeast3.run.app" style="display: block; background: #2563eb; color: white; text-align: center; padding: 14px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 24px 0;">
+        <a href="${process.env.NEXT_PUBLIC_BASE_URL || process.env.VERCEL_URL || "http://localhost:3000"}" style="display: block; background: #2563eb; color: white; text-align: center; padding: 14px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 24px 0;">
           무료 상담 예약하기
         </a>
         <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 32px 0;" />

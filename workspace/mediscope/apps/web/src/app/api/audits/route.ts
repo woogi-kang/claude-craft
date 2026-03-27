@@ -1,14 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const createAuditSchema = z.object({
   url: z.string().url("올바른 URL을 입력해주세요"),
   specialty: z.string().optional(),
 });
 
+const CACHE_TTL_HOURS = 24;
+
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit by IP
+    const ip =
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+      request.headers.get("x-real-ip") ??
+      "unknown";
+    const rateLimitResult = checkRateLimit(ip);
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: rateLimitResult.reason },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(rateLimitResult.retryAfterSeconds ?? 3600),
+          },
+        },
+      );
+    }
+
     const body = await request.json();
     const parsed = createAuditSchema.safeParse(body);
 
@@ -20,6 +41,33 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = createAdminClient();
+
+    // Check for recent completed audit on the same URL (24h cache)
+    const cacheThreshold = new Date(
+      Date.now() - CACHE_TTL_HOURS * 60 * 60 * 1000,
+    ).toISOString();
+    const { data: recentAudit } = await supabase
+      .from("audits")
+      .select("id, status, total_score, grade, created_at")
+      .eq("url", parsed.data.url)
+      .eq("status", "completed")
+      .gte("created_at", cacheThreshold)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .single();
+
+    if (recentAudit) {
+      return NextResponse.json(
+        {
+          id: recentAudit.id,
+          status: recentAudit.status,
+          cached: true,
+          total_score: recentAudit.total_score,
+          grade: recentAudit.grade,
+        },
+        { status: 200 },
+      );
+    }
 
     // 1. Find or create hospital
     const { data: existingHospital } = await supabase

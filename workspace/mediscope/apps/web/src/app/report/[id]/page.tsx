@@ -2,33 +2,17 @@
 
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
-  PieChart,
-  Pie,
-} from "recharts";
+import { PieChart, Pie, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import type { Audit, Category } from "@/lib/types";
-import { CATEGORY_LABELS, GRADE_COLORS, getGrade } from "@/lib/types";
+import { CATEGORY_LABELS, getGrade } from "@/lib/types";
+import { ScoreSection } from "@/components/report/score-section";
+import {
+  CategoryChart,
+  type ChartDataItem,
+} from "@/components/report/category-chart";
+import { LeadForm } from "@/components/report/lead-form";
+import { SubscriptionForm } from "@/components/report/subscription-form";
 
 const BAR_COLORS = ["#4f46e5", "#0ea5e9", "#8b5cf6", "#f59e0b", "#10b981"];
 const PIE_COLORS = ["#4f46e5", "#e5e7eb"];
@@ -55,40 +39,8 @@ interface CompetitionData {
   website_rate: number;
 }
 
-function ScoreGauge({ score, grade }: { score: number; grade: string }) {
-  return (
-    <div className="flex flex-col items-center">
-      <div className="relative flex h-32 w-32 items-center justify-center rounded-full border-8 border-muted">
-        <div className="text-center">
-          <div className="text-4xl font-bold">{score}</div>
-          <div className="text-sm text-muted-foreground">/100</div>
-        </div>
-      </div>
-      <Badge
-        className={`mt-3 text-lg ${GRADE_COLORS[grade as keyof typeof GRADE_COLORS] ?? ""}`}
-        variant="outline"
-      >
-        등급: {grade}
-      </Badge>
-    </div>
-  );
-}
-
 export default function ReportPage() {
   const { id } = useParams<{ id: string }>();
-  const [leadForm, setLeadForm] = useState({
-    email: "",
-    name: "",
-    hospital_name: "",
-    phone: "",
-  });
-  const [leadSubmitted, setLeadSubmitted] = useState(false);
-  const [leadError, setLeadError] = useState("");
-  const [subEmail, setSubEmail] = useState("");
-  const [subFrequency, setSubFrequency] = useState("monthly");
-  const [subSubmitted, setSubSubmitted] = useState(false);
-  const [subLoading, setSubLoading] = useState(false);
-  const [subError, setSubError] = useState("");
 
   const { data: audit, isLoading } = useQuery<Audit>({
     queryKey: ["audit", id],
@@ -118,64 +70,6 @@ export default function ReportPage() {
     },
     enabled: !!audit,
   });
-
-  async function handleLeadSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setLeadError("");
-
-    if (!leadForm.email || !leadForm.name) {
-      setLeadError("이메일과 이름은 필수입니다.");
-      return;
-    }
-
-    try {
-      const res = await fetch("/api/leads", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ audit_id: id, ...leadForm }),
-      });
-      if (!res.ok) throw new Error("제출 실패");
-      setLeadSubmitted(true);
-    } catch {
-      setLeadError("제출에 실패했습니다. 다시 시도해주세요.");
-    }
-  }
-
-  async function handleSubscriptionSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setSubError("");
-
-    if (!subEmail) {
-      setSubError("이메일을 입력해주세요.");
-      return;
-    }
-
-    setSubLoading(true);
-    try {
-      const res = await fetch("/api/subscriptions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          audit_id: id,
-          email: subEmail,
-          frequency: subFrequency,
-        }),
-      });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error((data as { error?: string }).error ?? "구독 실패");
-      }
-      setSubSubmitted(true);
-    } catch (err) {
-      setSubError(
-        err instanceof Error
-          ? err.message
-          : "구독에 실패했습니다. 다시 시도해주세요.",
-      );
-    } finally {
-      setSubLoading(false);
-    }
-  }
 
   if (isLoading) {
     return (
@@ -225,7 +119,7 @@ export default function ReportPage() {
     categoryScores[cat].count += 1;
   }
 
-  const chartData = Object.entries(categoryScores).map(
+  const chartData: ChartDataItem[] = Object.entries(categoryScores).map(
     ([key, { total, count }], i) => ({
       name: CATEGORY_LABELS[key as Category] ?? key,
       score: Math.round(count > 0 ? total / count : 0),
@@ -264,42 +158,8 @@ export default function ReportPage() {
       <p className="mb-8 text-muted-foreground">{audit.url}</p>
 
       <div className="grid gap-6 md:grid-cols-[1fr_2fr]">
-        {/* Score Summary */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">종합 점수</CardTitle>
-          </CardHeader>
-          <CardContent className="flex justify-center">
-            <ScoreGauge score={totalScore} grade={grade} />
-          </CardContent>
-        </Card>
-
-        {/* Bar Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">카테고리별 점수</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={chartData} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" domain={[0, 100]} />
-                <YAxis
-                  type="category"
-                  dataKey="name"
-                  width={80}
-                  tick={{ fontSize: 12 }}
-                />
-                <Tooltip />
-                <Bar dataKey="score" radius={[0, 4, 4, 0]}>
-                  {chartData.map((entry, i) => (
-                    <Cell key={i} fill={entry.fill} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
+        <ScoreSection totalScore={totalScore} grade={grade} />
+        <CategoryChart data={chartData} />
       </div>
 
       {/* Competition Analysis */}
@@ -478,141 +338,8 @@ export default function ReportPage() {
         </Card>
       )}
 
-      {/* Lead Collection Form */}
-      <Card className="mt-8">
-        <CardHeader>
-          <CardTitle className="text-lg">상세 리포트를 받아보세요</CardTitle>
-          <p className="text-sm text-muted-foreground">
-            정보를 입력하시면 PDF 상세 리포트를 이메일로 보내드립니다.
-          </p>
-        </CardHeader>
-        <CardContent>
-          {leadSubmitted ? (
-            <div className="rounded-lg bg-green-50 p-4 text-center text-green-800">
-              신청이 완료되었습니다. 이메일로 상세 리포트를 보내드리겠습니다.
-            </div>
-          ) : (
-            <form onSubmit={handleLeadSubmit} className="space-y-4">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="email">이메일 *</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="you@hospital.kr"
-                    value={leadForm.email}
-                    onChange={(e) =>
-                      setLeadForm((p) => ({ ...p, email: e.target.value }))
-                    }
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="name">담당자명 *</Label>
-                  <Input
-                    id="name"
-                    placeholder="홍길동"
-                    value={leadForm.name}
-                    onChange={(e) =>
-                      setLeadForm((p) => ({ ...p, name: e.target.value }))
-                    }
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="hospital_name">병원명</Label>
-                  <Input
-                    id="hospital_name"
-                    placeholder="OO병원"
-                    value={leadForm.hospital_name}
-                    onChange={(e) =>
-                      setLeadForm((p) => ({
-                        ...p,
-                        hospital_name: e.target.value,
-                      }))
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">전화번호</Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    placeholder="02-1234-5678"
-                    value={leadForm.phone}
-                    onChange={(e) =>
-                      setLeadForm((p) => ({ ...p, phone: e.target.value }))
-                    }
-                  />
-                </div>
-              </div>
-              {leadError && (
-                <p className="text-sm text-destructive">{leadError}</p>
-              )}
-              <Button type="submit" className="w-full">
-                무료 상세 리포트 받기
-              </Button>
-            </form>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Monitoring Subscription */}
-      <Card className="mt-8">
-        <CardHeader>
-          <CardTitle className="text-lg">모니터링 구독</CardTitle>
-          <p className="text-sm text-muted-foreground">
-            정기적으로 사이트를 재진단하여 점수 변동 알림을 받아보세요.
-          </p>
-        </CardHeader>
-        <CardContent>
-          {subSubmitted ? (
-            <div className="rounded-lg bg-green-50 p-4 text-center text-green-800">
-              구독이 완료되었습니다. 점수 변동 시 이메일로 알림을 보내드립니다.
-            </div>
-          ) : (
-            <form onSubmit={handleSubscriptionSubmit} className="space-y-4">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="sub-email">이메일 *</Label>
-                  <Input
-                    id="sub-email"
-                    type="email"
-                    placeholder="you@hospital.kr"
-                    value={subEmail}
-                    onChange={(e) => setSubEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="sub-frequency">진단 빈도</Label>
-                  <Select value={subFrequency} onValueChange={setSubFrequency}>
-                    <SelectTrigger id="sub-frequency">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="weekly">주간</SelectItem>
-                      <SelectItem value="biweekly">격주</SelectItem>
-                      <SelectItem value="monthly">월간</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              {subError && (
-                <p className="text-sm text-destructive">{subError}</p>
-              )}
-              <Button
-                type="submit"
-                variant="outline"
-                className="w-full"
-                disabled={subLoading}
-              >
-                {subLoading ? "처리중..." : "점수 변동 알림 받기"}
-              </Button>
-            </form>
-          )}
-        </CardContent>
-      </Card>
+      <LeadForm auditId={id} />
+      <SubscriptionForm auditId={id} />
     </div>
   );
 }

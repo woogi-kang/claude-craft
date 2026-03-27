@@ -1,23 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-// Mock createAdminClient before importing the route
-const mockSingle = vi.fn();
-const mockInsertSelectSingle = vi.fn();
-const mockInsertSelect = vi
-  .fn()
-  .mockReturnValue({ single: mockInsertSelectSingle });
-const mockInsert = vi.fn().mockReturnValue({ select: mockInsertSelect });
-const mockSelectEqSingle = vi.fn();
-const mockSelectEq = vi.fn().mockReturnValue({ single: mockSelectEqSingle });
-const mockSelect = vi.fn().mockReturnValue({ eq: mockSelectEq });
-const mockFrom = vi.fn().mockReturnValue({
-  select: mockSelect,
-  insert: mockInsert,
-});
-
 vi.mock("@/lib/supabase/admin", () => ({
   createAdminClient: vi.fn(() => ({ from: mockFrom })),
 }));
+
+vi.mock("@/lib/rate-limit", () => ({
+  checkRateLimit: vi.fn(() => ({ allowed: true })),
+}));
+
+const mockFrom = vi.fn();
 
 import { POST } from "@/app/api/audits/route";
 
@@ -29,49 +20,62 @@ function makeRequest(body: unknown) {
   });
 }
 
+// Helper: create a chainable mock that resolves at the end
+function makeChain(resolveValue: { data: unknown; error: unknown }) {
+  const chain: Record<string, unknown> = {};
+  const handler = {
+    get(_: unknown, prop: string) {
+      if (["single", "maybeSingle"].includes(prop)) {
+        return () => Promise.resolve(resolveValue);
+      }
+      if (prop === "then") return undefined; // not a thenable
+      return (..._args: unknown[]) => new Proxy({}, handler);
+    },
+  };
+  return new Proxy(chain, handler);
+}
+
 describe("POST /api/audits", () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // Default: no existing hospital, successful insert
+    // Default mock: no cache, no existing hospital, successful inserts
     mockFrom.mockImplementation((table: string) => {
-      if (table === "hospitals") {
-        return {
-          select: vi.fn().mockReturnValue({
-            eq: vi.fn().mockReturnValue({
-              single: vi.fn().mockResolvedValue({ data: null, error: null }),
-            }),
-          }),
-          insert: vi.fn().mockReturnValue({
-            select: vi.fn().mockReturnValue({
-              single: vi.fn().mockResolvedValue({
-                data: { id: "hospital-1" },
-                error: null,
-              }),
-            }),
-          }),
-        };
-      }
       if (table === "audits") {
         return {
-          insert: vi.fn().mockReturnValue({
-            select: vi.fn().mockReturnValue({
-              single: vi.fn().mockResolvedValue({
-                data: {
-                  id: "audit-123",
-                  status: "pending",
-                  created_at: "2026-03-27T00:00:00Z",
-                },
-                error: null,
-              }),
+          // Cache check (select chain)
+          select: () => makeChain({ data: null, error: null }),
+          // Insert
+          insert: () => ({
+            select: () => ({
+              single: () =>
+                Promise.resolve({
+                  data: {
+                    id: "audit-123",
+                    status: "pending",
+                    created_at: "2026-03-27T00:00:00Z",
+                  },
+                  error: null,
+                }),
             }),
           }),
         };
       }
-      return {
-        select: vi.fn().mockReturnThis(),
-        insert: vi.fn().mockReturnThis(),
-      };
+      if (table === "hospitals") {
+        return {
+          select: () => makeChain({ data: null, error: null }),
+          insert: () => ({
+            select: () => ({
+              single: () =>
+                Promise.resolve({
+                  data: { id: "hospital-1" },
+                  error: null,
+                }),
+            }),
+          }),
+        };
+      }
+      return makeChain({ data: null, error: null });
     });
   });
 
@@ -88,14 +92,12 @@ describe("POST /api/audits", () => {
   it("should return 400 when URL is missing", async () => {
     const req = makeRequest({});
     const res = await POST(req as any);
-
     expect(res.status).toBe(400);
   });
 
   it("should return 400 for an invalid URL", async () => {
     const req = makeRequest({ url: "not-a-url" });
     const res = await POST(req as any);
-
     expect(res.status).toBe(400);
   });
 
@@ -103,34 +105,28 @@ describe("POST /api/audits", () => {
     mockFrom.mockImplementation((table: string) => {
       if (table === "hospitals") {
         return {
-          select: vi.fn().mockReturnValue({
-            eq: vi.fn().mockReturnValue({
-              single: vi.fn().mockResolvedValue({
-                data: { id: "hospital-1" },
-                error: null,
-              }),
-            }),
-          }),
+          select: () => makeChain({ data: { id: "hospital-1" }, error: null }),
         };
       }
       if (table === "audits") {
         return {
-          insert: vi.fn().mockReturnValue({
-            select: vi.fn().mockReturnValue({
-              single: vi.fn().mockResolvedValue({
-                data: null,
-                error: { message: "insert error" },
-              }),
+          select: () => makeChain({ data: null, error: null }),
+          insert: () => ({
+            select: () => ({
+              single: () =>
+                Promise.resolve({
+                  data: null,
+                  error: { message: "insert error" },
+                }),
             }),
           }),
         };
       }
-      return {};
+      return makeChain({ data: null, error: null });
     });
 
     const req = makeRequest({ url: "https://example.com" });
     const res = await POST(req as any);
-
     expect(res.status).toBe(500);
   });
 
@@ -139,41 +135,35 @@ describe("POST /api/audits", () => {
     mockFrom.mockImplementation((table: string) => {
       if (table === "hospitals") {
         return {
-          select: vi.fn().mockReturnValue({
-            eq: vi.fn().mockReturnValue({
-              single: vi.fn().mockResolvedValue({
-                data: { id: "existing-hospital" },
-                error: null,
-              }),
-            }),
-          }),
+          select: () =>
+            makeChain({ data: { id: "existing-hospital" }, error: null }),
           insert: hospitalInsert,
         };
       }
       if (table === "audits") {
         return {
-          insert: vi.fn().mockReturnValue({
-            select: vi.fn().mockReturnValue({
-              single: vi.fn().mockResolvedValue({
-                data: {
-                  id: "audit-456",
-                  status: "pending",
-                  created_at: "2026-03-27",
-                },
-                error: null,
-              }),
+          select: () => makeChain({ data: null, error: null }),
+          insert: () => ({
+            select: () => ({
+              single: () =>
+                Promise.resolve({
+                  data: {
+                    id: "audit-456",
+                    status: "pending",
+                    created_at: "2026-03-27",
+                  },
+                  error: null,
+                }),
             }),
           }),
         };
       }
-      return {};
+      return makeChain({ data: null, error: null });
     });
 
     const req = makeRequest({ url: "https://example.com" });
     const res = await POST(req as any);
-
     expect(res.status).toBe(202);
-    // Hospital insert should NOT be called since existing hospital was found
     expect(hospitalInsert).not.toHaveBeenCalled();
   });
 });

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { ITEM_LABELS } from "@/lib/types";
 
 function generateReportHtml(audit: {
   url: string;
@@ -7,27 +8,6 @@ function generateReportHtml(audit: {
   grade: string;
   scores: Record<string, unknown>;
 }) {
-  const CATEGORY_LABELS: Record<string, string> = {
-    robots_txt: "Robots.txt",
-    sitemap: "Sitemap",
-    meta_tags: "Meta Tags",
-    headings: "Heading 구조",
-    images_alt: "이미지 ALT",
-    links: "내부 링크",
-    https: "HTTPS",
-    canonical: "Canonical",
-    url_structure: "URL 구조",
-    errors_404: "404/리다이렉트",
-    lcp: "LCP",
-    inp: "INP",
-    cls: "CLS",
-    performance_score: "성능 점수",
-    mobile: "모바일 반응형",
-    geo_aeo: "GEO/AEO",
-    multilingual: "다국어 지원",
-    competitiveness: "경쟁력",
-  };
-
   const gradeColor =
     audit.grade === "A"
       ? "#166534"
@@ -48,7 +28,7 @@ function generateReportHtml(audit: {
 
   const items = Object.entries(audit.scores).map(([key, val]) => {
     const v = val as { score?: number; grade?: string; issues?: string[] };
-    const label = CATEGORY_LABELS[key] ?? key;
+    const label = ITEM_LABELS[key] ?? key;
     const score = v?.score ?? 0;
     const grade = v?.grade ?? "skip";
     const issues = v?.issues ?? [];

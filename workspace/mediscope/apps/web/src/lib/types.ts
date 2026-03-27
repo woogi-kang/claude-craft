@@ -73,6 +73,27 @@ export interface CreateLeadRequest {
   specialty?: string;
 }
 
+export const ITEM_LABELS: Record<string, string> = {
+  robots_txt: "Robots.txt",
+  sitemap: "Sitemap",
+  meta_tags: "Meta Tags",
+  headings: "Heading 구조",
+  images_alt: "이미지 ALT",
+  links: "내부 링크",
+  https: "HTTPS",
+  canonical: "Canonical",
+  url_structure: "URL 구조",
+  errors_404: "404/리다이렉트",
+  lcp: "LCP",
+  inp: "INP",
+  cls: "CLS",
+  performance_score: "성능 점수",
+  mobile: "모바일 반응형",
+  geo_aeo: "GEO/AEO",
+  multilingual: "다국어 지원",
+  competitiveness: "경쟁력",
+};
+
 export const CATEGORY_LABELS: Record<Category, string> = {
   technical_seo: "기술 SEO",
   performance: "성능",

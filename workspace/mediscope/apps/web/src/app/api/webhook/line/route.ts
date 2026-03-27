@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createHmac } from "crypto";
+import { createHmac, timingSafeEqual } from "crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 const LINE_CHANNEL_SECRET = process.env.LINE_CHANNEL_SECRET ?? "";
@@ -17,7 +17,10 @@ function verifySignature(body: string, signature: string): boolean {
   const hash = createHmac("SHA256", LINE_CHANNEL_SECRET)
     .update(body)
     .digest("base64");
-  return hash === signature;
+  const hashBuf = Buffer.from(hash);
+  const sigBuf = Buffer.from(signature);
+  if (hashBuf.length !== sigBuf.length) return false;
+  return timingSafeEqual(hashBuf, sigBuf);
 }
 
 async function replyToLine(replyToken: string, text: string): Promise<void> {

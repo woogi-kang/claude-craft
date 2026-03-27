@@ -4,7 +4,7 @@ from ..checks.base import CheckResult
 
 # 20 items with weights (must sum to ~1.0)
 WEIGHTS: dict[str, float] = {
-    # Technical SEO (0.70)
+    # Technical SEO (0.50) + Performance (0.20) = 0.70
     "robots_txt": 0.05,
     "sitemap": 0.05,
     "meta_tags": 0.10,
@@ -15,6 +15,7 @@ WEIGHTS: dict[str, float] = {
     "canonical": 0.03,
     "url_structure": 0.04,
     "errors_404": 0.05,
+    # Performance (0.20)
     "lcp": 0.05,
     "inp": 0.03,
     "cls": 0.03,
