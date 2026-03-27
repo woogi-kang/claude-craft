@@ -41,3 +41,127 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* ────────────────────────────────────────────
+ * Scan Page — Premium Scan Experience
+ * ──────────────────────────────────────────── */
+
+.font-scan-display {
+  font-family: "Geist", "Satoshi", system-ui, sans-serif;
+  font-feature-settings: "tnum";
+}
+
+.scan-page-bg {
+  background-color: #0f172a;
+  background-image: radial-gradient(ellipse at 50% 0%, rgba(56, 189, 248, 0.04) 0%, transparent 60%);
+}
+
+/* Pulse rings around the gauge */
+.scan-pulse-ring {
+  border: 1px solid rgba(56, 189, 248, 0.15);
+  animation: scan-pulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes scan-pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+}
+
+/* Rotating dashed outer ring */
+.scan-rotate-ring {
+  animation: scan-rotate 8s linear infinite;
+  transform-origin: center;
+}
+
+@keyframes scan-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Glowing dot at the arc tip */
+.scan-glow-dot {
+  animation: scan-glow 1.2s ease-in-out infinite;
+}
+
+@keyframes scan-glow {
+  0%, 100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.8));
+  }
+  50% {
+    opacity: 0.6;
+    filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.4));
+  }
+}
+
+/* Step indicator pulse */
+.scan-step-pulse {
+  animation: scan-step-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes scan-step-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0;
+  }
+}
+
+/* Terminal cursor blink */
+.scan-blink {
+  animation: scan-blink 0.8s step-end infinite;
+}
+
+@keyframes scan-blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Ambient background orbs */
+.scan-ambient-orb {
+  animation: scan-ambient 6s ease-in-out infinite alternate;
+}
+
+@keyframes scan-ambient {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(-30px) scale(1.1);
+    opacity: 0.6;
+  }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .scan-pulse-ring,
+  .scan-rotate-ring,
+  .scan-glow-dot,
+  .scan-step-pulse,
+  .scan-blink,
+  .scan-ambient-orb {
+    animation: none;
+  }
+}
