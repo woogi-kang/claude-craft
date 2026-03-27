@@ -64,9 +64,23 @@ export async function GET(
     );
   }
 
-  const details = (audit.details ?? {}) as Record<string, unknown>;
-  const sido = details.sido as string | undefined;
-  const sggu = details.sggu as string | undefined;
+  // Find sido/sggu by matching audit URL to beauty_clinics
+  let sido: string | undefined;
+  let sggu: string | undefined;
+
+  if (audit.url) {
+    const domain = new URL(audit.url).hostname.replace("www.", "");
+    const { data: clinic } = await supabase
+      .from("beauty_clinics")
+      .select("sido, sggu")
+      .or(`website.ilike.%${domain}%,clinic_final_url.ilike.%${domain}%`)
+      .limit(1)
+      .maybeSingle();
+    if (clinic) {
+      sido = clinic.sido ?? undefined;
+      sggu = clinic.sggu ?? undefined;
+    }
+  }
 
   // Resolve medical tourism region
   const regionName =
