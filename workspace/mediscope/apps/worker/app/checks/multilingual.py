@@ -67,8 +67,65 @@ def check_multilingual_pages(
             detected.add(m.group(1).lower().split("-")[0])
         parsed = urlparse(url)
         qs = parse_qs(parsed.query)
-        for val in qs.get("lang", []):
-            detected.add(val.lower().split("-")[0])
+        for key in ("lang", "locale", "ln", "language", "hl"):
+            for val in qs.get(key, []):
+                detected.add(val.lower().split("-")[0])
+
+    # Check links in page for language switcher patterns
+    # Pattern 1: Subdomain links (en.hospital.kr, mapoen.hospital.kr)
+    _SUBDOMAIN_LANG_RE = re.compile(
+        r"https?://(?:[a-z0-9-]*?)?"
+        r"(en|eng|jp|ja|cn|zh|tw|th|vi|vn|ru|id|idn|mn|ar)"
+        r"[.-]",
+        re.I,
+    )
+    # Pattern 2: Link text indicating language (ENG, JP, English, 日本語, 中文 etc.)
+    _LANG_TEXT_MAP = {
+        "en": re.compile(r"^(ENG|English|영어|EN)$", re.I),
+        "ja": re.compile(r"^(JP|JPN|Japanese|일본어|日本語)$", re.I),
+        "zh": re.compile(r"^(CN|CHN|Chinese|중국어|中文|简体中文|繁體中文)$", re.I),
+        "vi": re.compile(r"^(VIE|Vietnamese|베트남어|Tiếng Việt)$", re.I),
+        "th": re.compile(r"^(THAI|Thai|태국어|ภาษาไทย)$", re.I),
+        "ru": re.compile(r"^(RU|Russian|러시아어|Русский)$", re.I),
+        "id": re.compile(r"^(IDN|Indonesian|인도네시아어)$", re.I),
+        "mn": re.compile(r"^(MN|Mongolian|몽골어)$", re.I),
+    }
+
+    for a_tag in soup.find_all("a", href=True):
+        href = str(a_tag["href"])
+        link_text = a_tag.get_text(strip=True)
+
+        # Check subdomain pattern in href
+        m = _SUBDOMAIN_LANG_RE.search(href)
+        if m:
+            lang_code = m.group(1).lower()
+            # Normalize common codes
+            norm = {"eng": "en", "jp": "ja", "cn": "zh", "tw": "zh",
+                    "vn": "vi", "idn": "id"}.get(lang_code, lang_code)
+            detected.add(norm)
+
+        # Check link text for language names
+        for lang, pattern in _LANG_TEXT_MAP.items():
+            # Handle text with leading separators like "|ENG"
+            clean_text = link_text.lstrip("|").strip()
+            if pattern.search(clean_text):
+                detected.add(lang)
+
+    # Check for GLOBAL / language selector images
+    for img_tag in soup.find_all("img", alt=True):
+        alt = str(img_tag.get("alt", "")).strip()
+        if alt.upper() in ("GLOBAL", "LANGUAGE", "TRANSLATE"):
+            # Page has a language selector — look at surrounding links
+            parent = img_tag.parent
+            if parent:
+                for sibling_a in parent.find_all("a", href=True):
+                    href = str(sibling_a["href"])
+                    m = _SUBDOMAIN_LANG_RE.search(href)
+                    if m:
+                        lang_code = m.group(1).lower()
+                        norm = {"eng": "en", "jp": "ja", "cn": "zh", "tw": "zh",
+                                "vn": "vi", "idn": "id"}.get(lang_code, lang_code)
+                        detected.add(norm)
 
     non_korean = detected - {"ko"}
     lang_count = len(non_korean)
