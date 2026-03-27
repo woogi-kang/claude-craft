@@ -85,10 +85,31 @@ export default function ReportPage() {
   const totalScore = audit.total_score ?? 0;
   const grade = audit.grade ?? getGrade(totalScore);
 
-  // Extract check item data — scores contains the enriched data from Worker
-  const categoryScores = (audit.scores ??
-    audit.details?.category_scores ??
-    {}) as Record<string, CheckItemData>;
+  // Extract check item data from scores (Worker saves enriched data here)
+  // scores may be typed as AuditScores but actually contains CheckItemData objects
+  const rawScores = (audit as unknown as Record<string, unknown>).scores as
+    | Record<string, CheckItemData>
+    | undefined;
+  const detailScores = (audit.details as Record<string, unknown>)
+    ?.category_scores as Record<string, CheckItemData> | undefined;
+
+  // Use scores if it contains enriched data (has display_name), otherwise fall back
+  const categoryScores: Record<string, CheckItemData> = (() => {
+    if (rawScores && typeof rawScores === "object") {
+      const firstVal = Object.values(rawScores)[0];
+      if (
+        firstVal &&
+        typeof firstVal === "object" &&
+        "display_name" in firstVal
+      ) {
+        return rawScores;
+      }
+    }
+    if (detailScores && typeof detailScores === "object") {
+      return detailScores;
+    }
+    return {};
+  })();
 
   // Compute pass/warn/fail counts
   let passCount = 0;
