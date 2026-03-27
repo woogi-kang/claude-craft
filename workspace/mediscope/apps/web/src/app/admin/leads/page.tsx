@@ -100,16 +100,23 @@ export default function AdminLeadsPage() {
                           )}
                         </td>
                         <td className="py-3">
-                          {(lead.status === "new" ||
-                            lead.status === "contacted") && (
-                            <Link
-                              href={`/admin/projects/new?lead_id=${lead.id}`}
-                            >
-                              <Button variant="outline" size="sm">
-                                프로젝트 전환
+                          <div className="flex items-center gap-2">
+                            <Link href={`/admin/leads/${lead.id}`}>
+                              <Button variant="ghost" size="sm">
+                                상세
                               </Button>
                             </Link>
-                          )}
+                            {(lead.status === "new" ||
+                              lead.status === "contacted") && (
+                              <Link
+                                href={`/admin/projects/new?lead_id=${lead.id}`}
+                              >
+                                <Button variant="outline" size="sm">
+                                  프로젝트 전환
+                                </Button>
+                              </Link>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     );
