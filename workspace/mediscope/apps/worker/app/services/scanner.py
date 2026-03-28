@@ -1,8 +1,12 @@
 """Scanner orchestrator: runs all checks and produces a score."""
 
+import logging
+
 import httpx
 
-from ..checks.base import CheckResult
+from ..checks.base import CheckResult, Grade
+
+logger = logging.getLogger("mediscope.scanner")
 from ..checks.canonical import check_canonical
 from ..checks.errors import check_errors
 from ..checks.geo_aeo import check_ai_search_mention, check_content_clarity
@@ -30,6 +34,38 @@ from ..checks.url_structure import check_url_structure
 from ..config import settings
 from .crawler import Crawler
 from .scorer import calculate_score
+
+
+async def _safe_check(coro, name: str) -> CheckResult | None:
+    """Run a check safely — return None on unexpected crash instead of killing scan."""
+    try:
+        return await coro
+    except Exception as e:
+        logger.error(f"Check {name} crashed: {e}")
+        return CheckResult(
+            name=name, score=0.0, grade=Grade.FAIL,
+            fail_type="api_error",
+            display_name=name,
+            description="이 항목 측정 중 오류가 발생했습니다",
+            recommendation="다시 진단을 시도해주세요",
+            issues=[f"측정 중 오류: {type(e).__name__}"],
+        )
+
+
+def _safe_sync(fn, name: str) -> CheckResult:
+    """Run a sync check safely."""
+    try:
+        return fn()
+    except Exception as e:
+        logger.error(f"Check {name} crashed: {e}")
+        return CheckResult(
+            name=name, score=0.0, grade=Grade.FAIL,
+            fail_type="api_error",
+            display_name=name,
+            description="이 항목 측정 중 오류가 발생했습니다",
+            recommendation="다시 진단을 시도해주세요",
+            issues=[f"측정 중 오류: {type(e).__name__}"],
+        )
 
 
 async def run_scan(
@@ -82,49 +118,58 @@ async def run_scan(
         follow_redirects=True,
         headers={"User-Agent": "MediScope-Bot/1.0"},
     ) as client:
-        # Async checks
-        all_results.append(await check_robots(client, url))
-        all_results.append(await check_sitemap(client, url))
-        all_results.append(await check_https(client, url))
-        all_results.append(await check_links(client, main_page.html, url))
-        all_results.append(await check_errors(client, crawled_urls))
+        # Async checks (each wrapped for safety)
+        for coro, name in [
+            (check_robots(client, url), "robots_txt"),
+            (check_sitemap(client, url), "sitemap"),
+            (check_https(client, url), "https"),
+            (check_links(client, main_page.html, url), "links"),
+            (check_errors(client, crawled_urls), "errors_404"),
+        ]:
+            r = await _safe_check(coro, name)
+            if r:
+                all_results.append(r)
 
-        # Performance checks (returns 4 results: lcp, inp, cls, performance_score)
-        perf_results = await check_performance(client, url)
-        all_results.extend(perf_results)
+        # Performance checks (returns 4 results)
+        try:
+            perf_results = await check_performance(client, url)
+            all_results.extend(perf_results)
+        except Exception as e:
+            logger.error(f"Performance check crashed: {e}")
 
         # GEO/AEO: AI search mention (async, optional)
         if check_geo:
-            all_results.append(
-                await check_ai_search_mention(
-                    client, url, hospital_name, specialty, region
-                )
-            )
-            all_results.append(
-                await check_international_search(
-                    client, url, hospital_name, specialty, region
-                )
-            )
+            for coro, name in [
+                (check_ai_search_mention(client, url, hospital_name, specialty, region), "ai_search_mention"),
+                (check_international_search(client, url, hospital_name, specialty, region), "international_search"),
+            ]:
+                r = await _safe_check(coro, name)
+                if r:
+                    all_results.append(r)
 
-    # Sync checks (HTML parsing)
-    all_results.append(check_meta_tags(main_page.html, url))
-    all_results.append(check_headings(main_page.html))
-    all_results.append(check_images(main_page.html))
-    all_results.append(check_canonical(main_page.html, url))
-    all_results.append(check_url_structure(url, crawled_urls))
-    all_results.append(check_mobile(main_page.html))
-
-    # Multilingual checks (sync, 3 separate checks)
-    all_results.append(check_multilingual_pages(main_page.html, crawled_urls))
-    all_results.append(check_hreflang(main_page.html))
-    all_results.append(check_overseas_channels(main_page.html))
+    # Sync checks (HTML parsing, each wrapped for safety)
+    for fn, name in [
+        (lambda: check_meta_tags(main_page.html, url), "meta_tags"),
+        (lambda: check_headings(main_page.html), "headings"),
+        (lambda: check_images(main_page.html), "images_alt"),
+        (lambda: check_canonical(main_page.html, url), "canonical"),
+        (lambda: check_url_structure(url, crawled_urls), "url_structure"),
+        (lambda: check_mobile(main_page.html), "mobile"),
+        (lambda: check_multilingual_pages(main_page.html, crawled_urls), "multilingual_pages"),
+        (lambda: check_hreflang(main_page.html), "hreflang"),
+        (lambda: check_overseas_channels(main_page.html), "overseas_channels"),
+    ]:
+        all_results.append(_safe_sync(fn, name))
 
     # GEO/AEO: HTML-based checks (sync)
     if check_geo:
-        all_results.append(check_structured_data(main_page.html))
-        all_results.append(check_faq_content(main_page.html))
-        all_results.append(check_eeat_signals(main_page.html, url, pages))
-        all_results.append(check_content_clarity(main_page.html))
+        for fn, name in [
+            (lambda: check_structured_data(main_page.html), "structured_data"),
+            (lambda: check_faq_content(main_page.html), "faq_content"),
+            (lambda: check_eeat_signals(main_page.html, url, pages), "eeat_signals"),
+            (lambda: check_content_clarity(main_page.html), "content_clarity"),
+        ]:
+            all_results.append(_safe_sync(fn, name))
 
     # Score
     score_data = calculate_score(all_results)

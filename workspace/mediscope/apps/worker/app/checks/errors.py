@@ -36,9 +36,9 @@ async def check_errors(
                         if resp2.status_code in (301, 302, 307, 308):
                             redirect_chains += 1
                             issues.append(f"리다이렉트 체인: {url}")
-                    except httpx.HTTPError:
+                    except Exception:
                         pass
-        except httpx.HTTPError:
+        except Exception:
             checked += 1
             error_count += 1
 
