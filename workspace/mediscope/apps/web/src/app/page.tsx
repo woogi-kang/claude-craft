@@ -51,6 +51,8 @@ export default function LandingPage() {
       }
 
       const data = await res.json();
+      const { analytics } = await import("@/lib/analytics");
+      analytics.scanStarted(url.startsWith("http") ? url : `https://${url}`);
       router.push(`/scan/${data.id}`);
     } catch (err) {
       setError(

@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Providers } from "@/components/providers";
 import { ChatWidget } from "@/components/chat-widget";
 import "./globals.css";
+
+const GA_ID = "G-29ECQ5M1G6";
 
 export const metadata: Metadata = {
   title: "CheckYourHospital - AI 병원 홈페이지 진단",
@@ -16,6 +19,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
+      <head>
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_ID}');
+          `}
+        </Script>
+      </head>
       <body className="min-h-screen antialiased">
         <Providers>
           {children}

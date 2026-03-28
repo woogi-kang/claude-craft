@@ -41,6 +41,9 @@ export function GateOverlay({
         body: JSON.stringify({ audit_id: auditId, email, name }),
       });
       if (!res.ok) throw new Error("제출 실패");
+      const { analytics } = await import("@/lib/analytics");
+      analytics.gateUnlocked(auditId);
+      analytics.leadSubmitted(auditId);
       onUnlock();
     } catch {
       setError("제출에 실패했습니다. 다시 시도해주세요.");
