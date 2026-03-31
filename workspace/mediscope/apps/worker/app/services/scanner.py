@@ -44,6 +44,7 @@ from .procedure_completeness import analyze_procedure_completeness
 from .scorer import calculate_score
 from .tech_stack_detector import detect_tech_stack
 from .review_sentiment import analyze_review_sentiment
+from .season_insight import get_season_insight
 from .voice_search_analyzer import analyze_voice_search_readiness
 
 
@@ -240,6 +241,9 @@ async def run_scan(
         [{"url": p.url, "html": p.html} for p in pages]
     )
 
+    # Season insight (date-based, no URL dependency)
+    season_insight = get_season_insight()
+
     scan_result = {
         "url": url,
         "pages_crawled": len(pages),
@@ -255,6 +259,7 @@ async def run_scan(
         "tech_stack": tech_stack,
         "international_usability": international_usability,
         "review_sentiment": review_sentiment,
+        "season_insight": season_insight,
     }
 
     if hospital_id:
