@@ -51,5 +51,10 @@ class Settings(BaseSettings):
     wechat_app_id: str = ""
     wechat_app_secret: str = ""
 
+    # Content Engine LLM (optional — falls back to template-based generation)
+    content_llm_provider: str = "claude"  # claude | openai
+    content_llm_api_key: str = ""  # CONTENT_LLM_API_KEY
+    content_llm_model: str = "claude-sonnet-4-6"  # or gpt-4o
+
 
 settings = Settings()
