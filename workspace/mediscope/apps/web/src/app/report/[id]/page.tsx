@@ -30,6 +30,7 @@ import { ContentFreshness } from "@/components/report/content-freshness";
 import { MultilingualReadiness } from "@/components/report/multilingual-readiness";
 import { SubscriptionForm } from "@/components/report/subscription-form";
 import { TrendSection } from "@/components/report/trend-section";
+import { ProcedureCompleteness } from "@/components/report/procedure-completeness";
 
 const PIE_COLORS = ["#334155", "#e2e8f0"];
 
@@ -504,6 +505,36 @@ export default function ReportPage() {
                       priority: string;
                       category: string;
                       lang?: string;
+                      message: string;
+                    }[];
+                  }
+                }
+              />
+            )}
+
+            {!!audit.details?.procedure_completeness && (
+              <ProcedureCompleteness
+                data={
+                  audit.details.procedure_completeness as {
+                    procedures: Record<
+                      string,
+                      {
+                        name: string;
+                        pages_found: number;
+                        sections: Record<string, boolean>;
+                        partial_sections: string[];
+                        completeness: number;
+                        content_length: number;
+                      }
+                    >;
+                    overall_completeness: number;
+                    best_procedure: string | null;
+                    worst_procedure: string | null;
+                    recommendations: {
+                      procedure: string;
+                      procedure_name: string;
+                      missing: string[];
+                      priority: string;
                       message: string;
                     }[];
                   }

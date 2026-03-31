@@ -38,6 +38,7 @@ from .content_freshness_analyzer import analyze_content_freshness
 from .multilingual_analyzer import analyze_multilingual_readiness
 from .patient_journey_scorer import calculate_journey_scores
 from .portal_scorer import calculate_portal_scores
+from .procedure_completeness import analyze_procedure_completeness
 from .scorer import calculate_score
 
 
@@ -204,6 +205,11 @@ async def run_scan(
         **conversion_result.details,
     }
 
+    # Procedure completeness analysis
+    procedure_completeness = analyze_procedure_completeness(
+        [{"url": p.url, "html": p.html} for p in pages]
+    )
+
     scan_result = {
         "url": url,
         "pages_crawled": len(pages),
@@ -213,6 +219,7 @@ async def run_scan(
         "content_freshness": content_freshness,
         "patient_journey": patient_journey,
         "conversion_analysis": conversion_analysis,
+        "procedure_completeness": procedure_completeness,
     }
 
     if hospital_id:
