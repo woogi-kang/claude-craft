@@ -41,6 +41,7 @@ from .portal_scorer import calculate_portal_scores
 from .medical_compliance import check_medical_compliance
 from .procedure_completeness import analyze_procedure_completeness
 from .scorer import calculate_score
+from .voice_search_analyzer import analyze_voice_search_readiness
 
 
 async def _safe_check(coro, name: str) -> CheckResult | None:
@@ -216,6 +217,12 @@ async def run_scan(
         [{"url": p.url, "html": p.html} for p in pages]
     )
 
+    # Voice search readiness analysis
+    voice_search = analyze_voice_search_readiness(
+        [{"url": p.url, "html": p.html} for p in pages],
+        score_data.get("category_scores", {}),
+    )
+
     scan_result = {
         "url": url,
         "pages_crawled": len(pages),
@@ -227,6 +234,7 @@ async def run_scan(
         "conversion_analysis": conversion_analysis,
         "procedure_completeness": procedure_completeness,
         "medical_compliance": medical_compliance,
+        "voice_search": voice_search,
     }
 
     if hospital_id:
