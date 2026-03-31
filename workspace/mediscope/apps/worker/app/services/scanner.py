@@ -45,6 +45,7 @@ from .scorer import calculate_score
 from .tech_stack_detector import detect_tech_stack
 from .review_sentiment import analyze_review_sentiment
 from .season_insight import get_season_insight
+from .video_presence import analyze_video_presence
 from .voice_search_analyzer import analyze_voice_search_readiness
 
 
@@ -232,6 +233,11 @@ async def run_scan(
         [{"url": p.url, "html": p.html} for p in pages]
     )
 
+    # Video presence analysis
+    video_presence = analyze_video_presence(
+        [{"url": p.url, "html": p.html} for p in pages]
+    )
+
     # International usability analysis
     page_dicts = [{"url": p.url, "html": p.html} for p in pages]
     international_usability = analyze_international_usability(page_dicts, multilingual_readiness)
@@ -260,6 +266,7 @@ async def run_scan(
         "international_usability": international_usability,
         "review_sentiment": review_sentiment,
         "season_insight": season_insight,
+        "video_presence": video_presence,
     }
 
     if hospital_id:
