@@ -23,6 +23,7 @@ import { CategoryAccordion } from "@/components/report/category-accordion";
 import { BenchmarkSection } from "@/components/report/benchmark-section";
 import { IntlSearchSection } from "@/components/report/intl-search-section";
 import { ImprovementRoadmap } from "@/components/report/improvement-roadmap";
+import { ConversionAnalysis } from "@/components/report/conversion-analysis";
 import { PatientJourneyFunnel } from "@/components/report/patient-journey-funnel";
 import { LeadForm } from "@/components/report/lead-form";
 import { MultilingualReadiness } from "@/components/report/multilingual-readiness";
@@ -235,6 +236,36 @@ export default function ReportPage() {
                 overall_journey_score: number;
                 narrative: string;
               }
+            }
+          />
+        )}
+
+        {/* Conversion Analysis */}
+        {(audit.details as Record<string, unknown>)?.conversion_analysis && (
+          <ConversionAnalysis
+            data={
+              (audit.details as Record<string, unknown>)
+                .conversion_analysis as {
+                cta_main: boolean;
+                cta_procedure_pages: { total: number; with_cta: number };
+                phone_clickable: boolean;
+                phone_tel_links: number;
+                phone_numbers_in_text: number;
+                messengers: Record<string, boolean>;
+                form_exists: boolean;
+                form_fields: number;
+                form_multilingual: boolean;
+                price_visible: boolean;
+                elements_found: string[];
+                elements_missing: string[];
+                score_breakdown: Record<string, number>;
+              }
+            }
+            score={
+              (
+                (audit.details as Record<string, unknown>)
+                  .conversion_analysis as { score: number }
+              ).score
             }
           />
         )}

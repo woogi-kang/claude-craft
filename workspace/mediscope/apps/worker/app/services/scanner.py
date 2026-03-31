@@ -16,6 +16,7 @@ from ..checks.https_check import check_https
 from ..checks.images import check_images
 from ..checks.links import check_links
 from ..checks.meta_tags import check_meta_tags
+from ..checks.conversion_elements import check_conversion_elements
 from ..checks.multilingual import (
     check_hreflang,
     check_multilingual_pages,
@@ -187,6 +188,19 @@ async def run_scan(
     # Patient journey funnel scores
     patient_journey = calculate_journey_scores(score_data.get("category_scores", {}))
 
+    # Conversion element analysis
+    conversion_result = _safe_sync(
+        lambda: check_conversion_elements(
+            [{"url": p.url, "html": p.html, "status_code": p.status_code} for p in pages]
+        ),
+        "conversion_elements",
+    )
+    conversion_analysis = {
+        "score": round(conversion_result.score * 100),
+        "grade": conversion_result.grade.value,
+        **conversion_result.details,
+    }
+
     scan_result = {
         "url": url,
         "pages_crawled": len(pages),
@@ -194,6 +208,7 @@ async def run_scan(
         "portal_scores": portal_scores,
         "multilingual_readiness": multilingual_readiness,
         "patient_journey": patient_journey,
+        "conversion_analysis": conversion_analysis,
     }
 
     if hospital_id:
