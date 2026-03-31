@@ -43,6 +43,7 @@ from .medical_compliance import check_medical_compliance
 from .procedure_completeness import analyze_procedure_completeness
 from .scorer import calculate_score
 from .tech_stack_detector import detect_tech_stack
+from .season_insight import get_season_insight
 from .voice_search_analyzer import analyze_voice_search_readiness
 
 
@@ -234,6 +235,9 @@ async def run_scan(
     page_dicts = [{"url": p.url, "html": p.html} for p in pages]
     international_usability = analyze_international_usability(page_dicts, multilingual_readiness)
 
+    # Season insight (date-based, no URL dependency)
+    season_insight = get_season_insight()
+
     scan_result = {
         "url": url,
         "pages_crawled": len(pages),
@@ -248,6 +252,7 @@ async def run_scan(
         "voice_search": voice_search,
         "tech_stack": tech_stack,
         "international_usability": international_usability,
+        "season_insight": season_insight,
     }
 
     if hospital_id:

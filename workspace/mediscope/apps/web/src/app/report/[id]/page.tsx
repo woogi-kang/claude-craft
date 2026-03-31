@@ -35,6 +35,7 @@ import { InternationalUsability } from "@/components/report/international-usabil
 import { MedicalCompliance } from "@/components/report/medical-compliance";
 import { TechStack } from "@/components/report/tech-stack";
 import { VoiceSearch } from "@/components/report/voice-search";
+import { SeasonInsight } from "@/components/report/season-insight";
 
 const PIE_COLORS = ["#334155", "#e2e8f0"];
 
@@ -666,6 +667,54 @@ export default function ReportPage() {
                       check: string;
                       message: string;
                     }[];
+                  }
+                }
+              />
+            )}
+
+            {!!audit.details?.season_insight && (
+              <SeasonInsight
+                data={
+                  audit.details.season_insight as {
+                    current_month: number;
+                    current_month_name: string;
+                    calendar: Record<
+                      string,
+                      {
+                        month: number;
+                        demand: number;
+                        level: string;
+                      }[]
+                    >;
+                    current_opportunities: {
+                      country: string;
+                      label: string;
+                      flag: string;
+                      demand: number;
+                      level: string;
+                      reason: string;
+                    }[];
+                    upcoming_peaks: {
+                      country: string;
+                      label: string;
+                      flag: string;
+                      month: number;
+                      month_name: string;
+                      demand: number;
+                      level: string;
+                      reason: string;
+                      days_until: number;
+                    }[];
+                    marketing_actions: {
+                      priority: string;
+                      country: string;
+                      message: string;
+                    }[];
+                    quarterly_forecast: {
+                      next_quarter: string;
+                      top_market: string;
+                      expected_demand: string;
+                    };
                   }
                 }
               />
