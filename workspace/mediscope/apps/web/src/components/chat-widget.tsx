@@ -43,7 +43,7 @@ export function ChatWidget() {
           id: "welcome",
           role: "bot",
           content:
-            "안녕하세요! MediScope AI 상담 챗봇이에요.\n\n시술 정보, 가격 비교, 병원 추천에 대해 물어보세요!",
+            "안녕하세요! CheckYourHospital AI 상담 챗봇이에요.\n\n시술 정보, 가격 비교, 병원 추천에 대해 물어보세요!",
           suggestions: ["인기 시술 추천", "보톡스 가격 비교", "강남 병원 추천"],
         },
       ]);
@@ -157,7 +157,7 @@ export function ChatWidget() {
             <div className="flex items-center gap-2">
               <MessageCircle className="h-5 w-5" />
               <div>
-                <h3 className="text-sm font-semibold">MediScope AI 상담</h3>
+                <h3 className="text-sm font-semibold">CheckYourHospital AI 상담</h3>
                 <p className="text-xs opacity-80">
                   시술 정보 &middot; 가격 비교 &middot; 병원 추천
                 </p>

@@ -794,7 +794,7 @@ export default function ReportPage() {
         {/* Footer */}
         <footer className="mt-12 pt-6 border-t border-slate-200 text-center print:mt-8">
           <p className="text-xs text-slate-400">
-            CheckYourHospital by MediScope &middot; 본 리포트는 자동화된 진단
+            CheckYourHospital by CheckYourHospital &middot; 본 리포트는 자동화된 진단
             결과이며, 실제 검색 순위와 차이가 있을 수 있습니다.
           </p>
         </footer>

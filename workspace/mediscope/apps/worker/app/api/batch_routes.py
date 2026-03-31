@@ -14,7 +14,7 @@ from ..db.supabase import get_supabase_client
 from ..security.ssrf import SSRFError, validate_url
 
 router = APIRouter()
-logger = logging.getLogger("mediscope.batch")
+logger = logging.getLogger("checkyourhospital.batch")
 
 BATCH_CONCURRENCY = 10
 SCAN_TIMEOUT = 15
@@ -135,7 +135,7 @@ async def batch_scan(body: BatchScanRequest):
             return await _light_scan(client, url)
 
     async with httpx.AsyncClient(
-        headers={"User-Agent": "MediScope-BatchScanner/1.0"},
+        headers={"User-Agent": "CheckYourHospital-BatchScanner/1.0"},
     ) as client:
         tasks = [scan_with_sem(client, str(u)) for u in body.urls]
         results = await asyncio.gather(*tasks)

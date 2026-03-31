@@ -9,7 +9,7 @@ from ..config import settings
 from ..db.supabase import get_supabase_client
 from .scanner import run_scan
 
-logger = logging.getLogger("mediscope.monitoring")
+logger = logging.getLogger("checkyourhospital.monitoring")
 
 FREQUENCY_HOURS = {
     "daily": 24,

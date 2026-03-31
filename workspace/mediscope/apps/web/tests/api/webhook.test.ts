@@ -163,7 +163,7 @@ describe("WeChat webhook", () => {
     expect(res.status).toBe(200);
     expect(text).toContain("<xml>");
     expect(text).toContain("<MsgType><![CDATA[text]]></MsgType>");
-    expect(text).toContain("MediScope");
+    expect(text).toContain("CheckYourHospital");
   });
 
   it("POST should return 403 with invalid signature", async () => {

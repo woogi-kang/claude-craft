@@ -15,7 +15,7 @@ from ..services.image_generator import (
     upload_image_to_storage,
 )
 
-logger = logging.getLogger("mediscope.image")
+logger = logging.getLogger("checkyourhospital.image")
 router = APIRouter()
 
 

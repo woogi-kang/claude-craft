@@ -10,7 +10,7 @@ from playwright.async_api import async_playwright
 from ..config import settings
 from ..db.supabase import get_supabase_client
 
-logger = logging.getLogger("mediscope.image")
+logger = logging.getLogger("checkyourhospital.image")
 
 TEMPLATES_DIR = Path(__file__).resolve().parent.parent / "templates" / "images"
 

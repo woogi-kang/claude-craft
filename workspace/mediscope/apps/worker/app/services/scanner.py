@@ -6,7 +6,7 @@ import httpx
 
 from ..checks.base import CheckResult, Grade
 
-logger = logging.getLogger("mediscope.scanner")
+logger = logging.getLogger("checkyourhospital.scanner")
 from ..checks.canonical import check_canonical
 from ..checks.errors import check_errors
 from ..checks.geo_aeo import check_ai_search_mention, check_content_clarity
@@ -129,7 +129,7 @@ async def run_scan(
     async with httpx.AsyncClient(
         timeout=settings.crawler_timeout,
         follow_redirects=True,
-        headers={"User-Agent": "MediScope-Bot/1.0"},
+        headers={"User-Agent": "CheckYourHospital-Bot/1.0"},
     ) as client:
         # Async checks (each wrapped for safety)
         for coro, name in [

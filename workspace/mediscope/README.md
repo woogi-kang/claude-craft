@@ -1,4 +1,4 @@
-# MediScope (CheckYourHospital)
+# CheckYourHospital
 
 병원 홈페이지 AI SEO 진단 플랫폼 -- URL을 입력하면 21개 항목(기술 SEO + GEO/AEO + 다국어)을 종합 진단하여 리포트를 제공합니다.
 
@@ -229,7 +229,7 @@ Cloud Scheduler로 매일 오전 9시(KST) `POST /api/cron/follow-up` 자동 실
 ## 프로젝트 구조
 
 ```
-workspace/mediscope/
+workspace/checkyourhospital/
 ├── apps/
 │   ├── web/                    # Next.js 15 (Frontend + API Gateway)
 │   │   ├── src/app/

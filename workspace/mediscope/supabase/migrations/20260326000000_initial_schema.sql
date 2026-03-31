@@ -1,4 +1,4 @@
--- MediScope Initial Schema
+-- CheckYourHospital Initial Schema
 -- 001_initial_schema.sql
 
 -- ============================================================

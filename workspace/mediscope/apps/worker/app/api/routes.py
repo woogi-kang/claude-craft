@@ -34,7 +34,7 @@ async def verify_bearer(authorization: Annotated[str | None, Header()] = None) -
 
 @router.get("/health")
 async def health():
-    return {"status": "ok", "service": "mediscope-worker"}
+    return {"status": "ok", "service": "checkyourhospital-worker"}
 
 
 # --- Scan ---
@@ -53,7 +53,7 @@ class ScanResponse(BaseModel):
 async def _run_scan_task(task_id: str, url: str, audit_id: str | None, options: dict):
     """Background task: run scan and save results."""
     import logging
-    logger = logging.getLogger("mediscope.scan")
+    logger = logging.getLogger("checkyourhospital.scan")
 
     max_pages = options.get("max_pages", 50)
     max_depth = options.get("depth", 3)
@@ -136,7 +136,7 @@ async def generate_pdf_endpoint(
     """Generate a PDF report for a completed audit."""
     import logging
 
-    logger = logging.getLogger("mediscope.pdf")
+    logger = logging.getLogger("checkyourhospital.pdf")
 
     client = get_supabase_client()
     if client is None:

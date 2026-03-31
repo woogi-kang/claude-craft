@@ -42,7 +42,7 @@ describe("POST /api/chat", () => {
     const data = await res.json();
 
     expect(res.status).toBe(200);
-    expect(data.reply).toContain("MediScope");
+    expect(data.reply).toContain("CheckYourHospital");
     expect(data.suggestions).toBeDefined();
   });
 
@@ -52,7 +52,7 @@ describe("POST /api/chat", () => {
     const data = await res.json();
 
     expect(res.status).toBe(200);
-    expect(data.reply).toContain("MediScope");
+    expect(data.reply).toContain("CheckYourHospital");
   });
 
   it("should return 400 when message is missing", async () => {

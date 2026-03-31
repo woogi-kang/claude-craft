@@ -4,7 +4,7 @@ import { SUPPORTED_LANGS } from "@/lib/i18n";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = [];
-  const baseUrl = "https://mediscope.kr";
+  const baseUrl = "https://checkyourhospital.kr";
 
   // 정적 페이지
   entries.push({

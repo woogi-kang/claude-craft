@@ -8,7 +8,7 @@ import httpx
 from ..checks.base import CheckResult, Grade
 from ..config import settings
 
-logger = logging.getLogger("mediscope.checks.geo_aeo")
+logger = logging.getLogger("checkyourhospital.checks.geo_aeo")
 
 # --- ai_search_mention ---
 _AI_DISPLAY_NAME = "AI 검색 노출"

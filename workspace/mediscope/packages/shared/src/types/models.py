@@ -1,4 +1,4 @@
-"""MediScope Pydantic v2 models for Worker API."""
+"""CheckYourHospital Pydantic v2 models for Worker API."""
 
 from __future__ import annotations
 

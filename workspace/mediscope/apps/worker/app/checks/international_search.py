@@ -8,7 +8,7 @@ import httpx
 from ..checks.base import CheckResult, Grade
 from ..config import settings
 
-logger = logging.getLogger("mediscope.checks.international_search")
+logger = logging.getLogger("checkyourhospital.checks.international_search")
 
 _DISPLAY_NAME = "해외 검색엔진 노출"
 _DESCRIPTION = "일본/대만/동남아 구글, 네이버, 바이두에서 병원이 검색되는지 확인합니다"

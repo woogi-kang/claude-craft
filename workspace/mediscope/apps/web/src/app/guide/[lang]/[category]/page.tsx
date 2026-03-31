@@ -192,7 +192,7 @@ export async function generateMetadata({
   const catName = lang === "ko" ? cat.name_ko : cat.name_en;
   const ui = GUIDE_UI[lang];
 
-  const title = `${catName} - ${ui.title} | MediScope`;
+  const title = `${catName} - ${ui.title} | CheckYourHospital`;
   const description =
     lang === "ko"
       ? `${cat.name_ko} 시술 가이드 - 한국 의료관광 가격 비교, 추천 병원 정보`
@@ -279,7 +279,7 @@ export default async function GuideCategoryPage({
     "@type": "MedicalWebPage",
     name: `${catName} - ${ui.title}`,
     description: `${catName} procedure guide for Korea medical tourism`,
-    url: `https://mediscope.kr/guide/${lang}/${categorySlug}`,
+    url: `https://checkyourhospital.kr/guide/${lang}/${categorySlug}`,
     inLanguage: lang,
     about: {
       "@type": "MedicalSpecialty",
@@ -294,7 +294,7 @@ export default async function GuideCategoryPage({
         item: {
           "@type": "MedicalProcedure",
           name: proc.name_intl ?? proc.name,
-          url: `https://mediscope.kr/guide/${lang}/procedure/${proc.id}`,
+          url: `https://checkyourhospital.kr/guide/${lang}/procedure/${proc.id}`,
         },
       })),
     },

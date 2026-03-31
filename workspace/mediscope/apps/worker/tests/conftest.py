@@ -1,4 +1,4 @@
-"""Common fixtures for MediScope Worker tests."""
+"""Common fixtures for CheckYourHospital Worker tests."""
 
 import os
 from unittest.mock import MagicMock, patch

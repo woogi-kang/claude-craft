@@ -207,7 +207,7 @@ export async function generateMetadata({
 
   const name = translationResult.data?.translated_name ?? procResult.data.name;
   const ui = GUIDE_UI[lang];
-  const title = `${name} - ${ui.title} | MediScope`;
+  const title = `${name} - ${ui.title} | CheckYourHospital`;
   const description =
     lang === "ko"
       ? `${name} 시술 정보 - 가격 비교, 회복 기간, 추천 병원`
@@ -341,7 +341,7 @@ export default async function GuideProcedureDetailPage({
     "@type": "MedicalWebPage",
     name: displayName,
     description: description?.slice(0, 200) ?? `${displayName} procedure guide`,
-    url: `https://mediscope.kr/guide/${lang}/procedure/${id}`,
+    url: `https://checkyourhospital.kr/guide/${lang}/procedure/${id}`,
     inLanguage: lang,
     about: {
       "@type": "MedicalProcedure",
@@ -632,7 +632,7 @@ export default async function GuideProcedureDetailPage({
             key={l}
             rel="alternate"
             hrefLang={l}
-            href={`https://mediscope.kr/guide/${l}/procedure/${id}`}
+            href={`https://checkyourhospital.kr/guide/${l}/procedure/${id}`}
           />
         ))}
 

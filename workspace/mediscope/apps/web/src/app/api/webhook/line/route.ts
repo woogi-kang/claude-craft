@@ -58,9 +58,9 @@ async function generateChatResponse(message: string): Promise<string> {
     message.includes("예약") ||
     message.includes("문의")
   ) {
-    return "안녕하세요! MediScope 의료관광 상담 서비스입니다. 전문 상담사가 곧 연락드리겠습니다. 궁금하신 사항을 남겨주세요.";
+    return "안녕하세요! CheckYourHospital 의료관광 상담 서비스입니다. 전문 상담사가 곧 연락드리겠습니다. 궁금하신 사항을 남겨주세요.";
   }
-  return "안녕하세요! MediScope입니다. 의료관광 상담을 원하시면 '상담'이라고 입력해주세요.";
+  return "안녕하세요! CheckYourHospital입니다. 의료관광 상담을 원하시면 '상담'이라고 입력해주세요.";
 }
 
 export async function GET() {

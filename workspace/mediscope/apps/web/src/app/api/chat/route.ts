@@ -464,7 +464,7 @@ async function handleClinic(message: string): Promise<ChatResponse> {
 function handleGreeting(): ChatResponse {
   return {
     reply:
-      "안녕하세요! MediScope AI 상담 챗봇이에요.\n\n다음과 같은 질문에 답변해 드릴 수 있어요:\n\n- 시술 정보 (효과, 방법, 다운타임 등)\n- 가격 비교 (한국 vs 해외)\n- 병원 추천 (지역별, 시술별)\n\n궁금한 것을 물어보세요!",
+      "안녕하세요! CheckYourHospital AI 상담 챗봇이에요.\n\n다음과 같은 질문에 답변해 드릴 수 있어요:\n\n- 시술 정보 (효과, 방법, 다운타임 등)\n- 가격 비교 (한국 vs 해외)\n- 병원 추천 (지역별, 시술별)\n\n궁금한 것을 물어보세요!",
     suggestions: ["인기 시술 추천", "보톡스 가격 비교", "강남 병원 추천"],
   };
 }

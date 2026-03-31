@@ -1,7 +1,7 @@
 [project]
-name = "mediscope-worker"
+name = "checkyourhospital-worker"
 version = "0.1.0"
-description = "MediScope crawling worker - Technical SEO diagnosis for hospital websites"
+description = "CheckYourHospital crawling worker - Technical SEO diagnosis for hospital websites"
 requires-python = ">=3.13"
 dependencies = [
     "fastapi>=0.115",

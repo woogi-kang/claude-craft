@@ -14,7 +14,7 @@ from ..services.monitoring import (
 from .routes import verify_bearer
 
 router = APIRouter(tags=["subscriptions"])
-logger = logging.getLogger("mediscope.subscriptions")
+logger = logging.getLogger("checkyourhospital.subscriptions")
 
 
 class CreateSubscriptionRequest(BaseModel):

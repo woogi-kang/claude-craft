@@ -8,11 +8,11 @@ import { SUPPORTED_LANGS, LANG_LABELS, GUIDE_UI } from "@/lib/i18n";
 import { BEAUTY_CATEGORIES } from "@/lib/types/beauty";
 
 export const metadata: Metadata = {
-  title: "한국 의료관광 시술 가이드 | MediScope",
+  title: "한국 의료관광 시술 가이드 | CheckYourHospital",
   description:
     "한국에서 받을 수 있는 미용 시술을 언어별, 카테고리별로 확인하세요. 가격 비교와 추천 병원 정보를 제공합니다.",
   openGraph: {
-    title: "한국 의료관광 시술 가이드 | MediScope",
+    title: "한국 의료관광 시술 가이드 | CheckYourHospital",
     description: "한국 미용 시술 가이드 - 가격 비교, 추천 병원, 다국어 지원",
     type: "website",
   },
@@ -149,7 +149,7 @@ export default async function GuideLandingPage() {
               name: "한국 의료관광 시술 가이드",
               description:
                 "한국에서 받을 수 있는 미용 시술 가이드 - 가격 비교, 추천 병원",
-              url: "https://mediscope.kr/guide",
+              url: "https://checkyourhospital.kr/guide",
               inLanguage: ["ko", "en", "ja", "zh"],
               about: {
                 "@type": "MedicalSpecialty",

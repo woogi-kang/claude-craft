@@ -39,7 +39,7 @@ class Crawler:
         async with httpx.AsyncClient(
             timeout=self.timeout,
             follow_redirects=True,
-            headers={"User-Agent": "MediScope-Bot/1.0"},
+            headers={"User-Agent": "CheckYourHospital-Bot/1.0"},
         ) as client:
             while queue and len(results) < self.max_pages:
                 url, depth = queue.pop(0)
@@ -91,7 +91,7 @@ class Crawler:
         async with httpx.AsyncClient(
             timeout=self.timeout,
             follow_redirects=True,
-            headers={"User-Agent": "MediScope-Bot/1.0"},
+            headers={"User-Agent": "CheckYourHospital-Bot/1.0"},
         ) as client:
             resp = await client.get(url)
             return CrawlResult(url=url, html=resp.text, status_code=resp.status_code)
