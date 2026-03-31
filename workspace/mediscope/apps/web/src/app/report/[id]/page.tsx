@@ -24,6 +24,7 @@ import { IntlSearchSection } from "@/components/report/intl-search-section";
 import { ImprovementRoadmap } from "@/components/report/improvement-roadmap";
 import { LeadForm } from "@/components/report/lead-form";
 import { SubscriptionForm } from "@/components/report/subscription-form";
+import { TrendSection } from "@/components/report/trend-section";
 
 const PIE_COLORS = ["#334155", "#e2e8f0"];
 
@@ -170,6 +171,10 @@ export default function ReportPage() {
         />
 
         <RadarChart categories={radarCategories} />
+
+        {audit.hospital_id && (
+          <TrendSection hospitalId={audit.hospital_id} enabled={!!audit} />
+        )}
 
         <CategorySummary categoryScores={categoryScores} />
 
