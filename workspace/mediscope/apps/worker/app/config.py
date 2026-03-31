@@ -38,6 +38,7 @@ class Settings(BaseSettings):
 
     # Supabase Storage
     supabase_storage_bucket: str = "reports"
+    supabase_image_bucket: str = "generated-images"
 
     # Resend API (optional, for alert emails)
     resend_api_key: str = ""

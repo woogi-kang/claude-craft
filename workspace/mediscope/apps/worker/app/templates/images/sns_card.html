@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="{{ language }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1080">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+  body { font-family: 'Noto Sans KR', 'Noto Sans JP', 'Noto Sans SC', sans-serif; margin: 0; }
+</style>
+</head>
+<body class="bg-gradient-to-br from-blue-600 to-indigo-700" style="width:1080px;height:1080px;">
+<div class="w-[1080px] h-[1080px] p-12 flex flex-col justify-between text-white">
+
+  <!-- Top Section -->
+  <div>
+    <div class="inline-block bg-white/20 backdrop-blur text-sm font-medium px-4 py-1.5 rounded-full mb-6">
+      {{ data.get('category', 'Cosmetic Procedure') }}
+    </div>
+    <h1 class="text-5xl font-bold leading-tight mb-4">
+      {% if language == 'ko' %}{{ procedure_name }}{% elif language == 'ja' %}{{ procedure_name }}{% else %}{{ procedure_name }}{% endif %}
+      {% if language == 'ko' %}이란?{% elif language == 'ja' %}とは？{% elif language == 'zh' %}是什么？{% else %} — What is it?{% endif %}
+    </h1>
+    <p class="text-xl text-white/80 leading-relaxed max-w-[800px]">
+      {{ data.get('description', '') }}
+    </p>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-3 gap-6">
+    <div class="bg-white/10 backdrop-blur rounded-2xl p-6 text-center">
+      <div class="text-sm text-white/60 mb-2">
+        {% if language == 'ko' %}시술 시간{% elif language == 'ja' %}施術時間{% elif language == 'zh' %}手术时间{% else %}Duration{% endif %}
+      </div>
+      <div class="text-3xl font-bold">{{ data.get('duration', '-') }}</div>
+    </div>
+    <div class="bg-white/10 backdrop-blur rounded-2xl p-6 text-center">
+      <div class="text-sm text-white/60 mb-2">
+        {% if language == 'ko' %}다운타임{% elif language == 'ja' %}ダウンタイム{% elif language == 'zh' %}恢复期{% else %}Downtime{% endif %}
+      </div>
+      <div class="text-3xl font-bold">{{ data.get('downtime', '-') }}</div>
+    </div>
+    <div class="bg-white/10 backdrop-blur rounded-2xl p-6 text-center">
+      <div class="text-sm text-white/60 mb-2">
+        {% if language == 'ko' %}통증{% elif language == 'ja' %}痛み{% elif language == 'zh' %}疼痛{% else %}Pain{% endif %}
+      </div>
+      <div class="text-3xl font-bold">
+        {% set pain = data.get('pain_level', 0) %}
+        {% for i in range(5) %}{% if i < pain %}●{% else %}○{% endif %}{% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Branding -->
+  <div class="flex items-center justify-between">
+    <div class="text-sm text-white/50">{{ data.get('clinic_name', '') }}</div>
+    <div class="text-sm text-white/50">{{ data.get('website', '') }}</div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="{{ language }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1080">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+  body { font-family: 'Noto Sans KR', 'Noto Sans JP', 'Noto Sans SC', sans-serif; margin: 0; }
+</style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-blue-50" style="width:1080px;height:1350px;">
+<div class="w-[1080px] h-[1350px] p-10 flex flex-col">
+
+  <!-- Header -->
+  <div class="text-center mb-8">
+    <div class="inline-block bg-blue-600 text-white text-sm font-medium px-4 py-1.5 rounded-full mb-4">
+      {{ data.get('clinic_name', 'Medical Procedure') }}
+    </div>
+    <h1 class="text-4xl font-bold text-slate-800 mb-2">{{ procedure_name }}</h1>
+    <p class="text-lg text-slate-500">
+      {% if language == 'ko' %}시술 과정 안내{% elif language == 'ja' %}施術プロセスガイド{% elif language == 'zh' %}手术流程指南{% else %}Procedure Process Guide{% endif %}
+    </p>
+  </div>
+
+  <!-- 4 Steps -->
+  <div class="flex-1 grid grid-cols-2 gap-6 mb-8">
+    {% for step in data.get('steps', []) %}
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 flex flex-col">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold">
+          {{ loop.index }}
+        </div>
+        <div>
+          <h3 class="text-xl font-bold text-slate-800">{{ step.get('title', '') }}</h3>
+          <span class="text-sm text-blue-500">{{ step.get('duration', '') }}</span>
+        </div>
+      </div>
+      <p class="text-base text-slate-600 leading-relaxed flex-1">{{ step.get('description', '') }}</p>
+      {% if step.get('icon') %}
+      <div class="mt-3 text-3xl">{{ step.get('icon') }}</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Bottom Info Bar -->
+  <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+    <div class="grid grid-cols-3 gap-6 text-center">
+      <div>
+        <div class="text-sm text-slate-400 mb-1">
+          {% if language == 'ko' %}총 소요시간{% elif language == 'ja' %}所要時間{% elif language == 'zh' %}总耗时{% else %}Total Duration{% endif %}
+        </div>
+        <div class="text-2xl font-bold text-slate-800">{{ data.get('total_duration', '-') }}</div>
+      </div>
+      <div>
+        <div class="text-sm text-slate-400 mb-1">
+          {% if language == 'ko' %}다운타임{% elif language == 'ja' %}ダウンタイム{% elif language == 'zh' %}恢复期{% else %}Downtime{% endif %}
+        </div>
+        <div class="text-2xl font-bold text-slate-800">{{ data.get('downtime', '-') }}</div>
+      </div>
+      <div>
+        <div class="text-sm text-slate-400 mb-1">
+          {% if language == 'ko' %}부작용{% elif language == 'ja' %}副作用{% elif language == 'zh' %}副作用{% else %}Side Effects{% endif %}
+        </div>
+        <div class="text-2xl font-bold text-slate-800">{{ data.get('side_effects', '-') }}</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
