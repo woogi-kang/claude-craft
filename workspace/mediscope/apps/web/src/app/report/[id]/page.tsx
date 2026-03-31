@@ -16,6 +16,7 @@ import { ReportHeader } from "@/components/report/report-header";
 import { ScoreHero } from "@/components/report/score-hero";
 import { RadarChart } from "@/components/report/radar-chart";
 import { CategorySummary } from "@/components/report/category-summary";
+import { PortalScorecard } from "@/components/report/portal-scorecard";
 import { TopIssues } from "@/components/report/top-issues";
 import { GateOverlay } from "@/components/report/gate-overlay";
 import { CategoryAccordion } from "@/components/report/category-accordion";
@@ -97,6 +98,21 @@ export default function ReportPage() {
   const detailScores = (audit.details as Record<string, unknown>)
     ?.category_scores as Record<string, CheckItemData> | undefined;
 
+  const portalScores = (audit.details as Record<string, unknown>)
+    ?.portal_scores as
+    | Record<
+        string,
+        {
+          score: number;
+          grade: string;
+          label: string;
+          issues: string[];
+          checks_measured: number;
+          checks_total: number;
+        }
+      >
+    | undefined;
+
   const categoryScores: Record<string, CheckItemData> = (() => {
     if (rawScores && typeof rawScores === "object") {
       const firstVal = Object.values(rawScores)[0];
@@ -170,6 +186,8 @@ export default function ReportPage() {
         />
 
         <RadarChart categories={radarCategories} />
+
+        {portalScores && <PortalScorecard portalScores={portalScores} />}
 
         <CategorySummary categoryScores={categoryScores} />
 

@@ -33,6 +33,7 @@ from ..checks.structured_data import (
 from ..checks.url_structure import check_url_structure
 from ..config import settings
 from .crawler import Crawler
+from .portal_scorer import calculate_portal_scores
 from .scorer import calculate_score
 
 
@@ -174,10 +175,13 @@ async def run_scan(
     # Score
     score_data = calculate_score(all_results)
 
+    portal_scores = calculate_portal_scores(score_data.get("category_scores", {}))
+
     scan_result = {
         "url": url,
         "pages_crawled": len(pages),
         **score_data,
+        "portal_scores": portal_scores,
     }
 
     if hospital_id:
