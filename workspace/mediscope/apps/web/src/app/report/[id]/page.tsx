@@ -22,6 +22,7 @@ import { CategoryAccordion } from "@/components/report/category-accordion";
 import { BenchmarkSection } from "@/components/report/benchmark-section";
 import { IntlSearchSection } from "@/components/report/intl-search-section";
 import { ImprovementRoadmap } from "@/components/report/improvement-roadmap";
+import { PatientJourneyFunnel } from "@/components/report/patient-journey-funnel";
 import { LeadForm } from "@/components/report/lead-form";
 import { SubscriptionForm } from "@/components/report/subscription-form";
 
@@ -170,6 +171,32 @@ export default function ReportPage() {
         />
 
         <RadarChart categories={radarCategories} />
+
+        {/* Patient Journey Funnel */}
+        {(audit.details as Record<string, unknown>)?.patient_journey && (
+          <PatientJourneyFunnel
+            data={
+              (audit.details as Record<string, unknown>).patient_journey as {
+                stages: Record<
+                  string,
+                  {
+                    score: number;
+                    grade: string;
+                    display_name: string;
+                    icon: string;
+                    description: string;
+                    weakest_check: string | null;
+                    recommendation: string;
+                  }
+                >;
+                weakest_stage: string | null;
+                strongest_stage: string | null;
+                overall_journey_score: number;
+                narrative: string;
+              }
+            }
+          />
+        )}
 
         <CategorySummary categoryScores={categoryScores} />
 
