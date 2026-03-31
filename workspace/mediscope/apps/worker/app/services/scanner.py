@@ -33,6 +33,7 @@ from ..checks.structured_data import (
 from ..checks.url_structure import check_url_structure
 from ..config import settings
 from .crawler import Crawler
+from .multilingual_analyzer import analyze_multilingual_readiness
 from .portal_scorer import calculate_portal_scores
 from .scorer import calculate_score
 
@@ -172,6 +173,11 @@ async def run_scan(
         ]:
             all_results.append(_safe_sync(fn, name))
 
+    # Multilingual readiness analysis (uses all crawled pages)
+    multilingual_readiness = analyze_multilingual_readiness(
+        [{"url": p.url, "html": p.html, "status_code": p.status_code} for p in pages]
+    )
+
     # Score
     score_data = calculate_score(all_results)
 
@@ -182,6 +188,7 @@ async def run_scan(
         "pages_crawled": len(pages),
         **score_data,
         "portal_scores": portal_scores,
+        "multilingual_readiness": multilingual_readiness,
     }
 
     if hospital_id:

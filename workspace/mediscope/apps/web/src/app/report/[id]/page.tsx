@@ -24,6 +24,7 @@ import { BenchmarkSection } from "@/components/report/benchmark-section";
 import { IntlSearchSection } from "@/components/report/intl-search-section";
 import { ImprovementRoadmap } from "@/components/report/improvement-roadmap";
 import { LeadForm } from "@/components/report/lead-form";
+import { MultilingualReadiness } from "@/components/report/multilingual-readiness";
 import { SubscriptionForm } from "@/components/report/subscription-form";
 
 const PIE_COLORS = ["#334155", "#e2e8f0"];
@@ -351,6 +352,42 @@ export default function ReportPage() {
                       }
                     >;
                     summary: string;
+                  }
+                }
+              />
+            )}
+
+            {!!audit.details?.multilingual_readiness && (
+              <MultilingualReadiness
+                data={
+                  audit.details.multilingual_readiness as {
+                    languages: Record<
+                      string,
+                      {
+                        code: string;
+                        label: string;
+                        flag: string;
+                        page_count: number;
+                      }
+                    >;
+                    page_types: Record<
+                      string,
+                      { name: string; languages: string[] }
+                    >;
+                    matrix: Record<string, Record<string, boolean>>;
+                    readiness_scores: Record<string, number>;
+                    overall_score: number;
+                    hreflang_tags: {
+                      lang: string;
+                      hreflang: string;
+                      href: string;
+                    }[];
+                    recommendations: {
+                      priority: string;
+                      category: string;
+                      lang?: string;
+                      message: string;
+                    }[];
                   }
                 }
               />
