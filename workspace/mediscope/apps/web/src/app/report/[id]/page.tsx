@@ -34,6 +34,7 @@ import { ProcedureCompleteness } from "@/components/report/procedure-completenes
 import { InternationalUsability } from "@/components/report/international-usability";
 import { MedicalCompliance } from "@/components/report/medical-compliance";
 import { TechStack } from "@/components/report/tech-stack";
+import { VideoPresence } from "@/components/report/video-presence";
 import { VoiceSearch } from "@/components/report/voice-search";
 
 const PIE_COLORS = ["#334155", "#e2e8f0"];
@@ -640,6 +641,43 @@ export default function ReportPage() {
                       reason: string;
                     }[];
                     total_detected: number;
+                    recommendations: {
+                      priority: string;
+                      message: string;
+                    }[];
+                  }
+                }
+              />
+            )}
+
+            {!!audit.details?.video_presence && (
+              <VideoPresence
+                data={
+                  audit.details.video_presence as {
+                    embedded_videos: Record<
+                      string,
+                      { count: number; urls: string[] }
+                    >;
+                    total_videos: number;
+                    social_profiles: Record<
+                      string,
+                      {
+                        found: boolean;
+                        url: string | null;
+                        label: string;
+                      }
+                    >;
+                    social_count: number;
+                    has_video_schema: boolean;
+                    has_og_video: boolean;
+                    video_score: number;
+                    social_score: number;
+                    overall_score: number;
+                    missing_platforms: {
+                      platform: string;
+                      reason: string;
+                      priority: string;
+                    }[];
                     recommendations: {
                       priority: string;
                       message: string;

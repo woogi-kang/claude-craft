@@ -43,6 +43,7 @@ from .medical_compliance import check_medical_compliance
 from .procedure_completeness import analyze_procedure_completeness
 from .scorer import calculate_score
 from .tech_stack_detector import detect_tech_stack
+from .video_presence import analyze_video_presence
 from .voice_search_analyzer import analyze_voice_search_readiness
 
 
@@ -230,6 +231,11 @@ async def run_scan(
         [{"url": p.url, "html": p.html} for p in pages]
     )
 
+    # Video presence analysis
+    video_presence = analyze_video_presence(
+        [{"url": p.url, "html": p.html} for p in pages]
+    )
+
     # International usability analysis
     page_dicts = [{"url": p.url, "html": p.html} for p in pages]
     international_usability = analyze_international_usability(page_dicts, multilingual_readiness)
@@ -248,6 +254,7 @@ async def run_scan(
         "voice_search": voice_search,
         "tech_stack": tech_stack,
         "international_usability": international_usability,
+        "video_presence": video_presence,
     }
 
     if hospital_id:
