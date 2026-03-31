@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="{{ language }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1080">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+  body { font-family: 'Noto Sans KR', 'Noto Sans JP', 'Noto Sans SC', sans-serif; margin: 0; }
+  .progress-ring { transform: rotate(-90deg); }
+</style>
+</head>
+<body class="bg-slate-50" style="width:1080px;height:1080px;">
+<div class="w-[1080px] h-[1080px] p-12 flex flex-col">
+
+  <!-- Header -->
+  <div class="text-center mb-10">
+    <h1 class="text-4xl font-bold text-slate-800 mb-2">{{ procedure_name }}</h1>
+    <p class="text-lg text-slate-500">
+      {% if language == 'ko' %}시술 요약{% elif language == 'ja' %}施術概要{% elif language == 'zh' %}手术概要{% else %}Procedure Summary{% endif %}
+    </p>
+  </div>
+
+  <!-- 4 Metric Cards -->
+  <div class="flex-1 grid grid-cols-2 gap-8">
+    <!-- Pain Level -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 flex flex-col items-center justify-center">
+      <div class="text-5xl mb-4">💉</div>
+      <div class="text-sm text-slate-400 mb-2">
+        {% if language == 'ko' %}통증 수준{% elif language == 'ja' %}痛みレベル{% elif language == 'zh' %}疼痛等级{% else %}Pain Level{% endif %}
+      </div>
+      <div class="text-3xl font-bold text-slate-800 mb-2">
+        {% set pain = data.get('pain_level', 0) %}
+        {% for i in range(5) %}
+        <span class="{{ 'text-red-500' if i < pain else 'text-slate-200' }}">●</span>
+        {% endfor %}
+      </div>
+      <div class="text-base text-slate-500">{{ data.get('pain_description', '') }}</div>
+    </div>
+
+    <!-- Duration -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 flex flex-col items-center justify-center">
+      <div class="text-5xl mb-4">⏱️</div>
+      <div class="text-sm text-slate-400 mb-2">
+        {% if language == 'ko' %}소요 시간{% elif language == 'ja' %}所要時間{% elif language == 'zh' %}所需时间{% else %}Duration{% endif %}
+      </div>
+      <div class="text-4xl font-bold text-slate-800 mb-2">{{ data.get('duration', '-') }}</div>
+      <div class="text-base text-slate-500">{{ data.get('duration_detail', '') }}</div>
+    </div>
+
+    <!-- Downtime -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 flex flex-col items-center justify-center">
+      <div class="text-5xl mb-4">🏠</div>
+      <div class="text-sm text-slate-400 mb-2">
+        {% if language == 'ko' %}다운타임{% elif language == 'ja' %}ダウンタイム{% elif language == 'zh' %}恢复期{% else %}Downtime{% endif %}
+      </div>
+      <div class="text-4xl font-bold text-slate-800 mb-2">{{ data.get('downtime', '-') }}</div>
+      <div class="text-base text-slate-500">{{ data.get('downtime_detail', '') }}</div>
+    </div>
+
+    <!-- Price Range -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 flex flex-col items-center justify-center">
+      <div class="text-5xl mb-4">💰</div>
+      <div class="text-sm text-slate-400 mb-2">
+        {% if language == 'ko' %}가격대{% elif language == 'ja' %}価格帯{% elif language == 'zh' %}价格区间{% else %}Price Range{% endif %}
+      </div>
+      <div class="text-4xl font-bold text-slate-800 mb-2">{{ data.get('price_range', '-') }}</div>
+      <div class="text-base text-slate-500">{{ data.get('price_detail', '') }}</div>
+    </div>
+  </div>
+
+  <!-- Bottom Note -->
+  {% if data.get('note') %}
+  <div class="mt-8 text-center text-sm text-slate-400">
+    {{ data.get('note') }}
+  </div>
+  {% endif %}
+
+</div>
+</body>
+</html>

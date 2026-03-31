@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="{{ language }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1080">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+  body { font-family: 'Noto Sans KR', 'Noto Sans JP', 'Noto Sans SC', sans-serif; margin: 0; }
+</style>
+</head>
+<body class="bg-white" style="width:1080px;height:1080px;">
+<div class="w-[1080px] h-[1080px] p-12 flex flex-col">
+
+  <!-- Header -->
+  <div class="text-center mb-10">
+    <h1 class="text-4xl font-bold text-slate-800 mb-2">{{ procedure_name }}</h1>
+    <p class="text-lg text-slate-500">
+      {% if language == 'ko' %}국가별 가격 비교{% elif language == 'ja' %}国別価格比較{% elif language == 'zh' %}各国价格比较{% else %}Price Comparison by Country{% endif %}
+    </p>
+  </div>
+
+  <!-- Bar Chart -->
+  <div class="flex-1 flex flex-col justify-center gap-6 px-4">
+    {% set max_price = data.get('prices', []) | map(attribute='price') | list | max if data.get('prices') else 1 %}
+    {% for item in data.get('prices', []) %}
+    <div class="flex items-center gap-4">
+      <div class="w-24 text-right">
+        <div class="text-lg font-bold text-slate-700">{{ item.get('country_flag', '') }} {{ item.get('country', '') }}</div>
+      </div>
+      <div class="flex-1 relative">
+        <div class="h-14 bg-slate-100 rounded-xl overflow-hidden">
+          {% set pct = (item.get('price', 0) / max_price * 100) | int if max_price else 0 %}
+          <div class="h-full rounded-xl flex items-center px-4 {{ 'bg-blue-500' if item.get('highlight') else 'bg-slate-300' }}"
+               style="width: {{ pct }}%;">
+            <span class="text-white font-bold text-lg whitespace-nowrap">
+              {{ item.get('price_formatted', '') }}
+            </span>
+          </div>
+        </div>
+        {% if item.get('discount') %}
+        <div class="absolute -right-2 -top-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+          {{ item.get('discount') }}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Summary -->
+  {% if data.get('summary') %}
+  <div class="mt-8 bg-blue-50 rounded-2xl p-6 text-center">
+    <p class="text-xl font-bold text-blue-700">{{ data.get('summary') }}</p>
+  </div>
+  {% endif %}
+
+  <!-- Source -->
+  <div class="mt-4 text-center text-sm text-slate-400">
+    {{ data.get('source', '') }}
+  </div>
+
+</div>
+</body>
+</html>
