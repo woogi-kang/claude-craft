@@ -32,6 +32,7 @@ import { SubscriptionForm } from "@/components/report/subscription-form";
 import { TrendSection } from "@/components/report/trend-section";
 import { ProcedureCompleteness } from "@/components/report/procedure-completeness";
 import { MedicalCompliance } from "@/components/report/medical-compliance";
+import { TechStack } from "@/components/report/tech-stack";
 import { VoiceSearch } from "@/components/report/voice-search";
 
 const PIE_COLORS = ["#334155", "#e2e8f0"];
@@ -611,6 +612,33 @@ export default function ReportPage() {
                     >;
                     pass_count: number;
                     total_checks: number;
+                    recommendations: {
+                      priority: string;
+                      message: string;
+                    }[];
+                  }
+                }
+              />
+            )}
+
+            {!!audit.details?.tech_stack && (
+              <TechStack
+                data={
+                  audit.details.tech_stack as {
+                    detected: Record<
+                      string,
+                      {
+                        label: string;
+                        category: string;
+                        found_on: string[];
+                      }
+                    >;
+                    by_category: Record<string, string[]>;
+                    missing_recommended: {
+                      tech: string;
+                      reason: string;
+                    }[];
+                    total_detected: number;
                     recommendations: {
                       priority: string;
                       message: string;

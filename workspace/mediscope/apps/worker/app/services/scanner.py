@@ -41,6 +41,7 @@ from .portal_scorer import calculate_portal_scores
 from .medical_compliance import check_medical_compliance
 from .procedure_completeness import analyze_procedure_completeness
 from .scorer import calculate_score
+from .tech_stack_detector import detect_tech_stack
 from .voice_search_analyzer import analyze_voice_search_readiness
 
 
@@ -223,6 +224,11 @@ async def run_scan(
         score_data.get("category_scores", {}),
     )
 
+    # Tech stack detection
+    tech_stack = detect_tech_stack(
+        [{"url": p.url, "html": p.html} for p in pages]
+    )
+
     scan_result = {
         "url": url,
         "pages_crawled": len(pages),
@@ -235,6 +241,7 @@ async def run_scan(
         "procedure_completeness": procedure_completeness,
         "medical_compliance": medical_compliance,
         "voice_search": voice_search,
+        "tech_stack": tech_stack,
     }
 
     if hospital_id:
