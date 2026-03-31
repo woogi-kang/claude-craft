@@ -38,6 +38,7 @@ from .content_freshness_analyzer import analyze_content_freshness
 from .multilingual_analyzer import analyze_multilingual_readiness
 from .patient_journey_scorer import calculate_journey_scores
 from .portal_scorer import calculate_portal_scores
+from .international_usability import analyze_international_usability
 from .medical_compliance import check_medical_compliance
 from .procedure_completeness import analyze_procedure_completeness
 from .scorer import calculate_score
@@ -229,6 +230,10 @@ async def run_scan(
         [{"url": p.url, "html": p.html} for p in pages]
     )
 
+    # International usability analysis
+    page_dicts = [{"url": p.url, "html": p.html} for p in pages]
+    international_usability = analyze_international_usability(page_dicts, multilingual_readiness)
+
     scan_result = {
         "url": url,
         "pages_crawled": len(pages),
@@ -242,6 +247,7 @@ async def run_scan(
         "medical_compliance": medical_compliance,
         "voice_search": voice_search,
         "tech_stack": tech_stack,
+        "international_usability": international_usability,
     }
 
     if hospital_id:
