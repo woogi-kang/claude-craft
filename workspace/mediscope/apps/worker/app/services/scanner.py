@@ -40,6 +40,7 @@ from .patient_journey_scorer import calculate_journey_scores
 from .portal_scorer import calculate_portal_scores
 from .procedure_completeness import analyze_procedure_completeness
 from .scorer import calculate_score
+from .tech_stack_detector import detect_tech_stack
 
 
 async def _safe_check(coro, name: str) -> CheckResult | None:
@@ -210,6 +211,11 @@ async def run_scan(
         [{"url": p.url, "html": p.html} for p in pages]
     )
 
+    # Tech stack detection
+    tech_stack = detect_tech_stack(
+        [{"url": p.url, "html": p.html} for p in pages]
+    )
+
     scan_result = {
         "url": url,
         "pages_crawled": len(pages),
@@ -220,6 +226,7 @@ async def run_scan(
         "patient_journey": patient_journey,
         "conversion_analysis": conversion_analysis,
         "procedure_completeness": procedure_completeness,
+        "tech_stack": tech_stack,
     }
 
     if hospital_id:

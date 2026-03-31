@@ -31,6 +31,7 @@ import { MultilingualReadiness } from "@/components/report/multilingual-readines
 import { SubscriptionForm } from "@/components/report/subscription-form";
 import { TrendSection } from "@/components/report/trend-section";
 import { ProcedureCompleteness } from "@/components/report/procedure-completeness";
+import { TechStack } from "@/components/report/tech-stack";
 
 const PIE_COLORS = ["#334155", "#e2e8f0"];
 
@@ -534,6 +535,33 @@ export default function ReportPage() {
                       procedure: string;
                       procedure_name: string;
                       missing: string[];
+                      priority: string;
+                      message: string;
+                    }[];
+                  }
+                }
+              />
+            )}
+
+            {!!audit.details?.tech_stack && (
+              <TechStack
+                data={
+                  audit.details.tech_stack as {
+                    detected: Record<
+                      string,
+                      {
+                        label: string;
+                        category: string;
+                        found_on: string[];
+                      }
+                    >;
+                    by_category: Record<string, string[]>;
+                    missing_recommended: {
+                      tech: string;
+                      reason: string;
+                    }[];
+                    total_detected: number;
+                    recommendations: {
                       priority: string;
                       message: string;
                     }[];
