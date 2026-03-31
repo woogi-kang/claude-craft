@@ -42,6 +42,27 @@ interface CompetitionData {
   website_rate: number;
 }
 
+function MaybePortalScorecard({
+  data,
+}: {
+  data:
+    | Record<
+        string,
+        {
+          score: number;
+          grade: string;
+          label: string;
+          issues: string[];
+          checks_measured: number;
+          checks_total: number;
+        }
+      >
+    | undefined;
+}) {
+  if (!data) return null;
+  return <PortalScorecard portalScores={data} />;
+}
+
 export default function ReportPage() {
   const { id } = useParams<{ id: string }>();
   const [isUnlocked, setIsUnlocked] = useState(false);
@@ -101,8 +122,8 @@ export default function ReportPage() {
   const detailScores = (audit.details as Record<string, unknown>)
     ?.category_scores as Record<string, CheckItemData> | undefined;
 
-  const portalScores = (audit.details as Record<string, unknown>)
-    ?.portal_scores as
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const portalScoreData = audit.details?.portal_scores as any as
     | Record<
         string,
         {
@@ -190,7 +211,7 @@ export default function ReportPage() {
 
         <RadarChart categories={radarCategories} />
 
-        {portalScores && <PortalScorecard portalScores={portalScores} />}
+        <MaybePortalScorecard data={portalScoreData} />
 
         {/* Patient Journey Funnel */}
         {(audit.details as Record<string, unknown>)?.patient_journey && (
