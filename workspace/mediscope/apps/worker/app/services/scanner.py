@@ -38,6 +38,7 @@ from .content_freshness_analyzer import analyze_content_freshness
 from .multilingual_analyzer import analyze_multilingual_readiness
 from .patient_journey_scorer import calculate_journey_scores
 from .portal_scorer import calculate_portal_scores
+from .medical_compliance import check_medical_compliance
 from .procedure_completeness import analyze_procedure_completeness
 from .scorer import calculate_score
 
@@ -210,6 +211,11 @@ async def run_scan(
         [{"url": p.url, "html": p.html} for p in pages]
     )
 
+    # Medical advertising compliance check
+    medical_compliance = check_medical_compliance(
+        [{"url": p.url, "html": p.html} for p in pages]
+    )
+
     scan_result = {
         "url": url,
         "pages_crawled": len(pages),
@@ -220,6 +226,7 @@ async def run_scan(
         "patient_journey": patient_journey,
         "conversion_analysis": conversion_analysis,
         "procedure_completeness": procedure_completeness,
+        "medical_compliance": medical_compliance,
     }
 
     if hospital_id:

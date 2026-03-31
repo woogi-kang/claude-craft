@@ -31,6 +31,7 @@ import { MultilingualReadiness } from "@/components/report/multilingual-readines
 import { SubscriptionForm } from "@/components/report/subscription-form";
 import { TrendSection } from "@/components/report/trend-section";
 import { ProcedureCompleteness } from "@/components/report/procedure-completeness";
+import { MedicalCompliance } from "@/components/report/medical-compliance";
 
 const PIE_COLORS = ["#334155", "#e2e8f0"];
 
@@ -505,6 +506,58 @@ export default function ReportPage() {
                       priority: string;
                       category: string;
                       lang?: string;
+                      message: string;
+                    }[];
+                  }
+                }
+              />
+            )}
+
+            {!!audit.details?.medical_compliance && (
+              <MedicalCompliance
+                data={
+                  audit.details.medical_compliance as {
+                    overall_score: number;
+                    violations: {
+                      severity: string;
+                      rule: string;
+                      text: string;
+                      url: string;
+                      law: string;
+                      description: string;
+                    }[];
+                    warnings: {
+                      severity: string;
+                      rule: string;
+                      text: string;
+                      url: string;
+                      law: string;
+                      description: string;
+                    }[];
+                    compliant_items: {
+                      rule: string;
+                      message: string;
+                      url?: string;
+                    }[];
+                    by_country: {
+                      kr: {
+                        score: number;
+                        violations: number;
+                        warnings: number;
+                      };
+                      jp: {
+                        score: number;
+                        violations: number;
+                        warnings: number;
+                      };
+                      global: {
+                        score: number;
+                        violations: number;
+                        warnings: number;
+                      };
+                    };
+                    recommendations: {
+                      priority: string;
                       message: string;
                     }[];
                   }
