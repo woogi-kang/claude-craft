@@ -31,7 +31,8 @@ export interface Audit {
   total_score: number | null;
   grade: Grade | null;
   scores: AuditScores;
-  details: Record<string, unknown>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  details: Record<string, any>;
   report_url: string | null;
   scan_duration_ms: number | null;
   created_at: string;

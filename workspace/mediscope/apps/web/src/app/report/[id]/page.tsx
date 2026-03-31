@@ -129,8 +129,9 @@ export default function ReportPage() {
   const rawScores = (audit as unknown as Record<string, unknown>).scores as
     | Record<string, CheckItemData>
     | undefined;
-  const detailScores = (audit.details as Record<string, unknown>)
-    ?.category_scores as Record<string, CheckItemData> | undefined;
+  const detailScores = audit.details?.category_scores as
+    | Record<string, CheckItemData>
+    | undefined;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const portalScoreData = audit.details?.portal_scores as any as
@@ -224,10 +225,10 @@ export default function ReportPage() {
         <MaybePortalScorecard data={portalScoreData} />
 
         {/* Patient Journey Funnel */}
-        {(audit.details as Record<string, unknown>)?.patient_journey && (
+        {audit.details?.patient_journey && (
           <PatientJourneyFunnel
             data={
-              (audit.details as Record<string, unknown>).patient_journey as {
+              audit.details.patient_journey as {
                 stages: Record<
                   string,
                   {
@@ -250,11 +251,10 @@ export default function ReportPage() {
         )}
 
         {/* Conversion Analysis */}
-        {(audit.details as Record<string, unknown>)?.conversion_analysis && (
+        {audit.details?.conversion_analysis && (
           <ConversionAnalysis
             data={
-              (audit.details as Record<string, unknown>)
-                .conversion_analysis as {
+              audit.details.conversion_analysis as {
                 cta_main: boolean;
                 cta_procedure_pages: { total: number; with_cta: number };
                 phone_clickable: boolean;
@@ -271,10 +271,7 @@ export default function ReportPage() {
               }
             }
             score={
-              (
-                (audit.details as Record<string, unknown>)
-                  .conversion_analysis as { score: number }
-              ).score
+              (audit.details.conversion_analysis as { score: number }).score
             }
           />
         )}
