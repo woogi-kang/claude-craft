@@ -78,7 +78,7 @@ export const REPORT_CATEGORIES: CategoryDef[] = [
     label: "AI 검색 대비",
     icon: "Bot",
     description:
-      "ChatGPT, Perplexity 같은 AI 검색에서 병원이 추천되기 위한 콘텐츠 준비도입니다. 2026년 현재 검색의 30%가 AI를 통해 이루어지고 있어 중요성이 급증하고 있습니다.",
+      "Gemini, ChatGPT, Perplexity 같은 AI 검색에서 병원이 추천되기 위한 콘텐츠 준비도입니다. 2026년 현재 검색의 30%가 AI를 통해 이루어지고 있어 중요성이 급증하고 있습니다.",
     items: ["ai_search_mention", "content_clarity", "faq_content"],
   },
 ];

@@ -28,6 +28,9 @@ class Settings(BaseSettings):
     # Perplexity API (optional, for GEO/AEO AI search checks)
     perplexity_api_key: str = ""
 
+    # Gemini API (optional, for GEO/AEO AI search checks)
+    gemini_api_key: str = ""
+
     # International Search (optional)
     google_cse_id: str = ""  # Google Custom Search Engine ID
     naver_client_id: str = ""
