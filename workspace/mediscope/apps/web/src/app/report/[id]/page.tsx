@@ -34,6 +34,7 @@ import { ProcedureCompleteness } from "@/components/report/procedure-completenes
 import { InternationalUsability } from "@/components/report/international-usability";
 import { MedicalCompliance } from "@/components/report/medical-compliance";
 import { TechStack } from "@/components/report/tech-stack";
+import { ReviewSentiment } from "@/components/report/review-sentiment";
 import { VoiceSearch } from "@/components/report/voice-search";
 
 const PIE_COLORS = ["#334155", "#e2e8f0"];
@@ -664,6 +665,47 @@ export default function ReportPage() {
                     recommendations: {
                       priority: string;
                       check: string;
+                      message: string;
+                    }[];
+                  }
+                }
+              />
+            )}
+
+            {!!audit.details?.review_sentiment && (
+              <ReviewSentiment
+                data={
+                  audit.details.review_sentiment as {
+                    reviews_found: number;
+                    has_review_section: boolean;
+                    has_star_ratings: boolean;
+                    average_rating: number | null;
+                    overall_sentiment: {
+                      positive: number;
+                      neutral: number;
+                      negative: number;
+                    };
+                    top_positive_keywords: {
+                      keyword: string;
+                      count: number;
+                    }[];
+                    top_negative_keywords: {
+                      keyword: string;
+                      count: number;
+                    }[];
+                    by_procedure: Record<
+                      string,
+                      {
+                        name: string;
+                        positive: number;
+                        neutral: number;
+                        negative: number;
+                        review_count: number;
+                      }
+                    >;
+                    sentiment_score: number;
+                    recommendations: {
+                      priority: string;
                       message: string;
                     }[];
                   }
