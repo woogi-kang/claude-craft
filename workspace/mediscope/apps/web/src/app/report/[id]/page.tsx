@@ -27,6 +27,7 @@ import { PatientJourneyFunnel } from "@/components/report/patient-journey-funnel
 import { LeadForm } from "@/components/report/lead-form";
 import { MultilingualReadiness } from "@/components/report/multilingual-readiness";
 import { SubscriptionForm } from "@/components/report/subscription-form";
+import { TrendSection } from "@/components/report/trend-section";
 
 const PIE_COLORS = ["#334155", "#e2e8f0"];
 
@@ -215,6 +216,11 @@ export default function ReportPage() {
               }
             }
           />
+        )}
+
+        {/* Trend Section */}
+        {audit.hospital_id && (
+          <TrendSection hospitalId={audit.hospital_id} enabled={!!audit} />
         )}
 
         <CategorySummary categoryScores={categoryScores} />

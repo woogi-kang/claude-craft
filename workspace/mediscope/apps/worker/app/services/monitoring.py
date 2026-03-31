@@ -115,6 +115,9 @@ async def send_alert_email(
     hospital_name: str,
     prev_score: int,
     new_score: int,
+    prev_grade: str = "",
+    new_grade: str = "",
+    improved_categories: list[str] | None = None,
 ) -> bool:
     """Send score change alert email via Resend API."""
     if not settings.resend_api_key:
@@ -124,6 +127,19 @@ async def send_alert_email(
     diff = new_score - prev_score
     direction = "상승" if diff > 0 else "하락"
     color = "#22c55e" if diff > 0 else "#ef4444"
+
+    # Trend summary line
+    trend_summary = ""
+    if prev_grade and new_grade and prev_grade != new_grade:
+        trend_summary = f"<p style='margin: 8px 0 0; color: #475569;'>{prev_grade}→{new_grade} 등급 변화</p>"
+
+    improved_html = ""
+    if improved_categories:
+        items = ", ".join(improved_categories[:3])
+        improved_html = (
+            f"<p style='margin: 8px 0 0; color: #16a34a; font-size: 14px;'>"
+            f"개선된 항목: {items}</p>"
+        )
 
     html_body = f"""
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
@@ -135,6 +151,8 @@ async def send_alert_email(
           <span style="color: {color}; font-weight: bold;"> → {new_score}점</span>
           <span style="color: {color};"> ({abs(diff)}점 {direction})</span>
         </p>
+        {trend_summary}
+        {improved_html}
       </div>
       <p style="color: #64748b; font-size: 14px;">CheckYourHospital에서 발송된 자동 알림입니다.</p>
     </div>
@@ -172,16 +190,18 @@ async def process_subscription(subscription: dict) -> dict:
 
     client = get_supabase_client()
 
-    # Get previous score
+    # Get previous score and grade
     prev_record = (
         client.table("score_history")
-        .select("total_score")
+        .select("total_score, grade, category_scores")
         .eq("hospital_id", hospital_id)
         .order("scanned_at", desc=True)
         .limit(1)
         .execute()
     )
     prev_score = prev_record.data[0]["total_score"] if prev_record.data else None
+    prev_grade = prev_record.data[0].get("grade", "") if prev_record.data else ""
+    prev_category_scores = prev_record.data[0].get("category_scores", {}) if prev_record.data else {}
 
     # Run scan
     result = await run_scan(hospital_url)
@@ -202,6 +222,22 @@ async def process_subscription(subscription: dict) -> dict:
             subscription_id, hospital_id, alert_type, message, prev_score, new_score
         )
 
+        # Compute improved categories for email
+        improved_cats = []
+        if prev_category_scores and category_scores:
+            cat_labels = {
+                "technical_seo": "기술 SEO",
+                "performance": "성능",
+                "geo_aeo": "GEO/AEO",
+                "multilingual": "다국어",
+                "competitiveness": "경쟁력",
+            }
+            for key in category_scores:
+                cur_val = category_scores.get(key, 0)
+                prev_val = prev_category_scores.get(key, 0)
+                if cur_val > prev_val:
+                    improved_cats.append(cat_labels.get(key, key))
+
         # Send alert email
         hospital_name = subscription.get("name", "병원")
         await send_alert_email(
@@ -209,6 +245,9 @@ async def process_subscription(subscription: dict) -> dict:
             hospital_name=hospital_name,
             prev_score=int(round(prev_score)),
             new_score=int(round(new_score)),
+            prev_grade=prev_grade,
+            new_grade=grade,
+            improved_categories=improved_cats,
         )
 
     # Update next_scan_at
