@@ -31,6 +31,7 @@ import { MultilingualReadiness } from "@/components/report/multilingual-readines
 import { SubscriptionForm } from "@/components/report/subscription-form";
 import { TrendSection } from "@/components/report/trend-section";
 import { ProcedureCompleteness } from "@/components/report/procedure-completeness";
+import { InternationalUsability } from "@/components/report/international-usability";
 
 const PIE_COLORS = ["#334155", "#e2e8f0"];
 
@@ -535,6 +536,28 @@ export default function ReportPage() {
                       procedure_name: string;
                       missing: string[];
                       priority: string;
+                      message: string;
+                    }[];
+                  }
+                }
+              />
+            )}
+
+            {!!audit.details?.international_usability && (
+              <InternationalUsability
+                data={
+                  audit.details.international_usability as {
+                    overall_score: number;
+                    checks: Record<
+                      string,
+                      { status: "pass" | "warn" | "fail"; detail: string }
+                    >;
+                    pass_count: number;
+                    warn_count: number;
+                    fail_count: number;
+                    recommendations: {
+                      priority: string;
+                      check: string;
                       message: string;
                     }[];
                   }
