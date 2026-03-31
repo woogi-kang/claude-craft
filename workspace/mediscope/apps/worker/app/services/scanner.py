@@ -34,6 +34,7 @@ from ..checks.url_structure import check_url_structure
 from ..config import settings
 from .crawler import Crawler
 from .multilingual_analyzer import analyze_multilingual_readiness
+from .patient_journey_scorer import calculate_journey_scores
 from .portal_scorer import calculate_portal_scores
 from .scorer import calculate_score
 
@@ -183,12 +184,16 @@ async def run_scan(
 
     portal_scores = calculate_portal_scores(score_data.get("category_scores", {}))
 
+    # Patient journey funnel scores
+    patient_journey = calculate_journey_scores(score_data.get("category_scores", {}))
+
     scan_result = {
         "url": url,
         "pages_crawled": len(pages),
         **score_data,
         "portal_scores": portal_scores,
         "multilingual_readiness": multilingual_readiness,
+        "patient_journey": patient_journey,
     }
 
     if hospital_id:
