@@ -26,6 +26,7 @@ import { ImprovementRoadmap } from "@/components/report/improvement-roadmap";
 import { ConversionAnalysis } from "@/components/report/conversion-analysis";
 import { PatientJourneyFunnel } from "@/components/report/patient-journey-funnel";
 import { LeadForm } from "@/components/report/lead-form";
+import { ContentFreshness } from "@/components/report/content-freshness";
 import { MultilingualReadiness } from "@/components/report/multilingual-readiness";
 import { SubscriptionForm } from "@/components/report/subscription-form";
 import { TrendSection } from "@/components/report/trend-section";
@@ -437,6 +438,38 @@ export default function ReportPage() {
                       }
                     >;
                     summary: string;
+                  }
+                }
+              />
+            )}
+
+            {!!audit.details?.content_freshness && (
+              <ContentFreshness
+                data={
+                  audit.details.content_freshness as {
+                    overall_freshness_score: number;
+                    total_pages: number;
+                    pages_with_date: number;
+                    recent_6months: number;
+                    by_type: Record<
+                      string,
+                      {
+                        count: number;
+                        newest: string | null;
+                        freshness: string;
+                        pages_with_date: number;
+                      }
+                    >;
+                    freshness_rating: {
+                      good: number;
+                      moderate: number;
+                      stale: number;
+                      unknown: number;
+                    };
+                    recommendations: {
+                      priority: string;
+                      message: string;
+                    }[];
                   }
                 }
               />
