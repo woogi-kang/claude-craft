@@ -31,6 +31,7 @@ import { MultilingualReadiness } from "@/components/report/multilingual-readines
 import { SubscriptionForm } from "@/components/report/subscription-form";
 import { TrendSection } from "@/components/report/trend-section";
 import { ProcedureCompleteness } from "@/components/report/procedure-completeness";
+import { VoiceSearch } from "@/components/report/voice-search";
 
 const PIE_COLORS = ["#334155", "#e2e8f0"];
 
@@ -534,6 +535,30 @@ export default function ReportPage() {
                       procedure: string;
                       procedure_name: string;
                       missing: string[];
+                      priority: string;
+                      message: string;
+                    }[];
+                  }
+                }
+              />
+            )}
+
+            {!!audit.details?.voice_search && (
+              <VoiceSearch
+                data={
+                  audit.details.voice_search as {
+                    overall_score: number;
+                    checks: Record<
+                      string,
+                      {
+                        status: "pass" | "warn" | "fail";
+                        description: string;
+                        count?: number;
+                      }
+                    >;
+                    pass_count: number;
+                    total_checks: number;
+                    recommendations: {
                       priority: string;
                       message: string;
                     }[];
