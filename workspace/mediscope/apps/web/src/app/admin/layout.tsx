@@ -34,6 +34,7 @@ export default async function AdminLayout({
             { href: "/admin/integrations", label: "메신저 연동" },
             { href: "/admin/alerts", label: "알림 이력" },
             { href: "/admin/market", label: "시장 현황" },
+            { href: "/admin/content", label: "콘텐츠 생성" },
           ].map((item) => (
             <Link
               key={item.href}
