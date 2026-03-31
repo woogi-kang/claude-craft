@@ -36,6 +36,7 @@ from .crawler import Crawler
 from .multilingual_analyzer import analyze_multilingual_readiness
 from .patient_journey_scorer import calculate_journey_scores
 from .portal_scorer import calculate_portal_scores
+from .procedure_completeness import analyze_procedure_completeness
 from .scorer import calculate_score
 
 
@@ -187,6 +188,11 @@ async def run_scan(
     # Patient journey funnel scores
     patient_journey = calculate_journey_scores(score_data.get("category_scores", {}))
 
+    # Procedure completeness analysis
+    procedure_completeness = analyze_procedure_completeness(
+        [{"url": p.url, "html": p.html} for p in pages]
+    )
+
     scan_result = {
         "url": url,
         "pages_crawled": len(pages),
@@ -194,6 +200,7 @@ async def run_scan(
         "portal_scores": portal_scores,
         "multilingual_readiness": multilingual_readiness,
         "patient_journey": patient_journey,
+        "procedure_completeness": procedure_completeness,
     }
 
     if hospital_id:
