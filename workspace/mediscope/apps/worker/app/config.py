@@ -36,6 +36,9 @@ class Settings(BaseSettings):
     naver_client_id: str = ""
     naver_client_secret: str = ""
 
+    # SERP Checker (optional)
+    serper_api_key: str = ""  # Serper.dev API key for Google SERP
+
     # Supabase Storage
     supabase_storage_bucket: str = "reports"
     supabase_image_bucket: str = "generated-images"
