@@ -38,6 +38,9 @@ import { ReviewSentiment } from "@/components/report/review-sentiment";
 import { VideoPresence } from "@/components/report/video-presence";
 import { VoiceSearch } from "@/components/report/voice-search";
 import { SeasonInsight } from "@/components/report/season-insight";
+import { CompetitorComparison } from "@/components/report/competitor-comparison";
+import { KeywordRankings } from "@/components/report/keyword-rankings";
+import { CompetitiveGap } from "@/components/report/competitive-gap";
 
 const PIE_COLORS = ["#334155", "#e2e8f0"];
 
@@ -427,6 +430,101 @@ export default function ReportPage() {
 
             <BenchmarkSection auditId={id} enabled={!!audit} teaser={false} />
 
+            {/* Competitor Analysis, Keyword Rankings, Competitive Gap */}
+            {!!audit.details?.competitor_analysis && (
+              <CompetitorComparison
+                data={
+                  audit.details.competitor_analysis as {
+                    region_name: string;
+                    your_score: number | null;
+                    your_rank: number | null;
+                    total_competitors: number;
+                    competitors_with_score: number;
+                    regional_avg_score: number;
+                    top3_avg_score: number;
+                    top_competitors: {
+                      name: string;
+                      score: number | null;
+                      grade: string | null;
+                      domain: string | null;
+                    }[];
+                    portal_comparison: Record<
+                      string,
+                      {
+                        your: number;
+                        avg: number;
+                        top3_avg: number;
+                        gap: number;
+                      }
+                    >;
+                    percentile: number;
+                    insight: string;
+                  }
+                }
+              />
+            )}
+
+            {!!audit.details?.keyword_rankings && (
+              <KeywordRankings
+                data={
+                  audit.details.keyword_rankings as {
+                    results: {
+                      keyword: string;
+                      language: string;
+                      naver: {
+                        rank: number | null;
+                        cached: boolean;
+                      } | null;
+                      google: {
+                        rank: number | null;
+                        cached: boolean;
+                      } | null;
+                    }[];
+                    summary: {
+                      naver_avg_rank: number | null;
+                      google_avg_rank: number | null;
+                      keywords_found_naver: number;
+                      keywords_found_google: number;
+                      keywords_total: number;
+                      best_keyword: {
+                        keyword: string;
+                        portal: string;
+                        rank: number;
+                      } | null;
+                      worst_keyword: {
+                        keyword: string;
+                        portal: string;
+                        rank: number | null;
+                      } | null;
+                    };
+                    competitors_in_serp: {
+                      domain: string;
+                      name: string;
+                      appearances: number;
+                      avg_rank: number;
+                    }[];
+                  }
+                }
+              />
+            )}
+
+            {!!audit.details?.competitive_gap && (
+              <CompetitiveGap
+                data={
+                  audit.details.competitive_gap as {
+                    gaps: {
+                      area: string;
+                      your_status: "present" | "missing" | "weak";
+                      competitor_rate: number;
+                      priority: "high" | "medium" | "low";
+                      recommendation: string;
+                    }[];
+                    overall_gap_score: number;
+                  }
+                }
+              />
+            )}
+
             {!!audit.details?.international_search && (
               <IntlSearchSection
                 data={
@@ -794,8 +892,8 @@ export default function ReportPage() {
         {/* Footer */}
         <footer className="mt-12 pt-6 border-t border-slate-200 text-center print:mt-8">
           <p className="text-xs text-slate-400">
-            CheckYourHospital by CheckYourHospital &middot; 본 리포트는 자동화된 진단
-            결과이며, 실제 검색 순위와 차이가 있을 수 있습니다.
+            CheckYourHospital by CheckYourHospital &middot; 본 리포트는 자동화된
+            진단 결과이며, 실제 검색 순위와 차이가 있을 수 있습니다.
           </p>
         </footer>
       </div>
