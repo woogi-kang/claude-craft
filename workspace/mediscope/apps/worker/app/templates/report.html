@@ -17,7 +17,6 @@
       line-height: 1.6;
     }
 
-    /* Header */
     .header {
       display: flex;
       justify-content: space-between;
@@ -26,28 +25,11 @@
       padding-bottom: 16px;
       border-bottom: 3px solid #2563eb;
     }
-    .logo {
-      font-size: 22px;
-      font-weight: 700;
-      color: #2563eb;
-      letter-spacing: -0.5px;
-    }
-    .date {
-      color: #64748b;
-      font-size: 12px;
-    }
+    .logo { font-size: 22px; font-weight: 700; color: #2563eb; letter-spacing: -0.5px; }
+    .date { color: #64748b; font-size: 12px; }
 
-    h1 {
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-    .url {
-      color: #64748b;
-      font-size: 14px;
-      margin-bottom: 24px;
-      word-break: break-all;
-    }
+    h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+    .url { color: #64748b; font-size: 14px; margin-bottom: 24px; word-break: break-all; }
 
     /* Executive Summary */
     .summary {
@@ -61,20 +43,13 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 110px;
-      height: 110px;
+      width: 110px; height: 110px;
       border-radius: 50%;
       border: 6px solid #e2e8f0;
       background: white;
     }
-    .score-num {
-      font-size: 38px;
-      font-weight: 700;
-    }
-    .score-sub {
-      color: #64748b;
-      font-size: 13px;
-    }
+    .score-num { font-size: 38px; font-weight: 700; }
+    .score-sub { color: #64748b; font-size: 13px; }
     .grade-badge {
       display: inline-block;
       margin-top: 10px;
@@ -83,154 +58,147 @@
       font-weight: 700;
       font-size: 16px;
     }
-
-    .stats {
-      display: flex;
-      gap: 32px;
-      justify-content: center;
-      margin: 20px 0 0 0;
-    }
+    .stats { display: flex; gap: 32px; justify-content: center; margin: 20px 0 0 0; }
     .stat { text-align: center; }
     .stat-num { font-size: 22px; font-weight: 700; }
     .stat-label { font-size: 11px; color: #64748b; margin-top: 2px; }
 
-    /* Top Issues */
+    /* Section Styles */
     .section-title {
-      font-size: 16px;
-      font-weight: 700;
+      font-size: 16px; font-weight: 700;
       margin: 28px 0 12px 0;
       padding-bottom: 6px;
       border-bottom: 2px solid #e2e8f0;
     }
-    .top-issues {
-      margin-bottom: 24px;
+    .section-subtitle {
+      font-size: 13px; font-weight: 600;
+      margin: 16px 0 8px 0;
+      color: #334155;
     }
+
+    /* Top Issues */
     .top-issue {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 8px 12px;
-      margin-bottom: 6px;
-      background: #fef2f2;
-      border-radius: 6px;
-      border-left: 3px solid #ef4444;
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 8px 12px; margin-bottom: 6px;
+      background: #fef2f2; border-radius: 6px; border-left: 3px solid #ef4444;
     }
-    .top-issue-num {
-      font-weight: 700;
-      color: #991b1b;
-      min-width: 20px;
-    }
-    .top-issue-label {
-      font-weight: 600;
-      color: #1e293b;
-    }
-    .top-issue-desc {
-      color: #64748b;
-      font-size: 12px;
-    }
+    .top-issue-num { font-weight: 700; color: #991b1b; min-width: 20px; }
+    .top-issue-label { font-weight: 600; }
+    .top-issue-desc { color: #64748b; font-size: 12px; }
 
-    /* Detail Table */
-    .items-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 12px 0 28px 0;
-      font-size: 12px;
-    }
-    .items-table th,
-    .items-table td {
-      padding: 10px 12px;
-      text-align: left;
-      border-bottom: 1px solid #e2e8f0;
-    }
-    .items-table th {
-      background: #f1f5f9;
-      font-weight: 600;
-      font-size: 11px;
-      color: #64748b;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .items-table tr:last-child td {
-      border-bottom: none;
-    }
+    /* Tables */
+    .items-table { width: 100%; border-collapse: collapse; margin: 12px 0 28px 0; font-size: 12px; }
+    .items-table th, .items-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+    .items-table th { background: #f1f5f9; font-weight: 600; font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
 
-    .badge {
-      display: inline-block;
-      padding: 2px 10px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 600;
-    }
+    .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
     .badge-pass { background: #dcfce7; color: #166534; }
     .badge-warn { background: #fef9c3; color: #854d0e; }
     .badge-fail { background: #fee2e2; color: #991b1b; }
     .badge-skip { background: #f1f5f9; color: #94a3b8; }
+    .badge-A { background: #dcfce7; color: #166534; }
+    .badge-B { background: #dbeafe; color: #1e40af; }
+    .badge-C { background: #fef9c3; color: #854d0e; }
+    .badge-D { background: #fed7aa; color: #9a3412; }
+    .badge-F { background: #fee2e2; color: #991b1b; }
 
-    .issue-text {
-      color: #64748b;
-      font-size: 11px;
-    }
+    .bar { height: 6px; border-radius: 3px; background: #e2e8f0; margin-top: 4px; width: 80px; }
+    .bar-fill { height: 100%; border-radius: 3px; }
+    .bar-wide { width: 100%; height: 8px; border-radius: 4px; background: #e2e8f0; }
+    .bar-wide-fill { height: 100%; border-radius: 4px; }
 
-    .bar {
-      height: 6px;
-      border-radius: 3px;
-      background: #e2e8f0;
-      margin-top: 4px;
-      width: 80px;
+    .issue-text { color: #64748b; font-size: 11px; }
+
+    /* Portal Scorecard */
+    .portal-grid { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0; }
+    .portal-card {
+      flex: 1; min-width: 100px;
+      padding: 12px; border-radius: 8px;
+      background: #f8fafc; border: 1px solid #e2e8f0;
+      text-align: center;
     }
-    .bar-fill {
-      height: 100%;
-      border-radius: 3px;
+    .portal-name { font-size: 11px; font-weight: 600; color: #64748b; margin-bottom: 4px; }
+    .portal-score { font-size: 24px; font-weight: 700; }
+
+    /* Journey Funnel */
+    .journey-flow { display: flex; gap: 0; align-items: center; margin: 12px 0; }
+    .journey-stage {
+      flex: 1; text-align: center; padding: 12px 8px;
+      border-radius: 8px; border: 2px solid #e2e8f0;
     }
+    .journey-stage.weakest { border-color: #ef4444; background: #fef2f2; }
+    .journey-arrow { font-size: 18px; color: #94a3b8; margin: 0 2px; }
+    .journey-label { font-size: 11px; color: #64748b; }
+    .journey-score { font-size: 20px; font-weight: 700; margin: 4px 0; }
+
+    /* Matrix Table */
+    .matrix-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 8px 0 16px 0; }
+    .matrix-table th, .matrix-table td { padding: 6px 10px; text-align: center; border: 1px solid #e2e8f0; }
+    .matrix-table th { background: #f1f5f9; font-size: 11px; }
+    .matrix-table td:first-child { text-align: left; font-weight: 500; }
+    .check-yes { color: #16a34a; font-weight: 700; }
+    .check-no { color: #dc2626; }
+
+    /* Checklist */
+    .checklist { margin: 8px 0 16px 0; }
+    .check-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 12px; margin-bottom: 4px;
+      border-radius: 6px; font-size: 12px;
+    }
+    .check-pass { background: #f0fdf4; }
+    .check-warn { background: #fffbeb; }
+    .check-fail { background: #fef2f2; }
+    .check-icon { font-size: 14px; min-width: 18px; }
 
     /* Recommendations */
-    .recommendations {
-      margin-bottom: 28px;
-    }
     .rec-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 8px 12px;
-      margin-bottom: 4px;
-      border-radius: 6px;
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 8px 12px; margin-bottom: 4px; border-radius: 6px;
     }
-    .rec-fail {
-      background: #fef2f2;
-      border-left: 3px solid #ef4444;
-    }
-    .rec-warn {
-      background: #fffbeb;
-      border-left: 3px solid #f59e0b;
-    }
-    .rec-priority {
-      font-weight: 700;
-      font-size: 11px;
-      min-width: 50px;
-    }
+    .rec-fail { background: #fef2f2; border-left: 3px solid #ef4444; }
+    .rec-warn { background: #fffbeb; border-left: 3px solid #f59e0b; }
+    .rec-high { background: #fef2f2; border-left: 3px solid #ef4444; }
+    .rec-medium { background: #fffbeb; border-left: 3px solid #f59e0b; }
+    .rec-low { background: #f0fdf4; border-left: 3px solid #22c55e; }
+    .rec-priority { font-weight: 700; font-size: 11px; min-width: 50px; }
     .rec-priority-high { color: #991b1b; }
     .rec-priority-medium { color: #854d0e; }
     .rec-label { font-weight: 600; }
     .rec-issue { color: #64748b; font-size: 12px; }
 
+    /* Violation */
+    .violation {
+      padding: 6px 12px; margin-bottom: 4px;
+      border-radius: 6px; font-size: 12px;
+      border-left: 3px solid;
+    }
+    .violation-high { background: #fef2f2; border-color: #ef4444; }
+    .violation-medium { background: #fffbeb; border-color: #f59e0b; }
+    .violation-text { color: #64748b; font-size: 11px; }
+
+    /* Season Heatmap */
+    .heatmap { width: 100%; border-collapse: collapse; font-size: 11px; margin: 8px 0; }
+    .heatmap th, .heatmap td { padding: 4px 6px; text-align: center; border: 1px solid #e2e8f0; }
+    .heatmap th { background: #f1f5f9; }
+    .heat-1 { background: #f1f5f9; }
+    .heat-2 { background: #e0f2fe; }
+    .heat-3 { background: #bae6fd; }
+    .heat-4 { background: #7dd3fc; color: #0c4a6e; }
+    .heat-5 { background: #38bdf8; color: white; font-weight: 700; }
+    .current-month { outline: 2px solid #2563eb; outline-offset: -1px; }
+
     /* Footer */
     .footer {
-      margin-top: 40px;
-      padding-top: 16px;
+      margin-top: 40px; padding-top: 16px;
       border-top: 2px solid #e2e8f0;
-      color: #94a3b8;
-      font-size: 11px;
-      text-align: center;
+      color: #94a3b8; font-size: 11px; text-align: center;
     }
 
-    @media print {
-      body { padding: 20px; }
-    }
+    .page-break { page-break-before: always; }
 
-    @page {
-      size: A4;
-      margin: 10mm;
-    }
+    @media print { body { padding: 20px; } }
+    @page { size: A4; margin: 10mm; }
   </style>
 </head>
 <body>
@@ -255,7 +223,6 @@
     <div class="grade-badge" style="background: {{ grade_bg }}; color: {{ grade_color }};">
       등급: {{ grade }}
     </div>
-
     <div class="stats">
       <div class="stat">
         <div class="stat-num" style="color:#166534">{{ pass_count }}</div>
@@ -275,7 +242,7 @@
   <!-- Top 3 Issues -->
   {% if top_issues %}
   <div class="section-title">핵심 문제 Top {{ top_issues|length }}</div>
-  <div class="top-issues">
+  <div style="margin-bottom:24px">
     {% for issue in top_issues %}
     <div class="top-issue">
       <div class="top-issue-num">{{ loop.index }}</div>
@@ -288,16 +255,46 @@
   </div>
   {% endif %}
 
-  <!-- Category Detail -->
+  <!-- Portal Scorecard -->
+  {% if portal_scores %}
+  <div class="section-title">포털별 SEO 점수</div>
+  <div class="portal-grid">
+    {% for key, portal in portal_scores.items() %}
+    <div class="portal-card">
+      <div class="portal-name">{{ portal.label }}</div>
+      <div class="portal-score" style="color: {{ '#166534' if portal.score >= 80 else '#1e40af' if portal.score >= 60 else '#854d0e' if portal.score >= 40 else '#991b1b' }}">{{ portal.score }}</div>
+      <span class="badge badge-{{ portal.grade }}">{{ portal.grade }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Patient Journey Funnel -->
+  {% if patient_journey %}
+  <div class="section-title">환자 여정 분석</div>
+  <div class="journey-flow">
+    {% for key in ['discovery', 'trust', 'comparison', 'booking'] %}
+    {% if patient_journey.stages[key] is defined %}
+    {% set stage = patient_journey.stages[key] %}
+    <div class="journey-stage {{ 'weakest' if patient_journey.weakest_stage == key else '' }}">
+      <div class="journey-label">{{ stage.display_name }}</div>
+      <div class="journey-score" style="color: {{ '#166534' if stage.score >= 80 else '#1e40af' if stage.score >= 60 else '#854d0e' if stage.score >= 40 else '#991b1b' }}">{{ stage.score }}</div>
+      <span class="badge badge-{{ stage.grade }}">{{ stage.grade }}</span>
+    </div>
+    {% if not loop.last %}<span class="journey-arrow">→</span>{% endif %}
+    {% endif %}
+    {% endfor %}
+  </div>
+  {% if patient_journey.narrative %}
+  <p style="color:#64748b; font-size:12px; margin-top:8px;">{{ patient_journey.narrative }}</p>
+  {% endif %}
+  {% endif %}
+
+  <!-- Category Detail Table -->
   <div class="section-title">카테고리별 상세</div>
   <table class="items-table">
     <thead>
-      <tr>
-        <th>항목</th>
-        <th>점수</th>
-        <th>상태</th>
-        <th>개선 사항</th>
-      </tr>
+      <tr><th>항목</th><th>점수</th><th>상태</th><th>개선 사항</th></tr>
     </thead>
     <tbody>
       {% for item in items %}
@@ -305,23 +302,263 @@
         <td><strong>{{ item.label }}</strong></td>
         <td>
           {{ item.score }}/100
-          <div class="bar">
-            <div class="bar-fill" style="width:{{ item.score }}%; background:{{ item.bar_color }};"></div>
-          </div>
+          <div class="bar"><div class="bar-fill" style="width:{{ item.score }}%; background:{{ item.bar_color }};"></div></div>
         </td>
-        <td>
-          <span class="badge badge-{{ item.grade }}">{{ item.grade_label }}</span>
-        </td>
+        <td><span class="badge badge-{{ item.grade }}">{{ item.grade_label }}</span></td>
         <td class="issue-text">{{ item.first_issue }}</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 
+  <!-- Page Break: Advanced Analysis -->
+  <div class="page-break"></div>
+
+  <!-- Multilingual Readiness -->
+  {% if multilingual_readiness and multilingual_readiness.matrix %}
+  <div class="section-title">다국어 준비도 ({{ multilingual_readiness.overall_score }}점)</div>
+  <table class="matrix-table">
+    <thead>
+      <tr>
+        <th>페이지 유형</th>
+        {% for lang in ['ko', 'en', 'ja', 'zh'] %}
+        <th>{{ {'ko':'🇰🇷 KO', 'en':'🇺🇸 EN', 'ja':'🇯🇵 JA', 'zh':'🇨🇳 ZH'}[lang] }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for pt, langs in multilingual_readiness.matrix.items() %}
+      <tr>
+        <td>{{ {'main':'메인', 'procedure':'시술 소개', 'doctor':'의료진', 'price':'가격/비용', 'booking':'예약/상담', 'review':'후기/리뷰'}[pt] or pt }}</td>
+        {% for lang in ['ko', 'en', 'ja', 'zh'] %}
+        <td>{% if langs.get(lang) %}<span class="check-yes">✓</span>{% else %}<span class="check-no">✗</span>{% endif %}</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+  <!-- Content Freshness -->
+  {% if content_freshness %}
+  <div class="section-title">콘텐츠 신선도 ({{ content_freshness.overall_freshness_score }}점)</div>
+  <div style="display:flex; gap:16px; margin:8px 0 16px 0;">
+    <div style="flex:1; text-align:center; padding:8px; background:#f0fdf4; border-radius:8px;">
+      <div style="font-size:20px; font-weight:700; color:#166534;">{{ content_freshness.freshness_rating.good or 0 }}</div>
+      <div style="font-size:11px; color:#64748b;">6개월 이내</div>
+    </div>
+    <div style="flex:1; text-align:center; padding:8px; background:#fffbeb; border-radius:8px;">
+      <div style="font-size:20px; font-weight:700; color:#854d0e;">{{ content_freshness.freshness_rating.moderate or 0 }}</div>
+      <div style="font-size:11px; color:#64748b;">6-12개월</div>
+    </div>
+    <div style="flex:1; text-align:center; padding:8px; background:#fef2f2; border-radius:8px;">
+      <div style="font-size:20px; font-weight:700; color:#991b1b;">{{ content_freshness.freshness_rating.stale or 0 }}</div>
+      <div style="font-size:11px; color:#64748b;">12개월+</div>
+    </div>
+    <div style="flex:1; text-align:center; padding:8px; background:#f1f5f9; border-radius:8px;">
+      <div style="font-size:20px; font-weight:700; color:#64748b;">{{ content_freshness.freshness_rating.unknown or 0 }}</div>
+      <div style="font-size:11px; color:#64748b;">날짜 불명</div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Procedure Completeness -->
+  {% if procedure_completeness and procedure_completeness.procedures %}
+  <div class="section-title">시술별 콘텐츠 완성도 (평균 {{ procedure_completeness.overall_completeness }}%)</div>
+  <table class="matrix-table">
+    <thead>
+      <tr><th>시술</th><th>설명</th><th>과정</th><th>가격</th><th>후기</th><th>B/A</th><th>FAQ</th><th>완성도</th></tr>
+    </thead>
+    <tbody>
+      {% for key, proc in procedure_completeness.procedures.items() %}
+      <tr>
+        <td>{{ proc.name or key }}</td>
+        {% for sec in ['description', 'process', 'price', 'review', 'before_after', 'faq'] %}
+        <td>{% if proc.sections.get(sec) %}<span class="check-yes">✓</span>{% else %}<span class="check-no">✗</span>{% endif %}</td>
+        {% endfor %}
+        <td><strong>{{ proc.completeness }}%</strong></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+  <!-- Conversion Analysis -->
+  {% if conversion_analysis %}
+  <div class="section-title">예약 전환 요소 ({{ conversion_analysis.score }}점)</div>
+  <div class="checklist">
+    {% set conv_checks = [
+      ('CTA 메인 페이지', conversion_analysis.cta_main),
+      ('전화번호 클릭 가능', conversion_analysis.phone_clickable),
+      ('예약 폼', conversion_analysis.form_exists),
+      ('가격 표시', conversion_analysis.price_visible),
+      ('폼 다국어', conversion_analysis.form_multilingual)
+    ] %}
+    {% for label, val in conv_checks %}
+    <div class="check-item {{ 'check-pass' if val else 'check-fail' }}">
+      <span class="check-icon">{{ '✓' if val else '✗' }}</span>
+      {{ label }}
+    </div>
+    {% endfor %}
+    {% if conversion_analysis.messengers %}
+    {% for name, found in conversion_analysis.messengers.items() %}
+    <div class="check-item {{ 'check-pass' if found else 'check-fail' }}">
+      <span class="check-icon">{{ '✓' if found else '✗' }}</span>
+      {{ name }} 메신저
+    </div>
+    {% endfor %}
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <div class="page-break"></div>
+
+  <!-- Medical Compliance -->
+  {% if medical_compliance %}
+  <div class="section-title">의료광고 규정 준수 ({{ medical_compliance.overall_score }}점)</div>
+  {% if medical_compliance.violations %}
+  <div class="section-subtitle">위반 사항 ({{ medical_compliance.violations|length }}건)</div>
+  {% for v in medical_compliance.violations[:10] %}
+  <div class="violation violation-{{ v.severity }}">
+    <strong>{{ v.text or v.rule }}</strong>
+    <div class="violation-text">{{ v.law or '' }} {% if v.url %} — {{ v.url }}{% endif %}</div>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% if medical_compliance.by_country %}
+  <div style="display:flex; gap:12px; margin:12px 0;">
+    {% for country, data in medical_compliance.by_country.items() %}
+    <div style="flex:1; padding:8px; text-align:center; background:#f8fafc; border-radius:8px; border:1px solid #e2e8f0;">
+      <div style="font-size:11px; color:#64748b;">{{ {'kr':'🇰🇷 한국', 'jp':'🇯🇵 일본', 'global':'🌐 글로벌'}[country] or country }}</div>
+      <div style="font-size:20px; font-weight:700;">{{ data.score }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% endif %}
+
+  <!-- Voice Search -->
+  {% if voice_search %}
+  <div class="section-title">음성 검색 최적화 ({{ voice_search.overall_score }}점)</div>
+  <div class="checklist">
+    {% for key, check in voice_search.checks.items() %}
+    <div class="check-item check-{{ check.status }}">
+      <span class="check-icon">{{ '✓' if check.status == 'pass' else '⚠' if check.status == 'warn' else '✗' }}</span>
+      {{ check.description }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Tech Stack -->
+  {% if tech_stack %}
+  <div class="section-title">기술 스택 탐지 ({{ tech_stack.total_detected }}개)</div>
+  {% if tech_stack.by_category %}
+  {% for cat, techs in tech_stack.by_category.items() %}
+  {% if techs %}
+  <div style="margin-bottom:4px;">
+    <span style="font-size:11px; color:#64748b; font-weight:600;">{{ cat }}:</span>
+    {% for t in techs %}<span class="badge badge-pass" style="margin:0 2px;">{{ t }}</span>{% endfor %}
+  </div>
+  {% endif %}
+  {% endfor %}
+  {% endif %}
+  {% if tech_stack.missing_recommended %}
+  <div class="section-subtitle">추천 미사용 기술</div>
+  {% for m in tech_stack.missing_recommended %}
+  <div class="check-item check-warn">
+    <span class="check-icon">⚠</span>
+    <strong>{{ m.tech }}</strong> — {{ m.reason }}
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endif %}
+
+  <!-- International Usability -->
+  {% if international_usability %}
+  <div class="section-title">해외 환자 사용성 ({{ international_usability.overall_score }}점)</div>
+  <div class="checklist">
+    {% for key, check in international_usability.checks.items() %}
+    <div class="check-item check-{{ check.status }}">
+      <span class="check-icon">{{ '✓' if check.status == 'pass' else '⚠' if check.status == 'warn' else '✗' }}</span>
+      {{ check.detail }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Review Sentiment -->
+  {% if review_sentiment and review_sentiment.reviews_found > 0 %}
+  <div class="section-title">리뷰 감성 분석 ({{ review_sentiment.sentiment_score }}점, {{ review_sentiment.reviews_found }}건)</div>
+  <div style="display:flex; gap:12px; margin:8px 0 12px 0;">
+    <div style="flex:1; text-align:center; padding:8px; background:#f0fdf4; border-radius:8px;">
+      <div style="font-size:18px; font-weight:700; color:#166534;">{{ review_sentiment.overall_sentiment.positive }}%</div>
+      <div style="font-size:11px; color:#64748b;">긍정</div>
+    </div>
+    <div style="flex:1; text-align:center; padding:8px; background:#f1f5f9; border-radius:8px;">
+      <div style="font-size:18px; font-weight:700; color:#64748b;">{{ review_sentiment.overall_sentiment.neutral }}%</div>
+      <div style="font-size:11px; color:#64748b;">중립</div>
+    </div>
+    <div style="flex:1; text-align:center; padding:8px; background:#fef2f2; border-radius:8px;">
+      <div style="font-size:18px; font-weight:700; color:#991b1b;">{{ review_sentiment.overall_sentiment.negative }}%</div>
+      <div style="font-size:11px; color:#64748b;">부정</div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Video Presence -->
+  {% if video_presence %}
+  <div class="section-title">비디오/소셜 프레즌스 ({{ video_presence.overall_score }}점)</div>
+  <div style="margin:8px 0;">
+    <span style="font-size:12px;">임베드 영상: <strong>{{ video_presence.total_videos }}개</strong></span> &nbsp;|&nbsp;
+    <span style="font-size:12px;">소셜 프로필: <strong>{{ video_presence.social_count }}개</strong></span>
+  </div>
+  {% if video_presence.missing_platforms %}
+  {% for m in video_presence.missing_platforms %}
+  <div class="check-item check-warn">
+    <span class="check-icon">⚠</span>
+    <strong>{{ m.platform }}</strong> — {{ m.reason }}
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endif %}
+
+  <!-- Season Insight -->
+  {% if season_insight %}
+  <div class="section-title">의료관광 시즌 인사이트 ({{ season_insight.current_month_name }})</div>
+  {% if season_insight.calendar %}
+  <table class="heatmap">
+    <thead>
+      <tr><th></th>{% for m in range(1, 13) %}<th class="{{ 'current-month' if m == season_insight.current_month else '' }}">{{ m }}월</th>{% endfor %}</tr>
+    </thead>
+    <tbody>
+      {% for country, months in season_insight.calendar.items() %}
+      <tr>
+        <td style="font-weight:600;">{{ season_insight.calendar[country][0].flag if season_insight.calendar[country][0].flag is defined else country }}</td>
+        {% for m in months %}
+        <td class="heat-{{ m.demand }} {{ 'current-month' if m.month == season_insight.current_month else '' }}">{{ m.demand }}</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+  {% if season_insight.marketing_actions %}
+  <div class="section-subtitle">마케팅 액션</div>
+  {% for action in season_insight.marketing_actions[:5] %}
+  <div class="rec-item rec-{{ action.priority }}">
+    <div class="rec-priority rec-priority-{{ 'high' if action.priority == 'high' else 'medium' }}">{{ action.priority }}</div>
+    <div class="rec-issue">{{ action.message }}</div>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endif %}
+
   <!-- Recommendations -->
   {% if recommendations %}
+  <div class="page-break"></div>
   <div class="section-title">개선 권고사항 (우선순위순)</div>
-  <div class="recommendations">
+  <div style="margin-bottom:28px">
     {% for rec in recommendations %}
     <div class="rec-item rec-{{ rec.grade }}">
       <div class="rec-priority {% if rec.grade == 'fail' %}rec-priority-high{% else %}rec-priority-medium{% endif %}">

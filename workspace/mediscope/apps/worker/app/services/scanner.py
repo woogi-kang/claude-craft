@@ -47,6 +47,7 @@ from .review_sentiment import analyze_review_sentiment
 from .season_insight import get_season_insight
 from .video_presence import analyze_video_presence
 from .keyword_engine import extract_and_generate_keywords
+from .serp_checker import check_keyword_rankings
 from .voice_search_analyzer import analyze_voice_search_readiness
 
 
@@ -257,6 +258,16 @@ async def run_scan(
     # Season insight (date-based, no URL dependency)
     season_insight = get_season_insight()
 
+    # Keyword rankings (SERP check) — uses keyword_analysis if available
+    keyword_rankings = {}
+    keyword_analysis = score_data.get("keyword_analysis", {})
+    kw_list = keyword_analysis.get("keywords", [])
+    if kw_list:
+        try:
+            keyword_rankings = await check_keyword_rankings(url, kw_list)
+        except Exception as e:
+            logger.error("SERP checker crashed: %s", e)
+
     scan_result = {
         "url": url,
         "pages_crawled": len(pages),
@@ -275,6 +286,7 @@ async def run_scan(
         "season_insight": season_insight,
         "video_presence": video_presence,
         "generated_keywords": generated_keywords,
+        "keyword_rankings": keyword_rankings,
     }
 
     if hospital_id:

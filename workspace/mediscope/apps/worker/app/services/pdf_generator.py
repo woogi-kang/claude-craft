@@ -136,6 +136,20 @@ def render_report_html(audit_data: dict) -> str:
         fail_count=fail_count,
         top_issues=top_issues,
         recommendations=recommendations,
+        # New analysis sections
+        portal_scores=audit_data.get("portal_scores"),
+        patient_journey=audit_data.get("patient_journey"),
+        multilingual_readiness=audit_data.get("multilingual_readiness"),
+        content_freshness=audit_data.get("content_freshness"),
+        procedure_completeness=audit_data.get("procedure_completeness"),
+        conversion_analysis=audit_data.get("conversion_analysis"),
+        medical_compliance=audit_data.get("medical_compliance"),
+        voice_search=audit_data.get("voice_search"),
+        tech_stack=audit_data.get("tech_stack"),
+        international_usability=audit_data.get("international_usability"),
+        review_sentiment=audit_data.get("review_sentiment"),
+        season_insight=audit_data.get("season_insight"),
+        video_presence=audit_data.get("video_presence"),
     )
 
 
