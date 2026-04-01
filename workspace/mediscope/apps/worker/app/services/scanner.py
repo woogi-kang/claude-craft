@@ -46,6 +46,7 @@ from .tech_stack_detector import detect_tech_stack
 from .review_sentiment import analyze_review_sentiment
 from .season_insight import get_season_insight
 from .video_presence import analyze_video_presence
+from .keyword_engine import extract_and_generate_keywords
 from .voice_search_analyzer import analyze_voice_search_readiness
 
 
@@ -247,6 +248,12 @@ async def run_scan(
         [{"url": p.url, "html": p.html} for p in pages]
     )
 
+    # Keyword engine: extract procedures and generate search keywords
+    generated_keywords = extract_and_generate_keywords(
+        [{"url": p.url, "html": p.html} for p in pages],
+        region_name=region,
+    )
+
     # Season insight (date-based, no URL dependency)
     season_insight = get_season_insight()
 
@@ -267,6 +274,7 @@ async def run_scan(
         "review_sentiment": review_sentiment,
         "season_insight": season_insight,
         "video_presence": video_presence,
+        "generated_keywords": generated_keywords,
     }
 
     if hospital_id:
