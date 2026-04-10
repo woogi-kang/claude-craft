@@ -89,6 +89,45 @@
 
 > **리뷰 오케스트레이터**는 요청을 분석하여 하위 리뷰어(code, architecture, security, design, content)에게 자동 분배한다. 직접 하위 리뷰어를 호출하지 않는다.
 
+### 🇰🇷 한국생활 (k-skill)
+
+> 아래 스킬들은 에이전트 없이 **스킬 단독**으로 실행된다. 키워드 매칭 시 해당 SKILL.md 워크플로우를 따른다.
+> 스킬 위치: `.claude/skills/🇰🇷 k-skill/`
+> 시크릿 설정: `~/.config/k-skill/secrets.env` | 설치: `bash scripts/k-skill-setup.sh`
+
+| 키워드/의도 | 스킬 | 설명 |
+|-------------|------|------|
+| SRT, 수서, SRT 예약 | `srt-booking` | SRT 조회/예약/취소 (로그인 필요) |
+| KTX, 코레일, 기차표 | `ktx-booking` | KTX/코레일 조회/예약/취소 (로그인 필요) |
+| 카카오톡, 카톡, 메시지 전송 | `kakaotalk-mac` | macOS 카카오톡 CLI 조회/전송 |
+| 지하철, 도착정보, 전철 | `seoul-subway-arrival` | 서울 지하철 실시간 도착정보 |
+| 날씨, 기온, 강수, 기상 | `korea-weather` | 기상청 단기예보 (프록시 필요) |
+| 미세먼지, PM2.5, 대기질 | `fine-dust-location` | 미세먼지 농도 조회 |
+| 한강 수위, 방류량 | `han-river-water-level` | 한강 수위/방류량 모니터링 |
+| 법령, 판례, 법률 검색 | `korean-law-search` | 법령/판례/해석례 검색 |
+| 부동산, 실거래가, 전세가 | `real-estate-search` | 부동산 거래 데이터 조회 |
+| 쓰레기, 분리수거, 배출일 | `household-waste-info` | 쓰레기 배출일/장소 안내 |
+| 주식, 시세, KRX, 상장사 | `korean-stock-search` | KRX 상장사 검색/일별 시세 |
+| 조선왕조실록, 사료 | `joseon-sillok-search` | 조선왕조실록 키워드 검색 |
+| 특허, 출원, KIPRIS | `korean-patent-search` | 특허 검색/상세 조회 (API키 필요) |
+| 주유소, 기름값, 유가 | `cheap-gas-nearby` | 주변 최저가 주유소 |
+| KBO, 야구, 프로야구 | `kbo-results` | KBO 일정/결과/팀별 필터 |
+| K리그, 축구 | `kleague-results` | K리그 1/2 결과/순위 |
+| LCK, LoL, e스포츠 | `lck-analytics` | LCK 경기결과/밴픽/메타 분석 |
+| Toss, 토스 증권, 포트폴리오 | `toss-securities` | 토스증권 계좌/포트폴리오 (로그인 필요) |
+| 하이패스, 통행료, 영수증 | `hipass-receipt` | 하이패스 통행내역 조회 (로그인 필요) |
+| 로또, 당첨번호 | `lotto-results` | 로또 당첨번호 조회/검증 |
+| HWP, 한글 문서, hwp 변환 | `hwp` | HWP → JSON/Markdown/HTML 변환 |
+| 술집, 바, 주점 | `kakao-bar-nearby` | 주변 술집 조회 |
+| 우편번호, 주소 검색 | `zipcode-search` | 주소 기반 우편번호 검색 |
+| 다이소, 재고 | `daiso-product-search` | 다이소 매장 재고 확인 |
+| 올리브영, 화장품 | `olive-young-search` | 올리브영 매장/상품/재고 |
+| 택배, 배송 추적, 운송장 | `delivery-tracking` | CJ대한통운/우체국 배송추적 |
+| 쿠팡, 로켓배송, 가격비교 | `coupang-product-search` | 쿠팡 상품 검색/가격비교 |
+| 번개장터, 중고거래 | `bunjang-search` | 번개장터 검색/상세 |
+| 중고차, 리스, 취득가 | `used-car-price-search` | 중고차 가격/리스료 비교 |
+| 맞춤법, 띄어쓰기, 문법 검사 | `korean-spell-check` | 한국어 맞춤법/문법 교정 |
+
 ---
 
 ## 3. 스킬 자동 트리거
