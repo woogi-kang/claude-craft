@@ -162,6 +162,14 @@ mcp.json
 # Claude Code worktrees (auto-managed)
 .claude/worktrees/
 
+# Local Codex desktop/runtime state
+.codex/
+.claude/scheduled_tasks.lock
+
+# Local screenshots and ad-hoc automation outputs
+/*.png
+workspace/littly-automation/
+
 # Clinic crawler temp files
 scripts/clinic-storage/data/
 data/clinic-results/screenshots/
