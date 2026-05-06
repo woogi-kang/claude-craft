@@ -28,6 +28,7 @@
 | FastAPI, Python API, async API | `fastapi-agent` | API 설계/구현/테스트 전 과정 |
 | Flutter, Dart, Riverpod, 모바일 앱 | `flutter-agent` | Flutter 앱 설계/구현/테스트 |
 | Next.js, React, App Router, 웹 앱 | `nextjs-agent` | Next.js 웹 앱 설계/구현/테스트 |
+| Figma → Next.js pixel-perfect, 픽셀퍼펙트, 100% 동일, strict 변환 | `figma-to-nextjs-pixel-perfect` | Figma 디자인을 deterministic diff 기반으로 엄격 검증하며 Next.js로 변환 |
 | Figma → Next.js, 피그마 웹 변환 | `figma-to-nextjs` | Figma 디자인을 Next.js 코드로 변환 |
 | Figma → Flutter, 피그마 앱 변환 | `figma-to-flutter` | Figma 디자인을 Flutter 코드로 변환 |
 | Flutter → Next.js, 마이그레이션 | `flutter-to-nextjs` | Flutter 앱을 Next.js로 전환 |
@@ -214,7 +215,8 @@ planning-agent (기획)
 
 ### Figma 디자인 → 프로덕션 코드
 ```
-figma-to-nextjs 또는 figma-to-flutter (변환)
+figma-to-nextjs-pixel-perfect (픽셀퍼펙트/strict 요구 시)
+  또는 figma-to-nextjs / figma-to-flutter (일반 변환)
   → /verify (빌드/타입/린트 검증)
   → review-orchestrator (코드 + 디자인 리뷰)
 ```
