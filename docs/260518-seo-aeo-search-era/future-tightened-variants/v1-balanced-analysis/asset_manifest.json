@@ -1,0 +1,27 @@
+[
+  {
+    "slide": 5,
+    "slot": "s22-hero-21x9",
+    "file": "images/05-answer-readiness-map.png",
+    "alt": "질문 맵과 근거 블록이 AI 답변 표면으로 재구성되는 구조",
+    "prompt": "21:9 analytical product visual for an AEO-ready content architecture: left side shows a structured question map and source content blocks, center shows three transformation lanes for answer-first block, entity clarity, and evidence pack, right side shows a clean AI answer surface with citation paths. No readable text, letters, numbers, logo, watermark, UI labels, or slide chrome. Warm white, black, soft gray, and one vivid royal blue accent matching #002FA7. Restrained executive presentation style with clear negative space.",
+    "status": "generated_via_cli",
+    "generator": "codex-native-image-cli",
+    "required_generator": "codex-native-image-cli",
+    "visual_contract": {
+      "claim": "SEO 페이지가 질문 맵, 엔티티 명확성, 근거 패키지를 통해 AI 답변의 정답 후보로 재구성된다.",
+      "must_show": [
+        "왼쪽의 질문 맵과 원천 콘텐츠 블록",
+        "가운데의 답변 블록, 엔티티, 근거 패키지 변환 경로",
+        "오른쪽의 AI 답변 표면과 인용 연결"
+      ],
+      "must_not_show": [
+        "읽어야 하는 텍스트",
+        "무작위 추상 도형",
+        "검색 회사나 브랜드 로고처럼 보이는 요소"
+      ],
+      "acceptance_check": "이미지만 보아도 기존 SEO 페이지가 답변 엔진이 선택할 수 있는 근거 구조로 바뀐다는 흐름이 읽혀야 한다."
+    },
+    "text_policy": "no readable text embedded in image"
+  }
+]

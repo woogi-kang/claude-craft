@@ -1,0 +1,27 @@
+[
+  {
+    "slide": 3,
+    "slot": "s22-hero-21x9",
+    "file": "images/03-answer-engine-hero.png",
+    "alt": "브랜드 지식이 답변 엔진으로 연결되는 추상 네트워크",
+    "prompt": "21:9 product evidence map for an AI answer visibility platform: source repository blocks flow into answer surface cards through citation paths. No readable text, letters, numbers, logo, watermark, UI labels, or slide chrome. Black, warm white, gray, and one green accent. Large negative space for Korean HTML typography.",
+    "status": "generated_via_cli",
+    "generator": "codex-native-image-cli",
+    "required_generator": "codex-native-image-cli",
+    "visual_contract": {
+      "claim": "브랜드 공식 근거가 답변 엔진의 답변 표면으로 연결된다.",
+      "must_show": [
+        "왼쪽의 브랜드 근거 저장소",
+        "가운데의 인용/연결 경로",
+        "오른쪽의 답변 표면"
+      ],
+      "must_not_show": [
+        "읽어야 하는 텍스트",
+        "무작위 추상 도형",
+        "브랜드 로고처럼 보이는 요소"
+      ],
+      "acceptance_check": "이미지만 보아도 근거가 답변 표면으로 이동한다는 구조가 읽혀야 한다."
+    },
+    "text_policy": "no readable text embedded in image"
+  }
+]

@@ -17,6 +17,10 @@ skills:
   - ppt-refinement
   - export-pptx
   - export-pdf
+  - future-tightened-slide
+  - future-slide-design
+  - future-slide-asset-gen
+  - future-slide-qa
 ---
 
 # PPT Agent
@@ -26,7 +30,7 @@ skills:
 
 ## 개요
 
-PPT Agent는 11개의 전문 Skills를 통합하여 고품질 프레젠테이션을 제작합니다.
+PPT Agent는 11개의 기존 PPT 전문 Skills와 Future Slide 선택 경로를 통합하여 고품질 프레젠테이션을 제작합니다.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -84,6 +88,15 @@ PPT Agent는 11개의 전문 Skills를 통합하여 고품질 프레젠테이션
 | 9 | **ppt-refinement** | 피드백 반영 & 개선 | "피드백 반영", "수정", "대안" |
 | 10 | **export-pptx** | PPTX 출력 | "PPT 만들어", "PPTX 생성", "파워포인트" |
 | 11 | **export-pdf** | PDF 출력 | "PDF 만들어", "PDF 변환", "PDF 출력" |
+
+### Future Slide 선택 Skills
+
+| Skill | 역할 | 사용 조건 |
+|-------|------|-----------|
+| **future-tightened-slide** | Future Slide/Tightened Slide HTML 덱 생성 | 사용자가 Future Slide, Tightened Slide, HTML 덱, web presentation을 명시 |
+| **future-slide-design** | 한국어 타이포그래피, accent, layout density 가드레일 | Future Slide 생성 전 디자인 방향 고정 |
+| **future-slide-asset-gen** | hero visual, diagram base, icon 등 보조 이미지 생성 | 이미지 slot이 필요한 HTML 덱 |
+| **future-slide-qa** | validator + screenshot 기반 overflow/padding/word-break QA | 모든 Future Slide 납품 전 필수 |
 
 ## 전체 워크플로우
 
@@ -172,6 +185,31 @@ PPT Agent는 11개의 전문 Skills를 통합하여 고품질 프레젠테이션
           ▼
     최종 산출물 완성 (PPTX + PDF)
 ```
+
+### Optional Path: Future Slide HTML Deck
+
+사용자가 Future Slide, Tightened Slide, HTML 덱, web presentation을 명시하면 아래 선택 경로를 사용합니다.
+
+```
+Research/Validation/Structure/Content
+          │
+          ▼
+future-slide-design
+          │
+          ▼
+future-tightened-slide
+          │
+          ├─ 필요 시 future-slide-asset-gen
+          ▼
+future-slide-qa
+          │
+          └─ 제출용 파일 필요 시 export-pdf/export-pptx 검토
+```
+
+주의:
+- `.pptx` 편집 가능성이 핵심이면 기존 `export-pptx` 경로를 우선합니다.
+- Future Slide에서는 전체 슬라이드 이미지를 만들지 않고, 텍스트는 HTML/PPT 레이어에 유지합니다.
+- 생성 이미지는 S22/S15/S16 slot에 들어가는 보조 asset으로 제한합니다.
 
 ## 사용 시나리오
 
@@ -317,6 +355,10 @@ automation_level:
 │   ├── 테마 색상 일관성
 │   ├── 텍스트 미포함 확인
 │   └── 접근성 alt text 포함
+├── Future Slide QA (HTML 덱 선택 시)
+│   ├── validator error 0건
+│   ├── overflow/padding/word-break FAIL 0건
+│   └── screenshot/contact sheet 생성
 ├── 접근성 (Review Skill)
 ├── PPTX 출력 품질 (Export-PPTX Skill)
 └── PDF 출력 품질 (Export-PDF Skill)
@@ -381,6 +423,7 @@ npm run build:all    # PPTX + PDF 동시 생성
 3. **일관성 유지** - Design System Skill 설정 전체 적용
 4. **반복 개선** - Review → Refinement 사이클 활용
 5. **버전 관리** - 모든 변경은 버전으로 기록
+6. **Future Slide는 선택 경로** - 기존 PPTX/PDF 제작 경로를 대체하지 않고 HTML 비주얼 덱 요청에만 사용
 
 ## 문제 해결
 
