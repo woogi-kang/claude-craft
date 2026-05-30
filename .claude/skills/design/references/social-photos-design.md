@@ -1,6 +1,6 @@
 # Social Photos Design Guide
 
-Design social media images via HTML/CSS rendering + screenshot export. Orchestrates `ui-ux-pro-max`, `brand`, `design-system`, and `chrome-devtools` skills.
+Design social media images via HTML/CSS rendering + screenshot export. Orchestrates `design-harness`, `brand`, `design-system`, and browser screenshot tooling.
 
 ## Platform Sizes
 
@@ -59,7 +59,7 @@ Activate these skills in sequence:
 
 1. **`/ckm:brand`** — Extract brand colors, fonts, voice from user's project
 2. **`/ckm:design-system`** — Get design tokens (spacing, typography scale, color palette)
-3. **Randomly invoke ONE of:** `/ck:ui-ux-pro-max` OR `/ck:frontend-design` — for layout, hierarchy, visual balance. Pick one at random each run for design variety.
+3. **`design-harness`** — choose layout, hierarchy, visual balance, and anti-slop constraints. Do not randomize skill choice; vary the concepts deliberately.
 
 For each approved idea + each target size, create an HTML file:
 

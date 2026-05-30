@@ -49,7 +49,7 @@
 
 | 키워드/의도 | 에이전트 | 언제 사용 |
 |-------------|----------|-----------|
-| UI/UX 디자인, 프론트엔드 디자인 | `ui-design-agent` | 독창적 웹/모바일 UI 디자인 생성 |
+| UI/UX 디자인, 프론트엔드 디자인 | `ui-design-agent` | `design-harness` 기반 웹/모바일 UI 디자인, 리디자인, visual QA |
 | Figma MCP, 디자인 추출 | `figma-flutter-agent` | Figma에서 디자인 컨텍스트 추출 → Flutter 코드 |
 
 ### 📝 콘텐츠
@@ -138,7 +138,7 @@
 
 | 키워드 | 스킬 | 설명 |
 |--------|------|------|
-| 스타일 추천, 컬러 팔레트, 폰트 페어링, UX 리뷰, 접근성 검토, 디자인 의사결정 | `ui-ux-pro-max` | 설계 단계: 무엇을 만들지 결정 (스타일/컬러/폰트/UX) |
+| UI/UX 디자인, 랜딩, 대시보드, 앱 UI, 포트폴리오, 스타일 추천, 컬러 팔레트, 폰트 페어링, UX 리뷰, 접근성 검토, 디자인 의사결정, AI스럽다, 템플릿 같다, 제네릭하다, 고급스럽게, UI polish, 리디자인, visual QA, anti-slop | `design-harness` | 새 1차 디자인 하네스: brief read, brand/product register, dials, anti-slop preflight, 리디자인/감사/폴리시 |
 | shadcn, Tailwind, 컴포넌트 코드, 다크모드 구현, 반응형 구현 | `ui-styling` | 구현 단계: shadcn/ui + Tailwind CSS 코드 작성 |
 | 디자인 토큰, CSS 변수, 컴포넌트 스펙, 토큰 검증 | `design-system` | 시스템 단계: 3-레이어 토큰 아키텍처 정의 |
 | 로고 만들기, logo, brand mark, favicon, 앱 아이콘 | `logo-creator` | 전문 특화: AI 로고 생성 End-to-End |

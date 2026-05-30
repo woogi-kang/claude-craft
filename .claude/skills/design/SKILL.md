@@ -24,7 +24,7 @@ metadata:
 
 **이 스킬이 직접 처리하지 않는 것:**
 - UI 컴포넌트 코드 작성 → `ui-styling`
-- 스타일/컬러/폰트 의사결정 → `ui-ux-pro-max`
+- 스타일/컬러/폰트/UI 방향 의사결정 → `design-harness`
 - 디자인 토큰/CSS 변수 → `design-system`
 - 로고 생성 → `logo-creator`
 - 배너 디자인 → `banner-design`
@@ -38,14 +38,14 @@ metadata:
 | 브랜드 정의 (보이스, 톤) | `brand` | 브랜드 가이드가 없을 때 |
 | 토큰/CSS 변수 필요 | `design-system` | 슬라이드에 토큰 시스템 적용 시 |
 | UI 코드 구현 | `ui-styling` | HTML/CSS 컴포넌트 코딩 시 |
-| 디자인 리서치/스타일 선택 | `ui-ux-pro-max` | 소셜 포토 아트 디렉션 시 |
+| 디자인 리서치/스타일 선택 | `design-harness` | 소셜 포토 아트 디렉션 시 |
 
 ## 이 스킬을 사용하지 않는 경우
 
 - 로고만 만들 때 → `logo-creator` 직접 호출
 - 배너만 만들 때 → `banner-design` 직접 호출
 - UI 컴포넌트를 코딩할 때 → `ui-styling` 직접 호출
-- 스타일/컬러/폰트를 추천받을 때 → `ui-ux-pro-max` 직접 호출
+- 스타일/컬러/폰트/UI 방향을 추천받을 때 → `design-harness` 직접 호출
 - 디자인 토큰을 정의할 때 → `design-system` 직접 호출
 
 ## When to Use
@@ -102,7 +102,7 @@ python3 ~/.claude/skills/design/scripts/logo/generate.py --prompt "coffee shop v
 
 **IMPORTANT:** When scripts fail, try to fix them directly.
 
-After generation, **ALWAYS** ask user about HTML preview via `AskUserQuestion`. If yes, invoke `/ui-ux-pro-max` for gallery.
+After generation, **ALWAYS** ask user about HTML preview via `AskUserQuestion`. If yes, invoke `design-harness` for gallery direction and visual QA.
 
 ## CIP Design (Built-in)
 
@@ -174,7 +174,7 @@ Load `references/banner-sizes-and-styles.md` for complete sizes and styles refer
 ### Banner: Workflow
 
 1. **Gather requirements** via `AskUserQuestion` — purpose, platform, content, brand, style, quantity
-2. **Research** — Activate `ui-ux-pro-max`, browse Pinterest for references
+2. **Research** — Activate `design-harness`, browse Pinterest for references when useful
 3. **Design** — Create HTML/CSS banner with `frontend-design`, generate visuals with `ai-artist`/`ai-multimodal`
 4. **Export** — Screenshot to PNG at exact dimensions via `chrome-devtools`
 5. **Present** — Show all options side-by-side, iterate on feedback
@@ -252,7 +252,7 @@ python3 ~/.claude/skills/design/scripts/icon/generate.py --prompt "user profile"
 
 ## Social Photos (Built-in)
 
-Multi-platform social image design: HTML/CSS → screenshot export. Uses `ui-ux-pro-max`, `brand`, `design-system`, `chrome-devtools` skills.
+Multi-platform social image design: HTML/CSS → screenshot export. Uses `design-harness`, `brand`, `design-system`, `chrome-devtools` skills.
 
 Load `references/social-photos-design.md` for sizes, templates, best practices.
 
@@ -261,7 +261,7 @@ Load `references/social-photos-design.md` for sizes, templates, best practices.
 1. **Orchestrate** — `project-management` skill for TODO tasks; parallel subagents for independent work
 2. **Analyze** — Parse prompt: subject, platforms, style, brand context, content elements
 3. **Ideate** — 3-5 concepts, present via `AskUserQuestion`
-4. **Design** — `/ckm:brand` → `/ckm:design-system` → randomly invoke `/ck:ui-ux-pro-max` OR `/ck:frontend-design`; HTML per idea × size
+4. **Design** — `/ckm:brand` → `/ckm:design-system` → `design-harness`; HTML per idea × size
 5. **Export** — `chrome-devtools` or Playwright screenshot at exact px (2x deviceScaleFactor)
 6. **Verify** — Use Chrome MCP or `chrome-devtools` skill to visually inspect exported designs; fix layout/styling issues and re-export
 7. **Report** — Summary to `plans/reports/` with design decisions
@@ -335,4 +335,4 @@ pip install google-genai pillow
 ## Integration
 
 **External sub-skills:** brand, design-system, ui-styling
-**Related Skills:** frontend-design, ui-ux-pro-max, ai-multimodal, chrome-devtools
+**Related Skills:** design-harness, frontend-design, ai-multimodal, chrome-devtools

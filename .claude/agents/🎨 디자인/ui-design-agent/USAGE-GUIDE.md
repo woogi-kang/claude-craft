@@ -1,178 +1,77 @@
 # UI Design Agent 사용 가이드
 
-독창적이고 프로덕션 수준의 프론트엔드 디자인을 생성하는 Agent 사용법입니다.
+프로덕션 수준의 프론트엔드 UI/UX를 설계, 구현, 리뷰할 때는 `design-harness`를 1차 진입점으로 사용합니다. 오래된 `/fd-*` 단계형 스킬과 12개 aesthetic template 방식은 더 이상 활성 라우팅 기준이 아닙니다.
 
----
+## 기본 요청
 
-## 전략 비교표
-
-| 전략 | 특징 | 폰트 스타일 | 적용 분야 | 템플릿 |
-|------|------|------------|----------|--------|
-| **Modern** | 세련된, 미니멀, 기능 중심 | Sans-serif, Mono | SaaS, AI, 개발자 도구 | Liquid Glass, Barely-There, Tech Documentation |
-| **Minimal** | 여백, 타이포그래피 중심 | Serif, Elegant | 미디어, 갤러리, 웰니스 | Editorial Magazine, Brutalist Raw, Organic Natural |
-| **Bold** | 대담한, 실험적, 눈에 띄는 | Display, Decorative | 브랜드, 포트폴리오, 게임 | Soft Maximalism, Anti-Design, Retro-Futuristic |
-
----
-
-## 전략 선택 가이드
-
-### Modern 전략 선택 시
-- B2B SaaS 제품
-- AI/ML 플랫폼
-- 개발자 도구 / API 문서
-- 테크 스타트업 앱
-
-### Minimal 전략 선택 시
-- 매거진 / 블로그
-- 아트 갤러리 / 포트폴리오
-- 웰니스 / 라이프스타일
-- 럭셔리 브랜드
-
-### Bold 전략 선택 시
-- 브랜드 캠페인 사이트
-- 크리에이티브 에이전시
-- 게임 / 엔터테인먼트
-- 스타트업 랜딩페이지
-
----
-
-## 전체 명령어
-
-### 자연어 요청
-```
-"UI 디자인해줘"
-"랜딩페이지 만들어줘"
-"대시보드 디자인 해줘"
-"SaaS 앱 디자인"
-"모바일 앱 UI 만들어줘"
+```text
+"랜딩페이지 디자인해줘"
+"대시보드 UX 리뷰해줘"
+"이 화면 AI스럽지 않게 리디자인해줘"
+"모바일에서 깨지는 UI 하드닝해줘"
+"컬러/타이포그래피를 제품에 맞게 정리해줘"
 ```
 
-### Phase 1: Discovery (탐색)
-| 명령어 | 설명 |
-|--------|------|
-| `/fd-context` | 프로젝트 컨텍스트 파악 |
-| `/fd-inspiration` | 레퍼런스 수집 |
-| `/fd-direction` | 미적 방향 결정 |
+## Design Harness Modes
 
-### Phase 2: Foundation (기반)
-| 명령어 | 설명 |
-|--------|------|
-| `/fd-typography` | 타이포그래피 시스템 |
-| `/fd-color` | 색상 팔레트 |
-| `/fd-spacing` | 스페이싱 시스템 |
-| `/fd-motion` | 애니메이션 시스템 |
+| 모드 | 용도 |
+|---|---|
+| `shape` | 코드 전 UX/UI 방향, 정보구조, 화면 구성 결정 |
+| `craft` | 새 UI surface를 구현까지 진행 |
+| `audit` | UX, 접근성, 반응형, visual QA 리뷰 |
+| `polish` | 기존 화면을 출시 전 품질로 다듬기 |
+| `redesign` | 기존 IA/기능을 보존하면서 현대화 |
+| `typeset` | 타이포그래피, 위계, 폰트 체계 정리 |
+| `colorize` | 팔레트, 테마, 토큰 방향 정리 |
+| `animate` | 목적 있는 모션/마이크로인터랙션 설계 |
+| `harden` | 상태, overflow, 모바일, i18n, reduced-motion 보강 |
 
-### Phase 3: Components (컴포넌트)
-| 명령어 | 설명 |
-|--------|------|
-| `/fd-primitives` | 기본 컴포넌트 |
-| `/fd-patterns` | 복합 패턴 |
-| `/fd-effects` | 배경 효과 |
-| `/fd-interactions` | 마이크로인터랙션 |
+## 처리 흐름
 
-### Phase 4: Pages (페이지)
-| 명령어 | 설명 |
-|--------|------|
-| `/fd-landing` | 랜딩 페이지 |
-| `/fd-dashboard` | 대시보드 |
-| `/fd-content` | 콘텐츠 페이지 |
-| `/fd-mobile` | 모바일 최적화 |
+1. 제품/브랜드/사용자 맥락을 읽고 대표 UI 파일을 확인합니다.
+2. 한 줄 design read를 작성합니다.
+3. `DISTINCTION`, `MOTION`, `DENSITY` 세 다이얼을 정합니다.
+4. Product register 또는 Brand register를 선택합니다.
+5. 필요하면 `ui-styling`, `design-system`, `logo-creator`, `banner-design`로 위임합니다.
+6. 구현 후 slop detector와 브라우저 검증을 수행합니다.
 
-### Phase 5: Polish (완성)
-| 명령어 | 설명 |
-|--------|------|
-| `/fd-a11y` | 접근성 검증 |
-| `/fd-responsive` | 반응형 검증 |
-| `/fd-perf` | 성능 최적화 |
+## 다이얼 기준
 
----
+| 화면 유형 | DISTINCTION | MOTION | DENSITY |
+|---|---:|---:|---:|
+| SaaS/운영 대시보드 | 3-5 | 2-4 | 6-9 |
+| 개발자 도구/API 콘솔 | 3-6 | 1-3 | 6-9 |
+| 브랜드/캠페인/포트폴리오 | 6-9 | 4-8 | 2-5 |
+| 공공/규제/법무/재무 | 2-4 | 1-3 | 5-8 |
 
-## 사용 예시
+## 하위 스킬 경계
 
-### 예시 1: B2B SaaS 대시보드
-```
-입력: "B2B SaaS 대시보드 디자인해줘"
+| 작업 | 사용 스킬 |
+|---|---|
+| UI 방향, 리디자인, UX 리뷰, anti-slop | `design-harness` |
+| Tailwind/shadcn 컴포넌트 구현 | `ui-styling` |
+| 토큰, CSS 변수, 디자인 시스템 구조 | `design-system` |
+| 로고, 브랜드 마크, favicon, app icon | `logo-creator` |
+| 배너, 커버, 광고 크리에이티브 | `banner-design` |
 
-Agent 처리:
-1. [context] → B2B, 데이터 중심, 생산성 도구
-2. [direction] → Modern 전략 → "Barely-There Minimal"
-3. [typography] → Geist + JetBrains Mono
-4. [color] → Neutral base + Blue accent
-5. [dashboard] → 데이터 테이블, 차트, 필터
+## 검증 명령
+
+UI 코드가 있는 프로젝트에서는 변경한 UI 디렉터리를 대상으로 실행합니다.
+
+```bash
+node .claude/skills/design-harness/scripts/detect-design-slop.mjs src app components pages
 ```
 
-### 예시 2: 크리에이티브 포트폴리오
-```
-입력: "디자이너 포트폴리오 만들어줘"
+프론트엔드 앱을 실제로 실행할 수 있으면 브라우저에서 desktop/mobile viewport를 확인합니다.
 
-Agent 처리:
-1. [context] → 개인 브랜딩, 창의성 강조
-2. [direction] → Bold 전략 → "Anti-Design Chaos"
-3. [typography] → Basement Grotesque
-4. [effects] → 노이즈 텍스처, 커스텀 커서
-5. [landing] → 비정형 그리드, 오버랩 레이아웃
-```
+## Legacy
 
-### 예시 3: 웰니스 앱 랜딩
-```
-입력: "명상 앱 랜딩페이지 만들어줘"
+다음 항목은 더 이상 1차 디자인 지침으로 사용하지 않습니다.
 
-Agent 처리:
-1. [context] → 웰니스, 평화로움, 자연
-2. [direction] → Minimal 전략 → "Organic Natural"
-3. [typography] → Cormorant + Lora
-4. [color] → Earth tones, Soft greens
-5. [landing] → 부드러운 곡선, 여백 활용
-```
-
----
-
-## 12개 Aesthetic Template 요약
-
-| # | 템플릿 | 전략 | 특징 | 적용 분야 |
-|---|--------|------|------|----------|
-| 1 | Barely-There Minimal | Modern | 극도의 절제, 여백 | SaaS, AI |
-| 2 | Liquid Glass | Modern | Apple 스타일, 블러 | 앱 |
-| 3 | Tech Documentation | Modern | 매뉴얼 스타일 | 개발자 도구 |
-| 4 | Editorial Magazine | Minimal | 타이포 중심 | 미디어 |
-| 5 | Organic Natural | Minimal | 자연, 부드러운 곡선 | 웰니스 |
-| 6 | Brutalist Raw | Minimal | 거친, 원시적 | 갤러리 |
-| 7 | Luxury Refined | Minimal | 고급, 세련된 | 럭셔리 |
-| 8 | Soft Maximalism | Bold | 대담하지만 통제된 | 브랜드 |
-| 9 | Anti-Design Chaos | Bold | 규칙 파괴, 비정형 | 포트폴리오 |
-| 10 | Retro-Futuristic | Bold | 90s + 사이버 | 게임 |
-| 11 | Playful Rounded | Bold | 친근한, 둥근 | 교육 |
-| 12 | Grade-School Bold | Bold | 기본 색상, 명확한 | 스타트업 |
-
----
-
-## 디자인 다양성 보장
-
-### Template Rotation
-- 12개 템플릿 중 이전에 사용하지 않은 것 우선 선택
-- 같은 프로젝트 유형이라도 다른 미적 방향 제안
-
-### Color Palette Shuffle
-- 같은 템플릿이라도 accent color를 매번 다르게
-- Primary hue를 +/-30도 범위에서 변형
-- Dark/Light mode 기본값 번갈아 제안
-
-### Layout Variation
-- Centered Text
-- Split Layout (Left Text + Right Image)
-- Split Layout (Left Image + Right Text)
-- Full-Bleed Background
-- Asymmetric Grid
-- Bento Style
-
----
-
-## 참조 문서
-
-| 문서 | 위치 |
-|------|------|
-| Modern 전략 상세 | `references/strategies/strategy-modern.md` |
-| Minimal 전략 상세 | `references/strategies/strategy-minimal.md` |
-| Bold 전략 상세 | `references/strategies/strategy-bold.md` |
-| 디자인 원칙 | `references/shared/design-principles.md` |
-| 기술 스택 | `references/shared/tech-stack.md` |
+| Legacy | 대체 |
+|---|---|
+| `/fd-context`, `/fd-inspiration`, `/fd-direction` | `design-harness shape` |
+| `/fd-typography`, `/fd-color`, `/fd-spacing` | `design-harness typeset/colorize` + `design-system` |
+| `/fd-motion`, `/fd-effects`, `/fd-interactions` | `design-harness animate/polish` |
+| `/fd-landing`, `/fd-dashboard`, `/fd-mobile` | `design-harness craft/redesign/harden` |
+| `/fd-a11y`, `/fd-responsive`, `/fd-perf` | `design-harness audit/harden` + framework performance skill |

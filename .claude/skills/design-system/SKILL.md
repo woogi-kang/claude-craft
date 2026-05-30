@@ -24,7 +24,7 @@ Token architecture, component specifications, systematic design, slide generatio
 
 **이 스킬이 직접 처리하지 않는 것:**
 - UI 컴포넌트 코드 작성 (React/HTML) → `ui-styling`
-- 스타일/컬러/폰트 추천 → `ui-ux-pro-max`
+- 스타일/컬러/폰트/UI 방향 추천 → `design-harness`
 - 로고/배너/CIP 제작 → `design`, `logo-creator`, `banner-design`
 
 ## 위임 (Delegates to)
@@ -33,12 +33,12 @@ Token architecture, component specifications, systematic design, slide generatio
 |-----------|-----------|------|
 | 정의한 토큰을 코드에 적용 | `ui-styling` | Tailwind/shadcn 컴포넌트에 토큰 적용 시 |
 | 브랜드 컬러/폰트 추출 | `brand` | 브랜드 가이드에서 원시 값 추출 시 |
-| 어떤 컬러/폰트를 사용할지 결정 | `ui-ux-pro-max` | 토큰 정의 전 디자인 의사결정 필요 시 |
+| 어떤 컬러/폰트를 사용할지 결정 | `design-harness` | 토큰 정의 전 디자인 의사결정 필요 시 |
 
 ## 이 스킬을 사용하지 않는 경우
 
 - shadcn/ui 컴포넌트를 설치/코딩할 때 → `ui-styling`
-- 스타일/컬러를 추천받을 때 → `ui-ux-pro-max`
+- 스타일/컬러를 추천받을 때 → `design-harness`
 - 로고/배너/CIP를 만들 때 → `logo-creator`, `banner-design`, `design`
 - UI 레이아웃/반응형 구현할 때 → `ui-styling`
 

@@ -6,6 +6,7 @@ When to use each design sub-skill.
 
 | Skill | Purpose | Key Files |
 |-------|---------|-----------|
+| design-harness | UI/UX direction, redesign, audit, polish, anti-slop, visual QA | SKILL.md + references + detector script |
 | brand | Brand identity, voice, assets | SKILL.md + 10 references + 3 scripts |
 | design-system | Token architecture, specs | SKILL.md + 7 references + 2 scripts |
 | ui-styling | Component implementation | SKILL.md + 7 references + 2 scripts |
@@ -45,6 +46,15 @@ When to use each design sub-skill.
 - Implement dark mode
 - Create responsive layouts
 - Build accessible components
+
+### UI/UX Direction And Review Tasks
+**→ design-harness**
+
+- Decide UI/UX direction for pages, dashboards, apps, portfolios
+- Review UX, accessibility, responsive behavior, and visual quality
+- Redesign or polish existing interfaces
+- Select product vs brand register
+- Run anti-slop and mechanical preflight before implementation
 
 ### Logo Design Tasks
 **→ logo-design**
@@ -93,6 +103,9 @@ When to use each design sub-skill.
 | Question | Skill |
 |----------|-------|
 | "What color should this be?" | brand |
+| "What should this interface feel like?" | design-harness |
+| "Review this landing page" | design-harness |
+| "This looks AI-generated" | design-harness |
 | "How do I create a token for X?" | design-system |
 | "How do I build a button component?" | ui-styling |
 | "Is this on-brand?" | brand |
@@ -115,13 +128,16 @@ When to use each design sub-skill.
 ### New Project Setup
 
 ```
-1. brand → Define identity
+1. design-harness → Define UI register and direction
+   - Product vs brand, dials, anti-slop risks
+
+2. brand → Define identity
    - Colors, typography, voice
 
-2. design-system → Create tokens
+3. design-system → Create tokens
    - Primitive, semantic, component
 
-3. ui-styling → Implement
+4. ui-styling → Implement
    - Configure Tailwind, add components
 ```
 
@@ -184,8 +200,8 @@ npx shadcn@latest add button card input
 Use **all eight** when:
 - Complete brand package from scratch (logo → CIP → presentation)
 
-Use **brand + design-system + ui-styling** when:
-- Design system setup and implementation
+Use **design-harness + brand + design-system + ui-styling** when:
+- Design direction, design system setup, and implementation
 
 Use **logo-design + cip-design** when:
 - Complete brand identity package with deliverable mockups
@@ -199,7 +215,7 @@ Use **banner-design + brand** when:
 Use **icon-design + design-system** when:
 - Custom icon set matching design tokens and component specs
 
-Use **brand + design-system** when:
+Use **design-harness + brand + design-system** when:
 - Defining design language without implementation
 
 Use **design-system + ui-styling** when:

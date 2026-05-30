@@ -23,7 +23,7 @@ Comprehensive skill for creating beautiful, accessible user interfaces combining
 - **캔버스 비주얼 디자인** — HTML Canvas 기반 시각적 구성
 
 **이 스킬이 직접 처리하지 않는 것:**
-- 스타일/컬러/폰트 선택 의사결정 → `ui-ux-pro-max`
+- 스타일/컬러/폰트/UI 방향 의사결정 → `design-harness`
 - 디자인 토큰 아키텍처 정의 → `design-system`
 - 로고/배너/CIP/아이콘 제작 → `design`, `logo-creator`, `banner-design`
 
@@ -31,16 +31,16 @@ Comprehensive skill for creating beautiful, accessible user interfaces combining
 
 | 요청 내용 | 위임 대상 | 조건 |
 |-----------|-----------|------|
-| 어떤 스타일/컬러를 사용할지 모를 때 | `ui-ux-pro-max` | 디자인 의사결정이 필요한 경우 |
+| 어떤 스타일/컬러를 사용할지 모를 때 | `design-harness` | 디자인 의사결정이 필요한 경우 |
 | 토큰 시스템을 정의해야 할 때 | `design-system` | CSS 변수 아키텍처 설계 시 |
-| UX 접근성 검토가 필요할 때 | `ui-ux-pro-max` | 구현 후 UX 리뷰 시 |
+| UX 접근성 검토가 필요할 때 | `design-harness` | 구현 후 UX 리뷰 시 |
 
 ## 이 스킬을 사용하지 않는 경우
 
-- 어떤 스타일이 적합한지 추천받고 싶을 때 → `ui-ux-pro-max`
+- 어떤 스타일이 적합한지 추천받고 싶을 때 → `design-harness`
 - 디자인 토큰을 정의하고 검증할 때 → `design-system`
 - 로고/배너/CIP를 만들 때 → `logo-creator`, `banner-design`, `design`
-- UX 리뷰/접근성 감사만 할 때 → `ui-ux-pro-max`
+- UX 리뷰/접근성 감사만 할 때 → `design-harness`
 
 ## Reference
 

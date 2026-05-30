@@ -28,14 +28,14 @@ Design banners across social, ads, web, and print formats. Generates multiple ar
 - CIP (명함, 레터헤드 등) → `design`
 - UI 컴포넌트 코드 → `ui-styling`
 - 디자인 토큰/시스템 → `design-system`
-- 전체 웹사이트 디자인 → `ui-ux-pro-max` + `ui-styling`
+- 전체 웹사이트 디자인 → `design-harness` + `ui-styling`
 - 동영상 편집 → 이 스킬 범위 외
 
 ## 위임 (Delegates to)
 
 | 요청 내용 | 위임 대상 | 조건 |
 |-----------|-----------|------|
-| 디자인 리서치/스타일 결정 | `ui-ux-pro-max` | 아트 디렉션 리서치 시 |
+| 디자인 리서치/스타일 결정 | `design-harness` | 아트 디렉션 리서치 시 |
 | HTML/CSS 배너 제작 | `frontend-design` | HTML 기반 배너 레이아웃 시 |
 | AI 이미지 생성 | `ai-artist`, `ai-multimodal` | 비주얼 요소 생성 시 |
 | 스크린샷 내보내기 | `chrome-devtools` | PNG 익스포트 시 |
@@ -72,7 +72,7 @@ Collect via AskUserQuestion:
 
 ### Step 2: Research & Art Direction
 
-1. Activate `ui-ux-pro-max` skill for design intelligence
+1. Activate `design-harness` skill for design direction and anti-slop checks
 2. Use Chrome browser to research Pinterest for design references:
    ```
    Navigate to pinterest.com → search "[purpose] banner design [style]"
