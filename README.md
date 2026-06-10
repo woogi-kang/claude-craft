@@ -171,6 +171,7 @@ docs/                 # 프로젝트 문서 (YYMMDD- prefix)
 scripts/brain-memory.sh status
 scripts/brain-memory.sh search "검색어"
 scripts/brain-memory.sh sync
+scripts/brain-memory-qa.sh
 ```
 
 ### 유틸리티

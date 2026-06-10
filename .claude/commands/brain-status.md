@@ -10,6 +10,7 @@ GBrain memory engine 상태를 점검합니다.
 
 ```bash
 scripts/brain-memory.sh status
+scripts/brain-memory-qa.sh
 codex mcp list
 claude mcp get gbrain
 ```
@@ -21,6 +22,7 @@ claude mcp get gbrain
 - `search modes`는 conservative가 active다.
 - Codex MCP list에 `gbrain`이 있다.
 - Claude MCP get gbrain이 `Connected`다.
+- Phase 1 routing QA가 0 failure로 끝난다.
 
 ## 알려진 Phase 0 경고
 

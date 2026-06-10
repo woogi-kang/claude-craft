@@ -16,7 +16,7 @@ GBrain은 Claude Craft의 하부 장기 기억 엔진이다. Claude Craft의 에
 
 다음 의도가 있으면 답변 또는 작업 계획 전에 GBrain을 먼저 조회한다.
 
-- "지난번", "전에", "이어", "다시", "왜 이렇게 했지"
+- "지난번", "전에", "이어", "다시", "왜 이렇게 했지", "왜 하기로 했지", "왜 정했지"
 - 프로젝트, 제품, 고객, 회사, 사람, 계약, 전략, GTM, PRD에 관한 과거 맥락
 - 이전에 결정한 방향, 실패한 접근, open question, 다음 액션
 - "이 프로젝트", "그때 정한 것", "관련 문서", "기존 전략"
@@ -45,6 +45,17 @@ scripts/brain-memory.sh get "<slug>"
 - 반복 가능한 업무 패턴
 - 프로젝트 재개에 필요한 다음 액션
 
+캡처 후 응답 또는 작업 로그에는 capture receipt를 남긴다.
+
+```text
+Capture receipt:
+- slug: sessions/260610-example
+- file: /Users/woogi/brain-craft/sessions/260610-example.md
+- commit: abc1234
+- source: brain-craft
+- synced: yes
+```
+
 ## 캡처하지 않는 항목
 
 - API key, token, credential, password, private env
@@ -52,6 +63,26 @@ scripts/brain-memory.sh get "<slug>"
 - 일회성 임시 로그
 - 원본 소스 코드 전체
 - 검증되지 않은 추측
+
+## Import Policy
+
+MVP와 Phase 1에서는 curated copy만 허용한다.
+
+Include:
+
+- PRD, GTM, 전략 문서, 통합 계획, 마이그레이션 기록
+- 명시적 의사결정, open question, next action
+- 반복 가능한 작업 패턴과 검증된 실패 접근
+- 세션 전체가 아니라 재개에 필요한 요약
+
+Exclude:
+
+- `.claude/skills/`, `.claude/agents/`, `.claude/sessions/` 전체 bulk import
+- `.env`, API key, token, credential, password, private config
+- raw source tree, generated binaries, screenshots/media dump
+- 일회성 로그, command output 전체, 검증되지 않은 추측
+
+Import 전에는 `scripts/brain-memory.sh secret-scan`을 통과해야 한다.
 
 ## 출처 표기
 
@@ -82,6 +113,7 @@ scripts/brain-memory.sh get "<slug>"
 scripts/brain-memory.sh capture decision "YYMMDD-kebab-title" "Title" < body.md
 scripts/brain-memory.sh sync
 scripts/brain-memory.sh secret-scan
+scripts/brain-memory-qa.sh
 ```
 
 `sync`와 `capture`는 `/Users/woogi/brain-craft`에 커밋되지 않은 변경이 있으면 중단한다.

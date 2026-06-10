@@ -80,10 +80,10 @@ scripts/brain-memory.sh sync
 ## 출력
 
 ```text
-Memory saved:
-- decisions/...
-Skipped:
-- ...
-Synced:
-- pages: N
+Capture receipt:
+- slug: decisions/...
+- file: /Users/woogi/brain-craft/decisions/....md
+- commit: abc1234
+- source: brain-craft
+- synced: yes
 ```

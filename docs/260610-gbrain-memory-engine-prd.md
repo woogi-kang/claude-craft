@@ -1,7 +1,7 @@
 # GBrain Memory Engine Integration PRD
 
 Date: 2026-06-10
-Status: Phase 0 Implemented / Phase 1 Wiring In Progress
+Status: Phase 1 Implemented / Phase 2 Ready
 Owner: Woogi
 Product Area: Claude Craft Harness
 
@@ -18,7 +18,9 @@ Implementation snapshot as of 2026-06-10:
 - 31 seed pages and 355 chunks imported without embeddings.
 - Codex MCP and Claude Code MCP both registered as `gbrain`.
 - Claude Craft wrapper added at `scripts/brain-memory.sh`.
+- Phase 1 QA wrapper added at `scripts/brain-memory-qa.sh`.
 - Slash command docs added for `/brain-search`, `/brain-capture`, `/brain-sync`, and `/brain-status`.
+- Capture receipts are emitted for memory writes.
 - Phase 0 keeps embedding and dream/autopilot disabled until API/cost policy is explicit.
 
 ## 2. Contacts
@@ -547,9 +549,10 @@ gantt
   Brain-first rules           :b1, after a2, 3d
   Wrapper commands            :b2, after b1, 4d
   Decision capture template   :b3, after b1, 4d
+  Capture receipt v1          :b4, after b3, 1d
   section Phase 2
   Context pack builder        :c1, after b2, 5d
-  Capture receipt             :c2, after b3, 3d
+  Memory quality loop         :c2, after b4, 3d
   section Phase 3
   30-day pilot metrics        :d1, after c1, 30d
 ```
@@ -589,6 +592,14 @@ Exit Criteria:
 - 10 sample prompts pass brain-first routing test.
 - 5 completed tasks produce memory capture receipts.
 - Captured pages are searchable in later sessions.
+
+Phase 1 Result:
+
+- `scripts/brain-memory-qa.sh` passed 14/14 checks.
+- Capture receipt format shipped in `scripts/brain-memory.sh`.
+- Five Phase 1 memory entries produced successful capture receipts in `brain-craft`.
+- One additional Phase 1 decision capture exposed and documented the receipt print bug before the wrapper fix.
+- Captured pages are retrievable through `scripts/brain-memory.sh get` and exact-term search.
 
 ### Phase 2: Context Pack And Quality Loop
 
@@ -665,8 +676,8 @@ Seed with known Claude Craft documents:
 - [x] output cites brain slug
 - [x] stale or missing information is flagged in rules
 - [x] unnecessary brain searches are avoided by trigger rules
-- [ ] 10 real follow-up prompts measured against brain-first routing
-- [ ] 5 completed tasks produce capture receipts
+- [x] 10 real follow-up prompts measured against brain-first routing
+- [x] 5 completed tasks produce capture receipts
 - [ ] 30-day usefulness metrics reviewed
 
 ### Verified Commands
@@ -677,6 +688,7 @@ scripts/brain-memory.sh search "GBrain 도입"
 scripts/brain-memory.sh search "design harness migration"
 scripts/brain-memory.sh get "decisions/260610-gbrain-memory-engine-integration"
 scripts/brain-memory.sh secret-scan
+scripts/brain-memory-qa.sh
 bash scripts/validate-skills.sh
 ```
 
@@ -703,6 +715,7 @@ bash scripts/validate-skills.sh
 
 1. Should `docs/` become a registered GBrain source after the 30-day pilot, or should curated copies remain the safer default?
 2. What is the minimum monthly memory quality review checklist before company-brain expansion?
+3. Should Phase 2 enable embeddings, or keep keyword search until the capture corpus is cleaner?
 
 ## 11. References
 
@@ -710,3 +723,4 @@ bash scripts/validate-skills.sh
 - GBrain eval repository: https://github.com/garrytan/gbrain-evals
 - Claude Craft harness evolution plan: `docs/260325-harness-evolution-plan.md`
 - CraftOps AI Work OS PRD: `docs/260604-craftops-ai-work-os-prd.md`
+- Phase 1 validation: `docs/260610-gbrain-memory-phase1-validation.md`

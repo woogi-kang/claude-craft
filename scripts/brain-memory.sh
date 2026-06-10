@@ -260,8 +260,15 @@ capture_memory() {
   secret_scan >/dev/null
   git -C "$BRAIN_REPO" add "$file"
   git -C "$BRAIN_REPO" commit -m "docs: capture ${directory%?} ${slug#??????-}"
+  local commit
+  commit="$(git -C "$BRAIN_REPO" rev-parse --short HEAD)"
   sync_memory
-  printf 'Memory saved:\n- %s/%s\n' "$directory" "$slug"
+  printf 'Capture receipt:\n'
+  printf '%s\n' "- slug: $directory/$slug"
+  printf '%s\n' "- file: $file"
+  printf '%s\n' "- commit: $commit"
+  printf '%s\n' "- source: $BRAIN_SOURCE"
+  printf '%s\n' "- synced: yes"
 }
 
 capture_decision() {
