@@ -202,6 +202,7 @@
 /brain-sync           → brain-craft repo와 GBrain index 동기화
 /brain-status         → GBrain 설치/MCP/source/search mode 상태 확인
 /brain-quality        → 월간 memory quality review 체크리스트 생성
+/brain-pilot          → Phase 3 파일럿 이벤트 기록과 Go/No-Go 리포트
 ```
 
 운영 wrapper는 `scripts/brain-memory.sh`이며, secret scan과 clean repo 확인은 wrapper 경로를 우선 사용한다.

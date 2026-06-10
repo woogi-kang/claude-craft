@@ -5,6 +5,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BRAIN_MEMORY="${BRAIN_MEMORY:-$ROOT_DIR/scripts/brain-memory.sh}"
+BRAIN_PILOT="${BRAIN_PILOT:-$ROOT_DIR/scripts/brain-pilot.sh}"
 
 pass_count=0
 fail_count=0
@@ -121,6 +122,7 @@ main() {
   assert_command "wrapper status" "$BRAIN_MEMORY" status
   assert_command "secret scan" "$BRAIN_MEMORY" secret-scan
   assert_command "quality report" "$BRAIN_MEMORY" quality-report
+  assert_command "pilot report" "$BRAIN_PILOT" report
   assert_search_contains "GBrain 도입" "260610-gbrain-memory-engine-prd"
   assert_search_contains "Phase 0 도입" "260610-gbrain-phase0-implementation"
   assert_context_pack "Phase 1 complete"

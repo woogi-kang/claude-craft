@@ -116,6 +116,7 @@ scripts/brain-memory.sh sync
 scripts/brain-memory.sh secret-scan
 scripts/brain-memory.sh quality-report
 scripts/brain-memory-qa.sh
+scripts/brain-pilot.sh report
 ```
 
 `sync`와 `capture`는 `/Users/woogi/brain-craft`에 커밋되지 않은 변경이 있으면 중단한다.
