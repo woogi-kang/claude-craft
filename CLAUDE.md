@@ -12,7 +12,7 @@ Claude Code, Gemini CLI, Codex CLI, OpenCode에서 동일한 에이전트/스킬
 │   ├── {카테고리}/_shared/  # 공유 스킬 (에이전트 간 중복 제거)
 │   │                        # 💻 개발: project-setup, architecture, unit-test, e2e-test, cicd, performance
 │   │                        # 📝 콘텐츠: research, validation
-├── commands/    # 슬래시 커맨드 (18개)
+├── commands/    # 슬래시 커맨드 (22개)
 ├── hooks/       # 라이프사이클 훅 (3개)
 ├── rules/       # 모듈형 규칙 (common, python, typescript)
 ├── templates/   # 팀 오케스트레이션 TOML 템플릿 (5개)
@@ -75,6 +75,7 @@ bash scripts/sync-to-projects.sh ../memoriz   # 특정 프로젝트
 
 - 사용자 응답은 현재 대화 언어를 따릅니다.
 - 서로 독립적인 조회 작업은 병렬 실행을 우선합니다.
+- 사람, 회사, 프로젝트, 과거 결정, 이전 작업 맥락을 묻는 요청은 답하기 전에 GBrain memory engine을 먼저 조회합니다. 세부 규칙은 `.claude/rules/common/memory-engine.md`를 따릅니다.
 - 도메인 에이전트와 스킬을 적극 활용합니다.
 - 코드 변경 시 기존 패턴과 컨벤션을 따릅니다.
 - 결과가 달라지는 불확실성은 먼저 질문하고, 사소한 가정은 명시한 뒤 진행합니다.
@@ -91,6 +92,7 @@ bash scripts/sync-to-projects.sh ../memoriz   # 특정 프로젝트
 .claude/rules/
 ├── common/
 │   ├── agent-orchestration.md   # 라우팅 매트릭스 + 워크플로우 체인
+│   ├── memory-engine.md         # GBrain 기반 장기 기억 조회/캡처
 │   ├── coding-style.md
 │   ├── git-workflow.md
 │   ├── testing.md

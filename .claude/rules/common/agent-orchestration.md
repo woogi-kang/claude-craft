@@ -10,11 +10,12 @@
 
 ```
 1. 슬래시 커맨드와 매칭되는가? → Skill 도구로 실행
-2. 여러 도메인 병렬 협업이 필요한가? → /team 제안 (자동 DAG)
-3. 단일 도메인 에이전트가 필요한 복합 작업인가? → Agent 도구로 위임
-4. 스킬 자동 트리거에 해당하는가? → Skill 도구로 실행
-5. 단순 코드 작업인가? → 직접 처리 (Glob/Grep/Read/Edit)
-6. 탐색이 필요한가? → Explore 서브에이전트
+2. 사람/회사/프로젝트/과거 결정/이전 맥락 요청인가? → GBrain memory 조회 후 계속 진행
+3. 여러 도메인 병렬 협업이 필요한가? → /team 제안 (자동 DAG)
+4. 단일 도메인 에이전트가 필요한 복합 작업인가? → Agent 도구로 위임
+5. 스킬 자동 트리거에 해당하는가? → Skill 도구로 실행
+6. 단순 코드 작업인가? → 직접 처리 (Glob/Grep/Read/Edit)
+7. 탐색이 필요한가? → Explore 서브에이전트
 ```
 
 ---
@@ -192,6 +193,16 @@
 /resume-session → 이전 세션 복원
 /checkpoint → 작업 전후 상태 비교
 ```
+
+### 기억 엔진
+```
+/brain-search "검색어" → GBrain에서 프로젝트/결정/과거 맥락 조회
+/brain-capture        → 결정, 가정, 실패 접근, 반복 패턴 저장
+/brain-sync           → brain-craft repo와 GBrain index 동기화
+/brain-status         → GBrain 설치/MCP/source/search mode 상태 확인
+```
+
+운영 wrapper는 `scripts/brain-memory.sh`이며, secret scan과 clean repo 확인은 wrapper 경로를 우선 사용한다.
 
 ### 관리/감사
 ```

@@ -9,9 +9,9 @@ Claude Code, Gemini CLI, Codex CLI, OpenCode에서 동일한 에이전트/스킬
 |------|------|------|
 | 도메인 에이전트 | 25+ | 8개 카테고리 전문 에이전트 |
 | 스킬 | 340+ | 에이전트 전용 + 독립 스킬 |
-| 슬래시 커맨드 | 18 | `/commit`, `/review`, `/team`, `/today` 등 |
+| 슬래시 커맨드 | 22 | `/commit`, `/review`, `/team`, `/today`, `/brain-search` 등 |
 | 팀 템플릿 | 5 | fullstack-dev, content-pipeline 등 |
-| 규칙 | 7 | 코딩, Git, 오케스트레이션 등 |
+| 규칙 | 8 | 코딩, Git, 오케스트레이션, memory engine 등 |
 | 컨텍스트 모드 | 4 | dev, plan, research, review |
 
 ---
@@ -34,7 +34,7 @@ Claude Code, Gemini CLI, Codex CLI, OpenCode에서 동일한 에이전트/스킬
 │   ├── 💻 개발/      # 카테고리별 에이전트 스킬
 │   ├── 🎯 기획/
 │   └── ...           # 독립 스킬 (design, brand, social-content 등 22개)
-├── commands/         # 슬래시 커맨드 (18개)
+├── commands/         # 슬래시 커맨드 (22개)
 ├── templates/        # 팀 오케스트레이션 TOML 템플릿 (5개)
 ├── hooks/            # 라이프사이클 훅 (3개)
 ├── rules/            # 모듈형 규칙 (common, python, typescript)
@@ -155,6 +155,23 @@ docs/                 # 프로젝트 문서 (YYMMDD- prefix)
 | `/save-session` | 작업 세션 구조화 저장 |
 | `/resume-session` | 이전 세션 복원 |
 | `/checkpoint` | 이름 있는 체크포인트 생성/비교 |
+
+### 기억 엔진
+
+| 커맨드 | 설명 |
+|--------|------|
+| `/brain-search` | GBrain에서 프로젝트/결정/과거 맥락 검색 |
+| `/brain-capture` | 결정, 가정, 실패 접근, 반복 패턴을 brain-craft에 저장 |
+| `/brain-sync` | brain-craft repo를 GBrain index와 동기화 |
+| `/brain-status` | GBrain 설치, MCP, source, 검색 모드 상태 확인 |
+
+로컬 wrapper:
+
+```bash
+scripts/brain-memory.sh status
+scripts/brain-memory.sh search "검색어"
+scripts/brain-memory.sh sync
+```
 
 ### 유틸리티
 
