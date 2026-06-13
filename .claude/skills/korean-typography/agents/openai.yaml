@@ -1,0 +1,4 @@
+interface:
+  display_name: "Korean Typography"
+  short_description: "Recommend Korean webfont systems by product mood and usage role."
+  default_prompt: "Recommend and apply a commercially safe Korean typography system for this Korean-first project."

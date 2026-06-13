@@ -24,6 +24,7 @@ Comprehensive skill for creating beautiful, accessible user interfaces combining
 
 **이 스킬이 직접 처리하지 않는 것:**
 - 스타일/컬러/폰트/UI 방향 의사결정 → `design-harness`
+- 한글 웹폰트 페어링/상업 사용 후보 추천 → `korean-typography`
 - 디자인 토큰 아키텍처 정의 → `design-system`
 - 로고/배너/CIP/아이콘 제작 → `design`, `logo-creator`, `banner-design`
 
@@ -32,6 +33,7 @@ Comprehensive skill for creating beautiful, accessible user interfaces combining
 | 요청 내용 | 위임 대상 | 조건 |
 |-----------|-----------|------|
 | 어떤 스타일/컬러를 사용할지 모를 때 | `design-harness` | 디자인 의사결정이 필요한 경우 |
+| 한국어 UI의 폰트 역할/웹폰트 후보가 정해지지 않았을 때 | `korean-typography` | Tailwind/CSS 적용 전에 한글 타이포그래피 선택 필요 |
 | 토큰 시스템을 정의해야 할 때 | `design-system` | CSS 변수 아키텍처 설계 시 |
 | UX 접근성 검토가 필요할 때 | `design-harness` | 구현 후 UX 리뷰 시 |
 

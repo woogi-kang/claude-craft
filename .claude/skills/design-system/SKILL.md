@@ -25,6 +25,7 @@ Token architecture, component specifications, systematic design, slide generatio
 **이 스킬이 직접 처리하지 않는 것:**
 - UI 컴포넌트 코드 작성 (React/HTML) → `ui-styling`
 - 스타일/컬러/폰트/UI 방향 추천 → `design-harness`
+- 한글 웹폰트 페어링/상업 사용 후보 추천 → `korean-typography`
 - 로고/배너/CIP 제작 → `design`, `logo-creator`, `banner-design`
 
 ## 위임 (Delegates to)
@@ -34,6 +35,7 @@ Token architecture, component specifications, systematic design, slide generatio
 | 정의한 토큰을 코드에 적용 | `ui-styling` | Tailwind/shadcn 컴포넌트에 토큰 적용 시 |
 | 브랜드 컬러/폰트 추출 | `brand` | 브랜드 가이드에서 원시 값 추출 시 |
 | 어떤 컬러/폰트를 사용할지 결정 | `design-harness` | 토큰 정의 전 디자인 의사결정 필요 시 |
+| 한국어 제품용 폰트 역할을 정해야 할 때 | `korean-typography` | `--font-body`, `--font-heading`, `--font-code` 토큰 정의 전 |
 
 ## 이 스킬을 사용하지 않는 경우
 

@@ -4,7 +4,9 @@ Apply when `lang="ko"`, Korean copy is present, or the user is Korean.
 
 ## Typography
 
-- Prefer `Pretendard`, `SUIT`, or an existing Korean brand font for Korean UI.
+- For Korean webfont choice, use `korean-typography` instead of picking a font family ad hoc.
+- Keep font roles stable: body for UI text, heading for titles, code for terminal/code, accent only for short expressive copy.
+- Prefer an existing licensed brand font when the project already has one.
 - Avoid Korean text in `leading-none`; use `leading-tight` to `leading-relaxed`.
 - Use `word-break: keep-all` for headings and important Korean phrases.
 - Use `text-wrap: balance` for headings where supported.

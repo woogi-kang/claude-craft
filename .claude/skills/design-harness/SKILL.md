@@ -67,7 +67,7 @@ The job is not to generate a style from a database. The job is to read the produ
    | `audit` | review UX, a11y, responsive, visual quality | `references/workflows.md`, `references/anti-slop.md` |
    | `polish` | improve an existing surface before ship | `references/anti-slop.md`, `references/motion-interaction.md` |
    | `redesign` | modernize existing UI | `references/workflows.md` |
-   | `typeset` | typography hierarchy/font work | `references/registers.md` |
+   | `typeset` | typography hierarchy/font work | `references/registers.md`, then `korean-typography` when Korean fonts apply |
    | `colorize` | palette/theme work | `references/registers.md`, `references/anti-slop.md` |
    | `animate` | purposeful motion/interactions | `references/motion-interaction.md` |
    | `harden` | states, edge cases, i18n, text overflow | `references/anti-slop.md`, `references/korean-ui.md` when Korean applies |
@@ -75,6 +75,7 @@ The job is not to generate a style from a database. The job is to read the produ
 6. **Use the right downstream skill**
    - Component implementation: `ui-styling`.
    - Token architecture: `design-system`.
+   - Korean webfont pairing, Hangul readability, and role-based font tokens: `korean-typography`.
    - Logos, banners, CIP, social images: `design`, `logo-creator`, `banner-design`.
    - Historical database lookup is archived; do not route new design work to it.
 

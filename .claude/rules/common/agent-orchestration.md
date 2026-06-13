@@ -139,6 +139,7 @@
 
 | 키워드 | 스킬 | 설명 |
 |--------|------|------|
+| 한글 폰트, 한국어 폰트, 한글 웹폰트, 한글 타이포그래피, Korean typography, Korean webfont, 폰트 페어링, 상업용 한글 폰트 | `korean-typography` | 한국어 제품/랜딩/앱/장표용 한글 웹폰트 역할 추천, CSS 변수, Tailwind/토큰 적용 가이드 |
 | UI/UX 디자인, 랜딩, 대시보드, 앱 UI, 포트폴리오, 스타일 추천, 컬러 팔레트, 폰트 페어링, UX 리뷰, 접근성 검토, 디자인 의사결정, AI스럽다, 템플릿 같다, 제네릭하다, 고급스럽게, UI polish, 리디자인, visual QA, anti-slop | `design-harness` | 새 1차 디자인 하네스: brief read, brand/product register, dials, anti-slop preflight, 리디자인/감사/폴리시 |
 | shadcn, Tailwind, 컴포넌트 코드, 다크모드 구현, 반응형 구현 | `ui-styling` | 구현 단계: shadcn/ui + Tailwind CSS 코드 작성 |
 | 디자인 토큰, CSS 변수, 컴포넌트 스펙, 토큰 검증 | `design-system` | 시스템 단계: 3-레이어 토큰 아키텍처 정의 |
