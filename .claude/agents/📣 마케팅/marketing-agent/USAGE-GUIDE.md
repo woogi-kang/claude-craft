@@ -5,7 +5,7 @@
 | Phase | 목적 | Skills | 산출물 | 소요 시간 |
 |-------|------|--------|--------|----------|
 | **Phase 0** | Context Intake | context-intake | 브랜드/제품 컨텍스트 문서 | 5-10분 |
-| **Phase 1** | 전략 수립 | research, persona, positioning, strategy | 3C 분석, 페르소나 3종, STP 전략, 마케팅 로드맵 | 20-30분 |
+| **Phase 1** | 전략 수립 | research, competitive-ads, persona, positioning, strategy | 3C 분석, 경쟁 광고 분석, 페르소나 3종, STP 전략, 마케팅 로드맵 | 25-40분 |
 | **Phase 2** | 캠페인 기획 | campaign, funnel, journey | SMART 목표, AARRR 퍼널, 고객 여정 맵 | 15-20분 |
 | **Phase 3** | 콘텐츠 제작 | copy, landing, email, ads | 헤드라인 10개+, LP 카피, 이메일 시퀀스 5-7통, 광고 카피 | 30-40분 |
 | **Phase 4** | 최적화 & 분석 | ab-testing, analytics, review | A/B 테스트 설계, KPI 대시보드, 최종 리뷰 | 15-20분 |
@@ -20,6 +20,7 @@
 실행 흐름:
 Phase 0 → Context: 제품 특성, 기술 스택, 타겟 개발자 유형 수집
 Phase 1 → Research: Datadog 가격/기능 비교
+         Competitive Ads: 공개 광고 라이브러리 기반 메시지/CTA 패턴 분석
          Persona: "스타트업 백엔드 개발자", "DevOps 엔지니어"
          Positioning: "Datadog의 10% 가격으로 핵심 기능만"
          Strategy: Product Hunt + 개발자 커뮤니티 전략
@@ -90,6 +91,7 @@ Phase 3 → Copy: AIDA/PAS 기반 카피 10개 (프레임워크별 분류 제공
 ```
 /mkt-context        # 컨텍스트 수집
 /mkt-research       # 시장 리서치
+/mkt-competitive-ads # 경쟁사 광고 리서치
 /mkt-persona        # 페르소나 생성
 /mkt-positioning    # 포지셔닝 전략
 /mkt-strategy       # 마케팅 전략
@@ -143,7 +145,12 @@ workspace/work-marketing/
     ├── context/
     │   └── {project}-context.md
     ├── research/
-    │   └── {project}-3c-analysis.md
+    │   ├── {project}-3c-analysis.md
+    │   └── competitive-ads/
+    │       ├── ads.csv
+    │       ├── analysis.md
+    │       ├── pattern-library.md
+    │       └── creative-brief.md
     ├── personas/
     │   └── {project}-personas.md
     ├── strategy/
@@ -184,6 +191,7 @@ workspace/work-marketing/
 
 ### 에이전트가 하는 것 (자동화)
 - 시장/경쟁사 리서치 & 분석
+- 공개 광고 라이브러리 기반 경쟁 광고 패턴 분석
 - 페르소나 생성
 - 전략 문서 작성
 - 모든 종류의 카피라이팅
@@ -195,6 +203,7 @@ workspace/work-marketing/
 
 ### 사용자가 하는 것 (수동)
 - 실제 광고 플랫폼에 광고 등록
+- 캡차/로그인 우회가 필요한 광고 데이터 수집
 - 이메일 툴에 시퀀스 세팅
 - 랜딩페이지 실제 구현/코딩
 - A/B 테스트 실행 & 결과 수집

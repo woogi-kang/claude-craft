@@ -105,6 +105,10 @@ Full page/screen/redesign:
 Motion/interactions:
 → Load: .claude/skills/design-harness/references/motion-interaction.md
 
+Lottie/Bodymovin JSON:
+→ Load: .claude/skills/design-harness/references/motion-interaction.md
+→ Then use: .claude/skills/text-to-lottie/SKILL.md
+
 Korean UI:
 → Load: .claude/skills/design-harness/references/korean-ui.md
 ```
@@ -164,6 +168,7 @@ Agent:
 3. **맥락 우선**: 기술보다 목적을 먼저 파악
 4. **접근성 필수**: 모든 디자인에 접근성 검증
 5. **성능 고려**: 애니메이션은 GPU 가속 속성 중심, reduced motion 필수
+6. **Lottie는 별도 하네스 사용**: Lottie/Bodymovin JSON 산출물은 `text-to-lottie`로 작성하고 공식 Skottie 플레이어에서 검증
 
 ---
 

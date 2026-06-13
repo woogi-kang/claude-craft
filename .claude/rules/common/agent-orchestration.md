@@ -68,6 +68,7 @@
 | 키워드/의도 | 에이전트 | 언제 사용 |
 |-------------|----------|-----------|
 | 마케팅 전략, 광고 카피, 캠페인 | `marketing-agent` | 마케팅 리서치 → 실행 산출물 |
+| 경쟁사 광고, 광고 라이브러리, Meta Ad Library, Facebook Ad Library, LinkedIn Ads Library | `marketing-agent` | 공개 광고 증거 수집 → 메시지/크리에이티브 패턴 분석 |
 | SEO, 키워드, 트래픽, 콘텐츠 최적화 | `seo-orchestrator` | SEO + 콘텐츠 마케팅 통합 |
 
 ### ⚖️ 법무
@@ -141,6 +142,7 @@
 |--------|------|------|
 | 한글 폰트, 한국어 폰트, 한글 웹폰트, 한글 타이포그래피, Korean typography, Korean webfont, 폰트 페어링, 상업용 한글 폰트 | `korean-typography` | 한국어 제품/랜딩/앱/장표용 한글 웹폰트 역할 추천, CSS 변수, Tailwind/토큰 적용 가이드 |
 | UI/UX 디자인, 랜딩, 대시보드, 앱 UI, 포트폴리오, 스타일 추천, 컬러 팔레트, 폰트 페어링, UX 리뷰, 접근성 검토, 디자인 의사결정, AI스럽다, 템플릿 같다, 제네릭하다, 고급스럽게, UI polish, 리디자인, visual QA, anti-slop | `design-harness` | 새 1차 디자인 하네스: brief read, brand/product register, dials, anti-slop preflight, 리디자인/감사/폴리시 |
+| Lottie, 로티, Bodymovin, Skottie, lottie.json, controls.json, animated JSON, SVG path 애니메이션, 로딩 애니메이션 JSON | `text-to-lottie` | Lottie/Bodymovin JSON 생성·수정·검증: 공식 CanvasKit/Skottie 플레이어 하네스, slots/controls, pinned-frame visual QA |
 | shadcn, Tailwind, 컴포넌트 코드, 다크모드 구현, 반응형 구현 | `ui-styling` | 구현 단계: shadcn/ui + Tailwind CSS 코드 작성 |
 | 디자인 토큰, CSS 변수, 컴포넌트 스펙, 토큰 검증 | `design-system` | 시스템 단계: 3-레이어 토큰 아키텍처 정의 |
 | 로고 만들기, logo, brand mark, favicon, 앱 아이콘 | `logo-creator` | 전문 특화: AI 로고 생성 End-to-End |
@@ -150,6 +152,7 @@
 | 슬라이드, 프레젠테이션 | `slides` | Chart.js 기반 HTML 프레젠테이션 |
 | 브랜드 보이스, 톤앤매너, 메시징 | `brand` | 브랜드 일관성 관리 |
 | LinkedIn, Twitter, SNS, 바이럴, 게시물 | `social-content` | 소셜 미디어 콘텐츠 제작 |
+| 경쟁사 광고, 광고 라이브러리, Meta Ad Library, Facebook Ad Library, LinkedIn Ads Library, 경쟁 광고 벤치마크 | `mkt-competitive-ads-research` | 공개 광고 라이브러리 기반 경쟁 광고 리서치 |
 | App Store 스크린샷, 마케팅 에셋 | `app-store-screenshots` | iOS 스크린샷 생성 |
 | Notion 문서 | `notion-core` | Notion 포맷팅 |
 | Obsidian 문서, vault | `obsidian-core` | Obsidian 마크다운 |

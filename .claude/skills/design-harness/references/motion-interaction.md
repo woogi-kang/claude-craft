@@ -70,3 +70,13 @@ Useful CSS curves:
 - Use Motion values, IntersectionObserver, CSS scroll timelines, WAAPI, or GSAP ScrollTrigger when the dependency exists.
 - Check `package.json` before importing Motion, GSAP, Lenis, Three.js, or any animation library.
 - Provide `prefers-reduced-motion` behavior for anything more than simple hover/active feedback.
+
+## Lottie Outputs
+
+Use `text-to-lottie` when the deliverable is a Lottie/Bodymovin JSON file, not just an in-app transition.
+
+- Decide the motion intent here first: feedback, state change, hierarchy, or narrative reveal.
+- Then hand off mechanics to `text-to-lottie`: official `diffusionstudio/lottie` player, `public/lottie.json`, optional `public/controls.json`, Skottie slots, validation, and pinned-frame screenshots.
+- Prefer concrete source geometry such as SVG paths or existing icons. Lottie generation from vague prompts tends to become generic.
+- Keep Lottie assets small and purposeful. For repeated product UI, use Lottie mainly for loaders, empty states, onboarding details, or compact brand moments.
+- Do not verify Lottie output only with `lottie-web` if the target harness is Skottie; Skottie support and blank-canvas failure modes differ.

@@ -70,12 +70,14 @@ The job is not to generate a style from a database. The job is to read the produ
    | `typeset` | typography hierarchy/font work | `references/registers.md`, then `korean-typography` when Korean fonts apply |
    | `colorize` | palette/theme work | `references/registers.md`, `references/anti-slop.md` |
    | `animate` | purposeful motion/interactions | `references/motion-interaction.md` |
+   | `lottie` | Lottie/Bodymovin JSON motion asset creation or repair | `references/motion-interaction.md`, then `text-to-lottie` |
    | `harden` | states, edge cases, i18n, text overflow | `references/anti-slop.md`, `references/korean-ui.md` when Korean applies |
 
 6. **Use the right downstream skill**
    - Component implementation: `ui-styling`.
    - Token architecture: `design-system`.
    - Korean webfont pairing, Hangul readability, and role-based font tokens: `korean-typography`.
+   - Lottie/Bodymovin JSON animation authoring and Skottie preview: `text-to-lottie`.
    - Logos, banners, CIP, social images: `design`, `logo-creator`, `banner-design`.
    - Historical database lookup is archived; do not route new design work to it.
 

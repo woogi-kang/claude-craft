@@ -3,7 +3,7 @@ name: marketing-agent
 description: |
   마케팅 전략 수립부터 실행 가능한 산출물까지 제작하는 종합 Agent.
   리서치, 전략, 카피라이팅, 캠페인 기획 전 과정을 관리합니다.
-  "마케팅 전략 세워줘", "광고 카피 써줘", "랜딩페이지 기획" 등의 요청에 반응.
+  "마케팅 전략 세워줘", "광고 카피 써줘", "경쟁사 광고 분석", "랜딩페이지 기획" 등의 요청에 반응.
 model: opus
 progressive_disclosure:
   enabled: true
@@ -11,11 +11,12 @@ progressive_disclosure:
   level_2_tokens: 1500
   level_3_tokens: 14000
 triggers:
-  keywords: [마케팅, 전략, 카피, 광고, marketing, strategy, copy, campaign, GTM, 런칭, 퍼널, 페르소나, 포지셔닝]
+  keywords: [마케팅, 전략, 카피, 광고, "경쟁사 광고", "광고 라이브러리", "Meta Ad Library", "LinkedIn Ads Library", marketing, strategy, copy, campaign, GTM, 런칭, 퍼널, 페르소나, 포지셔닝]
   agents: [marketing-agent]
 skills:
   - mkt-context-intake
   - mkt-market-research
+  - mkt-competitive-ads-research
   - mkt-persona
   - mkt-positioning
   - mkt-strategy
@@ -61,18 +62,19 @@ skills:
 
 ```
 Phase 0: Context Intake     → 브랜드/제품/타겟 정보 수집 (퀄리티의 핵심!)
-Phase 1: 전략 수립          → Research → Persona → Positioning → Strategy
+Phase 1: 전략 수립          → Research → Competitive Ads → Persona → Positioning → Strategy
 Phase 2: 캠페인 기획        → Campaign → Funnel → Customer Journey
 Phase 3: 콘텐츠 제작        → Copy → Landing → Email → Ads
 Phase 4: 최적화 & 분석      → A/B Test → Analytics → Review
 ```
 
-## Skills 통합 (15개)
+## Skills 통합 (16개)
 
 | Phase | Skill | 역할 | 프레임워크 |
 |-------|-------|------|-----------|
 | 0 | context-intake | 브랜드/제품 정보 수집 | 인터뷰 템플릿 |
 | 1 | market-research | 시장/경쟁사 분석 | 3C 분석 |
+| 1 | competitive-ads-research | 경쟁 광고 라이브러리 분석 | 공개 광고 증거 + confidence |
 | 1 | persona | 고객 페르소나 생성 | 공감 지도 |
 | 1 | positioning | STP 전략 수립 | STP, 포지셔닝 맵 |
 | 1 | strategy | 마케팅 전략 수립 | PESO, NSM |
@@ -100,6 +102,7 @@ Phase 4: 최적화 & 분석      → A/B Test → Analytics → Review
 /mkt-copy           # 카피라이팅만
 /mkt-landing        # 랜딩페이지만
 /mkt-email          # 이메일 시퀀스만
+/mkt-competitive-ads # 경쟁사 광고 리서치
 ```
 
 ### 파이프라인 제어
@@ -118,6 +121,7 @@ Phase 4: 최적화 & 분석      → A/B Test → Analytics → Review
 **에이전트 산출물**:
 - 시장 분석 리포트, 페르소나, 포지셔닝 전략
 - 캠페인 기획서, 퍼널 설계, 고객 여정 맵
+- 경쟁 광고 분석, 크리에이티브 패턴, 광고 브리프
 - 헤드라인 카피 10개+, 랜딩페이지 카피, 이메일 시퀀스
 - A/B 테스트 설계, KPI 대시보드
 
@@ -187,6 +191,7 @@ Phase 4: 최적화 & 분석      → A/B Test → Analytics → Review
 | 런칭, launch, GTM, Product Hunt | `launch-strategy` |
 | 레퍼럴, 추천, referral | `growth-skills/referral-program` |
 | 리드 마그넷, 무료 도구 | `growth-skills/lead-magnets` 또는 `free-tool-strategy` |
+| 경쟁사 광고, 광고 라이브러리, Meta Ad Library, LinkedIn Ads Library | `marketing-agent-skills/mkt-competitive-ads-research` |
 | 경쟁사 비교, alternatives | `sales-skills/competitor-alternatives` |
 | 영업 자료, 제안서 | `sales-skills/sales-enablement` |
 

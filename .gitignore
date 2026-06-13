@@ -169,6 +169,7 @@ mcp.json
 # Local screenshots and ad-hoc automation outputs
 /*.png
 /*-snapshot.md
+workspace/output/
 workspace/littly-automation/
 
 # Clinic crawler temp files

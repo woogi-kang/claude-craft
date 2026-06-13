@@ -8,6 +8,7 @@
 |------|------|-------------|
 | `design` | **오케스트레이터** — 종합 디자인 요청을 적절한 스킬로 분배. 자체 구현은 CIP, 슬라이드, 아이콘, 소셜 포토만 담당 | CIP, 아이콘, 소셜 포토, 브랜드 패키지 |
 | `design-harness` | **1차 디자인 하네스** — UI/UX 설계, 리디자인, audit/polish, brand/product register, anti-slop preflight, visual QA | UI/UX, 랜딩, 대시보드, 앱 UI, 스타일/컬러/폰트, 리디자인, AI스럽다, visual QA |
+| `text-to-lottie` | **Lottie 제작 하네스** — Bodymovin JSON 생성/수정, Skottie 플레이어 검증, slots/controls 작성 | Lottie, 로티, Bodymovin, Skottie, lottie.json, animated JSON |
 | `ui-styling` | **구현 단계** — shadcn/ui 컴포넌트 + Tailwind CSS로 실제 코드 작성 | shadcn, Tailwind, 컴포넌트 코드, 다크모드 구현 |
 | `design-system` | **시스템 단계** — 3-레이어 토큰 아키텍처, CSS 변수, 컴포넌트 스펙 정의 | 토큰, CSS 변수, 컴포넌트 스펙, 토큰 검증 |
 | `logo-creator` | **전문 특화** — AI 로고 생성 End-to-End (디스커버리 → 배치 생성 → 후처리) | 로고, brand mark, favicon, 앱 아이콘 |
@@ -21,6 +22,8 @@
 | "AI스럽지 않게/템플릿 같지 않게 개선해줘" | `design-harness` | `ui-styling` (구현) | `logo-creator`, `banner-design` |
 | "이 페이지 UX 리뷰해줘" | `design-harness` | — | `ui-styling`, `design`, `design-system` |
 | "리디자인/폴리시/고급스럽게 다듬어줘" | `design-harness` | `ui-styling` (구현) | `logo-creator`, `banner-design` |
+| "Lottie/로티 애니메이션 만들어줘" | `text-to-lottie` | `design-harness` (모션 의도/타이밍 결정) | `ui-styling`, `banner-design` |
+| "SVG path를 움직이는 Lottie로 변환해줘" | `text-to-lottie` | `design-harness` (브랜드/모션 방향 필요 시) | `logo-creator`, `slides` |
 | "대시보드 컬러/폰트 추천해줘" | `design-harness` | `design-system` (토큰화 필요 시) | `ui-styling`, `design` |
 | "버튼 컴포넌트 만들어줘" | `ui-styling` | `design-harness` (의사결정 필요 시) | `design` |
 | "shadcn Dialog 추가해줘" | `ui-styling` | — | `design`, `design-system` |
@@ -51,6 +54,9 @@
       │
       ├─ 배너/커버/헤더/광고 배너? ────────→ banner-design
       │
+      ├─ Lottie/Bodymovin/로티/Skottie?
+      │  lottie.json/animated JSON? ───────→ text-to-lottie
+      │
       ├─ CIP/명함/아이콘/소셜포토/슬라이드? → design (자체 처리)
       │
       ├─ 브랜드 패키지 전체? ──────────────→ design (오케스트레이션)
@@ -77,3 +83,4 @@
 5. **`logo-creator`와 `banner-design`은 독립적이다** — 다른 스킬의 영역을 침범하지 않는다.
 6. **`logo-creator`는 로고만 만든다** — CIP, 배너, 아이콘은 절대 처리하지 않는다.
 7. **`banner-design`은 배너만 만든다** — 로고, CIP, UI 컴포넌트는 절대 처리하지 않는다.
+8. **`text-to-lottie`는 Lottie JSON 산출물에만 사용한다** — 모션 의도는 `design-harness`, 영상 타임라인은 Remotion 계열, 일반 UI 전환은 `ui-styling`/프레임워크 코드가 맡는다.
