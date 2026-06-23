@@ -5,6 +5,14 @@ description = "Figma 디자인 → 프로덕션 코드: 추출 + 변환 + 구현
 [[agents]]
 name = "Design-Extractor"
 role = "Figma 디자인 분석 및 토큰 추출"
+success_criteria = [
+  "Design tokens, component structure, layout rules, and breakpoints are recorded in handoff.md",
+  "Unclear or missing source-design details are explicitly marked"
+]
+eval_type = "design"
+stop_condition = "Stop when the implementation-ready design spec is recorded, or when source access/detail is blocked."
+approval_boundary = ["Do not invent missing brand/product constraints; mark them as unknown."]
+state_record = "handoff.md"
 task_template = """
 {goal}에 대한 Figma 디자인을 분석하세요.
 
@@ -24,6 +32,14 @@ task_template = """
 name = "Implementer"
 role = "프로덕션 코드 구현"
 blocked_by = ["Design-Extractor"]
+success_criteria = [
+  "Implementation follows the extracted tokens and component structure",
+  "Desktop, tablet, and mobile layouts are implemented without obvious overflow"
+]
+eval_type = "ui"
+stop_condition = "Stop when the requested surface is implemented and ready for visual testing, or when the design handoff is insufficient."
+approval_boundary = ["Do not redesign unrelated screens or add unrelated libraries without explicit approval."]
+state_record = "handoff.md"
 task_template = """
 {goal}에 대한 프로덕션 코드를 구현하세요.
 
@@ -43,6 +59,15 @@ task_template = """
 name = "Visual-Tester"
 role = "Playwright 기반 시각적 + 기능적 검증"
 blocked_by = ["Implementer"]
+success_criteria = [
+  "Viewport screenshots are captured at 375px, 768px, and 1440px",
+  "Primary interactions are exercised in a real browser",
+  "Weighted score is PASS or failures are recorded with concrete reproduction evidence"
+]
+eval_type = "ui"
+stop_condition = "Stop at PASS, design-quality FAIL, blocked app access, or approval-required action."
+approval_boundary = ["Do not accept visual regressions by lowering the rubric; do not deploy without explicit approval."]
+state_record = "handoff.md"
 task_template = """
 {goal} 구현의 시각적/기능적 품질을 검증하세요.
 

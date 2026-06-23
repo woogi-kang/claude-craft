@@ -20,7 +20,8 @@ model: opus
 사용자의 자연어 요청을 분석하여:
 1. 필요한 도메인 에이전트를 식별 (agent-orchestration.md 라우팅 매트릭스 참조)
 2. 작업 간 의존성(depends_on)을 자동 추론
-3. plan.json 생성 → DAG 실행 → --watch로 자동 스폰
+3. 실행 계약(success_criteria/eval_type/stop_condition/approval_boundary/state_record) 포함
+4. plan.json 생성 → DAG 실행 → --watch로 자동 스폰
 
 ## Command Modes
 
@@ -85,7 +86,15 @@ python3 scripts/orchestrate-worktrees.py .orchestration/{session}/plan.json --cl
   "workers": [
     {
       "name": "Backend",
-      "task": "JWT 인증 API 구현.\n\n## 요구사항\n- POST /auth/login\n- POST /auth/refresh\n- JWT 토큰 발급/검증\n\n## 기술 스택\n- FastAPI + SQLAlchemy\n- Clean Architecture 패턴\n\n## 범위\n- src/auth/ 디렉토리만 수정"
+      "task": "JWT 인증 API 구현.\n\n## 요구사항\n- POST /auth/login\n- POST /auth/refresh\n- JWT 토큰 발급/검증\n\n## 기술 스택\n- FastAPI + SQLAlchemy\n- Clean Architecture 패턴\n\n## 범위\n- src/auth/ 디렉토리만 수정",
+      "success_criteria": [
+        "Login and refresh endpoints satisfy the documented request/response contract",
+        "Focused backend auth tests pass"
+      ],
+      "eval_type": "integration",
+      "stop_condition": "Stop when focused backend auth tests pass, or when a missing dependency blocks verification.",
+      "approval_boundary": ["Do not change production secrets or deploy without explicit approval."],
+      "state_record": ".orchestration/jwt-auth-system/backend/handoff.md"
     },
     {
       "name": "Frontend",
@@ -106,6 +115,8 @@ python3 scripts/orchestrate-worktrees.py .orchestration/{session}/plan.json --cl
 - 기술 스택과 패턴을 명시
 - 파일 수정 범위를 제한 (겹침 방지)
 - 각 워커가 독립적으로 작업 가능하도록 충분한 컨텍스트 제공
+- 성공 기준은 가능하면 `success_criteria` 필드로 분리
+- 반복/장기 작업은 `stop_condition`, `approval_boundary`, `state_record` 포함
 
 ## Step 5: Save Plan & Dry Run
 
@@ -169,6 +180,8 @@ Run `--watch` in another terminal to auto-spawn blocked workers when dependencie
      - Detailed task descriptions (Markdown, with requirements/stack/scope)
      - Non-overlapping file scopes
      - Appropriate depends_on relationships
+     - Observable success_criteria and eval_type
+     - stop_condition, approval_boundary, state_record for loop-like work
    - Generate session name (kebab-case summary of the task)
    - Use Write tool to save plan.json to `.orchestration/{session}/plan.json`
    - Run dry-run: `python3 scripts/orchestrate-worktrees.py .orchestration/{session}/plan.json`
@@ -184,9 +197,11 @@ Run `--watch` in another terminal to auto-spawn blocked workers when dependencie
    - base_ref: defaults to HEAD
    - Always infer depends_on from task relationships
    - Each worker's task should be self-contained with full context
+   - Each worker should carry observable success_criteria whenever verification matters
+   - Loop-like workers must state stop_condition, approval_boundary, and state_record
 
 ---
 
-Version: 1.0.0
-Last Updated: 2026-03-19
+Version: 1.1.0
+Last Updated: 2026-06-23
 Core: Natural language → DAG orchestration

@@ -63,6 +63,7 @@ python3 scripts/orchestrate-worktrees.py plan.json --cleanup
 - 각 워커에 명확한 목표 부여
 - 워커 이름은 영어 권장 (브랜치명 생성에 사용)
 - 작업 간 의존성이 있으면 `depends_on`으로 명시 (선택)
+- 가능한 경우 `success_criteria`, `eval_type`, `stop_condition`, `approval_boundary`, `state_record`를 별도 필드로 명시
 
 ## Step 4: Generate Plan
 
@@ -73,7 +74,15 @@ python3 scripts/orchestrate-worktrees.py plan.json --cleanup
   "session": "feature-name",
   "base_ref": "HEAD",
   "workers": [
-    { "name": "Backend", "task": "구체적인 작업 설명" },
+    {
+      "name": "Backend",
+      "task": "구체적인 작업 설명",
+      "success_criteria": ["API contract implemented and focused tests pass"],
+      "eval_type": "integration",
+      "stop_condition": "Stop after the focused API tests pass or a blocked dependency is identified.",
+      "approval_boundary": ["Do not deploy or change production data without explicit approval."],
+      "state_record": ".orchestration/{session}/backend/handoff.md"
+    },
     { "name": "Frontend", "task": "구체적인 작업 설명", "depends_on": ["Backend"] },
     { "name": "Tests", "task": "E2E 테스트", "depends_on": ["Backend", "Frontend"] }
   ]
@@ -142,6 +151,8 @@ python3 scripts/orchestrate-worktrees.py plan.json --execute
    - Analyze user's task descriptions
    - Decompose into workers with non-overlapping scopes
    - Identify dependencies between workers (add `depends_on` if needed)
+   - Add execution-contract fields when evidence or loop behavior matters:
+     `success_criteria`, `eval_type`, `stop_condition`, `approval_boundary`, `state_record`
    - Create plan.json in `.orchestration/` directory
    - Run dry-run: `python3 scripts/orchestrate-worktrees.py plan.json`
    - Ask user to confirm via AskUserQuestion
@@ -157,6 +168,8 @@ python3 scripts/orchestrate-worktrees.py plan.json --execute
    - base_ref defaults to HEAD
    - depends_on: array of worker names that must complete first
    - Circular dependencies are automatically detected and rejected
+   - success_criteria should be observable and should not be buried only in prose
+   - stop_condition must distinguish success, blocked, approval-required, and no-progress exits for loop work
 
 ---
 

@@ -82,6 +82,7 @@ bash scripts/sync-to-projects.sh ../memoriz   # 특정 프로젝트
 - 요청 범위를 벗어난 기능, 추상화, 리팩토링을 추가하지 않습니다.
 - 변경한 모든 라인은 사용자 요청과 직접 연결되어야 합니다.
 - 구현 전 성공 기준과 검증 방법을 짧게 정하고, 변경 후 확인합니다.
+- 반복/장기/자율 작업은 실행 계약(`success_criteria`, 검증, 중단 조건, 승인 경계, 상태 기록)을 먼저 정합니다.
 - 보안 민감 정보(API 키, 시크릿)는 절대 커밋하지 않습니다.
 
 ## Rules
@@ -93,6 +94,7 @@ bash scripts/sync-to-projects.sh ../memoriz   # 특정 프로젝트
 ├── common/
 │   ├── agent-orchestration.md   # 라우팅 매트릭스 + 워크플로우 체인
 │   ├── memory-engine.md         # GBrain 기반 장기 기억 조회/캡처
+│   ├── execution-contract.md    # 성공 기준/검증/중단 조건/승인 경계
 │   ├── coding-style.md
 │   ├── git-workflow.md
 │   ├── testing.md

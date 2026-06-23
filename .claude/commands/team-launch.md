@@ -17,7 +17,7 @@ model: opus
 ## Core Principle
 
 `.claude/templates/` 디렉토리의 TOML 템플릿을 사용하여
-사전 정의된 팀 구성을 한 명령으로 실행합니다.
+사전 정의된 팀 구성을 한 명령으로 실행합니다. 생성되는 plan에는 가능한 경우 실행 계약(`success_criteria`, `eval_type`, `stop_condition`, `approval_boundary`, `state_record`)을 포함합니다.
 
 ## Usage
 
@@ -95,7 +95,8 @@ TOML → plan.json 변환:
 1. `--goal`이 없거나 비어 있으면 에러 → 사용 예시를 보여주고 STOP
 2. `{goal}`을 사용자의 `--goal` 값으로 치환 (str.replace, format 아님)
 3. `blocked_by` → `depends_on` 변환
-3. 세션 이름 생성: `{template-name}-{goal-slug}`
+4. 템플릿에 `success_criteria`, `eval_type`, `stop_condition`, `approval_boundary`, `state_record`가 있으면 plan worker에 그대로 전달
+5. 세션 이름 생성: `{template-name}-{goal-slug}`
 
 ```json
 {
@@ -103,7 +104,15 @@ TOML → plan.json 변환:
   "workers": [
     { "name": "Backend", "task": "...(goal 주입됨)..." },
     { "name": "Frontend", "task": "...", "depends_on": ["Backend"] },
-    { "name": "Tester", "task": "...", "depends_on": ["Backend", "Frontend"] }
+    {
+      "name": "Tester",
+      "task": "...",
+      "depends_on": ["Backend", "Frontend"],
+      "success_criteria": ["Relevant tests pass"],
+      "eval_type": "integration",
+      "stop_condition": "Stop when the relevant tests pass or a blocker is recorded.",
+      "state_record": ".orchestration/{session}/tester/handoff.md"
+    }
   ]
 }
 ```
@@ -130,7 +139,7 @@ TOML → plan.json 변환:
    - Read `.claude/templates/{name}.toml`
    - If not found, show available templates and suggest closest match
    - Replace `{goal}` in all task_template fields with --goal value
-   - Convert to plan.json format (blocked_by → depends_on)
+   - Convert to plan.json format (blocked_by → depends_on, execution-contract fields preserved)
    - Generate session name: `{name}-{slugified-goal}`
    - Save plan.json to `.orchestration/{session}/plan.json`
    - Run dry-run

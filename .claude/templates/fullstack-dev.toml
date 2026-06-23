@@ -5,6 +5,14 @@ description = "Full-stack: backend API + frontend UI + tester"
 [[agents]]
 name = "Backend"
 role = "API 엔드포인트 구현"
+success_criteria = [
+  "API request/response contract is implemented and recorded in handoff.md",
+  "The backend change is limited to the requested feature scope"
+]
+eval_type = "integration"
+stop_condition = "Stop when the API contract is implemented and recorded, or when a missing dependency blocks verification."
+approval_boundary = ["Do not change production secrets, production data, or deployment settings without explicit approval."]
+state_record = "handoff.md"
 task_template = """
 {goal}에 대한 백엔드 API를 구현하세요.
 
@@ -27,6 +35,14 @@ task_template = """
 name = "Frontend"
 role = "UI 컴포넌트 구현"
 blocked_by = ["Backend"]
+success_criteria = [
+  "Frontend flow uses the backend handoff contract",
+  "The requested user flow renders and handles success/error states"
+]
+eval_type = "ui"
+stop_condition = "Stop when the requested flow is wired and locally verifiable, or when backend/API handoff is insufficient."
+approval_boundary = ["Do not add unrelated routes, redesign unrelated screens, or change production configuration without explicit approval."]
+state_record = "handoff.md"
 task_template = """
 {goal}에 대한 프론트엔드 UI를 구현하세요.
 
@@ -46,6 +62,14 @@ task_template = """
 name = "Tester"
 role = "테스트 작성 및 실행"
 blocked_by = ["Backend", "Frontend"]
+success_criteria = [
+  "Relevant unit, integration, or E2E tests cover the requested behavior",
+  "The selected test command passes or a concrete blocker is recorded"
+]
+eval_type = "test"
+stop_condition = "Stop when relevant tests pass, or when the environment/test fixture blocker is documented with reproduction details."
+approval_boundary = ["Do not weaken assertions, skip failing tests, or broaden test scope without explicit approval."]
+state_record = "handoff.md"
 task_template = """
 {goal}에 대한 테스트를 작성하고 실행하세요.
 
@@ -64,6 +88,15 @@ task_template = """
 name = "QA"
 role = "라이브 QA — Playwright로 기능 검증 및 버그 리포트"
 blocked_by = ["Backend", "Frontend", "Tester"]
+success_criteria = [
+  "Primary user flow completes in a real browser",
+  "Every discovered critical or major issue is recorded with reproduction evidence",
+  "Final handoff states PASS, FAIL, or BLOCKED with evidence"
+]
+eval_type = "ui"
+stop_condition = "Stop at PASS, critical/major FAIL, blocked local app access, or approval-required action."
+approval_boundary = ["Do not deploy, mutate production, or send external messages without explicit approval."]
+state_record = "handoff.md"
 task_template = """
 구현된 기능을 Playwright로 라이브 테스트하세요.
 

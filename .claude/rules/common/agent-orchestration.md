@@ -11,11 +11,12 @@
 ```
 1. 슬래시 커맨드와 매칭되는가? → Skill 도구로 실행
 2. 사람/회사/프로젝트/과거 결정/이전 맥락 요청인가? → GBrain memory 조회 후 계속 진행
-3. 여러 도메인 병렬 협업이 필요한가? → /team 제안 (자동 DAG)
-4. 단일 도메인 에이전트가 필요한 복합 작업인가? → Agent 도구로 위임
-5. 스킬 자동 트리거에 해당하는가? → Skill 도구로 실행
-6. 단순 코드 작업인가? → 직접 처리 (Glob/Grep/Read/Edit)
-7. 탐색이 필요한가? → Explore 서브에이전트
+3. 반복/장기/자율 작업인가? → `execution-contract.md` + `autonomous-loops` 적용
+4. 여러 도메인 병렬 협업이 필요한가? → /team 제안 (자동 DAG)
+5. 단일 도메인 에이전트가 필요한 복합 작업인가? → Agent 도구로 위임
+6. 스킬 자동 트리거에 해당하는가? → Skill 도구로 실행
+7. 단순 코드 작업인가? → 직접 처리 (Glob/Grep/Read/Edit)
+8. 탐색이 필요한가? → Explore 서브에이전트
 ```
 
 ---
@@ -149,6 +150,7 @@
 | 배너, 소셜 배너, 광고 배너, 커버, 헤더 이미지 | `banner-design` | 전문 특화: 22가지 스타일 배너 디자인 |
 | CIP, 명함, 레터헤드, 아이콘 생성, 소셜 포토, 브랜드 패키지 | `design` | 오케스트레이터: CIP/아이콘/소셜포토 자체 처리 + 라우팅 |
 | Future Slide, Tightened Slide, HTML 덱, web presentation | `future-tightened-slide` | Future Slide HTML 덱 생성 + `future-slide-qa` 검증 |
+| loop engineering, 루프 엔지니어링, agent loop, 자율 루프, 반복 루프, Loop Library, 루프 설계, 루프 진단, loop doctor, 자동 반복, 장기 실행 | `autonomous-loops` | 루프 실행 계약, 패턴 선택, Loop Doctor, 외부 Loop Library 선별 적용 |
 | 슬라이드, 프레젠테이션 | `slides` | Chart.js 기반 HTML 프레젠테이션 |
 | 브랜드 보이스, 톤앤매너, 메시징 | `brand` | 브랜드 일관성 관리 |
 | LinkedIn, Twitter, SNS, 바이럴, 게시물 | `social-content` | 소셜 미디어 콘텐츠 제작 |
@@ -184,6 +186,8 @@
 /orchestrate               → 병렬 워크트리 실행 (수동 plan.json)
 대시보드: python3 scripts/orchestrate-dashboard.py --open
 ```
+
+모든 오케스트레이션 plan은 가능한 경우 `success_criteria`, `eval_type`, `stop_condition`, `approval_boundary`, `state_record`를 포함한다. 반복/장기 작업은 `.claude/rules/common/execution-contract.md`와 `autonomous-loops`를 먼저 적용한다.
 
 ### 멀티 LLM 협업
 ```

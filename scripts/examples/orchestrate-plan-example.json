@@ -1,19 +1,51 @@
 {
   "session": "feature-auth",
-  "base_ref": "main",
+  "base_ref": "HEAD",
   "launcher": "claude --dangerously-skip-permissions -p '{task}' --cwd {worktree}",
   "workers": [
     {
       "name": "Backend",
-      "task": "JWT 인증 API를 구현하세요. FastAPI 기반으로 /auth/login, /auth/register, /auth/refresh 엔드포인트를 만들고, access/refresh 토큰 발급 로직을 작성하세요. tests/ 디렉토리에 단위 테스트도 포함하세요."
+      "task": "JWT 인증 API를 구현하세요. FastAPI 기반으로 /auth/login, /auth/register, /auth/refresh 엔드포인트를 만들고, access/refresh 토큰 발급 로직을 작성하세요. tests/ 디렉토리에 단위 테스트도 포함하세요.",
+      "success_criteria": [
+        "Auth endpoints implement the documented request/response contract",
+        "Focused backend auth tests pass"
+      ],
+      "eval_type": "integration",
+      "stop_condition": "Stop when focused backend auth tests pass, or when a missing dependency blocks verification.",
+      "approval_boundary": [
+        "Do not change production secrets or deploy without explicit approval."
+      ],
+      "state_record": "handoff.md"
     },
     {
       "name": "Frontend",
-      "task": "로그인/회원가입 UI를 구현하세요. React 컴포넌트로 LoginPage, RegisterPage를 만들고, JWT 토큰을 localStorage에 저장하는 auth hook을 작성하세요. 폼 유효성 검사를 포함하세요."
+      "task": "로그인/회원가입 UI를 구현하세요. React 컴포넌트로 LoginPage, RegisterPage를 만들고, JWT 토큰을 localStorage에 저장하는 auth hook을 작성하세요. 폼 유효성 검사를 포함하세요.",
+      "depends_on": ["Backend"],
+      "success_criteria": [
+        "Signup and login UI cover success, loading, and error states",
+        "Frontend uses the backend auth contract recorded by Backend"
+      ],
+      "eval_type": "ui",
+      "stop_condition": "Stop when the auth UI is locally verifiable, or when the backend contract is insufficient.",
+      "approval_boundary": [
+        "Do not redesign unrelated screens without explicit approval."
+      ],
+      "state_record": "handoff.md"
     },
     {
       "name": "Tests",
-      "task": "E2E 테스트를 작성하세요. Playwright를 사용해서 회원가입 → 로그인 → 토큰 갱신 → 로그아웃 시나리오를 테스트하세요. CI에서 실행 가능한 설정 파일도 포함하세요."
+      "task": "E2E 테스트를 작성하세요. Playwright를 사용해서 회원가입 → 로그인 → 토큰 갱신 → 로그아웃 시나리오를 테스트하세요. CI에서 실행 가능한 설정 파일도 포함하세요.",
+      "depends_on": ["Backend", "Frontend"],
+      "success_criteria": [
+        "Signup, login, refresh, and logout E2E scenario passes",
+        "Any environment blocker is documented with reproduction details"
+      ],
+      "eval_type": "ui",
+      "stop_condition": "Stop when the E2E scenario passes, or when local app/test environment access is blocked.",
+      "approval_boundary": [
+        "Do not weaken assertions or skip failing coverage without explicit approval."
+      ],
+      "state_record": "handoff.md"
     }
   ]
 }

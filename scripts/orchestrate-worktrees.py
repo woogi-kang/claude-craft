@@ -282,6 +282,9 @@ class WorkerInfo:
         self.depends_on: list[str] = worker.get("depends_on", [])
         self.success_criteria: list[str] = worker.get("success_criteria", [])
         self.eval_type: str = worker.get("eval_type", "")
+        self.stop_condition: str = worker.get("stop_condition", "")
+        self.approval_boundary = worker.get("approval_boundary", [])
+        self.state_record: str = worker.get("state_record", "")
 
     def launcher_cmd(self) -> str:
         """Expand template variables in the launcher string with shell escaping."""
@@ -316,7 +319,7 @@ TASK_TEMPLATE = textwrap.dedent("""\
     - Worker: {worker_name}
     - Branch: {branch}
     - Worktree: {worktree_path}
-    {dependency_section}{success_criteria_section}
+    {dependency_section}{execution_contract_section}
     ## Objective
     {task_description}
 
@@ -347,6 +350,45 @@ HANDOFF_TEMPLATE = textwrap.dedent("""\
 """)
 
 
+def normalize_list(value) -> list[str]:
+    """Normalize optional string/list plan values into display lines."""
+    if not value:
+        return []
+    if isinstance(value, list):
+        return [str(item) for item in value if str(item).strip()]
+    return [str(value)]
+
+
+def build_execution_contract_section(worker: WorkerInfo) -> str:
+    """Render optional execution-contract fields into the task prompt."""
+    sections: list[str] = []
+
+    criteria = normalize_list(worker.success_criteria)
+    if criteria:
+        criteria_lines = "\n".join(f"- [ ] {c}" for c in criteria)
+        sections.append(f"### Success Criteria\n{criteria_lines}")
+
+    if worker.eval_type:
+        sections.append(f"### Eval Type\n{worker.eval_type}")
+
+    if worker.stop_condition:
+        sections.append(f"### Stop Condition\n{worker.stop_condition}")
+
+    approval_lines = normalize_list(worker.approval_boundary)
+    if approval_lines:
+        sections.append(
+            "### Approval Boundary\n" + "\n".join(f"- {item}" for item in approval_lines)
+        )
+
+    if worker.state_record:
+        sections.append(f"### State Record\n{worker.state_record}")
+
+    if not sections:
+        return ""
+
+    return "\n## Execution Contract\n" + "\n\n".join(sections) + "\n"
+
+
 def write_coordination_files(worker: WorkerInfo) -> None:
     worker.coord_dir.mkdir(parents=True, exist_ok=True)
 
@@ -357,12 +399,7 @@ def write_coordination_files(worker: WorkerInfo) -> None:
     else:
         dependency_section = ""
 
-    # Build success criteria section
-    if worker.success_criteria:
-        criteria_lines = "\n".join(f"    - [ ] {c}" for c in worker.success_criteria)
-        success_criteria_section = f"\n    ## Success Criteria\n{criteria_lines}\n"
-    else:
-        success_criteria_section = ""
+    execution_contract_section = build_execution_contract_section(worker)
 
     worker.task_file.write_text(
         TASK_TEMPLATE.format(
@@ -373,7 +410,7 @@ def write_coordination_files(worker: WorkerInfo) -> None:
             task_description=worker.task,
             worker_slug=worker.slug,
             dependency_section=dependency_section,
-            success_criteria_section=success_criteria_section,
+            execution_contract_section=execution_contract_section,
         ),
         encoding="utf-8",
     )
@@ -538,15 +575,18 @@ def mode_dry_run(plan: dict, workers: list[WorkerInfo]) -> None:
     print(f"  workers      : {len(workers)}")
     if is_dag:
         print(f"  dependencies : yes (use --watch for auto-spawn)")
+    if any(build_execution_contract_section(w) for w in workers):
+        print("  contracts    : yes")
     print(f"  launcher     : {plan.get('launcher', '(default)')}")
     print()
 
     if is_dag:
-        print(f"  {'Worker':<16} {'Slug':<16} {'Depends On':<24} Worktree")
-        print(f"  {'─'*15:<16} {'─'*15:<16} {'─'*23:<24} {'─'*40}")
+        print(f"  {'Worker':<16} {'Slug':<16} {'Depends On':<24} {'Contract':<9} Worktree")
+        print(f"  {'─'*15:<16} {'─'*15:<16} {'─'*23:<24} {'─'*8:<9} {'─'*40}")
         for w in workers:
             deps = ", ".join(w.depends_on) if w.depends_on else "—"
-            print(f"  {w.name:<16} {w.slug:<16} {deps:<24} {w.worktree_path}")
+            contract = "yes" if build_execution_contract_section(w) else "—"
+            print(f"  {w.name:<16} {w.slug:<16} {deps:<24} {contract:<9} {w.worktree_path}")
         print()
 
         # DAG visualization
@@ -557,10 +597,11 @@ def mode_dry_run(plan: dict, workers: list[WorkerInfo]) -> None:
             deps_str = f" (after {', '.join(w.depends_on)})" if w.depends_on else " (immediate)"
             print(f"    {i+1}. {arrow}{w.name}{deps_str}")
     else:
-        print(f"  {'Worker':<16} {'Slug':<16} {'Branch':<32} Worktree")
-        print(f"  {'─'*15:<16} {'─'*15:<16} {'─'*31:<32} {'─'*40}")
+        print(f"  {'Worker':<16} {'Slug':<16} {'Branch':<32} {'Contract':<9} Worktree")
+        print(f"  {'─'*15:<16} {'─'*15:<16} {'─'*31:<32} {'─'*8:<9} {'─'*40}")
         for w in workers:
-            print(f"  {w.name:<16} {w.slug:<16} {w.branch:<32} {w.worktree_path}")
+            contract = "yes" if build_execution_contract_section(w) else "—"
+            print(f"  {w.name:<16} {w.slug:<16} {w.branch:<32} {contract:<9} {w.worktree_path}")
 
     print()
     print(f"  Coordination dir: .orchestration/{session}/")

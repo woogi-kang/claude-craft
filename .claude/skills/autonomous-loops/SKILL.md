@@ -1,16 +1,21 @@
 ---
 name: autonomous-loops
-description: "자율 에이전트 루프 패턴 레퍼런스 — 6가지 루프 패턴과 의사결정 매트릭스 제공"
+description: "자율 에이전트 루프 패턴 레퍼런스 — 8가지 루프 패턴, 실행 계약, Loop Doctor, 의사결정 매트릭스 제공"
 metadata:
   category: "standalone"
-  version: "1.0.0"
-  tags: "loops, automation, orchestration, patterns, architecture"
+  version: "1.1.0"
+  tags: "loops, automation, orchestration, patterns, architecture, execution-contract"
   author: "woogi"
 ---
 
 # Autonomous Loop Patterns
 
-자율 에이전트 루프 설계를 위한 6가지 패턴과 의사결정 가이드.
+자율 에이전트 루프 설계를 위한 8가지 패턴, 실행 계약, Loop Doctor, 의사결정 가이드.
+
+외부 Loop Library는 레퍼런스로만 사용한다. published loop를 찾거나 비교해야 하면 라이브 카탈로그를 확인하고, 실행은 claude-craft의 권한/검증/중단 규칙에 맞게 변환한다. 통째로 vendoring하지 않는다.
+
+추가 레퍼런스:
+- `references/loop-library-adaptations.md` — Loop Library에서 우리 하네스에 맞게 선별한 로컬 적용 패턴
 
 ## 패턴 개요
 
@@ -24,6 +29,22 @@ metadata:
 | 6 | RFC-DAG | 높음 | 높음 | 대규모 기능, 의존성 복잡 |
 | 7 | Sprint-Reset Loop | 중간 | 없음 | 장기 순차 작업, 컨텍스트 초과 |
 | 8 | GAN-Loop | 높음 | 중간 | UI/풀스택 품질 정제, 독립 검증 |
+
+## 루프 실행 계약
+
+루프는 "계속 해줘"가 아니라 반복 가능한 피드백 시스템이다. 루프를 만들거나 실행하기 전 아래 항목을 짧게 고정한다.
+
+| 항목 | 질문 | 예시 |
+|------|------|------|
+| Outcome | 무엇이 끝나야 하는가? | PR-ready patch, docs drift zero, QA PASS |
+| Scope | 무엇을 볼 수 있고 바꿀 수 있는가? | repo docs only, changed files only, local env only |
+| Success criteria | 어떤 증거가 PASS인가? | 테스트명, benchmark, screenshot, reviewer verdict |
+| Verification | 매 반복 후 같은 검증을 어떻게 재실행하는가? | `/verify`, Playwright flow, coverage report |
+| Stop condition | 언제 성공/정체/차단/소진으로 멈추는가? | no remaining failures, 2 no-gain passes, blocked handoff |
+| Approval boundary | 무엇은 사용자 승인 전까지 하지 않는가? | production, destructive git/data ops, external messages |
+| State record | 다음 반복/인계가 무엇을 읽는가? | `handoff.md`, `.orchestration/...`, `LOOP-STATE.md` |
+
+계약이 불명확하면 루프를 시작하지 말고 one-shot 작업으로 축소하거나 먼저 질문한다. 특히 검증 결과가 다음 행동을 바꾸지 않는 작업은 루프가 아니다.
 
 ## 패턴 상세
 
@@ -133,6 +154,22 @@ Generator 구현 → Evaluator 라이브 테스트 → 피드백 → 재구현 (
 - 도메인별 평가 루브릭 적용 (`.claude/evals/presets/`)
 - fullstack-dev.toml, figma-to-prod.toml에 QA 워커로 통합
 
+## Loop Doctor
+
+기존 루프, 자동화, `/team` plan, 장기 작업 지시를 리뷰할 때는 아래 결함만 고친다. 의도나 범위를 임의로 넓히지 않는다.
+
+| 결함 | 수리 기준 |
+|------|----------|
+| 약한 검증 | "확인한다", "좋게 만든다"를 재현 가능한 테스트/루브릭/리뷰 판정으로 바꾼다 |
+| 무한 반복 | 성공, clean no-op, blocked, approval-required, exhausted, stagnated 상태를 명시한다 |
+| 오래된 상태 | 각 반복 전 fresh state를 다시 읽고, 결과는 state record에 남긴다 |
+| 자기 승인 | 고영향 산출물은 maker와 verifier를 분리한다 |
+| 권한 과잉 | production, destructive, finance/privacy, external-send는 승인 경계로 분리한다 |
+| 범위 누수 | unrelated refactor, broad cleanup, stale branches를 루프 안으로 끌어오지 않는다 |
+| 증거 부재 | 완료 보고에는 변경, 검증, 남은 리스크, stop reason을 포함한다 |
+
+Loop Doctor 결과는 가능하면 짧은 수리 프롬프트나 plan 필드 변경으로 끝낸다. 스타일만 바꾸는 rewrite는 하지 않는다.
+
 ## 안전 장치
 
 모든 루프 패턴에 공통으로 적용:
@@ -140,3 +177,5 @@ Generator 구현 → Evaluator 라이브 테스트 → 피드백 → 재구현 (
 - **비용 한도**: 예상 비용 초과 시 중단
 - **교착 감지**: 3회 연속 동일 에러 시 에스컬레이션
 - **체크포인트**: `/checkpoint` 으로 중간 상태 저장
+- **증거 테이블**: 성공 기준별 PASS/FAIL/blocked와 증거 경로 기록
+- **승인 게이트**: production, 삭제, 외부 전송, 민감 데이터 작업 전 중단
