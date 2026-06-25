@@ -86,9 +86,11 @@ pass@k = 1 - C(n-c, k) / C(n, k)
 1. **Eval 정의**: 기능 요구사항에서 평가 기준 도출
 2. **케이스 작성**: 다양한 입력 시나리오 (정상, 에지, 에러)
 3. **구현**: 코드 작성
-4. **실행**: Eval 실행하여 pass@k 측정
-5. **반복**: pass@k 목표 미달 시 구현 개선
-6. **회귀 방지**: CI에 Eval 통합
+4. **근거 패킷 구성**: 실제 확인한 파일, 명령, 브라우저 플로우, 로그만 평가 근거로 분리
+5. **실행**: Eval 실행하여 pass@k 측정
+6. **채점**: base score와 deductions/bonus/hard failures를 분리해 기록
+7. **반복**: pass@k 목표 미달 시 구현 개선
+8. **회귀 방지**: CI에 Eval 통합
 
 ## 사용 예시
 
@@ -110,11 +112,22 @@ echo '{"timestamp":"...","pass":true,"notes":"..."}' >> .claude/evals/auth-login
 
 | 프리셋 | 파일 | 용도 |
 |--------|------|------|
+| Evaluation Result Schema | `.claude/evals/presets/evaluation-result-schema.md` | evidence packet, excluded signals, adjustments, hard failures 표준 결과 형식 |
 | UI/Design | `.claude/evals/presets/ui-design.md` | 4축 평가 (Design Quality, Originality, Craft, Functionality) |
 | API Backend | `.claude/evals/presets/api-backend.md` | 4축 평가 (Correctness, Robustness, Security, Performance) |
 | Content | `.claude/evals/presets/content-quality.md` | 4축 평가 (Clarity, Completeness, Accuracy, Engagement) |
 
 프리셋은 `live-qa-agent`의 `eval_type` 파라미터와 연동됩니다.
+
+## 평가 결과 계약
+
+Model-based grader, human grader, 리뷰 합의 결과처럼 주관 판단이 섞이는 Eval은 `.claude/evals/presets/evaluation-result-schema.md`를 따른다.
+
+- 점수 전에 Evidence Packet을 만든다.
+- 점수에 쓰면 안 되는 정보는 `excluded_signals`에 적고 평가에서 제외한다.
+- 축별 점수는 `scores`에 기록하고, 감점/가점은 `adjustments`에 따로 둔다.
+- 보안 취약점, 핵심 플로우 불능, 치명적 사실 오류는 `hard_failures`로 둔다.
+- 개인정보와 시크릿은 원문을 남기지 않고 `redacted` 또는 범주명으로만 기록한다.
 
 ## 기존 도구와 연동
 

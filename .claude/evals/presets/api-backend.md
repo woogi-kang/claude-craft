@@ -3,6 +3,22 @@
 API 백엔드 구현의 품질을 평가하는 루브릭.
 `eval-harness` 스킬 및 `live-qa-agent`에서 `eval_type: api` 시 사용.
 
+## Evidence Packet
+
+채점 전에 `.claude/evals/presets/evaluation-result-schema.md`의 `evidence_packet`을 먼저 구성한다.
+
+**포함할 근거**:
+- 실제 요청/응답 결과, 상태 코드, 응답 body/header
+- DB 상태 변화 확인 결과
+- 테스트, 린트, 타입 체크, 보안 스캔 출력
+- 서버 로그, 에러 로그, 재현 명령
+
+**점수에서 제외할 신호**:
+- 작성자, 회사, 학교, 레포 star 수 같은 구현 품질과 무관한 평판 정보
+- 원문 시크릿, API 키, 토큰, 직접 연락처
+- 실행하지 않은 엔드포인트에 대한 추측
+- 요청 범위를 벗어난 제품/디자인 취향
+
 ## 평가 축 (가중치)
 
 ### Correctness (40%)
@@ -116,6 +132,8 @@ psql -c "SELECT * FROM users WHERE email='test@test.com'"
 ```
 
 ## 출력 형식
+
+자동 집계나 model-based grader 결과는 `.claude/evals/presets/evaluation-result-schema.md`의 JSON 구조를 함께 남긴다. 사람에게 보여주는 요약은 아래 Markdown 형식을 사용할 수 있다.
 
 ```markdown
 ## API Backend Evaluation

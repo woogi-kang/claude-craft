@@ -3,6 +3,22 @@
 Anthropic GAN-Loop 패턴 기반의 UI/디자인 평가 루브릭.
 `eval-harness` 스킬 및 `live-qa-agent`에서 `eval_type: ui` 시 사용.
 
+## Evidence Packet
+
+채점 전에 `.claude/evals/presets/evaluation-result-schema.md`의 `evidence_packet`을 먼저 구성한다.
+
+**포함할 근거**:
+- 실제 화면 스크린샷, 브라우저 플로우, 접근성 트리
+- 디자인 brief, 대상 사용자, 브랜드/제품 제약
+- 컴포넌트 상태, 반응형 viewport, 콘솔/네트워크 에러
+- 확인 가능한 레이아웃 깨짐, 대비, overflow, 상호작용 문제
+
+**점수에서 제외할 신호**:
+- 개인 취향, 유행 선호, 근거 없는 "고급스러움" 판단
+- 브랜드/회사 인지도
+- 스크린샷에 없는 화면이나 상태에 대한 추측
+- 기능 요구와 무관한 장식 선호
+
 ## 평가 축 (가중치)
 
 ### Design Quality (35%)
@@ -94,6 +110,8 @@ FAIL: Functionality < 3 (사용 불가)
 ```
 
 ## 출력 형식
+
+자동 집계나 model-based grader 결과는 `.claude/evals/presets/evaluation-result-schema.md`의 JSON 구조를 함께 남긴다. 사람에게 보여주는 요약은 아래 Markdown 형식을 사용할 수 있다.
 
 ```markdown
 ## UI/Design Evaluation

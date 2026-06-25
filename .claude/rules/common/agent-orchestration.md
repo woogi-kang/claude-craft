@@ -14,9 +14,10 @@
 3. 반복/장기/자율 작업인가? → `execution-contract.md` + `autonomous-loops` 적용
 4. 여러 도메인 병렬 협업이 필요한가? → /team 제안 (자동 DAG)
 5. 단일 도메인 에이전트가 필요한 복합 작업인가? → Agent 도구로 위임
-6. 스킬 자동 트리거에 해당하는가? → Skill 도구로 실행
-7. 단순 코드 작업인가? → 직접 처리 (Glob/Grep/Read/Edit)
-8. 탐색이 필요한가? → Explore 서브에이전트
+6. 한국어 기술/제출 문서 작성 또는 수정인가? → `korean-writing-style.md` 적용 후 Skill 도구 실행
+7. 스킬 자동 트리거에 해당하는가? → Skill 도구로 실행
+8. 단순 코드 작업인가? → 직접 처리 (Glob/Grep/Read/Edit)
+9. 탐색이 필요한가? → Explore 서브에이전트
 ```
 
 ---
@@ -142,6 +143,7 @@
 | 키워드 | 스킬 | 설명 |
 |--------|------|------|
 | 한글 폰트, 한국어 폰트, 한글 웹폰트, 한글 타이포그래피, Korean typography, Korean webfont, 폰트 페어링, 상업용 한글 폰트 | `korean-typography` | 한국어 제품/랜딩/앱/장표용 한글 웹폰트 역할 추천, CSS 변수, Tailwind/토큰 적용 가이드 |
+| 한국어 문서, 제출문, 지원서, 과제 답안, 표현 교정, 번역투, 직역, 현업 용어, 용어 다듬기 | `copy-editing` | `korean-writing-style.md`를 적용해 한국어 기술/제출 문서의 번역투, 직역 용어, 현업 용어 적합성을 점검 |
 | UI/UX 디자인, 랜딩, 대시보드, 앱 UI, 포트폴리오, 스타일 추천, 컬러 팔레트, 폰트 페어링, UX 리뷰, 접근성 검토, 디자인 의사결정, AI스럽다, 템플릿 같다, 제네릭하다, 고급스럽게, UI polish, 리디자인, visual QA, anti-slop | `design-harness` | 새 1차 디자인 하네스: brief read, brand/product register, dials, anti-slop preflight, 리디자인/감사/폴리시 |
 | Lottie, 로티, Bodymovin, Skottie, lottie.json, controls.json, animated JSON, SVG path 애니메이션, 로딩 애니메이션 JSON | `text-to-lottie` | Lottie/Bodymovin JSON 생성·수정·검증: 공식 CanvasKit/Skottie 플레이어 하네스, slots/controls, pinned-frame visual QA |
 | shadcn, Tailwind, 컴포넌트 코드, 다크모드 구현, 반응형 구현 | `ui-styling` | 구현 단계: shadcn/ui + Tailwind CSS 코드 작성 |

@@ -83,6 +83,7 @@ bash scripts/sync-to-projects.sh ../memoriz   # 특정 프로젝트
 - 변경한 모든 라인은 사용자 요청과 직접 연결되어야 합니다.
 - 구현 전 성공 기준과 검증 방법을 짧게 정하고, 변경 후 확인합니다.
 - 반복/장기/자율 작업은 실행 계약(`success_criteria`, 검증, 중단 조건, 승인 경계, 상태 기록)을 먼저 정합니다.
+- 한국어 기술/제출 문서는 영어 직역투와 현업 비사용어를 별도 패스로 점검하고, 코드 식별자는 보존하되 설명문은 자연스러운 실무 용어로 풀어씁니다.
 - 보안 민감 정보(API 키, 시크릿)는 절대 커밋하지 않습니다.
 
 ## Rules
@@ -95,6 +96,7 @@ bash scripts/sync-to-projects.sh ../memoriz   # 특정 프로젝트
 │   ├── agent-orchestration.md   # 라우팅 매트릭스 + 워크플로우 체인
 │   ├── memory-engine.md         # GBrain 기반 장기 기억 조회/캡처
 │   ├── execution-contract.md    # 성공 기준/검증/중단 조건/승인 경계
+│   ├── korean-writing-style.md  # 한국어 기술문서 번역투/용어 점검
 │   ├── coding-style.md
 │   ├── git-workflow.md
 │   ├── testing.md

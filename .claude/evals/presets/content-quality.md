@@ -3,6 +3,22 @@
 콘텐츠(블로그, 기획서, 마케팅 카피 등)의 품질을 평가하는 루브릭.
 `eval-harness` 스킬 및 `review-orchestrator`에서 콘텐츠 리뷰 시 사용.
 
+## Evidence Packet
+
+채점 전에 `.claude/evals/presets/evaluation-result-schema.md`의 `evidence_packet`을 먼저 구성한다.
+
+**포함할 근거**:
+- 원문 섹션, 제목, 문장, 주장
+- 사용자가 제공한 목적, 대상 독자, 제출 맥락
+- 확인한 출처, 데이터, 인용, 코드 식별자
+- 실제 누락, 모순, 사실 오류가 발생한 위치
+
+**점수에서 제외할 신호**:
+- 작성자 이름, 성별, 학교, 회사 인지도, 개인 배경
+- 출처 없이 외부에서 추정한 의도
+- 단순 취향이나 선호 표현
+- 원문에 없는 성과, 수치, 평판
+
 ## 평가 축 (가중치)
 
 ### Clarity (30%)
@@ -64,6 +80,8 @@ FAIL: Clarity < 4 (이해 불가)
 ```
 
 ## 출력 형식
+
+자동 집계나 model-based grader 결과는 `.claude/evals/presets/evaluation-result-schema.md`의 JSON 구조를 함께 남긴다. 사람에게 보여주는 요약은 아래 Markdown 형식을 사용할 수 있다.
 
 ```markdown
 ## Content Quality Evaluation
