@@ -21,7 +21,9 @@ model: opus
 1. 필요한 도메인 에이전트를 식별 (agent-orchestration.md 라우팅 매트릭스 참조)
 2. 작업 간 의존성(depends_on)을 자동 추론
 3. 실행 계약(success_criteria/eval_type/stop_condition/approval_boundary/state_record) 포함
-4. plan.json 생성 → DAG 실행 → --watch로 자동 스폰
+4. 실행 substrate 선택: worktree DAG, one-shot agents, deterministic workflow
+5. 필요한 경우 context pack과 critic/refute worker 추가
+6. plan.json 생성 → DAG 실행 → --watch로 자동 스폰
 
 ## Command Modes
 
@@ -75,6 +77,25 @@ python3 scripts/orchestrate-worktrees.py .orchestration/{session}/plan.json --cl
 
 사용자가 명시적으로 의존성을 언급하면 그것을 우선 사용.
 
+### 3c. Substrate 선택
+
+요청을 분해하기 전에 실행 방식을 짧게 판단:
+
+| Substrate | 사용 조건 | 실행 |
+|-----------|-----------|------|
+| Worktree DAG | 여러 파일/모듈, 병렬 구현, 충돌 격리 필요 | `/team` plan.json + `scripts/orchestrate-worktrees.py` |
+| One-shot agents | 조사/리뷰/문서처럼 repo mutation이 작거나 없음 | Task/Agent 병렬 호출 후 통합 |
+| Deterministic workflow | 반복 가능한 검증/변환/리포트 생성 | 스크립트/명령 중심, 필요 시 worker 1개 |
+
+코드를 수정하는 병렬 작업은 기본적으로 Worktree DAG를 사용한다. 단일 파일 수정이나 단순 리뷰는 과도한 DAG를 만들지 않는다.
+
+### 3d. Context pack과 Critic
+
+- repo slice가 넓거나 외부/별도 worker에게 전달될 때는 먼저 `context-pack-gate`를 실행하고 worker에 `context_pack` 필드를 넣는다.
+- 보안, 결제, auth, 데이터 마이그레이션, 출시, 장기 작업은 `Critic` 또는 `Verifier` worker를 추가한다.
+- Critic task는 구현이 아니라 refute 중심으로 작성한다: "무엇이 틀렸을 수 있는가", "성공 기준을 충족했다는 증거가 충분한가", "숨은 승인 경계가 있는가".
+- worker task에는 완성된 함수 본문을 길게 붙여넣지 말고, 목표/범위/계약/참조 파일/검증 방법을 명확히 준다.
+
 ## Step 4: Generate Plan
 
 세션 이름을 자동 생성 (kebab-case, 작업 내용 요약):
@@ -94,7 +115,8 @@ python3 scripts/orchestrate-worktrees.py .orchestration/{session}/plan.json --cl
       "eval_type": "integration",
       "stop_condition": "Stop when focused backend auth tests pass, or when a missing dependency blocks verification.",
       "approval_boundary": ["Do not change production secrets or deploy without explicit approval."],
-      "state_record": ".orchestration/jwt-auth-system/backend/handoff.md"
+      "state_record": ".orchestration/jwt-auth-system/backend/handoff.md",
+      "context_pack": ".orchestration/context-packs/20260629-auth-worker/report.md"
     },
     {
       "name": "Frontend",
@@ -117,6 +139,8 @@ python3 scripts/orchestrate-worktrees.py .orchestration/{session}/plan.json --cl
 - 각 워커가 독립적으로 작업 가능하도록 충분한 컨텍스트 제공
 - 성공 기준은 가능하면 `success_criteria` 필드로 분리
 - 반복/장기 작업은 `stop_condition`, `approval_boundary`, `state_record` 포함
+- repo context가 넓으면 ad hoc paste 대신 `context-pack-gate` 산출물 경로를 제공
+- 고위험 작업에는 검증/반박 전용 Critic 또는 Verifier 워커 추가
 
 ## Step 5: Save Plan & Dry Run
 
@@ -175,11 +199,14 @@ Run `--watch` in another terminal to auto-spawn blocked workers when dependencie
 3. IF team mode:
    - Read `.claude/rules/common/agent-orchestration.md` for agent routing matrix
    - Analyze user's task description
+   - Choose substrate: worktree DAG, one-shot agents, or deterministic workflow
    - Identify domain agents and their expertise
    - Decompose into workers with:
      - Detailed task descriptions (Markdown, with requirements/stack/scope)
      - Non-overlapping file scopes
      - Appropriate depends_on relationships
+     - context_pack path when repository context was prepacked
+     - Critic/Verifier worker for high-risk implementation
      - Observable success_criteria and eval_type
      - stop_condition, approval_boundary, state_record for loop-like work
    - Generate session name (kebab-case summary of the task)
@@ -199,6 +226,8 @@ Run `--watch` in another terminal to auto-spawn blocked workers when dependencie
    - Each worker's task should be self-contained with full context
    - Each worker should carry observable success_criteria whenever verification matters
    - Loop-like workers must state stop_condition, approval_boundary, and state_record
+   - Broad repo context should be passed through `context-pack-gate`, not pasted ad hoc
+   - Prefer a refute-oriented Critic worker for high-risk changes
 
 ---
 

@@ -68,6 +68,26 @@ Based on the user interview, fill in these components:
 - **compatibility**: Required tools, dependencies (optional, rarely needed)
 - **the rest of the skill :)**
 
+Before writing a high-impact skill, do a compact four-perspective preflight:
+
+| Perspective | Question |
+|---|---|
+| Planner | What workflow should become repeatable? |
+| User | What will a real user say when they need this? |
+| Expert | What domain constraints or tools make the workflow correct? |
+| Reviewer | What failure would make this skill harmful, noisy, or over-triggered? |
+
+Also classify each major step. This keeps the skill concrete and helps decide what belongs in `SKILL.md` versus bundled resources.
+
+| Step type | Use when |
+|---|---|
+| `prompt` | Judgment, planning, synthesis, or review is the work |
+| `script` | Deterministic transformation, validation, packaging, or repeated file work |
+| `api_mcp` | A tool/API/MCP provides source-of-truth data or side effects |
+| `rag` | The skill needs retrieval from docs, references, or examples |
+| `review` | A critic, verifier, or human approval gate is required |
+| `generate` | The skill creates a reusable artifact, file, image, or code surface |
+
 ### Skill Writing Guide
 
 #### Anatomy of a Skill

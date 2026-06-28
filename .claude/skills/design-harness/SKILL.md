@@ -32,7 +32,7 @@ The job is not to generate a style from a database. The job is to read the produ
 
 3. **Choose reference stance when useful**
 
-   Read `references/design-reference-index.md` when the user asks for "proven", "best-in-class", big-company, or broad reference options. Read `references/design-references.md` when the user names a company/product/site as inspiration, has already chosen a reference, wants a more mature visual direction, or needs a full-screen/page/app design where reference choice will materially change the output.
+   Read `references/design-reference-index.md` when the user asks for "proven", "best-in-class", big-company, or broad reference options. Read `references/design-references.md` when the user names a company/product/site as inspiration, has already chosen a reference, wants a more mature visual direction, or needs a full-screen/page/app design where reference choice will materially change the output. Read `references/reference-style-extraction.md` when the reference is a concrete URL/screenshot and the work would benefit from measured CSS, computed styles, or a portable `design.md`.
 
    Output:
 
@@ -63,6 +63,7 @@ The job is not to generate a style from a database. The job is to read the produ
    |---|---|---|
    | `shape` | UX/UI plan before code | `references/workflows.md` |
    | `reference` | named brand/product/site inspiration, best-in-class reference selection, or DESIGN.md translation | `references/design-reference-index.md`, `references/design-references.md`, `references/anti-slop.md` |
+   | `measure` | concrete reference URL/screenshot should become measured tokens or `design.md` | `references/reference-style-extraction.md`, then `web-access-ladder` if fetching is hard |
    | `craft` | implement a new UI surface end-to-end | `references/registers.md`, `references/anti-slop.md`, `references/interface-polish.md` |
    | `audit` | review UX, a11y, responsive, visual quality | `references/workflows.md`, `references/anti-slop.md`, `references/interface-polish.md` |
    | `polish` | improve an existing surface before ship | `references/anti-slop.md`, `references/interface-polish.md`, `references/motion-interaction.md` |
@@ -77,6 +78,8 @@ The job is not to generate a style from a database. The job is to read the produ
    - Component implementation: `ui-styling`.
    - Token architecture: `design-system`.
    - Korean webfont pairing, Hangul readability, and role-based font tokens: `korean-typography`.
+   - Public reference URL retrieval: `web-access-ladder`.
+   - Official design system docs for a library or SDK: `official-docs-guide`.
    - Lottie/Bodymovin JSON animation authoring and Skottie preview: `text-to-lottie`.
    - Logos, banners, CIP, social images: `design`, `logo-creator`, `banner-design`.
    - Historical database lookup is archived; do not route new design work to it.

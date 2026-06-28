@@ -5,6 +5,14 @@ description = "서비스 기획: 리서처 + 분석가 + 전략가"
 [[agents]]
 name = "Researcher"
 role = "시장 조사 및 데이터 수집"
+success_criteria = [
+  "Primary claims cite current sources or explicitly mark unknowns",
+  "Official/public sources are preferred over secondary summaries"
+]
+eval_type = "docs"
+stop_condition = "Stop when source-backed findings are recorded, or when the required source is blocked and the retrieval attempts are documented."
+approval_boundary = ["Do not create paid accounts, bypass login/paywalls, or submit forms without explicit approval."]
+state_record = "handoff.md"
 task_template = """
 {goal}에 대한 시장 조사를 수행하세요.
 
@@ -14,6 +22,11 @@ task_template = """
 - 타겟 사용자 페르소나
 - 기존 솔루션의 강점/약점
 
+## 조사 지침
+- 기술/SDK/API 주장은 official-docs-guide를 우선 적용
+- 공개 웹 소스가 막히면 web-access-ladder를 적용
+- 출처와 날짜를 handoff.md에 기록
+
 ## 산출물
 - 시장 조사 보고서 (docs/에 저장)
 - 경쟁사 비교 매트릭스
@@ -22,6 +35,14 @@ task_template = """
 [[agents]]
 name = "Analyst"
 role = "데이터 분석 및 기회 식별"
+success_criteria = [
+  "Analysis separates evidence, assumptions, and recommendations",
+  "Top risks include a validation method"
+]
+eval_type = "review"
+stop_condition = "Stop when opportunity/risk matrix is complete or when missing evidence is explicitly marked."
+approval_boundary = ["Do not invent market numbers or cite unavailable sources as facts."]
+state_record = "handoff.md"
 task_template = """
 {goal}에 대한 기회를 분석하세요.
 
@@ -40,6 +61,14 @@ task_template = """
 name = "Strategist"
 role = "전략 수립 및 로드맵"
 blocked_by = ["Researcher", "Analyst"]
+success_criteria = [
+  "Roadmap ties each phase to evidence from Researcher/Analyst",
+  "MVP scope has explicit non-goals and validation checks"
+]
+eval_type = "docs"
+stop_condition = "Stop when strategy doc and MVP scope are ready, or when upstream evidence is insufficient and documented."
+approval_boundary = ["Do not commit budget, legal, hiring, or launch promises without explicit approval."]
+state_record = "handoff.md"
 task_template = """
 {goal}에 대한 전략을 수립하세요.
 
@@ -49,6 +78,7 @@ task_template = """
 - MVP 스코프 정의
 - 3개월/6개월/12개월 로드맵
 - 핵심 성과 지표 (KPI) 정의
+- 장기/자율 실행으로 전환할 경우 goal-prep-pack 후보 표시
 
 ## 산출물
 - 전략 보고서 (docs/에 저장)

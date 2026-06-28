@@ -34,6 +34,22 @@ Steps:
 7. Run mechanical preflight.
 8. Run browser/screenshot QA when possible.
 
+## Measure
+
+Use when a concrete URL, screenshot, or product reference should inform local tokens or styling.
+
+Steps:
+
+1. Read `references/reference-style-extraction.md`.
+2. Capture source evidence: CSS, computed styles, screenshots, or clearly marked visual estimates.
+3. Produce a compact `design.md` with token roles, provenance, transfer rules, and do-not-borrow guardrails.
+4. Choose apply level:
+   - `L1 tokens`: typography scale, spacing, color roles, radius, shadows.
+   - `L2 style`: tokens plus component treatment and state styling.
+   - `L3 redesign`: layout/IA changes only with explicit approval.
+5. Map reference grammar into the current project's tokens/components.
+6. Verify the result does not copy brand identity, proprietary art, exact layout, or trademarked chrome.
+
 ## Audit
 
 Use for review without immediately rewriting.

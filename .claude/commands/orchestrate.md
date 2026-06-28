@@ -64,6 +64,8 @@ python3 scripts/orchestrate-worktrees.py plan.json --cleanup
 - 워커 이름은 영어 권장 (브랜치명 생성에 사용)
 - 작업 간 의존성이 있으면 `depends_on`으로 명시 (선택)
 - 가능한 경우 `success_criteria`, `eval_type`, `stop_condition`, `approval_boundary`, `state_record`를 별도 필드로 명시
+- repo context가 넓으면 `context-pack-gate`를 먼저 실행하고 worker에 `context_pack` 경로를 명시
+- 고위험 작업은 구현 worker와 별도로 검증/반박 전용 worker를 둔다
 
 ## Step 4: Generate Plan
 
@@ -81,7 +83,8 @@ python3 scripts/orchestrate-worktrees.py plan.json --cleanup
       "eval_type": "integration",
       "stop_condition": "Stop after the focused API tests pass or a blocked dependency is identified.",
       "approval_boundary": ["Do not deploy or change production data without explicit approval."],
-      "state_record": ".orchestration/{session}/backend/handoff.md"
+      "state_record": ".orchestration/{session}/backend/handoff.md",
+      "context_pack": ".orchestration/context-packs/20260629-backend/report.md"
     },
     { "name": "Frontend", "task": "구체적인 작업 설명", "depends_on": ["Backend"] },
     { "name": "Tests", "task": "E2E 테스트", "depends_on": ["Backend", "Frontend"] }
@@ -153,6 +156,8 @@ python3 scripts/orchestrate-worktrees.py plan.json --execute
    - Identify dependencies between workers (add `depends_on` if needed)
    - Add execution-contract fields when evidence or loop behavior matters:
      `success_criteria`, `eval_type`, `stop_condition`, `approval_boundary`, `state_record`
+   - Add `context_pack` paths for broad repo slices or prepacked handoff material
+   - Add Critic/Verifier workers for security, auth, payment, migration, deploy, or long-running work
    - Create plan.json in `.orchestration/` directory
    - Run dry-run: `python3 scripts/orchestrate-worktrees.py plan.json`
    - Ask user to confirm via AskUserQuestion
@@ -170,6 +175,7 @@ python3 scripts/orchestrate-worktrees.py plan.json --execute
    - Circular dependencies are automatically detected and rejected
    - success_criteria should be observable and should not be buried only in prose
    - stop_condition must distinguish success, blocked, approval-required, and no-progress exits for loop work
+   - context_pack should point to a `context-pack-gate` report or manifest, kept separate from task prose
 
 ---
 

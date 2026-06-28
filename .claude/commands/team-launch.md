@@ -95,7 +95,7 @@ TOML → plan.json 변환:
 1. `--goal`이 없거나 비어 있으면 에러 → 사용 예시를 보여주고 STOP
 2. `{goal}`을 사용자의 `--goal` 값으로 치환 (str.replace, format 아님)
 3. `blocked_by` → `depends_on` 변환
-4. 템플릿에 `success_criteria`, `eval_type`, `stop_condition`, `approval_boundary`, `state_record`가 있으면 plan worker에 그대로 전달
+4. 템플릿에 `success_criteria`, `eval_type`, `stop_condition`, `approval_boundary`, `state_record`, `context_pack`가 있으면 plan worker에 그대로 전달
 5. 세션 이름 생성: `{template-name}-{goal-slug}`
 
 ```json
@@ -111,7 +111,8 @@ TOML → plan.json 변환:
       "success_criteria": ["Relevant tests pass"],
       "eval_type": "integration",
       "stop_condition": "Stop when the relevant tests pass or a blocker is recorded.",
-      "state_record": ".orchestration/{session}/tester/handoff.md"
+      "state_record": ".orchestration/{session}/tester/handoff.md",
+      "context_pack": ".orchestration/context-packs/{session}-tester/report.md"
     }
   ]
 }
@@ -139,7 +140,7 @@ TOML → plan.json 변환:
    - Read `.claude/templates/{name}.toml`
    - If not found, show available templates and suggest closest match
    - Replace `{goal}` in all task_template fields with --goal value
-   - Convert to plan.json format (blocked_by → depends_on, execution-contract fields preserved)
+   - Convert to plan.json format (blocked_by → depends_on, execution-contract fields and context_pack preserved)
    - Generate session name: `{name}-{slugified-goal}`
    - Save plan.json to `.orchestration/{session}/plan.json`
    - Run dry-run

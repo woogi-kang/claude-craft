@@ -11,13 +11,16 @@
 ```
 1. 슬래시 커맨드와 매칭되는가? → Skill 도구로 실행
 2. 사람/회사/프로젝트/과거 결정/이전 맥락 요청인가? → GBrain memory 조회 후 계속 진행
-3. 반복/장기/자율 작업인가? → `execution-contract.md` + `autonomous-loops` 적용
-4. 여러 도메인 병렬 협업이 필요한가? → /team 제안 (자동 DAG)
-5. 단일 도메인 에이전트가 필요한 복합 작업인가? → Agent 도구로 위임
-6. 한국어 기술/제출 문서 작성 또는 수정인가? → `korean-writing-style.md` 적용 후 Skill 도구 실행
-7. 스킬 자동 트리거에 해당하는가? → Skill 도구로 실행
-8. 단순 코드 작업인가? → 직접 처리 (Glob/Grep/Read/Edit)
-9. 탐색이 필요한가? → Explore 서브에이전트
+3. 기술 문서/SDK/API/라이브러리 동작이 현재성에 의존하는가? → `official-docs-guide` 적용
+4. 공개 웹 소스가 막히거나 근거 검증이 필요한가? → `web-access-ladder` 적용
+5. 반복/장기/자율 작업인가? → `execution-contract.md` + `goal-prep-pack` 또는 `autonomous-loops` 적용
+6. 외부 모델/워커/리뷰어에게 repo context를 보낼 예정인가? → `context-pack-gate` 적용
+7. 여러 도메인 병렬 협업이 필요한가? → /team 제안 (자동 DAG)
+8. 단일 도메인 에이전트가 필요한 복합 작업인가? → Agent 도구로 위임
+9. 한국어 기술/제출 문서 작성 또는 수정인가? → `korean-writing-style.md` 적용 후 Skill 도구 실행
+10. 스킬 자동 트리거에 해당하는가? → Skill 도구로 실행
+11. 단순 코드 작업인가? → 직접 처리 (Glob/Grep/Read/Edit)
+12. 탐색이 필요한가? → Explore 서브에이전트
 ```
 
 ---
@@ -162,6 +165,12 @@
 | Obsidian 문서, vault | `obsidian-core` | Obsidian 마크다운 |
 | NotebookLM, 팟캐스트 생성 | `notebooklm` | Google NotebookLM API |
 | 이력서, 경력기술서, 포트폴리오 | `resume-writer` | 이력서 변환 |
+| 공식 문서, SDK 문서, API 문서, llms.txt, 최신 사용법, 버전별 문서, provider docs, docs lookup | `official-docs-guide` | 로컬 버전 확인 → 공식 문서/llms.txt/릴리스 노트 우선 조회 |
+| 403, 404처럼 보임, blocked URL, WAF, CAPTCHA, 웹페이지가 안 열림, 공개 페이지 수집, reader mode, archive, 캐시 조회 | `web-access-ladder` | 공개 웹 소스 접근 복구와 출처 검증 사다리 |
+| context pack, repomix, 외부 리뷰에 보낼 코드, 워커에게 repo context 전달, token budget, secret scan, included files audit | `context-pack-gate` | repo context를 보내기 전 범위/토큰/secret 게이트 |
+| PRD를 실행 계획으로, 장기 작업 준비, autonomous goal, validation/recovery/progress, 실행 준비팩 | `goal-prep-pack` | PRD/장기 목표를 검증/복구/진행 추적 문서로 전환 |
+| 클립보드, 복사한 로그, 긴 로그, stack trace 붙여넣기, 방금 복사한 것, screenshot path | `clipboard-intake` | 로컬 intake 폴더에 캡처 후 lazy read/redaction |
+| 외부 모델 리뷰, ChatGPT Pro 리뷰, hosted model review, third-party review, 외부로 코드 보내서 검토 | `external-model-review` | 승인 기반 외부 모델 리뷰와 context-pack 안전 게이트 |
 
 ---
 
@@ -190,12 +199,16 @@
 ```
 
 모든 오케스트레이션 plan은 가능한 경우 `success_criteria`, `eval_type`, `stop_condition`, `approval_boundary`, `state_record`를 포함한다. 반복/장기 작업은 `.claude/rules/common/execution-contract.md`와 `autonomous-loops`를 먼저 적용한다.
+넓은 repo context를 워커에게 넘기거나 외부 리뷰를 결합할 때는 먼저 `context-pack-gate`를 실행하고, worker에 `context_pack` 필드를 포함한다.
+자연어 요청이 넓으면 `/team`은 worktree DAG, one-shot agent, deterministic workflow 중 어떤 substrate가 맞는지 짧게 판단하고, 위험도가 높은 작업에는 critic/refute worker를 추가한다.
 
 ### 멀티 LLM 협업
 ```
 /multi-plan → 기획 (Claude + Gemini + Codex 분석)
 /multi-execute → 구현 (프로토타입 정제)
 ```
+
+외부 모델이나 hosted chat UI로 repo 내용을 보낼 때는 `external-model-review`를 사용한다. 이 경로는 `context-pack-gate` PASS와 사용자 승인 없이는 실행하지 않는다.
 
 ### 세션/상태 관리
 ```
@@ -233,10 +246,19 @@
 ### 새 서비스 기획 → 구현
 ```
 planning-agent (기획)
+  → goal-prep-pack (장기/자율 작업이면 VALIDATION/RECOVERY/PROGRESS 생성)
   → ui-design-agent (UI 디자인)
   → nextjs-agent 또는 flutter-agent (구현)
   → /verify (검증)
   → /review (리뷰)
+```
+
+### 기술 조사 → 구현
+```
+official-docs-guide (로컬 버전 + 공식 문서)
+  → web-access-ladder (공식/공개 소스 접근 실패 시)
+  → context-pack-gate (외부 모델/워커에게 전달할 때)
+  → 구현/검증
 ```
 
 ### Figma 디자인 → 프로덕션 코드

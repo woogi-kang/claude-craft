@@ -5,8 +5,19 @@ description = "멀티 관점 리뷰: 코드 + 아키텍처 + 보안 → 통합"
 [[agents]]
 name = "Code-Reviewer"
 role = "코드 품질 리뷰"
+success_criteria = [
+  "Findings cite concrete files and lines",
+  "Critical or major findings explain user-visible or runtime impact"
+]
+eval_type = "review"
+stop_condition = "Stop when high-signal findings are recorded or when context is insufficient and the missing context is listed."
+approval_boundary = ["Do not send repository context outside the local session without context-pack-gate PASS and user approval."]
+state_record = "handoff.md"
 task_template = """
 {goal}에 대한 코드 리뷰를 수행하세요.
+
+## Context
+- repo slice가 넓으면 context-pack-gate report를 먼저 확인하세요.
 
 ## 관점
 - 코드 품질 (가독성, 유지보수성)
@@ -22,8 +33,19 @@ task_template = """
 [[agents]]
 name = "Arch-Reviewer"
 role = "아키텍처 리뷰"
+success_criteria = [
+  "Architecture claims cite actual code paths or documented contracts",
+  "Recommendations distinguish required fixes from optional refactors"
+]
+eval_type = "review"
+stop_condition = "Stop when architecture risks and tradeoffs are recorded, or when source context is insufficient."
+approval_boundary = ["Do not recommend broad rewrites unless tied to the requested scope."]
+state_record = "handoff.md"
 task_template = """
 {goal}에 대한 아키텍처 리뷰를 수행하세요.
+
+## Context
+- repo slice가 넓으면 context-pack-gate report를 먼저 확인하세요.
 
 ## 관점
 - 설계 패턴 적절성
@@ -39,8 +61,19 @@ task_template = """
 [[agents]]
 name = "Security-Reviewer"
 role = "보안 리뷰"
+success_criteria = [
+  "Security findings include exploitability, impact, and concrete mitigation",
+  "False-positive-prone findings are labeled with confidence"
+]
+eval_type = "security"
+stop_condition = "Stop when security risks are triaged or when secret/context access is blocked."
+approval_boundary = ["Do not print secrets, attempt exploitation, or send sensitive context externally without explicit approval."]
+state_record = "handoff.md"
 task_template = """
 {goal}에 대한 보안 리뷰를 수행하세요.
+
+## Context
+- repo slice가 넓으면 context-pack-gate report를 먼저 확인하세요.
 
 ## 관점
 - OWASP Top 10 취약점
@@ -57,6 +90,14 @@ task_template = """
 name = "Consolidator"
 role = "리뷰 통합 및 합의"
 blocked_by = ["Code-Reviewer", "Arch-Reviewer", "Security-Reviewer"]
+success_criteria = [
+  "Final report deduplicates findings and preserves severity rationale",
+  "Action items are ordered by risk and effort"
+]
+eval_type = "review"
+stop_condition = "Stop when consolidated report is written or when upstream reviewer handoffs are missing."
+approval_boundary = ["Do not weaken critical/security findings without evidence."]
+state_record = "handoff.md"
 task_template = """
 {goal}에 대한 리뷰 결과를 통합하세요.
 

@@ -18,6 +18,17 @@
 
 작업이 작으면 사용자에게 길게 말하지 않는다. 그래도 구현 전에는 성공 기준과 검증 방법을 짧게 잡고, 완료 후 그 기준으로 확인한다.
 
+## Goal Prep Pack 전환 기준
+
+아래 중 하나라도 참이면 단순 계약 대신 `goal-prep-pack`을 사용해 `.claude/goals/{yyMMdd}-{goal-slug}/` 아래에 `VALIDATION.md`, `RECOVERY.md`, `PLAN.md`, `PROGRESS.md`, `goal-command.md`를 만든다.
+
+- PRD, 로드맵, 출시 계획, 장기 목표를 실제 구현으로 전환한다.
+- 작업이 여러 세션, 여러 에이전트, 여러 워크트리를 넘나든다.
+- rollback, production, privacy, finance, external-send, deploy 승인이 필요할 수 있다.
+- 실패 후 재시도/복구 경로를 다음 실행자가 읽어야 한다.
+
+작업 중에는 `PROGRESS.md`를 최신 항목이 위로 오도록 갱신한다. 같은 blocker가 세 번 반복되면 진행을 멈추고 blocked 상태를 명시한다.
+
 ## 루프 판정
 
 아래가 모두 참이면 루프로 설계한다.
@@ -48,6 +59,7 @@
 ```
 
 `success_criteria`는 task prose 안에 묻지 말고 가능하면 별도 필드로 둔다. 반복 작업은 `stop_condition`, `approval_boundary`, `state_record`까지 포함한다.
+넓은 repo context를 worker에게 제공할 때는 `context-pack-gate` 산출물 경로를 `context_pack` 필드로 별도 기록한다.
 
 ## 완료 보고
 
