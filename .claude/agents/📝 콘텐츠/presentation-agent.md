@@ -355,6 +355,11 @@ automation_level:
 │   ├── 테마 색상 일관성
 │   ├── 텍스트 미포함 확인
 │   └── 접근성 alt text 포함
+├── Presentation Quality Gate (공통 필수)
+│   ├── 인포그래픽 적합성 확인
+│   ├── 전체 슬라이드 렌더/contact sheet 확인
+│   ├── 한국어 word breaking 확인
+│   └── PDF 동시 생성 및 PDF 렌더 확인
 ├── Future Slide QA (HTML 덱 선택 시)
 │   ├── validator error 0건
 │   ├── overflow/padding/word-break FAIL 0건
@@ -380,6 +385,7 @@ automation_level:
 
 1. **PPTX 파일** - 편집 가능한 프레젠테이션 (export-pptx)
 2. **PDF 파일** - 16:9 고품질 발표용 (export-pdf)
+3. **QA 산출물** - 전수 렌더 이미지, contact sheet, QA report/manual review
 
 ### 빌드 명령어
 

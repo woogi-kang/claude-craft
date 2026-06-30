@@ -62,8 +62,8 @@
 
 | 키워드/의도 | 에이전트 | 언제 사용 |
 |-------------|----------|-----------|
-| PPT, 발표자료, 프레젠테이션 | `presentation-agent` | PPT 리서치 → 제작 전 과정 |
-| Future Slide, Tightened Slide, HTML 덱, web presentation | `presentation-agent` | 내부 선택 경로로 `future-tightened-slide` 사용. PPTX/편집 가능한 산출물은 기존 PPT 경로 유지 |
+| PPT, 발표자료, 프레젠테이션 | `presentation-agent` | PPT 리서치 → 제작 전 과정. 완료 전 `presentation-quality-gate`로 인포그래픽, 전수 렌더, 한국어 줄바꿈, PDF를 확인 |
+| Future Slide, Tightened Slide, HTML 덱, web presentation | `presentation-agent` | 내부 선택 경로로 `future-tightened-slide` 사용. PPTX/편집 가능한 산출물은 기존 PPT 경로 유지. 완료 전 `presentation-quality-gate` 적용 |
 | 소셜 미디어, SNS 콘텐츠 | `social-media-agent` | 멀티 플랫폼 소셜 콘텐츠 제작 |
 | 기술 블로그, Hashnode | `tech-blog-agent` | 블로그 글 작성 → 발행 |
 | 이모티콘, 캐릭터, 스티커 | `emoticon-orchestrator` | AI 이모티콘 제작 워크플로우 |
@@ -154,9 +154,9 @@
 | 로고 만들기, logo, brand mark, favicon, 앱 아이콘 | `logo-creator` | 전문 특화: AI 로고 생성 End-to-End |
 | 배너, 소셜 배너, 광고 배너, 커버, 헤더 이미지 | `banner-design` | 전문 특화: 22가지 스타일 배너 디자인 |
 | CIP, 명함, 레터헤드, 아이콘 생성, 소셜 포토, 브랜드 패키지 | `design` | 오케스트레이터: CIP/아이콘/소셜포토 자체 처리 + 라우팅 |
-| Future Slide, Tightened Slide, HTML 덱, web presentation | `future-tightened-slide` | Future Slide HTML 덱 생성 + `future-slide-qa` 검증 |
+| Future Slide, Tightened Slide, HTML 덱, web presentation | `future-tightened-slide` | Future Slide HTML 덱 생성 + `future-slide-qa` 검증 + `presentation-quality-gate` 적용 |
 | loop engineering, 루프 엔지니어링, agent loop, 자율 루프, 반복 루프, Loop Library, 루프 설계, 루프 진단, loop doctor, 자동 반복, 장기 실행 | `autonomous-loops` | 루프 실행 계약, 패턴 선택, Loop Doctor, 외부 Loop Library 선별 적용 |
-| 슬라이드, 프레젠테이션 | `slides` | Chart.js 기반 HTML 프레젠테이션 |
+| 슬라이드, 프레젠테이션 | `slides` | Chart.js 기반 HTML 프레젠테이션 + `presentation-quality-gate` 적용 |
 | 브랜드 보이스, 톤앤매너, 메시징 | `brand` | 브랜드 일관성 관리 |
 | LinkedIn, Twitter, SNS, 바이럴, 게시물 | `social-content` | 소셜 미디어 콘텐츠 제작 |
 | 경쟁사 광고, 광고 라이브러리, Meta Ad Library, Facebook Ad Library, LinkedIn Ads Library, 경쟁 광고 벤치마크 | `mkt-competitive-ads-research` | 공개 광고 라이브러리 기반 경쟁 광고 리서치 |

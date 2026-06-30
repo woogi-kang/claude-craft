@@ -540,9 +540,14 @@ def create_statistics_slide(prs, title, metrics):
 □ 텍스트 하단 여백 (0.5인치 이상)
 □ CSS 그라데이션 → 이미지 변환 완료
 □ 폰트 임베딩 또는 시스템 폰트 사용
+□ 인포그래픽/이미지 사용 목적과 asset manifest 확인
+□ 한국어 word breaking 확인 (`break-all`, 조사/어미 고립, 어색한 직역투 없음)
 □ 색상 코드 '#' 제거
 □ 이미지 절대 경로 확인
 □ 하이퍼링크 작동 확인
+□ PPTX 전체 슬라이드 렌더/contact sheet 확인
+□ PDF 생성 및 PDF 전체 페이지 렌더/contact sheet 확인
+□ PDF 페이지 수와 PPTX 슬라이드 수 일치
 □ 파일명 규칙 준수
 ```
 
@@ -620,6 +625,10 @@ apt-get install poppler-utils
 
 - [x] 슬라이드 크기 검증 통과
 - [x] 오버플로우 검증 통과
+- [x] 인포그래픽/이미지 적합성 검토 완료
+- [x] 한국어 word breaking 검증 통과
+- [x] PPTX/PDF contact sheet 전수 확인 완료
+- [x] PDF 페이지 수 일치
 - [x] 폰트 임베딩 완료
 - [x] 색상 코드 검증 통과
 
@@ -642,3 +651,4 @@ apt-get install poppler-utils
 5. **텍스트 태그**: 시맨틱 HTML만 사용 (p, h1-h6, ul, li)
 6. **인라인 스타일**: margin 미지원, padding으로 대체
 7. **검증 필수**: 출력 전 반드시 validateSlide 실행
+8. **최종 게이트**: 납품 전 `.claude/rules/common/presentation-quality-gate.md` 적용

@@ -67,6 +67,7 @@ sed -n '1,220p' ".claude/skills/📝 콘텐츠/future-slide-skills/_vendor/futur
 6. 검증
    - vendor validator를 먼저 실행합니다.
    - 이어서 `future-slide-qa`를 실행해 screenshot/contact sheet 기반 QA를 남깁니다.
+   - 최종 납품 전 `.claude/rules/common/presentation-quality-gate.md`를 적용해 인포그래픽 적합성, 전수 렌더, Korean word breaking, PDF 생성을 확인합니다.
 
 ## 필수 검증 명령
 
@@ -82,10 +83,13 @@ target/
 ├── index.html
 ├── images/
 ├── asset_manifest.json        # 이미지 생성/slot 사용 시
+├── pdf/
+│   └── presentation.pdf
 └── qa/
     ├── qa-report.md
     ├── desktop-slide-01.png
-    └── contact-sheet.png
+    ├── contact-sheet.png
+    └── pdf-contact-sheet.png
 ```
 
 ## 합격 기준
@@ -95,3 +99,4 @@ target/
 - layout overflow, offscreen, bottom nav collision, padding violation 0건
 - 한국어 display heading의 부자연스러운 자동 줄바꿈 없음
 - 생성 이미지 안에 읽어야 하는 텍스트 없음
+- PDF 페이지 수가 슬라이드 수와 일치하고, PDF 렌더 contact sheet에서 잘림/overflow가 없음

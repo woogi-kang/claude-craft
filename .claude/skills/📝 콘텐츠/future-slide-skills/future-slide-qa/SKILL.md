@@ -47,6 +47,8 @@ node ".claude/skills/📝 콘텐츠/future-slide-skills/future-slide-qa/scripts/
 - `data-image-slot`
 - image alt text
 - S15/S16/S22 slot class consistency
+- 인포그래픽/이미지 slot의 목적이 장식이 아니라 메시지 이해에 필요한지
+- PDF 동시 생성 여부와 PDF 페이지 수 일치 여부
 
 ## 산출물
 
@@ -55,8 +57,11 @@ qa/
 ├── qa-report.md
 ├── desktop-slide-01.png
 ├── desktop-slide-02.png
-└── contact-sheet.png
+├── contact-sheet.png
+└── pdf-contact-sheet.png
 ```
+
+최종 납품 전에는 `.claude/rules/common/presentation-quality-gate.md`도 함께 적용합니다. 이 QA 스킬이 HTML 렌더 문제를 잡고, 공통 게이트가 PDF 생성과 인포그래픽 적합성까지 닫습니다.
 
 ## 교체 판단
 

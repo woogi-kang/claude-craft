@@ -437,6 +437,12 @@ PDF 출력 전 확인:
 □ 배경 이미지 경로 유효
 □ 폰트 CDN 접근 가능
 □ 출력 디렉토리 쓰기 권한
+□ PDF 페이지 수와 원본 슬라이드 수 일치
+□ PDF 전체 페이지 PNG 렌더 완료
+□ PDF contact sheet 전수 확인 완료
+□ 텍스트/이미지 잘림, overflow, 겹침 없음
+□ 한국어 word breaking 문제 없음
+□ `.claude/rules/common/presentation-quality-gate.md` 적용
 ```
 
 ## 출력 완료 예시
@@ -451,5 +457,11 @@ BUILD COMPLETE
 
   Output Files:
   ├── Claude_Code_Team_Guide.pptx (1.97 MB)
-  └── Claude_Code_Team_Guide.pdf (2.96 MB)
+  ├── Claude_Code_Team_Guide.pdf (2.96 MB)
+  └── qa_pdf_render/contact-sheet.png
+
+  QA:
+  ├── PDF pages match slide count
+  ├── PDF page render complete
+  └── No visible overflow/clipping in contact sheet
 ```
