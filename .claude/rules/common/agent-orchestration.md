@@ -15,12 +15,13 @@
 4. 공개 웹 소스가 막히거나 근거 검증이 필요한가? → `web-access-ladder` 적용
 5. 반복/장기/자율 작업인가? → `execution-contract.md` + `goal-prep-pack` 또는 `autonomous-loops` 적용
 6. 외부 모델/워커/리뷰어에게 repo context를 보낼 예정인가? → `context-pack-gate` 적용
-7. 여러 도메인 병렬 협업이 필요한가? → /team 제안 (자동 DAG)
-8. 단일 도메인 에이전트가 필요한 복합 작업인가? → Agent 도구로 위임
-9. 한국어 기술/제출 문서 작성 또는 수정인가? → `korean-writing-style.md` 적용 후 Skill 도구 실행
-10. 스킬 자동 트리거에 해당하는가? → Skill 도구로 실행
-11. 단순 코드 작업인가? → 직접 처리 (Glob/Grep/Read/Edit)
-12. 탐색이 필요한가? → Explore 서브에이전트
+7. 마케팅/제품 이미지에 `imagegen`을 사용할 예정인가? → `imagegen-marketing-assets.md` 적용
+8. 여러 도메인 병렬 협업이 필요한가? → /team 제안 (자동 DAG)
+9. 단일 도메인 에이전트가 필요한 복합 작업인가? → Agent 도구로 위임
+10. 한국어 기술/제출 문서 작성 또는 수정인가? → `korean-writing-style.md` 적용 후 Skill 도구 실행
+11. 스킬 자동 트리거에 해당하는가? → Skill 도구로 실행
+12. 단순 코드 작업인가? → 직접 처리 (Glob/Grep/Read/Edit)
+13. 탐색이 필요한가? → Explore 서브에이전트
 ```
 
 ---
@@ -154,6 +155,7 @@
 | 로고 만들기, logo, brand mark, favicon, 앱 아이콘 | `logo-creator` | 전문 특화: AI 로고 생성 End-to-End |
 | 배너, 소셜 배너, 광고 배너, 커버, 헤더 이미지 | `banner-design` | 전문 특화: 22가지 스타일 배너 디자인 |
 | CIP, 명함, 레터헤드, 아이콘 생성, 소셜 포토, 브랜드 패키지 | `design` | 오케스트레이터: CIP/아이콘/소셜포토 자체 처리 + 라우팅 |
+| 이미지 생성, imagegen, AI 이미지, OG image, social graphic, blog hero, product mockup, listing image, profile banner | `imagegen` | 시스템 `imagegen` 사용 전 `imagegen-marketing-assets.md`로 마케팅 에셋 목적/규격/후처리/QA 기준 적용 |
 | Future Slide, Tightened Slide, HTML 덱, web presentation | `future-tightened-slide` | Future Slide HTML 덱 생성 + `future-slide-qa` 검증 + `presentation-quality-gate` 적용 |
 | loop engineering, 루프 엔지니어링, agent loop, 자율 루프, 반복 루프, Loop Library, 루프 설계, 루프 진단, loop doctor, 자동 반복, 장기 실행 | `autonomous-loops` | 루프 실행 계약, 패턴 선택, Loop Doctor, 외부 Loop Library 선별 적용 |
 | 슬라이드, 프레젠테이션 | `slides` | Chart.js 기반 HTML 프레젠테이션 + `presentation-quality-gate` 적용 |

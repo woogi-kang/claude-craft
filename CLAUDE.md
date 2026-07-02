@@ -101,6 +101,7 @@ bash scripts/sync-to-projects.sh ../memoriz   # 특정 프로젝트
 │   ├── memory-engine.md         # GBrain 기반 장기 기억 조회/캡처
 │   ├── execution-contract.md    # 성공 기준/검증/중단 조건/승인 경계
 │   ├── presentation-quality-gate.md # PPT/PDF 생성 품질 게이트
+│   ├── imagegen-marketing-assets.md # 마케팅/제품 이미지 생성 기준
 │   ├── korean-writing-style.md  # 한국어 기술문서 번역투/용어 점검
 │   ├── coding-style.md
 │   ├── git-workflow.md
